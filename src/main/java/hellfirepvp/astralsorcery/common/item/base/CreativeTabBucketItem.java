@@ -16,10 +16,15 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class CreativeTabBucketItem extends BucketItem implements CreativeTabItem {
 
     public CreativeTabBucketItem(Fluid content, Properties properties) {
+        this(() -> content, properties);
+    }
+
+    public CreativeTabBucketItem(Supplier<? extends Fluid> content, Properties properties) {
         super(content, properties);
     }
 

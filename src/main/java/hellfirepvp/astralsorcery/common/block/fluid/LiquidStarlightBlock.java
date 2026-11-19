@@ -10,9 +10,7 @@ package hellfirepvp.astralsorcery.common.block.fluid;
 
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
-import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
 import hellfirepvp.astralsorcery.client.lib.EffectTemplatesAS;
-import hellfirepvp.astralsorcery.common.lib.constants.ColorsAS;
 import hellfirepvp.astralsorcery.common.recipe.liquid.ActiveLiquidStarlightRecipe;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
@@ -31,6 +29,8 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.function.Supplier;
+
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -42,13 +42,14 @@ public class LiquidStarlightBlock extends LiquidBlock {
 
     private static final RandomSource rand = RandomSource.create();
 
-    public LiquidStarlightBlock(FlowingFluid fluid) {
-        super(fluid, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)
+    public LiquidStarlightBlock(Supplier<? extends FlowingFluid> fluid) {
+        super(fluid, BlockBehaviour.Properties.copy(Blocks.WATER)
+                .noLootTable()
                 .lightLevel(state -> 15));
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         super.entityInside(state, level, pos, entity);
 
         if (entity instanceof LivingEntity livingEntity) {

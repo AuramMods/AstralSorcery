@@ -137,10 +137,10 @@ public class LiquidInteractionRecipe extends CustomRecipe<LiquidInteractionRecip
             return false;
         }
         if (random.nextFloat() < chanceA) {
-            handlerA.drain(matchA.copyWithAmount(requiredA.amount()), IFluidHandler.FluidAction.EXECUTE);
+            handlerA.drain(new FluidStack(matchA, requiredA.amount()), IFluidHandler.FluidAction.EXECUTE);
         }
         if (random.nextFloat() < chanceB) {
-            handlerB.drain(matchB.copyWithAmount(requiredB.amount()), IFluidHandler.FluidAction.EXECUTE);
+            handlerB.drain(new FluidStack(matchB, requiredB.amount()), IFluidHandler.FluidAction.EXECUTE);
         }
         return true;
     }
@@ -151,7 +151,7 @@ public class LiquidInteractionRecipe extends CustomRecipe<LiquidInteractionRecip
             if (contained.isEmpty() || !required.ingredient().test(contained) || contained.getAmount() < required.amount()) {
                 continue;
             }
-            FluidStack drainable = handler.drain(contained.copyWithAmount(required.amount()), IFluidHandler.FluidAction.SIMULATE);
+            FluidStack drainable = handler.drain(new FluidStack(contained, required.amount()), IFluidHandler.FluidAction.SIMULATE);
             if (!drainable.isEmpty() && drainable.getAmount() >= required.amount()) {
                 return contained;
             }

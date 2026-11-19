@@ -14,8 +14,6 @@ import hellfirepvp.astralsorcery.common.block.fluid.LiquidStarlightBlock;
 import hellfirepvp.astralsorcery.common.item.base.CreativeTabBucketItem;
 import hellfirepvp.astralsorcery.common.util.TriFunction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -25,20 +23,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.util.TriPredicate;
-import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fluids.FluidInteractionRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
@@ -46,10 +41,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class FluidsAS {
 
@@ -65,10 +57,10 @@ public class FluidsAS {
         private final ResourceLocation stillTexture;
         private final ResourceLocation flowingTexture;
         private final RegistryObject<FluidType> fluidType;
-        private RegistryObject<BaseFlowingFluid> source;
-        private RegistryObject<BaseFlowingFluid> flowing;
-        private RegisteredItemLike<LiquidBlock> fluidBlock;
-        private RegisteredItemLike<BucketItem> bucket;
+        private final RegistryObject<ForgeFlowingFluid> source;
+        private final RegistryObject<ForgeFlowingFluid> flowing;
+        private final RegisteredItemLike<LiquidBlock> fluidBlock;
+        private final RegisteredItemLike<BucketItem> bucket;
 
         public FluidLiquidStarlight(String fluidName) {
             this.stillTexture = AstralSorcery.key("block/" + fluidName + "_still");
@@ -98,17 +90,18 @@ public class FluidsAS {
 
                 @Override
                 public void setItemMovement(ItemEntity entity) {
-                    double gravity = entity.getGravity();
-                    if (gravity != 0) {
-                        entity.setDeltaMovement(entity.getDeltaMovement().add(0.0, -gravity, 0.0));
+                    if (!entity.isNoGravity()) {
+                        entity.setDeltaMovement(entity.getDeltaMovement().add(0.0, -0.04, 0.0));
                     }
                 }
             });
 
-            source = FLUID_REGISTER.register(fluidName, () -> new LiquidStarlightFluid.Source(createProperties(fluidType, source, flowing, bucket, fluidBlock)));
-            flowing = FLUID_REGISTER.register(fluidName + "_flowing", () -> new LiquidStarlightFluid.Flowing(createProperties(fluidType, source, flowing, bucket, fluidBlock)));
-            fluidBlock = BlocksAS.BLOCK_REGISTER.register(fluidName, () -> new LiquidStarlightBlock(source.get()));
-            bucket = ItemsAS.ITEM_REGISTER.register(fluidName + "_bucket", () -> new CreativeTabBucketItem(source.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+            this.source = FLUID_REGISTER.register(fluidName, () -> new LiquidStarlightFluid.Source(this.createProperties()));
+            this.flowing = FLUID_REGISTER.register(fluidName + "_flowing", () -> new LiquidStarlightFluid.Flowing(this.createProperties()));
+            this.fluidBlock = new RegisteredItemLike<>(BlocksAS.BLOCK_REGISTER.register(fluidName,
+                    () -> new LiquidStarlightBlock(this.source)));
+            this.bucket = new RegisteredItemLike<>(ItemsAS.ITEM_REGISTER.register(fluidName + "_bucket",
+                    () -> new CreativeTabBucketItem(this.source, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))));
         }
 
         public RegisteredItemLike<LiquidBlock> getFluidBlock() {
@@ -123,11 +116,11 @@ public class FluidsAS {
             return this.fluidType.get();
         }
 
-        public RegistryObject<BaseFlowingFluid> getSource() {
+        public RegistryObject<ForgeFlowingFluid> getSource() {
             return this.source;
         }
 
-        public RegistryObject<BaseFlowingFluid> getFlowing() {
+        public RegistryObject<ForgeFlowingFluid> getFlowing() {
             return this.flowing;
         }
 
@@ -140,18 +133,14 @@ public class FluidsAS {
         }
 
         public FluidStack stack(int amount) {
-            return new FluidStack(this.getSource(), amount);
+            return new FluidStack(this.source.get(), amount);
         }
 
-        private static BaseFlowingFluid.Properties createProperties(Supplier<FluidType> type,
-                                                                    Supplier<? extends Fluid> still,
-                                                                    Supplier<? extends Fluid> flowing,
-                                                                    RegisteredItemLike<? extends Item> bucket,
-                                                                    Supplier<? extends LiquidBlock> block) {
-            return new BaseFlowingFluid.Properties(type, still, flowing)
+        private ForgeFlowingFluid.Properties createProperties() {
+            return new ForgeFlowingFluid.Properties(this.fluidType, this.source, this.flowing)
                     .tickRate(1)
-                    .bucket(bucket)
-                    .block(block);
+                    .bucket(this.bucket)
+                    .block(this.fluidBlock);
         }
 
         public static FluidType.Properties createTypeProperties() {
@@ -188,12 +177,12 @@ public class FluidsAS {
                     FluidType otherType = level.getFluidState(relativePos).getFluidType();
                     return !otherType.isAir() && otherType != type && otherTypeTest.test(level, relativePos, otherType);
                 }, (level, currentPos, relativePos, currentState) -> {
-                    level.setBlockAndUpdate(currentPos, EventHooks.fireFluidPlaceBlockEvent(level, currentPos, currentPos,
+                    level.setBlockAndUpdate(currentPos, ForgeEventFactory.fireFluidPlaceBlockEvent(level, currentPos, currentPos,
                             getInteractedState.apply(level, currentPos, currentState)));
                 }));
     }
 
-    public abstract static class LiquidStarlightFluid extends BaseFlowingFluid {
+    public abstract static class LiquidStarlightFluid extends ForgeFlowingFluid {
 
         protected LiquidStarlightFluid(Properties properties) {
             super(properties);
