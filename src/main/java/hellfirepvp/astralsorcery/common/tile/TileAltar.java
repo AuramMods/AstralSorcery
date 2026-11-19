@@ -51,9 +51,7 @@ import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.util.inventory.*;
 import hellfirepvp.astralsorcery.common.util.tooltip.StoredLumenDisplayTooltip;
-import hellfirepvp.observerlib.api.ObserverProvider;
 import hellfirepvp.observerlib.api.structure.MatchableStructure;
-import hellfirepvp.observerlib.common.change.ObserverProviderStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -248,9 +246,9 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
         if (this.getRequiredObserver() == null || this.getRequiredObserver() == ObserversAS.STRUCTURE_EMPTY) return;
         if (this.getTileData().getActiveRecipe().isPresent()) return;
 
-        ObserverProvider<?> provider = ObserversAS.STRUCTURE_ALTAR_T4.observer().get();
-        if (!(provider instanceof ObserverProviderStructure providerStructure)) return;
-        MatchableStructure structure = providerStructure.getStructure();
+        MatchableStructure structure = ObserverRegistryObject.extractRequiredStructure(ObserversAS.STRUCTURE_ALTAR_T4.observer().get())
+                .orElse(null);
+        if (structure == null) return;
 
         List<BlockPos> sootyMarblePositions = new ArrayList<>();
         structure.getContents().forEach((offset, matchState) -> {

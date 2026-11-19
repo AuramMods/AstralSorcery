@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -26,8 +25,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -45,8 +43,6 @@ import java.util.function.Supplier;
  */
 public class PillarBlock extends Block implements SimpleWaterloggedBlock {
 
-    public static final MapCodec<PillarBlock> CODEC = simpleCodec(PillarBlock::new);
-
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<PillarType> PILLAR_TYPE = EnumProperty.create("pillartype", PillarType.class);
 
@@ -62,11 +58,6 @@ public class PillarBlock extends Block implements SimpleWaterloggedBlock {
 
     public static Supplier<PillarBlock> make(Properties prop) {
         return () -> new PillarBlock(prop);
-    }
-
-    @Override
-    protected MapCodec<PillarBlock> codec() {
-        return CODEC;
     }
 
     protected VoxelShape createPillarShape() {
@@ -139,8 +130,8 @@ public class PillarBlock extends Block implements SimpleWaterloggedBlock {
 
     @Nullable
     @Override
-    public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
-        return PathType.BLOCKED;
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        return BlockPathTypes.BLOCKED;
     }
 
     public enum PillarType implements StringRepresentable {

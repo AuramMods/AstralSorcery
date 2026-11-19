@@ -59,7 +59,7 @@ public class StructureRenderer {
         this.structure = structure;
         BoundingBox structureBox = BoundingBox.fromCorners(structure.getMinimumOffset(), structure.getMaximumOffset());
         this.level = new StructureDisplayLevel(registries, structureBox);
-        structure.place(this.level, BlockPos.ZERO);
+        structure.placeInWorld(this.level, BlockPos.ZERO, pos -> true);
         int maxLength = Math.max(Math.max(structureBox.getXSpan(), structureBox.getYSpan()), structureBox.getZSpan());
         this.scale = 10F * (10F / maxLength);
 

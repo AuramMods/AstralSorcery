@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.common.structure;
 import hellfirepvp.astralsorcery.common.block.PillarBlock;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.observerlib.api.util.StructureBlockArray;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 
 /**
@@ -22,7 +23,8 @@ import net.minecraft.world.level.block.Blocks;
  */
 public class PatternInfuser extends StructureBlockArray implements PillarStructure {
 
-    public PatternInfuser() {
+    public PatternInfuser(ResourceLocation id) {
+        super(id);
         this.addBlock(BlocksAS.INFUSER.get(), 0, 0, 0);
 
         this.addBlock(BlocksAS.MARBLE_RAW.get(), -2, -2, -2);

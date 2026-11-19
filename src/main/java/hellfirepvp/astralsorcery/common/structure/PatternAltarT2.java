@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.structure;
 
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.observerlib.api.util.StructureBlockArray;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 
 /**
@@ -21,7 +22,8 @@ import net.minecraft.world.level.block.Blocks;
  */
 public class PatternAltarT2 extends StructureBlockArray {
 
-    public PatternAltarT2() {
+    public PatternAltarT2(ResourceLocation id) {
+        super(id);
         this.addBlock(BlocksAS.ALTAR_RESONANCE.get().defaultBlockState(), 0, 0, 0);
         this.addBlockCube(BlocksAS.SOOTY_MARBLE_RAW.get().defaultBlockState(), -2, -1, -2, 2, -1, 2);
 

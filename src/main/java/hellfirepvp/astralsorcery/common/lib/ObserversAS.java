@@ -8,6 +8,8 @@
 
 package hellfirepvp.astralsorcery.common.lib;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.focal.observer.FocusCrystalFilamentProvider;
 import hellfirepvp.astralsorcery.common.structure.*;
@@ -18,16 +20,13 @@ import hellfirepvp.observerlib.api.structure.MatchableStructure;
 import hellfirepvp.observerlib.api.util.StructureBlockArray;
 import hellfirepvp.observerlib.common.change.ObserverProviderStructure;
 import hellfirepvp.observerlib.common.registry.RegistryProviders;
-import net.minecraft.resources.ResourceKey;
-import net.minecraftforge.registries.RegistryObject;
+import hellfirepvp.observerlib.common.registry.RegistryStructures;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -38,12 +37,21 @@ import java.util.stream.Collectors;
  */
 public class ObserversAS {
 
-    public static final DeferredRegister<ObserverProvider<?>> OBSERVER_REGISTER =
-            DeferredRegister.create(RegistryProviders.REGISTRY_KEY, AstralSorcery.MODID);
+    public static final DeferredRegister<ObserverProvider> OBSERVER_REGISTER =
+            DeferredRegister.create(RegistryProviders.REGISTRY_NAME, AstralSorcery.MODID);
+    public static final DeferredRegister<MatchableStructure> STRUCTURE_REGISTER =
+            DeferredRegister.create(RegistryStructures.REGISTRY_NAME, AstralSorcery.MODID);
+
+    public static final Codec<ObserverProvider> PROVIDER_CODEC = ResourceLocation.CODEC.comapFlatMap(id -> {
+        ObserverProvider provider = RegistryProviders.getProvider(id);
+        return provider == null
+                ? DataResult.error(() -> "Unknown observer provider " + id)
+                : DataResult.success(provider);
+    }, ObserverProvider::getRegistryName);
 
     public static final ObserverRegistryObject STRUCTURE_EMPTY = registerStructure("empty", StructureBlockArray::new);
     public static final ObserverRegistryObject STRUCTURE_ALTAR_T2 =
-            registerCompoundStructure("altar_t2", PatternAltarT2::new, PatternAltarT2Expanded::new);
+            registerResonanceAltar();
     public static final ObserverRegistryObject STRUCTURE_ALTAR_T3 =
             registerStructure("altar_t3", PatternAltarT3::new);
     public static final ObserverRegistryObject STRUCTURE_ALTAR_T4 =
@@ -58,30 +66,27 @@ public class ObserversAS {
     public static final ObserverRegistryObject FOCUS_CRYSTAL_FILAMENTS =
             register("focus_crystal_filaments", FocusCrystalFilamentProvider::new);
 
-    private static ObserverRegistryObject registerCompoundStructure(String name, Supplier<StructureBlockArray>... structuresSupplier) {
-        RegistryObject<ObserverProvider<?>> providerObj =
-                OBSERVER_REGISTER.register(name, () -> {
-                    List<MatchableStructure> structures = Arrays.stream(structuresSupplier)
-                            .map(Supplier::get)
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList());
-                    return new CompoundObserverProviderStructure(structures);
-                });
-        return new ObserverRegistryObject(providerObj);
+    private static ObserverRegistryObject registerResonanceAltar() {
+        var standard = STRUCTURE_REGISTER.register("altar_t2", () -> new PatternAltarT2(AstralSorcery.key("altar_t2")));
+        var expanded = STRUCTURE_REGISTER.register("altar_t2_expanded",
+                () -> new PatternAltarT2Expanded(AstralSorcery.key("altar_t2_expanded")));
+        return register("altar_t2", id -> new CompoundObserverProviderStructure(id, () -> List.of(standard.get(), expanded.get())));
     }
 
-    private static ObserverRegistryObject registerStructure(String name, Supplier<StructureBlockArray> structureSupplier) {
-        return register(name, () -> new ObserverProviderStructure(structureSupplier.get()));
+    private static ObserverRegistryObject registerStructure(String name, Function<ResourceLocation, StructureBlockArray> factory) {
+        ResourceLocation id = AstralSorcery.key(name);
+        STRUCTURE_REGISTER.register(name, () -> factory.apply(id));
+        return register(name, ObserverProviderStructure::new);
     }
 
-    private static <T extends ObserverProvider<?>> ObserverRegistryObject register(String name, Supplier<T> provider) {
-        RegistryObject<ObserverProvider<?>> providerObj = OBSERVER_REGISTER.register(name, provider);
-        return new ObserverRegistryObject(providerObj);
+    private static ObserverRegistryObject register(String name, Function<ResourceLocation, ObserverProvider> factory) {
+        ResourceLocation id = AstralSorcery.key(name);
+        return new ObserverRegistryObject(OBSERVER_REGISTER.register(name, () -> factory.apply(id)));
     }
 
-    public static Optional<ObserverRegistryObject> getByName(ResourceKey<ObserverProvider<?>> key) {
+    public static Optional<ObserverRegistryObject> getByName(ResourceLocation id) {
         return OBSERVER_REGISTER.getEntries().stream()
-                .filter(entry -> entry.getKey().equals(key))
+                .filter(entry -> entry.getId().equals(id))
                 .findFirst()
                 .map(ObserverRegistryObject::new);
     }

@@ -564,14 +564,12 @@ public class Vector3 {
 
     @OnlyIn(Dist.CLIENT)
     public VertexConsumer drawPos(VertexConsumer buf) {
-        buf.addVertex((float) this.x, (float) this.y, (float) this.z);
-        return buf;
+        return buf.vertex(this.x, this.y, this.z);
     }
 
     @OnlyIn(Dist.CLIENT)
     public VertexConsumer drawPos(Matrix4f renderMatrix, VertexConsumer buf) {
-        buf.addVertex(renderMatrix, (float) this.x, (float) this.y, (float) this.z);
-        return buf;
+        return buf.vertex(renderMatrix, (float) this.x, (float) this.y, (float) this.z);
     }
 
     public double getX() {

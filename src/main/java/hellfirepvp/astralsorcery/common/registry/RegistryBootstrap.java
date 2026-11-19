@@ -80,6 +80,7 @@ public class RegistryBootstrap {
         StructureMarkerReplacementTypesAS.MARKER_REPLACEMENT_TYPE_REGISTER.register(modLifecycleBus);
 
         // ------------------ OBSERVER ----------------- //
+        ObserversAS.STRUCTURE_REGISTER.register(modLifecycleBus);
         ObserversAS.OBSERVER_REGISTER.register(modLifecycleBus);
     }
 }

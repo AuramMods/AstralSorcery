@@ -9,20 +9,19 @@
 package hellfirepvp.astralsorcery.common.util.data;
 
 import hellfirepvp.astralsorcery.common.structure.observer.CompoundObserverProviderStructure;
-import hellfirepvp.observerlib.api.ChangeObserver;
 import hellfirepvp.observerlib.api.ChangeSubscriber;
 import hellfirepvp.observerlib.api.ObserverHelper;
 import hellfirepvp.observerlib.api.ObserverProvider;
 import hellfirepvp.observerlib.api.structure.MatchableStructure;
 import hellfirepvp.observerlib.api.util.StructureBlockArray;
 import hellfirepvp.observerlib.common.change.ObserverProviderStructure;
+import hellfirepvp.observerlib.common.registry.RegistryStructures;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,18 +32,10 @@ import java.util.Optional;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public record ObserverRegistryObject(RegistryObject<? extends ObserverProvider<?>> observer) {
+public record ObserverRegistryObject(RegistryObject<ObserverProvider> observer) {
 
     public boolean isProviderFor(ChangeSubscriber<?> subscriber) {
-        return this.isProviderFor(subscriber.getObserver());
-    }
-
-    public boolean isProviderFor(ChangeObserver<?> observer) {
-        return this.isProviderFor(observer.getProvider());
-    }
-
-    public boolean isProviderFor(ObserverProvider<?> provider) {
-        return this.observer().get() == provider;
+        return this.observer().getId().equals(subscriber.getObserver().getProviderRegistryName());
     }
 
     public Component getObserverName() {
@@ -55,20 +46,32 @@ public record ObserverRegistryObject(RegistryObject<? extends ObserverProvider<?
         return ObserverHelper.getHelper().observeArea(level, pos, this.observer().get());
     }
 
-    public static Optional<StructureBlockArray> extractRequiredStructure(ObserverProvider<?> observerProvider) {
+    public static Optional<StructureBlockArray> extractRequiredStructure(ObserverProvider observerProvider) {
         return extractRequiredStructures(observerProvider).stream().findFirst();
     }
 
-    public static List<StructureBlockArray> extractRequiredStructures(ObserverProvider<?> observerProvider) {
-        List<MatchableStructure> structures = new ArrayList<>();
-        if (observerProvider instanceof ObserverProviderStructure structureProvider) {
-            structures.add(structureProvider.getStructure());
-        } else if (observerProvider instanceof CompoundObserverProviderStructure compoundProvider) {
-            structures.addAll(compoundProvider.getStructures());
+    public static List<StructureBlockArray> extractRequiredStructures(ObserverProvider observerProvider) {
+        if (observerProvider instanceof CompoundObserverProviderStructure compoundProvider) {
+            return compoundProvider.getStructures().stream()
+                    .filter(StructureBlockArray.class::isInstance)
+                    .map(StructureBlockArray.class::cast)
+                    .toList();
         }
-        return structures.stream()
-                .filter(matchableStructure -> matchableStructure instanceof StructureBlockArray)
-                .map(matchableStructure -> (StructureBlockArray) matchableStructure)
-                .toList();
+        if (observerProvider instanceof ObserverProviderStructure) {
+            MatchableStructure structure = RegistryStructures.getStructure(observerProvider.getRegistryName());
+            if (structure instanceof StructureBlockArray blocks) {
+                return List.of(blocks);
+            }
+        }
+        return List.of();
+    }
+
+    public Optional<StructureBlockArray> findStructureForPreview(Level level, BlockPos center) {
+        ObserverProvider provider = this.observer().get();
+        List<StructureBlockArray> structures = extractRequiredStructures(provider);
+        if (provider instanceof CompoundObserverProviderStructure) {
+            return structures.stream().filter(structure -> !structure.matches(level, center)).findFirst();
+        }
+        return structures.stream().findFirst();
     }
 }

@@ -16,13 +16,10 @@ import hellfirepvp.astralsorcery.common.item.base.InterceptInteractItem;
 import hellfirepvp.astralsorcery.common.item.base.ItemCustom;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.DataAS;
-import hellfirepvp.astralsorcery.common.structure.observer.CompoundObserverProviderStructure;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityTick;
 import hellfirepvp.astralsorcery.common.util.ChunkUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import hellfirepvp.observerlib.api.ObserverProvider;
 import hellfirepvp.observerlib.api.structure.MatchableStructure;
-import hellfirepvp.observerlib.common.change.ObserverProviderStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -95,8 +92,6 @@ public class WandItem extends ItemCustom implements InterceptInteractItem.Block 
         MiscUtil.getTileAt(level, pos, TileEntityTick.class, true).ifPresent(te -> {
             ObserverRegistryObject registryObject = te.getRequiredObserver();
             if (registryObject != null) {
-                ObserverProvider<?> observer = registryObject.observer().get();
-
                 boolean isValid = ((TileEntityTick<?>) te).getStructureObserver()
                         .map(sub -> sub.isValid(level))
                         .orElse(false);
@@ -104,17 +99,7 @@ public class WandItem extends ItemCustom implements InterceptInteractItem.Block 
                     return;
                 }
 
-                MatchableStructure neededStructure = null;
-                if (observer instanceof ObserverProviderStructure structureObserver) {
-                    neededStructure = structureObserver.getStructure();
-                } else if (observer instanceof CompoundObserverProviderStructure compoundStructureObserver) {
-                    for (MatchableStructure structure : compoundStructureObserver.getStructures()) {
-                        if (!structure.matches(level, pos)) {
-                            neededStructure = structure;
-                            break;
-                        }
-                    }
-                }
+                MatchableStructure neededStructure = registryObject.findStructureForPreview(level, pos).orElse(null);
                 if (neededStructure != null) {
                     if (player.isCreative() && player.isShiftKeyDown()) {
                         neededStructure.getContents().forEach((offset, state) -> {

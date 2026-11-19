@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.structure;
 
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.observerlib.api.util.StructureBlockArray;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -21,7 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class PatternCelestialGateway extends StructureBlockArray {
 
-    public PatternCelestialGateway() {
+    public PatternCelestialGateway(ResourceLocation id) {
+        super(id);
         this.addBlock(BlocksAS.CELESTIAL_GATEWAY.get(), 0, 0, 0);
 
         this.addBlockCube(BlocksAS.MARBLE_ARCH.get().defaultBlockState(), -3, -1, -3, 3, -1, 3);

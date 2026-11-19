@@ -9,6 +9,7 @@
 package hellfirepvp.astralsorcery.common.structure;
 
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 
 /**
@@ -20,7 +21,8 @@ import net.minecraft.world.level.block.Blocks;
  */
 public class PatternAltarT2Expanded extends PatternAltarT2 {
 
-    public PatternAltarT2Expanded() {
+    public PatternAltarT2Expanded(ResourceLocation id) {
+        super(id);
         this.addBlockCube(BlocksAS.MARBLE_SLAB.get().defaultBlockState(), -3, 0, -2, -3, 0,  2);
         this.addBlockCube(BlocksAS.MARBLE_SLAB.get().defaultBlockState(),  3, 0, -2,  3, 0,  2);
         this.addBlockCube(BlocksAS.MARBLE_SLAB.get().defaultBlockState(), -2, 0, -3,  2, 0, -3);

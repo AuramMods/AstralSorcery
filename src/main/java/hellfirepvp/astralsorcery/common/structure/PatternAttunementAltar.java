@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.structure;
 
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.observerlib.api.util.StructureBlockArray;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -20,7 +21,8 @@ import hellfirepvp.observerlib.api.util.StructureBlockArray;
  */
 public class PatternAttunementAltar extends StructureBlockArray implements PillarStructure {
 
-    public PatternAttunementAltar() {
+    public PatternAttunementAltar(ResourceLocation id) {
+        super(id);
         this.addBlock(BlocksAS.ATTUNEMENT_ALTAR.get(), 0, 0, 0);
 
         this.addBlockCube(BlocksAS.MARBLE_ARCH.get().defaultBlockState(), -7, -1, -8,  7, -1, -8);

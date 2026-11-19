@@ -9,6 +9,7 @@
 package hellfirepvp.astralsorcery.common.structure;
 
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -19,7 +20,8 @@ import hellfirepvp.astralsorcery.common.lib.BlocksAS;
  */
 public class PatternAltarT3 extends PatternAltarT2Expanded implements PillarStructure {
 
-    public PatternAltarT3() {
+    public PatternAltarT3(ResourceLocation id) {
+        super(id);
         this.addBlock(BlocksAS.ALTAR_LUMINANCE.get().defaultBlockState(), 0, 0, 0);
         this.addBlock(BlocksAS.MARBLE_CHISELED.get().defaultBlockState(),  5, 0,  5);
         this.addBlock(BlocksAS.MARBLE_CHISELED.get().defaultBlockState(), -5, 0,  5);
