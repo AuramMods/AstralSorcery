@@ -21,6 +21,7 @@
         "client.AccessorPostChain",
         "client.AccessorPostPass",
         "client.MixinAbstractClientPlayer",
+        "client.MixinClientLevel",
         "client.MixinGameRenderer",
         "client.MixinGui",
         "client.MixinItemRenderer",

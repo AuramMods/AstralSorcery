@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.util.time;
 
 import hellfirepvp.astralsorcery.common.data.sync.SyncDataManager;
 import hellfirepvp.astralsorcery.common.lib.types.SyncDataTypesAS;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.enderdragon.phases.DragonPhaseInstance;
@@ -24,6 +25,10 @@ import net.minecraft.world.phys.Vec3;
  * Date: 09.10.2026 / 13:48
  */
 public class TimeStopEntityHelper {
+
+    public static boolean canTick(Entity entity) {
+        return !(entity instanceof LivingEntity livingEntity) || !skipAndRunLivingTick(livingEntity);
+    }
 
     public static boolean isFrozenDirectly(LivingEntity entity) {
         if (entity.level().isClientSide()) {

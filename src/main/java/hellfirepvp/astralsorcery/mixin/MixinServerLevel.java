@@ -8,11 +8,14 @@
 
 package hellfirepvp.astralsorcery.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import hellfirepvp.astralsorcery.common.perk.type.AttributeTypeMiningSize;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
+import hellfirepvp.astralsorcery.common.util.time.TimeStopEntityHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,6 +30,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(ServerLevel.class)
 public class MixinServerLevel {
+
+    @WrapWithCondition(method = "tickNonPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
+    private boolean astralsorcery$tickUnfrozenEntity(Entity entity) {
+        return TimeStopEntityHelper.canTick(entity);
+    }
 
     @Inject(method = "destroyBlockProgress", at = @At("RETURN"))
     public void addMiningSizeDestroyProgress(int breakerId, BlockPos pos, int progress, CallbackInfo ci) {

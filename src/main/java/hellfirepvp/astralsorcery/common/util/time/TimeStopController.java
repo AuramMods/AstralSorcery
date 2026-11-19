@@ -24,7 +24,6 @@ import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -79,7 +78,6 @@ public class TimeStopController {
         bus.addListener(TimeStopController::onLevelTick);
         bus.addListener(freezeTimeout::onServerTick);
 
-        bus.addListener(TimeStopController::onLivingTick);
         bus.addListener(TimeStopController::onKnockback);
         bus.addListener(TimeStopController::onDestroyBlock);
 
@@ -104,12 +102,6 @@ public class TimeStopController {
             }
             return false;
         });
-    }
-
-    private static void onLivingTick(EntityTickEvent.Pre event) {
-        if (event.getEntity() instanceof LivingEntity livingEntity && TimeStopEntityHelper.skipAndRunLivingTick(livingEntity)) {
-            event.setCanceled(true);
-        }
     }
 
     private static void onKnockback(LivingKnockBackEvent event) {
