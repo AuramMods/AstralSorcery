@@ -11,13 +11,10 @@ package hellfirepvp.astralsorcery.common.container.provider;
 import hellfirepvp.astralsorcery.common.container.ContainerTomePapers;
 import hellfirepvp.astralsorcery.common.container.base.ContainerProviderCustom;
 import hellfirepvp.astralsorcery.common.lib.MenuTypesAS;
-import hellfirepvp.astralsorcery.common.util.data.MenuTypeRegistryObject;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import javax.annotation.Nullable;
 
@@ -42,7 +39,7 @@ public class ContainerTomePapersProvider extends ContainerProviderCustom<Contain
     }
 
     @Override
-    public void writeClientSideData(AbstractContainerMenu menu, FriendlyByteBuf buffer) {
+    public void writeClientSideData(ServerPlayer player, FriendlyByteBuf buffer) {
         buffer.writeInt(this.tomeSlotId);
     }
 

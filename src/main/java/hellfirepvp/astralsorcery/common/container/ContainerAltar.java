@@ -161,8 +161,6 @@ public abstract class ContainerAltar extends ContainerTileEntity<TileAltar> impl
         return this;
     }
 
-    public void writeClientData(FriendlyByteBuf buf) {}
-
     public static class Type {
 
         private final MenuTypeRegistryObject<? extends ContainerAltar> menuType;

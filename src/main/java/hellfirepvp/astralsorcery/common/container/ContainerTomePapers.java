@@ -60,7 +60,7 @@ public class ContainerTomePapers extends ContainerItemInSlot implements DefaultQ
             for (int column = 0; column < 9; column++) {
                 if (seenConstellations.isEmpty()) return;
 
-                BaseConstellation cst = seenConstellations.removeFirst();
+                BaseConstellation cst = seenConstellations.remove(0);
                 this.addSlot(new ConstellationPaperSlot(() -> cst, offsetX + column * 18, offsetY + (row * 18)));
             }
         }

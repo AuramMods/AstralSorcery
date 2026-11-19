@@ -16,6 +16,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -39,14 +40,13 @@ public abstract class ContainerProviderCustom<T extends AbstractContainerMenu> i
         return this.menuType.getDisplayName();
     }
 
-    @Override
-    public abstract void writeClientSideData(AbstractContainerMenu menu, FriendlyByteBuf buffer);
+    public abstract void writeClientSideData(ServerPlayer player, FriendlyByteBuf buffer);
 
     @Nullable
     @Override
     public abstract T createMenu(int containerId, Inventory playerInventory, Player player);
 
     public void open(ServerPlayer sPlayer) {
-        sPlayer.openMenu(this);
+        NetworkHooks.openScreen(sPlayer, this, buffer -> this.writeClientSideData(sPlayer, buffer));
     }
 }

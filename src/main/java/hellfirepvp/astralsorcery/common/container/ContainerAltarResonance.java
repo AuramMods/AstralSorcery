@@ -27,19 +27,11 @@ import javax.annotation.Nullable;
  */
 public class ContainerAltarResonance extends ContainerAltar {
 
-    private boolean isExpanded = false;
+    private final boolean isExpanded;
 
     public ContainerAltarResonance(@Nullable MenuType<?> menuType, TileAltar tile, Inventory playerInv, int containerId) {
         super(menuType, tile, playerInv, containerId);
-        tile.getStructureObserver().ifPresent(subscriber -> {
-            if (subscriber.getObserver() instanceof CompoundChangeObserverStructure compoundObserver) {
-                compoundObserver.getLastMatchedStructure().ifPresent(matchedStructure -> {
-                    if (matchedStructure instanceof PatternAltarT2Expanded) {
-                        this.isExpanded = true;
-                    }
-                });
-            }
-        });
+        this.isExpanded = matchesExpandedStructure(tile);
         this.initSlots(playerInv, tile);
     }
 
@@ -72,9 +64,10 @@ public class ContainerAltarResonance extends ContainerAltar {
         return this.isExpanded() ? new IntPoint(48, 173) : new IntPoint(28, 133);
     }
 
-    @Override
-    public void writeClientData(FriendlyByteBuf buf) {
-        super.writeClientData(buf);
-        buf.writeBoolean(this.isExpanded);
+    public static boolean matchesExpandedStructure(TileAltar tile) {
+        return tile.getStructureObserver().map(subscriber ->
+                subscriber.getObserver() instanceof CompoundChangeObserverStructure observer
+                        && observer.getLastMatchedStructure().filter(PatternAltarT2Expanded.class::isInstance).isPresent()
+        ).orElse(false);
     }
 }
