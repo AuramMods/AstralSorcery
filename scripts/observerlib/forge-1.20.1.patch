@@ -178,3 +178,121 @@
              } catch (NumberFormatException exc) {
                  continue;
              }
+--- a/src/main/java/hellfirepvp/observerlib/common/data/StructureMatchingBuffer.java
++++ b/src/main/java/hellfirepvp/observerlib/common/data/StructureMatchingBuffer.java
+@@ -45,6 +45,25 @@
+ 
+     @Override
+     public void updateTick(Level world) {}
++
++    @Override
++    public void onLoad(Level world) {
++        this.write(() -> {
++            // A subscriber is persisted in its center chunk and indexed in every affected chunk.
++            var restored = this.getSections().stream()
++                    .flatMap(section -> section.requestSubscribers.values().stream())
++                    .toList();
++            restored.forEach(this::indexSubscriber);
++        });
++    }
++
++    private void indexSubscriber(MatchChangeSubscriber<?> subscriber) {
++        BlockPos center = subscriber.getCenter();
++        this.getOrCreateSection(center).addSubscriber(center, subscriber);
++        for (ChunkPos chunk : subscriber.getObservableChunks()) {
++            this.getOrCreateSection(chunk.getWorldPosition()).addSubscriber(center, subscriber);
++        }
++    }
+ 
+     @Nonnull
+     public <T extends ChangeObserver> MatchChangeSubscriber<T> observeArea(Level world, BlockPos center, ObserverProvider provider) {
+@@ -63,28 +82,29 @@
+         T observer = (T) provider.provideObserver();
+         MatchChangeSubscriber<T> subscriber = new MatchChangeSubscriber<>(center, observer);
+ 
+-        for (ChunkPos chPos : subscriber.getObservableChunks()) {
+-            MatcherSectionData data = getOrCreateSection(chPos.getWorldPosition());
+-            this.write(() -> data.addSubscriber(center, subscriber));
+-            markDirty(data);
+-        }
+         observer.initialize(world, center);
++        this.write(() -> {
++            this.indexSubscriber(subscriber);
++            this.markDirty(center);
++        });
+         return subscriber;
+     }
+ 
+     public boolean removeSubscriber(BlockPos pos) {
+-        MatcherSectionData data = getOrCreateSection(pos);
+-
+-        ChangeSubscriber<? extends ChangeObserver> removed = this.write(() -> data.removeSubscriber(pos));
+-        if (removed != null) {
++        return this.write(() -> {
++            MatcherSectionData data = this.getOrCreateSection(pos);
++            ChangeSubscriber<? extends ChangeObserver> removed = data.removeSubscriber(pos);
++            if (removed == null) {
++                return false;
++            }
++
+             ObservableArea area = removed.getObserver().getObservableArea();
+-            for (ChunkPos chPos : area.getAffectedChunks(pos)) {
+-                MatcherSectionData matchData = getOrCreateSection(chPos.getWorldPosition());
+-                this.write(() -> matchData.removeSubscriber(pos));
+-                markDirty(matchData);
+-            }
+-        }
+-        return removed != null;
++            for (ChunkPos chunk : area.getAffectedChunks(pos)) {
++                this.getOrCreateSection(chunk.getWorldPosition()).removeSubscriber(pos);
++            }
++            this.markDirty(data);
++            return true;
++        });
+     }
+ 
+     @Nullable
+@@ -127,11 +147,19 @@
+             return this.requestSubscribers.put(pos, subscriber);
+         }
+ 
++        private boolean owns(BlockPos center) {
++            ChunkPos chunk = new ChunkPos(center);
++            return chunk.x == this.getSectionX() && chunk.z == this.getSectionZ();
++        }
++
+         @Override
+         public void writeToNBT(CompoundTag tag) {
+             ListTag subscriberList = new ListTag();
+ 
+             for (MatchChangeSubscriber<? extends ChangeObserver> sub : this.requestSubscribers.values()) {
++                if (!this.owns(sub.getCenter())) {
++                    continue;
++                }
+                 CompoundTag subscriber = new CompoundTag();
+                 NBTHelper.writeBlockPosToNBT(sub.getCenter(), subscriber);
+                 subscriber.putString("identifier", sub.getObserver().getProviderRegistryName().toString());
+@@ -153,6 +181,9 @@
+                 CompoundTag subscriberTag = subscriberList.getCompound(i);
+ 
+                 BlockPos requester = NBTHelper.readBlockPosFromNBT(subscriberTag);
++                if (!this.owns(requester)) {
++                    continue;
++                }
+                 ResourceLocation matchIdentifier = new ResourceLocation(subscriberTag.getString("identifier"));
+                 ObserverProvider observer = RegistryProviders.getProvider(matchIdentifier);
+                 if (observer == null) {
+--- a/src/main/java/hellfirepvp/observerlib/common/change/StructureIntegrityObserver.java
++++ b/src/main/java/hellfirepvp/observerlib/common/change/StructureIntegrityObserver.java
+@@ -31,7 +31,9 @@
+         ChunkPos ch = chunk.getPos();
+         for (MatchChangeSubscriber<?> subscriber : buf.getSubscribers(ch)) {
+             if (subscriber.observes(pos)) {
+-                subscriber.addChange(pos, oldState, newState);
+-                buf.markDirty(pos);
++                buf.write(() -> {
++                    subscriber.addChange(pos, oldState, newState);
++                    buf.markDirty(subscriber.getCenter());
++                });
+             }
+         }
