@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.common.extensions.IFluidExtension;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
@@ -100,7 +99,7 @@ public class ColorUtil {
     @OnlyIn(Dist.CLIENT)
     public static ColorWrapper getOverlayColor(FluidStack stack) {
         if (stack.isEmpty()) return ColorWrapper.WHITE;
-        return ColorWrapper.transparent(IClientFluidTypeExtensions.of(stack.getFluidType()).getTintColor(stack));
+        return ColorWrapper.transparent(IClientFluidTypeExtensions.of(stack.getFluid()).getTintColor(stack));
     }
 
     @OnlyIn(Dist.CLIENT)

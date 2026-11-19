@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 public record PerkDataType<D extends AbstractPerk.Data>(MapCodec<D> codec, StreamCodec<FriendlyByteBuf, D> syncCodec, Supplier<D> emptyDataFn) {
 
     public static final Codec<AbstractPerk.Data> DATA_CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_DATA_TYPES)
-            .dispatch(AbstractPerk.Data::getType, PerkDataType::codec);
+            .dispatch(AbstractPerk.Data::getType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, AbstractPerk.Data> DATA_SYNC_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_PERK_DATA_TYPES)
             .dispatch(AbstractPerk.Data::getType, PerkDataType::syncCodec);
 

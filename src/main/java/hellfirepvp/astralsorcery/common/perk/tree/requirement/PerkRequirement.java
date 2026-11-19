@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 public abstract class PerkRequirement {
 
     public static final Codec<PerkRequirement> CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_REQUIREMENT_TYPES)
-            .dispatch(PerkRequirement::getType, PerkRequirement.Type::codec);
+            .dispatch(PerkRequirement::getType, type -> type.codec().codec());
 
     public abstract Type<?> getType();
 

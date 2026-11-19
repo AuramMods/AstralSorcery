@@ -44,7 +44,7 @@ import java.util.Optional;
 public abstract class FocalPointNode {
 
     public static final Codec<FocalPointNode> CODEC = RegistriesAS.codec(RegistriesAS.KEY_FOCAL_NODE_TYPES)
-            .dispatch(FocalPointNode::getType, FocalPointNode.Type::codec);
+            .dispatch(FocalPointNode::getType, type -> type.codec().codec());
 
     public static final StreamCodec<FriendlyByteBuf, FocalPointNode> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_FOCAL_NODE_TYPES)
             .dispatch(FocalPointNode::getType, FocalPointNode.Type::syncCodec);

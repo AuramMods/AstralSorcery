@@ -28,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 public abstract class AltarRecipeOutputModifier {
 
     public static final Codec<AltarRecipeOutputModifier> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ALTAR_OUTPUT_MODIFIER_TYPES)
-            .dispatch(AltarRecipeOutputModifier::getType, AltarRecipeOutputModifier.Type::codec);
+            .dispatch(AltarRecipeOutputModifier::getType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, AltarRecipeOutputModifier> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ALTAR_OUTPUT_MODIFIER_TYPES)
             .dispatch(AltarRecipeOutputModifier::getType, AltarRecipeOutputModifier.Type::streamCodec);
 

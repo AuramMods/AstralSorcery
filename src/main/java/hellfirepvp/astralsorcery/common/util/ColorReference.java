@@ -47,7 +47,7 @@ public interface ColorReference {
             put(Chat.ID, Chat.STREAM_CODEC);
         }
     };
-    Codec<ColorReference> CODEC = ResourceLocation.CODEC.dispatch(ColorReference::getId, REFERENCES::get);
+    Codec<ColorReference> CODEC = CodecUtil.dispatchById(ColorReference::getId, REFERENCES::get);
     StreamCodec<ByteBuf, ColorReference> STREAM_CODEC = ByteBufCodecs.RESOURCE_LOCATION.dispatch(ColorReference::getId, STREAM_REFERENCES::get);
     ColorReference WHITE = RGB.of(0xFFFFFF);
 

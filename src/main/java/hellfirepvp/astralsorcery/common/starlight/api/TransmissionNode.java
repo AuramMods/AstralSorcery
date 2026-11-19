@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public interface TransmissionNode {
 
     Codec<TransmissionNode> CODEC = TransmissionNodeProvider.NODE_CODEC
-            .dispatch(TransmissionNode::getProvider, TransmissionNodeProvider::nodeCodec);
+            .dispatch(TransmissionNode::getProvider, provider -> provider.nodeCodec().codec());
 
     RandomSource rand = RandomSource.create();
 

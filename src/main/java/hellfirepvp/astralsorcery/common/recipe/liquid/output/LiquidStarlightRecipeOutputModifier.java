@@ -33,7 +33,7 @@ import java.util.List;
 public abstract class LiquidStarlightRecipeOutputModifier {
 
     public static final Codec<LiquidStarlightRecipeOutputModifier> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LIQUID_STARLIGHT_OUTPUT_MODIFIER_TYPES)
-            .dispatch(LiquidStarlightRecipeOutputModifier::getType, LiquidStarlightRecipeOutputModifier.Type::codec);
+            .dispatch(LiquidStarlightRecipeOutputModifier::getType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, LiquidStarlightRecipeOutputModifier> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LIQUID_STARLIGHT_OUTPUT_MODIFIER_TYPES)
             .dispatch(LiquidStarlightRecipeOutputModifier::getType, LiquidStarlightRecipeOutputModifier.Type::streamCodec);
 

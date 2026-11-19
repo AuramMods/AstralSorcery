@@ -48,7 +48,7 @@ import java.util.function.BiConsumer;
 public abstract class LumenBindingUsage {
 
     public static final Codec<LumenBindingUsage> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LUMEN_BINDING_USAGE_TYPES)
-            .dispatch(LumenBindingUsage::unwrapType, LumenBindingUsage.Type::codec);
+            .dispatch(LumenBindingUsage::unwrapType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, LumenBindingUsage> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN_BINDING_USAGE_TYPES)
             .dispatch(LumenBindingUsage::unwrapType, LumenBindingUsage.Type::streamCodec);
 

@@ -28,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 public abstract class LiquidInteractionResult {
 
     public static final Codec<LiquidInteractionResult> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LIQUID_INTERACTION_RESULT_TYPES)
-            .dispatch(LiquidInteractionResult::getType, LiquidInteractionResult.Type::codec);
+            .dispatch(LiquidInteractionResult::getType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, LiquidInteractionResult> STREAM_CODEC =
             ByteBufCodecs.registry(RegistriesAS.KEY_LIQUID_INTERACTION_RESULT_TYPES)
                     .dispatch(LiquidInteractionResult::getType, LiquidInteractionResult.Type::streamCodec);

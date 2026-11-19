@@ -35,7 +35,7 @@ import java.util.function.Function;
 public abstract class ArtifactCondition {
 
     public static final Codec<ArtifactCondition> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_CONDITION_TYPES)
-            .dispatch(ArtifactCondition::unwrapType, ArtifactCondition.Type::codec);
+            .dispatch(ArtifactCondition::unwrapType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, ArtifactCondition> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_CONDITION_TYPES)
             .dispatch(ArtifactCondition::unwrapType, ArtifactCondition.Type::streamCodec);
 

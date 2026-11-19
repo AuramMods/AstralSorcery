@@ -12,6 +12,7 @@ import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -38,8 +39,7 @@ public class CodecDispatchMap<T extends CodecDispatchMap.DataEntry<? extends E>,
     }
 
     public Codec<E> byNameCodec() {
-        return ResourceLocation.CODEC
-                .dispatch(this.nameResolver, key -> this.get(key).map(DataEntry::getCodec).orElseThrow());
+        return CodecUtil.dispatchById(this.nameResolver, key -> this.get(key).map(DataEntry::getCodec).orElse(null));
     }
 
     public StreamCodec<FriendlyByteBuf, E> streamCodec() {

@@ -17,12 +17,14 @@ import com.mojang.datafixers.util.Function7;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.WeightedEntry;
 
@@ -176,6 +178,18 @@ public class CodecUtil {
 
     public static <D, P> RecordCodecBuilder<D, Optional<P>> optional(Codec<P> codec, String field, Function<D, P> getter) {
         return codec.optionalFieldOf(field).forGetter(dataObj -> Optional.ofNullable(getter.apply(dataObj)));
+    }
+
+    public static <T> Codec<T> dispatchById(Function<T, ResourceLocation> idGetter,
+                                             Function<ResourceLocation, ? extends MapCodec<? extends T>> codecs) {
+        return ResourceLocation.CODEC.partialDispatch("type",
+                value -> DataResult.success(idGetter.apply(value)),
+                id -> {
+                    MapCodec<? extends T> codec = codecs.apply(id);
+                    return codec == null
+                            ? DataResult.error(() -> "Unknown type " + id)
+                            : DataResult.success(codec.codec());
+                });
     }
 
     public static <T> Codec<T> registryOr(Registry<T> registry, Codec<T> nonRegistryCodec) {

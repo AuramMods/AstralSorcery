@@ -25,7 +25,7 @@ import java.util.Optional;
 public interface TransmissionSourceNode extends TransmissionNode {
 
     Codec<TransmissionSourceNode> CODEC = TransmissionSourceNodeProvider.SOURCE_NODE_CODEC
-            .dispatch(TransmissionSourceNode::getProvider, TransmissionSourceNodeProvider::nodeCodec);
+            .dispatch(TransmissionSourceNode::getProvider, provider -> provider.nodeCodec().codec());
 
     Optional<StarlightTransmissionPacket> produceStarlight(Level level);
 

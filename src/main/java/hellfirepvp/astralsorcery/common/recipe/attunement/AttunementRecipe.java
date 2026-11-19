@@ -33,7 +33,7 @@ public abstract class AttunementRecipe<T extends AttunementRecipe.Active<?, ?>> 
 
     private static final Map<ResourceLocation, AttunementRecipe<?>> RECIPES = new HashMap<>();
     public static final Codec<AttunementRecipe<?>> CODEC = ResourceLocation.CODEC.xmap(RECIPES::get, AttunementRecipe::getIdentifier);
-    public static final Codec<AttunementRecipe.Active<?, ?>> ACTIVE_CODEC = CODEC.dispatch(Active::getRecipe, AttunementRecipe::codec);
+    public static final Codec<AttunementRecipe.Active<?, ?>> ACTIVE_CODEC = CODEC.dispatch(Active::getRecipe, recipe -> recipe.codec().codec());
 
     private final ResourceLocation identifier;
 

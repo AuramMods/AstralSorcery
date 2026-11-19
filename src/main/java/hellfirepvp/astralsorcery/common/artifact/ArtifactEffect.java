@@ -32,7 +32,7 @@ import java.util.function.Function;
 public abstract class ArtifactEffect {
 
     public static final Codec<ArtifactEffect> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_EFFECT_TYPES)
-            .dispatch(ArtifactEffect::unwrapType, ArtifactEffect.Type::codec);
+            .dispatch(ArtifactEffect::unwrapType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, ArtifactEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_EFFECT_TYPES)
             .dispatch(ArtifactEffect::unwrapType, ArtifactEffect.Type::streamCodec);
 

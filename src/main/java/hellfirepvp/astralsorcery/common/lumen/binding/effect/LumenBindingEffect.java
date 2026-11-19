@@ -44,7 +44,7 @@ import java.util.function.BiFunction;
 public abstract class LumenBindingEffect {
 
     public static final Codec<LumenBindingEffect> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LUMEN_BINDING_EFFECT_TYPES)
-            .dispatch(LumenBindingEffect::unwrapType, LumenBindingEffect.Type::codec);
+            .dispatch(LumenBindingEffect::unwrapType, type -> type.codec().codec());
     public static final StreamCodec<FriendlyByteBuf, LumenBindingEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN_BINDING_EFFECT_TYPES)
             .dispatch(LumenBindingEffect::unwrapType, LumenBindingEffect.Type::streamCodec);
 

@@ -65,7 +65,7 @@ import static hellfirepvp.astralsorcery.common.util.SidedHelper.getSide;
 public abstract class AbstractPerk<T extends AbstractPerk.Data> implements ModifierSource {
 
     public static final Codec<AbstractPerk<?>> DATAPACK_CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_TYPES)
-            .dispatch(AbstractPerk::getType, PerkType::perkCodec);
+            .dispatch(AbstractPerk::getType, type -> type.perkCodec().codec());
     public static final StreamCodec<FriendlyByteBuf, AbstractPerk<?>> TO_CLIENT_PERKTREE_CODEC = StreamCodec.of(
             (buf, perk) -> buf.writeResourceLocation(perk.getKey()),
             buf -> PerkTree.getInstance().getPerk(LogicalSide.CLIENT, buf.readResourceLocation()).orElseThrow()

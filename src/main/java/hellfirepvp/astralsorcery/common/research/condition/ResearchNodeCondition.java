@@ -30,7 +30,7 @@ import java.util.List;
 public interface ResearchNodeCondition {
 
     Codec<ResearchNodeCondition> CODEC = RegistriesAS.codec(RegistriesAS.KEY_RESEARCH_NODE_CONDITION_TYPES)
-            .dispatch(ResearchNodeCondition::getType, ResearchNodeCondition.Type::codec);
+            .dispatch(ResearchNodeCondition::getType, type -> type.codec().codec());
     StreamCodec<FriendlyByteBuf, ResearchNodeCondition> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_RESEARCH_NODE_CONDITION_TYPES)
             .dispatch(ResearchNodeCondition::getType, ResearchNodeCondition.Type::syncCodec);
 
