@@ -31,6 +31,7 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.LazyRecipeHolder;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.util.inventory.InventoryView;
+import hellfirepvp.astralsorcery.common.util.LumenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -344,7 +345,7 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
                 if (neededAmt > 0) {
                     LumenStack draw = required.copyWithAmount(neededAmt);
                     boolean didTransfer = LumenRequestHelper.requestRelayed(level, altarPos, draw).map(chain -> {
-                        ILumenHandler handler = level.getCapability(ILumenHandler.BLOCK, chain.getEndNode().getPos(), null);
+                        ILumenHandler handler = LumenUtil.getBlockHandler(level, chain.getEndNode().getPos());
                         if (handler != null) {
                             LumenStack drained = handler.drain(draw, ILumenHandler.Action.EXECUTE);
                             if (!drained.isEmpty()) {

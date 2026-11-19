@@ -23,6 +23,7 @@ import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.recipe.lightwell.LightwellRecipe;
 import hellfirepvp.astralsorcery.common.starlight.api.provider.TransmissionNodeProvider;
 import hellfirepvp.astralsorcery.common.starlight.transmission.StarlightTransmissionPacket;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityNetwork;
 import hellfirepvp.astralsorcery.common.tile.network.ForwardingStarlightReceiverNode;
 import hellfirepvp.astralsorcery.common.tile.network.provider.ForwardingStarlightReceiverNodeProvider;
@@ -227,7 +228,8 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
         return StarlightNetworkNodesAS.FORWARDING_RECEIVER_NODE;
     }
 
-    public static class Data extends TileEntityNetwork.Data {
+    public static class Data extends TileEntityNetwork.Data
+            implements TileCapabilities.ItemStorage, TileCapabilities.FluidStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> lightwellFields(inst).apply(inst, Data::new));
 
@@ -275,6 +277,7 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
                     .accessibleSides(Direction.DOWN);
         }
 
+        @Override
         public FluidTankView getFluidTank() {
             return this.newFluidTank().createTileView(this, this.fluidContents);
         }
@@ -290,6 +293,7 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
                     .accessibleSides(Direction.DOWN);
         }
 
+        @Override
         public FilteredInventoryView getInventory() {
             return this.newInventoryHandler().createTileView(this, this.inventoryContents);
         }

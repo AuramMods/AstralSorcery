@@ -31,6 +31,7 @@ import hellfirepvp.astralsorcery.common.lumen.capability.LumenStackList;
 import hellfirepvp.astralsorcery.common.lumen.transfer.LumenRequestHelper;
 import hellfirepvp.astralsorcery.common.starlight.api.provider.TransmissionNodeProvider;
 import hellfirepvp.astralsorcery.common.starlight.transmission.StarlightTransmissionPacket;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityLumenDisplay;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityNetwork;
 import hellfirepvp.astralsorcery.common.tile.network.ForwardingStarlightReceiverNode;
@@ -303,7 +304,7 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
         }
     }
 
-    public static class Data extends TileEntityNetwork.Data {
+    public static class Data extends TileEntityNetwork.Data implements TileCapabilities.LumenStorage {
 
         public static final int LUMEN_TANK_CAPACITY = 1000;
 
@@ -361,6 +362,7 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
                     .extractFilter((toExtract, existing) -> false);
         }
 
+        @Override
         public LumenHandlerView getLumenHandler() {
             return this.newLumenHandler().createTileView(this, this.getStoredLumen());
         }

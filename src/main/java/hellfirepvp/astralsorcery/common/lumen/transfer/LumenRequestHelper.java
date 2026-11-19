@@ -15,6 +15,7 @@ import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.lumen.LumenStack;
 import hellfirepvp.astralsorcery.common.util.RayTraceUtil;
 import hellfirepvp.astralsorcery.common.util.data.BiDiPair;
+import hellfirepvp.astralsorcery.common.util.LumenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -162,7 +163,7 @@ public class LumenRequestHelper {
 
     private static boolean canProvideLumen(Level level, LumenNode node, LumenStack lumenStack) {
         if (!node.getProvidedLumenTypes().contains(lumenStack.getLumen())) return false;
-        ILumenHandler handler = level.getCapability(ILumenHandler.BLOCK, node.getPos(), null);
+        ILumenHandler handler = LumenUtil.getBlockHandler(level, node.getPos());
         return handler != null && !handler.drain(lumenStack, ILumenHandler.Action.SIMULATE).isEmpty();
     }
 

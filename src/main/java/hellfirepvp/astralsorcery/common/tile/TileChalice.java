@@ -21,6 +21,7 @@ import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.recipe.liquid.interaction.LiquidInteractionRecipe;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityTick;
 import hellfirepvp.astralsorcery.common.util.*;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
@@ -45,7 +46,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -152,7 +153,7 @@ public class TileChalice extends TileEntityTick<TileChalice.Data> {
         MiscUtil.shuffle(lightwells, this.rand);
 
         for (BlockPos wellPos : lightwells) {
-            IFluidHandler wellHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, wellPos, Direction.DOWN);
+            IFluidHandler wellHandler = FluidUtil.getFluidHandler(level, wellPos, Direction.DOWN).orElse(null);
             if (wellHandler == null) {
                 continue;
             }
@@ -313,7 +314,7 @@ public class TileChalice extends TileEntityTick<TileChalice.Data> {
         return required.isEmpty();
     }
 
-    public static class Data extends TileEntityTick.Data {
+    public static class Data extends TileEntityTick.Data implements TileCapabilities.FluidStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> tickFields(inst).and(
                 CodecUtil.defaulted(FluidContainerList.CODEC, "fluidContents", FluidContainerList::create, Data::getFluidContents)
@@ -342,6 +343,7 @@ public class TileChalice extends TileEntityTick<TileChalice.Data> {
                     .accessibleSides(Direction.DOWN);
         }
 
+        @Override
         public FluidTankView getFluidTank() {
             return this.newFluidTank().createTileView(this, this.fluidContents);
         }

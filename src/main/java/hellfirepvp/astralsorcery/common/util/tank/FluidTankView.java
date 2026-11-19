@@ -134,19 +134,19 @@ public class FluidTankView implements IFluidHandler {
             if (tankContent.isEmpty()) {
                 return Math.min(capacity, fillStack.getAmount());
             }
-            if (!FluidStack.isSameFluidSameComponents(tankContent, fillStack)) {
+            if (!tankContent.isFluidEqual(fillStack)) {
                 return 0;
             }
             return Math.min(capacity - tankContent.getAmount(), fillStack.getAmount());
         }
 
         if (tankContent.isEmpty()) {
-            FluidStack newContent = fillStack.copyWithAmount(Math.min(capacity, fillStack.getAmount()));
+            FluidStack newContent = new FluidStack(fillStack, Math.min(capacity, fillStack.getAmount()));
             tank.setContent(newContent);
             this.onContentChanged(tankIndex);
             return newContent.getAmount();
         }
-        if (!FluidStack.isSameFluidSameComponents(tankContent, fillStack)) {
+        if (!tankContent.isFluidEqual(fillStack)) {
             return 0;
         }
 
@@ -176,7 +176,7 @@ public class FluidTankView implements IFluidHandler {
     private List<Integer> getDrainableTanks(FluidStack resource) {
         return IntStream.range(0, this.getTanks())
                 .filter(tank -> !this.getTank(tank).getContent().isEmpty())
-                .filter(tank -> FluidStack.isSameFluidSameComponents(this.getTank(tank).getContent(), resource))
+                .filter(tank -> this.getTank(tank).getContent().isFluidEqual(resource))
                 .boxed()
                 .toList();
     }
@@ -212,7 +212,7 @@ public class FluidTankView implements IFluidHandler {
         if (tankContent.isEmpty() || !this.extractFilter.canExtract(tankIndex, maxDrain, tankContent)) {
             return FluidStack.EMPTY;
         }
-        if (!drainedType.isEmpty() && !FluidStack.isSameFluidSameComponents(tankContent, drainedType)) {
+        if (!drainedType.isEmpty() && !tankContent.isFluidEqual(drainedType)) {
             return FluidStack.EMPTY;
         }
 
@@ -221,7 +221,7 @@ public class FluidTankView implements IFluidHandler {
             tank.getModifiableContent().shrink(canDrain);
             this.onContentChanged(tankIndex);
         }
-        return tankContent.copyWithAmount(canDrain);
+        return new FluidStack(tankContent, canDrain);
     }
 
     public void clearTanks() {

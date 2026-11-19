@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.common.tile;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntitySynchronized;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
@@ -43,7 +44,7 @@ public class TileFocusRelay extends TileEntitySynchronized<TileFocusRelay.Data> 
         return Data.CODEC;
     }
 
-    public static class Data extends TileEntitySynchronized.Data {
+    public static class Data extends TileEntitySynchronized.Data implements TileCapabilities.ItemStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 CodecUtil.defaulted(InventoryStackList.CODEC, "inventoryContents", InventoryStackList::create, Data::getInventoryContents)
@@ -65,6 +66,7 @@ public class TileFocusRelay extends TileEntitySynchronized<TileFocusRelay.Data> 
                     .stackSizeLimiter((slot, stack) -> 1);
         }
 
+        @Override
         public InventoryView getInventory() {
             return this.newRelayInventory().createTileView(this, this.getInventoryContents());
         }

@@ -8,12 +8,9 @@
 
 package hellfirepvp.astralsorcery.common.lumen;
 
-import hellfirepvp.astralsorcery.AstralSorcery;
-import net.minecraft.core.Direction;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.EntityCapability;
-import net.neoforged.neoforge.capabilities.ItemCapability;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,12 +24,7 @@ import java.util.Optional;
  */
 public interface ILumenHandler {
 
-    BlockCapability<ILumenHandler, @Nullable Direction> BLOCK =
-            BlockCapability.createSided(AstralSorcery.key("lumen_handler"), ILumenHandler.class);
-    EntityCapability<ILumenHandler, @Nullable Void> ENTITY =
-            EntityCapability.createVoid(AstralSorcery.key("lumen_handler"), ILumenHandler.class);
-    ItemCapability<ILumenHandler, @Nullable Void> ITEM =
-            ItemCapability.createVoid(AstralSorcery.key("lumen_handler"), ILumenHandler.class);
+    Capability<ILumenHandler> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
 
     enum Action {
 

@@ -50,7 +50,8 @@ public class LumenDataProvider implements IBlockComponentProvider, IServerDataPr
 
     @Override
     public void appendServerData(CompoundTag data, BlockAccessor accessor) {
-        ILumenHandler handler = accessor.getLevel().getCapability(ILumenHandler.BLOCK, accessor.getPosition(), null);
+        var blockEntity = accessor.getBlockEntity();
+        ILumenHandler handler = blockEntity == null ? null : blockEntity.getCapability(ILumenHandler.CAPABILITY).orElse(null);
         if (handler == null) return;
 
         var lumenData = new ListTag();

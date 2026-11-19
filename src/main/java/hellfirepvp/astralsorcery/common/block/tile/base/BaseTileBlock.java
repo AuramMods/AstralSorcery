@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,7 +77,7 @@ public abstract class BaseTileBlock<T extends BlockEntity> extends BaseEntityBlo
     protected void dropTileContents(BlockState state, Level level, BlockPos pos) {
         MiscUtil.getTileAt(level, pos, BlockEntity.class, true).ifPresent(tile -> {
             //Drop items from inventory/inventories
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, tile, null);
+            IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
             if (handler != null) {
                 Containers.dropContents(level, pos, ItemUtil.listContents(handler));
             }

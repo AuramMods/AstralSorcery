@@ -100,7 +100,7 @@ public class InventoryView implements IItemHandlerModifiable, Iterable<ItemStack
         int transferLimit = Math.min(this.getSlotLimit(slot), stack.getMaxStackSize());
 
         if (!existing.isEmpty()) {
-            if (!ItemStack.isSameItemSameComponents(stack, existing)) return stack;
+            if (!ItemStack.isSameItemSameTags(stack, existing)) return stack;
             transferLimit -= existing.getCount();
         }
 

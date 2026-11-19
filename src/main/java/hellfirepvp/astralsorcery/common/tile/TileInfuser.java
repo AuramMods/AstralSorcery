@@ -31,6 +31,7 @@ import hellfirepvp.astralsorcery.common.recipe.infusion.ActiveInfusionRecipe;
 import hellfirepvp.astralsorcery.common.recipe.infusion.InfusionRecipe;
 import hellfirepvp.astralsorcery.common.recipe.infusion.InfusionRecipeInput;
 import hellfirepvp.astralsorcery.common.sound.CategorizedSoundEvent;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityTick;
 import hellfirepvp.astralsorcery.common.util.*;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
@@ -315,7 +316,7 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
         }
     }
 
-    public static class Data extends TileEntityTick.Data {
+    public static class Data extends TileEntityTick.Data implements TileCapabilities.ItemStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> tickFields(inst).and(inst.group(
                 CodecUtil.defaulted(InventoryStackList.CODEC, "inventoryContents", InventoryStackList::create, Data::getInventoryContents),
@@ -349,6 +350,7 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
                     .stackSizeLimiter((slot, stack) -> 1);
         }
 
+        @Override
         public InventoryView getInventory() {
             return this.newRelayInventory().createTileView(this, this.getInventoryContents());
         }

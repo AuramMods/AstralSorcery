@@ -39,6 +39,7 @@ import hellfirepvp.astralsorcery.common.lumen.transfer.LumenRequestHelper;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.research.ResearchHelper;
 import hellfirepvp.astralsorcery.common.research.ResearchMessageHelper;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileDataOwned;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityLumenDisplay;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityTick;
@@ -149,7 +150,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                     } else {
                         LumenNode targetNode = requestChain.getEndNode();
                         LumenStack requiredPeek = LumenStack.of(requiredType, 100);
-                        ILumenHandler handler = level.getCapability(ILumenHandler.BLOCK, targetNode.getPos(), null);
+                        ILumenHandler handler = LumenUtil.getBlockHandler(level, targetNode.getPos());
                         if (handler == null || handler.drain(requiredPeek, ILumenHandler.Action.SIMULATE).isEmpty()) {
                             this.activeRequestChains.remove(requiredType);
                             requestChain = null;
@@ -190,7 +191,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                                 break;
                             }
                             LumenStack drainAttempt = LumenStack.of(additionalInput, fillableAttempts * additionalRequiredAmount);
-                            ILumenHandler handler = level.getCapability(ILumenHandler.BLOCK, requestChain.getEndNode().getPos(), null);
+                            ILumenHandler handler = LumenUtil.getBlockHandler(level, requestChain.getEndNode().getPos());
                             LumenStack drainable;
                             if (handler == null || (drainable = handler.drain(drainAttempt, ILumenHandler.Action.SIMULATE)).isEmpty()) {
                                 fillableAttempts = 0;
@@ -390,7 +391,8 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
         return Data.CODEC;
     }
 
-    public static class Data extends TileEntityTick.Data implements TileDataOwned {
+    public static class Data extends TileEntityTick.Data
+            implements TileDataOwned, TileCapabilities.ItemStorage, TileCapabilities.FluidStorage, TileCapabilities.LumenStorage {
 
         public static final int LUMEN_TANK_CAPACITY = 4000;
         public static final int TANK_CAPACITY = 2000;
@@ -509,6 +511,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                             this.doesAllowExtendedLumenTransfer() ? existing.getAmount() >= LUMEN_TANK_CAPACITY / 4 : existing.getAmount() >= LUMEN_TANK_CAPACITY / 2);
         }
 
+        @Override
         public LumenHandlerView getLumenHandler() {
             return this.newLumenHandler().createTileView(this, this.getLumenContents());
         }
@@ -521,6 +524,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                     .accessibleSides(Direction.DOWN);
         }
 
+        @Override
         public FluidTankView getFluidTank() {
             return this.newFluidTank().createTileView(this, this.fluidContents);
         }
@@ -538,6 +542,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                     .accessibleSides(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
         }
 
+        @Override
         public FilteredInventoryView getInventory() {
             return this.newInventoryHandler().createTileView(this, this.inventoryContents);
         }

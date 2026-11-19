@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.*;
@@ -61,7 +61,7 @@ public class WandBlockStorageHelper {
     }
 
     public static boolean consumeBlock(Player player, ItemStack match) {
-        IItemHandler inv = player.getCapability(Capabilities.ItemHandler.ENTITY);
+        IItemHandler inv = player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (inv == null) return false;
 
         for (int i = 0; i < inv.getSlots(); i++) {
@@ -168,7 +168,7 @@ public class WandBlockStorageHelper {
     }
 
     private static int countMatchingItems(Player player, ItemStack match) {
-        IItemHandler inv = player.getCapability(Capabilities.ItemHandler.ENTITY);
+        IItemHandler inv = player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (inv == null) return 0;
 
         int count = 0;

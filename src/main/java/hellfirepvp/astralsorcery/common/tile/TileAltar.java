@@ -34,6 +34,7 @@ import hellfirepvp.astralsorcery.common.research.ResearchTier;
 import hellfirepvp.astralsorcery.common.sound.CategorizedSoundEvent;
 import hellfirepvp.astralsorcery.common.starlight.api.provider.TransmissionNodeProvider;
 import hellfirepvp.astralsorcery.common.starlight.transmission.StarlightTransmissionPacket;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityLumenDisplay;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityNetwork;
 import hellfirepvp.astralsorcery.common.tile.network.ForwardingStarlightReceiverNode;
@@ -414,7 +415,7 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
         return !(newState.getBlock() instanceof AltarBlock);
     }
 
-    public static class Data extends TileEntityNetwork.Data {
+    public static class Data extends TileEntityNetwork.Data implements TileCapabilities.ItemStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> altarFields(inst).apply(inst, Data::new));
 
@@ -458,6 +459,11 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
         protected FilteredInventoryViewFactory newAltarInventory() {
             return FilteredInventoryViewFactory.filteredBuilder(9)
                     .accessibleSides(Direction.DOWN);
+        }
+
+        @Override
+        public InventoryView getInventory() {
+            return this.getAltarInventory();
         }
 
         public InventoryView getAltarInventory() {

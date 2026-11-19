@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -44,7 +44,7 @@ public class InteractUtil {
     @Nullable
     public static ItemInteractionResult tryTransferFluidIntoBlock(ItemStack heldStack, Player player, Level level, BlockPos pos, Consumer<ItemStack> stackUpdateFn) {
         IFluidHandler target = MiscUtil.getTileAt(level, pos, BlockEntity.class, true)
-                .map(blockEntity -> level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null))
+                .map(blockEntity -> blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null))
                 .orElse(null);
         if (heldStack.isEmpty() || target == null) {
             return null;
@@ -59,7 +59,7 @@ public class InteractUtil {
     @Nullable
     public static ItemInteractionResult tryTransferFluidFromBlock(ItemStack heldStack, Player player, Level level, BlockPos pos, Consumer<ItemStack> stackUpdateFn) {
         IFluidHandler target = MiscUtil.getTileAt(level, pos, BlockEntity.class, true)
-                .map(blockEntity -> level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null))
+                .map(blockEntity -> blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null))
                 .orElse(null);
         if (heldStack.isEmpty() || target == null) {
             return null;
@@ -74,7 +74,7 @@ public class InteractUtil {
     @Nullable
     public static ItemInteractionResult tryPlaceItemIntoBlock(ItemStack heldStack, Player player, Level level, BlockPos pos) {
         IItemHandler target = MiscUtil.getTileAt(level, pos, BlockEntity.class, true)
-                .map(blockEntity -> level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null))
+                .map(blockEntity -> blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null))
                 .orElse(null);
         if (target == null) {
             return null;

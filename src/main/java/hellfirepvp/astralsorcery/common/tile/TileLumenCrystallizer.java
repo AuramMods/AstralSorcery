@@ -29,6 +29,7 @@ import hellfirepvp.astralsorcery.common.lumen.capability.LumenStackList;
 import hellfirepvp.astralsorcery.common.lumen.transfer.LumenRequestHelper;
 import hellfirepvp.astralsorcery.common.recipe.infusion.ActiveInfusionRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenCrystallizationRecipe;
+import hellfirepvp.astralsorcery.common.tile.base.TileCapabilities;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityLumenDisplay;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityTick;
 import hellfirepvp.astralsorcery.common.util.*;
@@ -284,7 +285,8 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
         return Data.CODEC;
     }
 
-    public static class Data extends TileEntityTick.Data {
+    public static class Data extends TileEntityTick.Data
+            implements TileCapabilities.ItemStorage, TileCapabilities.FluidStorage, TileCapabilities.LumenStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> crystallizerFields(inst).apply(inst, Data::new));
 
@@ -356,6 +358,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
                     .accessibleSides(Direction.DOWN);
         }
 
+        @Override
         public FluidTankView getFluidTank() {
             return this.newFluidTank().createTileView(this, this.fluidContents);
         }
@@ -374,6 +377,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
                     .accessibleSides(Direction.DOWN);
         }
 
+        @Override
         public FilteredInventoryView getInventory() {
             return this.newInventoryHandler().createTileView(this, this.inventoryContents);
         }
@@ -386,6 +390,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
                             this.getContainedLumen().isEmpty() || this.getContainedLumen().isSameLumen(toAdd));
         }
 
+        @Override
         public LumenHandlerView getLumenHandler() {
             return this.newLumenHandler().createTileView(this, this.getLumenContents());
         }

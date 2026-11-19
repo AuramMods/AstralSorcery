@@ -14,7 +14,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.function.Supplier;
@@ -47,7 +47,7 @@ public class TileDisplaySlot extends ReadOnlySlot {
     public ItemStack getItem() {
         Level level = this.level.get();
         return MiscUtil.getTileAt(level, this.tilePos, this.expectedTileClass, false).map(tile -> {
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, this.tilePos, null);
+            IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
             if (handler == null || handler.getSlots() <= 0) return ItemStack.EMPTY;
             return handler.getStackInSlot(0).copy();
         }).orElse(ItemStack.EMPTY);

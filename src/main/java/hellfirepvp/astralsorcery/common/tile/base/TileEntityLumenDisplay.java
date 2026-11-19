@@ -16,7 +16,6 @@ import hellfirepvp.astralsorcery.common.util.tooltip.StoredLumenDisplayTooltip;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +44,7 @@ public interface TileEntityLumenDisplay {
         BlockEntity be = this.self();
         Level level = be.getLevel();
         if (level == null) return Optional.empty();
-        BlockState state = be.getBlockState();
-        ILumenHandler handler = level.getCapability(ILumenHandler.BLOCK, be.getBlockPos(), state, be, null);
+        ILumenHandler handler = be.getCapability(ILumenHandler.CAPABILITY).orElse(null);
         if (handler == null) return Optional.empty();
 
         List<StoredLumenComponent.StoredLumen> lumenList = new ArrayList<>();

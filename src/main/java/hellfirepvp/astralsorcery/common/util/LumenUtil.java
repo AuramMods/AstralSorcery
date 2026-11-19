@@ -14,8 +14,12 @@ import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lumen.ILumenHandler;
 import hellfirepvp.astralsorcery.common.lumen.LumenStack;
 import hellfirepvp.astralsorcery.common.lumen.transfer.LumenRequestChain;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import javax.annotation.Nullable;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -27,9 +31,15 @@ import net.minecraft.world.level.Level;
 //Inspired by utility of FluidUtil
 public class LumenUtil {
 
+    @Nullable
+    public static ILumenHandler getBlockHandler(Level level, BlockPos pos) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        return tile == null ? null : tile.getCapability(ILumenHandler.CAPABILITY).orElse(null);
+    }
+
     // Returns the lumen stack that was actually drained & successfully filled from the chain source
     public static LumenStack tryChainTransfer(ILumenHandler destination, Level level, LumenRequestChain transferChain, LumenStack transfer, ILumenHandler.Action action) {
-        ILumenHandler handler = level.getCapability(ILumenHandler.BLOCK, transferChain.getEndNode().getPos(), null);
+        ILumenHandler handler = getBlockHandler(level, transferChain.getEndNode().getPos());
         if (handler == null) return LumenStack.EMPTY;
         return tryLumenTransfer(destination, handler, transfer, action);
     }
@@ -63,7 +73,7 @@ public class LumenUtil {
 
     public static LumenStack fillItem(ItemStack destination, LumenStack transfer, ILumenHandler.Action action) {
         if (destination.isEmpty()) return LumenStack.EMPTY;
-        ILumenHandler handler = destination.getCapability(ILumenHandler.ITEM, null);
+        ILumenHandler handler = destination.getCapability(ILumenHandler.CAPABILITY).orElse(null);
         if (handler == null) handler = StoredLumenComponent.getAsHandlerAccess(destination);
         if (handler == null) return LumenStack.EMPTY;
         return fill(handler, transfer, action);
@@ -81,7 +91,7 @@ public class LumenUtil {
 
     public static LumenStack drainItem(ItemStack source, LumenStack transfer, ILumenHandler.Action action) {
         if (source.isEmpty()) return LumenStack.EMPTY;
-        ILumenHandler handler = source.getCapability(ILumenHandler.ITEM, null);
+        ILumenHandler handler = source.getCapability(ILumenHandler.CAPABILITY).orElse(null);
         if (handler == null) handler = StoredLumenComponent.getAsHandlerAccess(source);
         if (handler == null) return LumenStack.EMPTY;
         return drain(handler, transfer, action);

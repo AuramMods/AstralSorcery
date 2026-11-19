@@ -35,7 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class ItemUtil {
     }
 
     public static Map<Integer, ItemStack> findItemsInInventory(Player player, Predicate<ItemStack> match) {
-        IItemHandler inv = player.getCapability(Capabilities.ItemHandler.ENTITY);
+        IItemHandler inv = player.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (inv == null) return Map.of();
         return findItemsInInventory(inv, match);
     }
