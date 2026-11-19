@@ -16,15 +16,15 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class IsLumenBindableIngredient implements ICustomIngredient {
+public class IsLumenBindableIngredient implements AstralIngredient {
 
     public static final IsLumenBindableIngredient INSTANCE = new IsLumenBindableIngredient();
     public static final MapCodec<IsLumenBindableIngredient> CODEC = MapCodec.unit(INSTANCE);
@@ -58,14 +58,15 @@ public class IsLumenBindableIngredient implements ICustomIngredient {
 
     public boolean isPotionLumenBindable(ItemStack stack) {
         if (!stack.is(ItemsAS.STARDEW.get())) return false;
-        if (!stack.has(DataComponents.POTION_CONTENTS)) return false;
+        CompoundTag tag = stack.getTag();
+        if (tag == null || !(tag.contains("Potion", Tag.TAG_STRING) || tag.contains("CustomPotionEffects", Tag.TAG_LIST))) {
+            return false;
+        }
         if (stack.getDamageValue() == stack.getMaxDamage()) return false;
-        PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
-        if (contents == null) return false;
+        Potion potion = PotionUtils.getPotion(stack);
         boolean isPrismaticSet = DataComponentsAS.FLAGS.getOrDefault(stack, FlagsComponent.EMPTY).isSet(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN);
-        return contents.is(Potions.WATER) || (contents.potion().isEmpty() &&
-                ((isPrismaticSet && contents.customEffects().size() < 2) ||
-                        (!isPrismaticSet && contents.customEffects().size() < 3)));
+        int customEffects = PotionUtils.getCustomEffects(stack).size();
+        return potion == Potions.WATER || (potion == Potions.EMPTY && customEffects < (isPrismaticSet ? 2 : 3));
     }
 
     @Override
@@ -82,7 +83,7 @@ public class IsLumenBindableIngredient implements ICustomIngredient {
         inputDisplayCache = BuiltInRegistries.ITEM.stream()
                 .map(Item::getDefaultInstance)
                 .filter(IsLumenBindableIngredient.INSTANCE::test)
-                .peek(stack -> stack.set(DataComponents.ITEM_NAME, display))
+                .peek(stack -> stack.setHoverName(display))
                 .collect(MiscUtil.collectShuffledList(ArrayList::new));
         buildingCache = false;
         return inputDisplayCache;
@@ -98,7 +99,7 @@ public class IsLumenBindableIngredient implements ICustomIngredient {
     }
 
     @Override
-    public IngredientType<?> getType() {
-        return IngredientsAS.LUMEN_BINDABLE.get();
+    public AstralIngredientSerializer<?> getType() {
+        return IngredientsAS.LUMEN_BINDABLE;
     }
 }

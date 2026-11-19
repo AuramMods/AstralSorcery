@@ -8,36 +8,44 @@
 
 package hellfirepvp.astralsorcery.common.lib;
 
+import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.ingredient.*;
-import net.neoforged.neoforge.common.crafting.IngredientType;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.registries.RegisterEvent;
 
-/**
- * This class is part of the Astral Sorcery Mod
- * The complete source code for this mod can be found on GitHub.
- * Class: IngredientsAS
- * Created by HellFirePvP
- * Date: 07.09.2026 / 10:00
- */
-public class IngredientsAS {
+import java.util.List;
 
-    public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPE_REGISTER =
-            DeferredRegister.create(NeoForgeRegistries.INGREDIENT_TYPES, AstralSorcery.MODID);
+public final class IngredientsAS {
 
-    public static final RegistryObject<IngredientType<IngredientBridge>> INGREDIENT_BRIDGE =
-            INGREDIENT_TYPE_REGISTER.register("bridge", () -> new IngredientType<>(IngredientBridge.CODEC));
+    public static final AstralIngredientSerializer<IngredientBridge> INGREDIENT_BRIDGE =
+            serializer("bridge", IngredientBridge.CODEC);
+    public static final AstralIngredientSerializer<IsEnchantedIngredient> IS_ENCHANTED =
+            serializer("is_enchanted", IsEnchantedIngredient.CODEC);
+    public static final AstralIngredientSerializer<IsStableArtifactIngredient> IS_STABLE_ARTIFACT =
+            serializer("is_stable_artifact", IsStableArtifactIngredient.CODEC);
+    public static final AstralIngredientSerializer<IsFlagSetIngredient> IS_FLAG_SET =
+            serializer("is_flag_set", IsFlagSetIngredient.CODEC);
+    public static final AstralIngredientSerializer<IsLumenBindableIngredient> LUMEN_BINDABLE =
+            serializer("lumen_bindable", IsLumenBindableIngredient.CODEC);
+    public static final AstralIngredientSerializer<HasStoredLumenIngredient> STORED_LUMEN =
+            serializer("has_stored_lumen", HasStoredLumenIngredient.CODEC);
+    public static final AstralIngredientSerializer<StackDataIngredient<?>> STACK_DATA =
+            serializer("stack_data", StackDataIngredient.CODEC);
 
-    public static final RegistryObject<IngredientType<IsEnchantedIngredient>> IS_ENCHANTED =
-            INGREDIENT_TYPE_REGISTER.register("is_enchanted", () -> new IngredientType<>(IsEnchantedIngredient.CODEC));
-    public static final RegistryObject<IngredientType<? extends IsStableArtifactIngredient>> IS_STABLE_ARTIFACT =
-            INGREDIENT_TYPE_REGISTER.register("is_stable_artifact", () -> new IngredientType<>(IsStableArtifactIngredient.CODEC));
-    public static final RegistryObject<IngredientType<? extends IsFlagSetIngredient>> IS_FLAG_SET =
-            INGREDIENT_TYPE_REGISTER.register("is_flag_set", () -> new IngredientType<>(IsFlagSetIngredient.CODEC));
-    public static final RegistryObject<IngredientType<? extends IsLumenBindableIngredient>> LUMEN_BINDABLE =
-            INGREDIENT_TYPE_REGISTER.register("lumen_bindable", () -> new IngredientType<>(IsLumenBindableIngredient.CODEC));
-    public static final RegistryObject<IngredientType<? extends HasStoredLumenIngredient>> STORED_LUMEN =
-            INGREDIENT_TYPE_REGISTER.register("has_stored_lumen", () -> new IngredientType<>(HasStoredLumenIngredient.CODEC));
+    private IngredientsAS() {}
+
+    public static void register(RegisterEvent event) {
+        if (event.getRegistryKey().equals(Registries.RECIPE_SERIALIZER)) {
+            for (AstralIngredientSerializer<?> serializer : List.of(
+                    INGREDIENT_BRIDGE, IS_ENCHANTED, IS_STABLE_ARTIFACT, IS_FLAG_SET, LUMEN_BINDABLE, STORED_LUMEN, STACK_DATA)) {
+                CraftingHelper.register(serializer.id(), serializer);
+            }
+        }
+    }
+
+    private static <T extends AstralIngredient> AstralIngredientSerializer<T> serializer(String name, MapCodec<T> codec) {
+        return new AstralIngredientSerializer<>(AstralSorcery.key(name), codec);
+    }
 }

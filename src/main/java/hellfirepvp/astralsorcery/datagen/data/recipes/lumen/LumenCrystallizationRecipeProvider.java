@@ -20,7 +20,6 @@ import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.recipe.builder.LumenCrystallizationRecipeBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -29,7 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CompoundIngredient;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.StackDataIngredient;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -150,8 +149,6 @@ public class LumenCrystallizationRecipeProvider extends RecipeProvider {
     }
     
     private static Ingredient lumenCrystal(Holder<Lumen> type) {
-        return DataComponentIngredient.of(false, DataComponentPredicate.builder()
-                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(type))
-                .build(), ItemsAS.LUMEN_CRYSTAL.asItem());
+        return StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(type), ItemsAS.LUMEN_CRYSTAL);
     }
 }

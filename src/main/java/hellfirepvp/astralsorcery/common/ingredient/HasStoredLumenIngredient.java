@@ -14,11 +14,8 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.IngredientsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
 
 import java.util.stream.Stream;
 
@@ -29,7 +26,7 @@ import java.util.stream.Stream;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class HasStoredLumenIngredient implements ICustomIngredient {
+public class HasStoredLumenIngredient implements AstralIngredient {
 
     public static final HasStoredLumenIngredient INSTANCE = new HasStoredLumenIngredient();
     public static final MapCodec<HasStoredLumenIngredient> CODEC = MapCodec.unit(INSTANCE);
@@ -49,7 +46,7 @@ public class HasStoredLumenIngredient implements ICustomIngredient {
         if (displayStack != null) return Stream.of(displayStack);
 
         displayStack = ItemsAS.STARDUST.toStack();
-        displayStack.set(DataComponents.ITEM_NAME, Component.translatable("ingredient.astralsorcery.has_stored_lumen.description"));
+        displayStack.setHoverName(Component.translatable("ingredient.astralsorcery.has_stored_lumen.description"));
 
         return Stream.of(displayStack);
     }
@@ -60,8 +57,8 @@ public class HasStoredLumenIngredient implements ICustomIngredient {
     }
 
     @Override
-    public IngredientType<?> getType() {
-        return IngredientsAS.STORED_LUMEN.get();
+    public AstralIngredientSerializer<?> getType() {
+        return IngredientsAS.STORED_LUMEN;
     }
 
     public static void clearDisplayCache() {

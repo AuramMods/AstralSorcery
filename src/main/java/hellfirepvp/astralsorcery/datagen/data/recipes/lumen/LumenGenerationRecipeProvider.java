@@ -23,7 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CompoundIngredient;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.StackDataIngredient;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -133,11 +133,11 @@ public class LumenGenerationRecipeProvider extends RecipeProvider {
                 .addLumenCombinationInput(LumenAS.DISCIDIA.asLumen(), 16)
                 .save(recipeOutput);
 
-        CompoundIngredient matchAnyArtifactShard = new CompoundIngredient(RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
+        Ingredient matchAnyArtifactShard = CompoundIngredient.of(RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
                 .map(ArtifactTypeComponent::new)
-                .map(typeCmp -> DataComponentIngredient.of(false, DataComponentsAS.ARTIFACT_TYPE, typeCmp, ItemsAS.ARTIFACT_SHARD))
-                .toList());
-        LumenGenerationRecipeBuilder.builder(matchAnyArtifactShard.toVanilla(), LumenAS.PRISMATIC.get())
+                .map(typeCmp -> StackDataIngredient.of(DataComponentsAS.ARTIFACT_TYPE, typeCmp, ItemsAS.ARTIFACT_SHARD))
+                .toArray(Ingredient[]::new));
+        LumenGenerationRecipeBuilder.builder(matchAnyArtifactShard, LumenAS.PRISMATIC.get())
                 .producedLumenAmount(2)
                 .productionAttemptMultiplier(2.5F)
                 .catalystShatterMultiplier(2F)

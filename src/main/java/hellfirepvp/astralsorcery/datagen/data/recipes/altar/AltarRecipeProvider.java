@@ -32,7 +32,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CompoundIngredient;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.StackDataIngredient;
 import net.minecraftforge.common.crafting.IntersectionIngredient;
 import net.minecraftforge.fluids.FluidType;
 
@@ -252,10 +252,10 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .addInput('S', ItemsAS.STARDUST)
                 .save(recipeOutput);
 
-        CompoundIngredient matchAnyArtifactShard = new CompoundIngredient(RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
+        Ingredient matchAnyArtifactShard = CompoundIngredient.of(RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
                 .map(ArtifactTypeComponent::new)
-                .map(typeCmp -> DataComponentIngredient.of(false, DataComponentsAS.ARTIFACT_TYPE, typeCmp, ItemsAS.ARTIFACT_SHARD))
-                .toList());
+                .map(typeCmp -> StackDataIngredient.of(DataComponentsAS.ARTIFACT_TYPE, typeCmp, ItemsAS.ARTIFACT_SHARD))
+                .toArray(Ingredient[]::new));
         AltarRecipeBuilder.builder(TileAltar.AltarType.ILLUMINATION)
                 .setRecipeId(ItemsAS.AKASHIC_SINGULARITY, "_with_generated_artifact_loot")
                 .addOutput(ItemsAS.AKASHIC_SINGULARITY)

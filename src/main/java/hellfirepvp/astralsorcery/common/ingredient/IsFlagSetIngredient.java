@@ -15,8 +15,6 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.IngredientsAS;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
 
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -28,7 +26,7 @@ import java.util.stream.Stream;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public record IsFlagSetIngredient(FlagsComponent.Flag flag, FlagState state) implements ICustomIngredient {
+public record IsFlagSetIngredient(FlagsComponent.Flag flag, FlagState state) implements AstralIngredient {
 
     public static final MapCodec<IsFlagSetIngredient> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             FlagsComponent.Flag.CODEC.fieldOf("flag").forGetter(IsFlagSetIngredient::flag),
@@ -59,8 +57,8 @@ public record IsFlagSetIngredient(FlagsComponent.Flag flag, FlagState state) imp
     }
 
     @Override
-    public IngredientType<?> getType() {
-        return IngredientsAS.IS_FLAG_SET.get();
+    public AstralIngredientSerializer<?> getType() {
+        return IngredientsAS.IS_FLAG_SET;
     }
 
     public enum FlagState implements StringRepresentable {

@@ -19,14 +19,13 @@ import hellfirepvp.astralsorcery.common.recipe.builder.LiquidStarlightRecipeBuil
 import hellfirepvp.astralsorcery.common.recipe.liquid.output.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CompoundIngredient;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.StackDataIngredient;
 import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 
 import java.util.List;
@@ -112,13 +111,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_virel",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.VIREL))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.VIREL), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(LiquidStarlightOutputEngraveLumen.builder()
@@ -135,13 +128,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_solyn",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.SOLYN))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.SOLYN), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(LiquidStarlightOutputEngraveLumen.builder()
@@ -158,13 +145,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_nullae",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.NULLAE))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.NULLAE), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(LiquidStarlightOutputEngraveLumen.builder()
@@ -181,13 +162,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_caldor",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.CALDOR))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.CALDOR), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(LiquidStarlightOutputEngraveLumen.builder()
@@ -218,13 +193,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_dynamis",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.DYNAMIS))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.DYNAMIS), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(minorBuilder.build())
@@ -236,13 +205,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_aion",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.AION))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.AION), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(majorBuilder.build())
@@ -268,13 +231,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_hyle",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.HYLE))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.HYLE), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(elementaryBuilder.build())
@@ -286,13 +243,7 @@ public class LiquidStarlightRecipeProvider extends RecipeProvider {
         LiquidStarlightRecipeBuilder.builder("engrave_lumen_akasha",
                         new SizedIngredient(Ingredient.of(TagsAS.Items.CRYSTAL), 1),
                         List.of(
-                                new SizedIngredient(DataComponentIngredient.of(
-                                        false,
-                                        DataComponentPredicate.builder()
-                                                .expect(DataComponentsAS.LUMEN.get(), new LumenComponent(LumenAS.AKASHA))
-                                                .build(),
-                                        ItemsAS.LUMEN_CRYSTAL.asItem()
-                                ), 1),
+                                new SizedIngredient(StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(LumenAS.AKASHA), ItemsAS.LUMEN_CRYSTAL), 1),
                                 new SizedIngredient(Ingredient.of(ItemsAS.RESONATING_GEM), 1)
                         ))
                 .addOutputModifier(complexBuilder.build())

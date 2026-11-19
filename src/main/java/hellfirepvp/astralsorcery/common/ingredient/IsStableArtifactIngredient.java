@@ -16,11 +16,8 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.IngredientsAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
 
 import java.util.stream.Stream;
 
@@ -31,7 +28,7 @@ import java.util.stream.Stream;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class IsStableArtifactIngredient implements ICustomIngredient {
+public class IsStableArtifactIngredient implements AstralIngredient {
 
     public static final IsStableArtifactIngredient INSTANCE = new IsStableArtifactIngredient();
     public static final MapCodec<IsStableArtifactIngredient> CODEC = MapCodec.unit(INSTANCE);
@@ -56,7 +53,7 @@ public class IsStableArtifactIngredient implements ICustomIngredient {
                         cmp = cmp.changeStability(ArtifactStability.STABLE);
                         DataComponentsAS.ARTIFACT.set(artifact, cmp);
                     }
-                    artifact.set(DataComponents.ITEM_NAME, display);
+                    artifact.setHoverName(display);
                 });
     }
 
@@ -66,7 +63,7 @@ public class IsStableArtifactIngredient implements ICustomIngredient {
     }
 
     @Override
-    public IngredientType<?> getType() {
-        return IngredientsAS.IS_STABLE_ARTIFACT.get();
+    public AstralIngredientSerializer<?> getType() {
+        return IngredientsAS.IS_STABLE_ARTIFACT;
     }
 }

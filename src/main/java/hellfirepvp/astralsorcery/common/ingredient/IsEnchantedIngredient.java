@@ -12,14 +12,11 @@ import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.lib.IngredientsAS;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,7 @@ import java.util.stream.Stream;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class IsEnchantedIngredient implements ICustomIngredient {
+public class IsEnchantedIngredient implements AstralIngredient {
 
     public static final IsEnchantedIngredient INSTANCE = new IsEnchantedIngredient();
     public static final MapCodec<IsEnchantedIngredient> CODEC = MapCodec.unit(INSTANCE);
@@ -44,7 +41,7 @@ public class IsEnchantedIngredient implements ICustomIngredient {
     @Override
     public boolean test(ItemStack stack) {
         if (getDisplayCache().contains(stack)) return true; //Hard-test against specifically created display objects
-        return EnchantmentHelper.hasAnyEnchantments(stack);
+        return !EnchantmentHelper.getEnchantments(stack).isEmpty();
     }
 
     @Override
@@ -59,7 +56,7 @@ public class IsEnchantedIngredient implements ICustomIngredient {
         inputDisplayCache = BuiltInRegistries.ITEM.stream()
                 .map(Item::getDefaultInstance)
                 .filter(ItemStack::isEnchantable)
-                .peek(stack -> stack.set(DataComponents.ITEM_NAME, display))
+                .peek(stack -> stack.setHoverName(display))
                 .collect(MiscUtil.collectShuffledList(ArrayList::new));
         return inputDisplayCache;
     }
@@ -74,7 +71,7 @@ public class IsEnchantedIngredient implements ICustomIngredient {
     }
 
     @Override
-    public IngredientType<?> getType() {
-        return IngredientsAS.IS_ENCHANTED.get();
+    public AstralIngredientSerializer<?> getType() {
+        return IngredientsAS.IS_ENCHANTED;
     }
 }

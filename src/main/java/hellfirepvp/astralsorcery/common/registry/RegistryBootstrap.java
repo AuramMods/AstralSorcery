@@ -36,7 +36,7 @@ public class RegistryBootstrap {
         LootAS.LOOT_CONDITION_REGISTER.register(modLifecycleBus);
         LootAS.GLOBAL_LOOT_FUNCTION_REGISTER.register(modLifecycleBus);
         MenuTypesAS.MENU_TYPE_REGISTER.register(modLifecycleBus);
-        IngredientsAS.INGREDIENT_TYPE_REGISTER.register(modLifecycleBus);
+        modLifecycleBus.addListener(IngredientsAS::register);
         RecipeTypesAS.RECIPE_TYPE_REGISTER.register(modLifecycleBus);
         RecipeTypesAS.RECIPE_SERIALIZER_REGISTER.register(modLifecycleBus);
         FluidsAS.FLUID_REGISTER.register(modLifecycleBus);

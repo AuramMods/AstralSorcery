@@ -35,7 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.AstralIngredient;
 import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 import net.minecraftforge.fluids.FluidStack;
 import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
@@ -139,7 +139,7 @@ public class AltarRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public AltarRecipeBuilder addInput(Character key, ICustomIngredient input) {
+    public AltarRecipeBuilder addInput(Character key, AstralIngredient input) {
         return this.addInput(key, input.toVanilla());
     }
 
@@ -240,7 +240,7 @@ public class AltarRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public AltarRecipeBuilder addRequiredAdditionalInput(int count, ICustomIngredient ingredient) {
+    public AltarRecipeBuilder addRequiredAdditionalInput(int count, AstralIngredient ingredient) {
         return this.addRequiredAdditionalInput(count, ingredient.toVanilla());
     }
 

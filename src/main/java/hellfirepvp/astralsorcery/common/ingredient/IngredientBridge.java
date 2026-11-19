@@ -19,8 +19,6 @@ import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -41,11 +39,11 @@ import java.util.stream.Stream;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public final class IngredientBridge implements ICustomIngredient {
+public final class IngredientBridge implements AstralIngredient {
 
     public static final IngredientBridge EMPTY = of(Ingredient.EMPTY);
     public static final MapCodec<IngredientBridge> CODEC = StringRepresentable.fromEnum(Type::values)
-            .dispatchMap(ingredient -> ingredient.type, Type::getIngredientCodec);
+            .dispatchMap(ingredient -> ingredient.type, type -> type.getIngredientCodec().codec());
     public static final StreamCodec<FriendlyByteBuf, IngredientBridge> STREAM_CODEC =
             Type.STREAM_CODEC.dispatch(ing -> ing.type, Type::getIngredientStreamCodec);
 
@@ -99,7 +97,7 @@ public final class IngredientBridge implements ICustomIngredient {
     public boolean isSimple() {
         return switch (this.type) {
             case ITEM -> this.ingredient.isSimple();
-            case FLUID -> this.fluidIngredient.ingredient().isSimple();
+            case FLUID -> false;
         };
     }
 
@@ -143,8 +141,8 @@ public final class IngredientBridge implements ICustomIngredient {
     }
 
     @Override
-    public IngredientType<?> getType() {
-        return IngredientsAS.INGREDIENT_BRIDGE.get();
+    public AstralIngredientSerializer<?> getType() {
+        return IngredientsAS.INGREDIENT_BRIDGE;
     }
 
     public enum Type implements StringRepresentable {
