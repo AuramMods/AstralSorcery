@@ -14,7 +14,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 
 /**
@@ -48,7 +49,8 @@ public class StructurePreviewHelper {
         }
     }
 
-    public static void tickPreview(ClientTickEvent.Post event) {
+    public static void tickPreview(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         if (currentPreview == null) return;
         Player player = Minecraft.getInstance().player;
         if (player == null) {

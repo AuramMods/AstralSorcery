@@ -30,10 +30,11 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import org.joml.Quaternionf;
 
 import java.util.Optional;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -88,7 +89,8 @@ public class GatewayInterfaceRenderHelper {
         }
     }
 
-    public static void onClientTick(ClientTickEvent.Post event) {
+    public static void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         GatewayInterfaceRenderHelper.getInstance().getCurrentUI().ifPresent(GatewayUserInterface::tick);
     }
 

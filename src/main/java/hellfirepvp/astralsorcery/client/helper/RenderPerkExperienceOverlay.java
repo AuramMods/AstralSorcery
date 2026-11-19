@@ -33,8 +33,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
@@ -54,7 +55,8 @@ public class RenderPerkExperienceOverlay {
         event.registerBelow(VanillaGuiLayers.EXPERIENCE_BAR, PERK_EXPERIENCE_ID, RENDERER);
     }
 
-    public static void onClientTick(ClientTickEvent.Pre event) {
+    public static void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 

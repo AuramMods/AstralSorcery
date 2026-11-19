@@ -18,12 +18,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -85,8 +86,9 @@ public class TimeStopController {
         bus.addListener(TimeStopController::onClientEffectTick);
     }
 
-    private static void onLevelTick(LevelTickEvent.Pre event) {
-        if (!(event.getLevel() instanceof ServerLevel sLevel)) return;
+    private static void onLevelTick(LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
+        if (!(event.level instanceof ServerLevel sLevel)) return;
 
         activeStopZones.getOrDefault(sLevel.dimension(), Collections.emptyMap()).values().removeIf(zone -> {
             if (!zone.isActive()) {
@@ -122,7 +124,8 @@ public class TimeStopController {
         }
     }
 
-    private static void onClientEffectTick(ClientTickEvent.Pre event) {
+    private static void onClientEffectTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         TimeStopEffectHelper.playClientEffectTick();
     }
 

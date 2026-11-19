@@ -37,7 +37,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
@@ -151,7 +152,8 @@ public final class EffectHandler {
     }
     */
 
-    public void tick(ClientTickEvent.Post event) {
+    public void tick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         if (this.clear) {
             this.sources.forEach(EntityFX::setRemoved);
             this.sources.clear();

@@ -23,10 +23,11 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import java.util.List;
 import java.util.function.Predicate;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -37,7 +38,8 @@ import java.util.function.Predicate;
  */
 public class FocalPointEffectHelper {
 
-    public static void onClientTick(ClientTickEvent.Pre event) {
+    public static void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         if (Minecraft.getInstance().isPaused()) return;
 
         ClientLevel level = Minecraft.getInstance().level;

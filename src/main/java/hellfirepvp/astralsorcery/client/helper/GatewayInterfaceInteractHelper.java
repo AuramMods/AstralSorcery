@@ -25,8 +25,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
@@ -58,7 +59,8 @@ public class GatewayInterfaceInteractHelper {
         bus.addListener(GatewayInterfaceInteractHelper::onFovModifier);
     }
 
-    private static void onClientInteractTick(ClientTickEvent.Post event) {
+    private static void onClientInteractTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         if (!focusTarget()) return;
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         GatewayUserInterface ui = GatewayInterfaceRenderHelper.getInstance().getCurrentUI().orElseThrow();

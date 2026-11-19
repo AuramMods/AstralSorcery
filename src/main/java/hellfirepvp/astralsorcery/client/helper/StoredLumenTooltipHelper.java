@@ -16,7 +16,6 @@ import hellfirepvp.astralsorcery.common.util.tooltip.StoredLumenDisplayTooltip;
 import net.minecraft.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 
 import java.util.HashSet;

@@ -19,8 +19,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -37,7 +38,8 @@ public class StarlightTransmissionEffectHelper {
         eventBus.addListener(StarlightTransmissionEffectHelper::onClientTick);
     }
 
-    private static void onClientTick(ClientTickEvent.Post event) {
+    private static void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         if (ClientProxy.getClientTick() % 48 != 0) return;
 
         Entity view = Minecraft.getInstance().cameraEntity;

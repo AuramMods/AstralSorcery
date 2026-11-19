@@ -16,8 +16,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -32,7 +33,8 @@ public class PatreonManagerClient {
         eventBus.addListener(PatreonManagerClient::onClientTick);
     }
 
-    private static void onClientTick(ClientTickEvent.Post event) {
+    private static void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         Level clientLevel = Minecraft.getInstance().level;
         Player player = Minecraft.getInstance().player;
         if (clientLevel == null || player == null) return;

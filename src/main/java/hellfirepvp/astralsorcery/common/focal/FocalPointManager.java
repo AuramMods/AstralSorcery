@@ -40,12 +40,13 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.level.ChunkEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
 
@@ -84,15 +85,17 @@ public class FocalPointManager {
         bus.addListener(this::onChunkUnload);
     }
 
-    private void onLevelTick(LevelTickEvent.Post event) {
-        if (event.getLevel() instanceof ServerLevel sLevel) {
+    private void onLevelTick(LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (event.level instanceof ServerLevel sLevel) {
             List.copyOf(this.getData().getNodes(sLevel.dimension()))
                     .forEach(node -> node.tick(sLevel, ChunkUtil.isChunkLoaded(sLevel, node.getPos().toBlockPos(0))));
         }
     }
 
-    private void onPlayerTick(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer sPlayer && AstrolabeItem.isUsingAstrolabe(sPlayer)) {
+    private void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (event.player instanceof ServerPlayer sPlayer && AstrolabeItem.isUsingAstrolabe(sPlayer)) {
             if (sPlayer.serverLevel().getGameTime() % 10 == 0) {
                 ItemStack held = sPlayer.getUseItem();
                 if (held.isEmpty()) return;

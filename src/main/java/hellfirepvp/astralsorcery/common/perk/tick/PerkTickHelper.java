@@ -13,9 +13,10 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -32,8 +33,9 @@ public class PerkTickHelper {
         bus.addListener(PerkTickHelper::onPlayerTick);
     }
 
-    private static void onPlayerTick(PlayerTickEvent.Post event) {
-        Player player = event.getEntity();
+    private static void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        Player player = event.player;
         LogicalSide side = SidedHelper.getSide(player);
         PlayerProgress prog = ResearchManager.getProgress(player, side);
         if (prog.isValid()) {

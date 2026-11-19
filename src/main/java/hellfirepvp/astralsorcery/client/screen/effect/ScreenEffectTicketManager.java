@@ -10,10 +10,11 @@ package hellfirepvp.astralsorcery.client.screen.effect;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import java.util.*;
 import java.util.function.Predicate;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -55,7 +56,8 @@ public class ScreenEffectTicketManager {
                 });
     }
 
-    public void tick(ClientTickEvent.Post event) {
+    public void tick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         this.thisTickUsedTickets.clear();
 
         if (this.clear) {

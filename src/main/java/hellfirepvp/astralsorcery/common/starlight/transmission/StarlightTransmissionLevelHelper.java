@@ -11,10 +11,11 @@ package hellfirepvp.astralsorcery.common.starlight.transmission;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,8 +46,9 @@ public class StarlightTransmissionLevelHelper {
         eventBus.addListener(this::onChunkUnload);
     }
 
-    private void onLevelTick(LevelTickEvent.Post event) {
-        if (event.getLevel() instanceof ServerLevel sLevel) {
+    private void onLevelTick(LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (event.level instanceof ServerLevel sLevel) {
             this.levelHandlers.computeIfAbsent(sLevel.dimension(), StarlightTransmissionLevelHandler::new).tick(sLevel);
         }
     }

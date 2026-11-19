@@ -15,9 +15,10 @@ import hellfirepvp.astralsorcery.common.patreon.entity.PatreonPartialEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.*;
 
@@ -34,7 +35,8 @@ public class PatreonManager {
         eventBus.addListener(PatreonManager::onServerTick);
     }
 
-    private static void onServerTick(ServerTickEvent.Post event) {
+    private static void onServerTick(ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         PlayerList players = event.getServer().getPlayerList();
         PatreonEntitySyncData data = SyncDataManager.getInstance().getData(SyncDataTypesAS.PATREON_ENTITY);
 

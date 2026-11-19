@@ -11,10 +11,11 @@ package hellfirepvp.astralsorcery.common.data.sync;
 import hellfirepvp.astralsorcery.common.network.play.PktSyncData;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -82,7 +83,8 @@ public class SyncDataManager {
         bus.addListener(this::onWorldUnload);
     }
 
-    private void onServerTick(ServerTickEvent.Post event) {
+    private void onServerTick(ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         if (this.dirtyData.isEmpty()) return;
         NetworkRegistry.sendToAllPlayers(PktSyncData.syncDiff(this, this.dirtyData));
         this.dirtyData.clear();

@@ -13,9 +13,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
 
@@ -47,8 +48,9 @@ public class DamageCancellingHelper {
         bus.addListener(DamageCancellingHelper::onPlayerTick);
     }
 
-    private static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer sPlayer && sPlayer.onGround()) {
+    private static void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (event.player instanceof ServerPlayer sPlayer && sPlayer.onGround()) {
             UUID playerId = sPlayer.getUUID();
             Set<ResourceKey<DamageType>> types = invulnerableTypes.getOrDefault(playerId, Collections.emptySet());
             if (types.contains(DamageTypes.FALL)) {

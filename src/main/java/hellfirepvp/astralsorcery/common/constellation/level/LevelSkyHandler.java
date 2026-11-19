@@ -14,13 +14,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -52,8 +53,9 @@ public class LevelSkyHandler {
         bus.addListener(this::onWorldUnload);
     }
 
-    private void onWorldTick(LevelTickEvent.Pre event) {
-        Level level = event.getLevel();
+    private void onWorldTick(LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
+        Level level = event.level;
         if (level instanceof ServerLevel) {
             ResourceKey<Level> dimKey = level.dimension();
 
@@ -63,7 +65,8 @@ public class LevelSkyHandler {
         }
     }
 
-    private void onClientTick(ClientTickEvent.Pre event) {
+    private void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         this.sidedClientTick();
     }
 

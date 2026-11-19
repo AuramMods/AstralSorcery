@@ -24,9 +24,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.*;
@@ -54,8 +55,9 @@ public class LinkSessionHelper {
         }
     }
 
-    private static void onPlayerTick(PlayerTickEvent.Pre event) {
-        if (event.getEntity() instanceof ServerPlayer sPlayer) {
+    private static void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
+        if (event.player instanceof ServerPlayer sPlayer) {
             ActiveLinkSession session = ACTIVE_SESSIONS.get(sPlayer.getUUID());
             if (session != null &&
                     !sPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemsAS.LINKING_TOOL.get()) &&

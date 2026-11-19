@@ -66,7 +66,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
@@ -529,7 +530,8 @@ public class RenderAstrolabeOverlay {
         }
     }
 
-    public static void overrideFov(ClientTickEvent.Pre event) {
+    public static void overrideFov(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         Player player = Minecraft.getInstance().player;
         if (player == null) {
             if (capturedFov > 0) {

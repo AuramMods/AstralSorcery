@@ -29,6 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -37,7 +39,6 @@ import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
@@ -62,10 +63,11 @@ public class EnchantmentModifierHelper {
         bus.addListener(EnchantmentModifierHelper::onEnchantmentAdd);
     }
 
-    private static void onPlayerTick(PlayerTickEvent.Pre event) {
-        UUID playerId = event.getEntity().getUUID();
+    private static void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
+        UUID playerId = event.player.getUUID();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            ItemStack stack = event.getEntity().getItemBySlot(slot);
+            ItemStack stack = event.player.getItemBySlot(slot);
             if (!stack.isEmpty() && canHaveModifiedEnchantments(stack)) {
                 ItemStackEquipmentReference.setEquipmentReference(stack, playerId, slot);
             }

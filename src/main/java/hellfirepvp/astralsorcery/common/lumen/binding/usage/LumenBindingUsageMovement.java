@@ -19,8 +19,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.stats.StatsCounter;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
 
@@ -86,8 +87,9 @@ public class LumenBindingUsageMovement extends LumenBindingUsage {
         bus.addListener(LumenBindingUsageMovement::onPlayerTick);
     }
 
-    private static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (!(event.getEntity() instanceof ServerPlayer sPlayer)) return;
+    private static void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (!(event.player instanceof ServerPlayer sPlayer)) return;
         if (sPlayer.level().isClientSide()) return;
 
         forEachUsage(sPlayer, LumenBindingUsageMovement.class, (stack, usage) -> {

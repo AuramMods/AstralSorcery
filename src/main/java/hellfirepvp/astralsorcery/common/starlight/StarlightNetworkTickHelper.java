@@ -9,12 +9,12 @@
 package hellfirepvp.astralsorcery.common.starlight;
 
 import hellfirepvp.astralsorcery.common.starlight.api.ITransmissionTickable;
-import hellfirepvp.astralsorcery.common.starlight.api.TransmissionNode;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.*;
 
@@ -44,8 +44,9 @@ public class StarlightNetworkTickHelper {
         bus.addListener(this::onWorldUnload);
     }
 
-    private void onLevelTick(LevelTickEvent.Post event) {
-        Level level = event.getLevel();
+    private void onLevelTick(LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        Level level = event.level;
         if (level.isClientSide()) return;
         ResourceKey<Level> dimKey = level.dimension();
 

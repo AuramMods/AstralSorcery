@@ -11,12 +11,13 @@ package hellfirepvp.astralsorcery.common.perk.source;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -46,8 +47,9 @@ public class ModifierManager {
         bus.addListener(this::onDisconnect);
     }
 
-    private void onPlayerTick(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer sPlayer) {
+    private void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (event.player instanceof ServerPlayer sPlayer) {
             for (ModifierSourceProvider<?> sourceProvider : RegistriesAS.REGISTRY_PERK_MODIFIER_SOURCES.get()) {
                 sourceProvider.update(sPlayer);
             }

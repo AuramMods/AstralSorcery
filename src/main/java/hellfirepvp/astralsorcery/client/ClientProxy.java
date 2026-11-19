@@ -62,6 +62,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.config.ModConfig;
@@ -244,7 +246,8 @@ public class ClientProxy extends CommonProxy {
         this.clientLifecycleListeners.forEach(ClientLifecycleListener::onClientDisconnect);
     }
 
-    private void onClientTick(ClientTickEvent.Post event) {
+    private void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
         clientTick++;
     }
 

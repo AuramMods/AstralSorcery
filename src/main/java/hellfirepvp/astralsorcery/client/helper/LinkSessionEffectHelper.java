@@ -23,8 +23,9 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.client.event.InputEvent;
 import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
@@ -56,7 +57,8 @@ public class LinkSessionEffectHelper {
         });
     }
 
-    private static void onClientTick(ClientTickEvent.Pre event) {
+    private static void onClientTick(ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         if (Minecraft.getInstance().isPaused()) return;
         if (ClientProxy.getClientTick() % 30 != 0) return;
 

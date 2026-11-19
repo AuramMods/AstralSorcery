@@ -15,8 +15,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -33,8 +34,9 @@ public class VeiledItemStackHelper {
         bus.addListener(VeiledItemStackHelper::onPlayerTick);
     }
 
-    private static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (!(event.getEntity() instanceof ServerPlayer sPlayer)) return;
+    private static void onPlayerTick(PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (!(event.player instanceof ServerPlayer sPlayer)) return;
 
         Inventory inventory = sPlayer.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
