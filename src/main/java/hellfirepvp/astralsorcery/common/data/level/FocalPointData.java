@@ -11,14 +11,11 @@ package hellfirepvp.astralsorcery.common.data.level;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.focal.node.FocalPointNode;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColumnPos;
-import hellfirepvp.observerlib.common.data.CachedWorldData;
 import hellfirepvp.observerlib.common.data.WorldCacheDomain;
-import hellfirepvp.observerlib.common.data.base.SectionWorldData;
 import hellfirepvp.observerlib.common.data.base.WorldSection;
-import hellfirepvp.observerlib.common.util.CodecUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.*;
 import java.util.function.Function;
@@ -31,14 +28,10 @@ import java.util.stream.Collectors;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class FocalPointData extends SectionWorldData<FocalPointData, FocalPointData.Section> {
-
-    public static final Codec<FocalPointData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            WorldCacheDomain.SaveKey.CODEC.fieldOf("key").forGetter(CachedWorldData::getSaveKey)
-    ).apply(inst, key -> new FocalPointData(MiscUtil.cast(key))));
+public class FocalPointData extends AstralSectionData<FocalPointData.Section> {
 
     public FocalPointData(WorldCacheDomain.SaveKey<FocalPointData> key) {
-        super(key, Section.CODEC, PRECISION_SECTION, true);
+        super(key, PRECISION_SECTION);
     }
 
     @Override
@@ -86,6 +79,18 @@ public class FocalPointData extends SectionWorldData<FocalPointData, FocalPointD
                 Codec.INT.fieldOf("sZ").forGetter(WorldSection::getSectionZ),
                 FocalPointNode.CODEC.listOf().fieldOf("focalPoints").forGetter(section -> new ArrayList<>(section.focalPoints.values()))
         ).apply(inst, Section::new));
+
+        @Override
+        public void writeToNBT(CompoundTag tag) {
+            WorldCacheNbt.write(tag, CODEC, this);
+        }
+
+        @Override
+        public void readFromNBT(CompoundTag tag) {
+            Section loaded = WorldCacheNbt.read(tag, CODEC);
+            this.focalPoints.clear();
+            this.focalPoints.putAll(loaded.focalPoints);
+        }
 
         private final Map<ColumnPos, FocalPointNode> focalPoints;
 

@@ -12,12 +12,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lumen.transfer.LumenNode;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import hellfirepvp.observerlib.common.data.CachedWorldData;
 import hellfirepvp.observerlib.common.data.WorldCacheDomain;
-import hellfirepvp.observerlib.common.data.base.SectionWorldData;
 import hellfirepvp.observerlib.common.data.base.WorldSection;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.*;
 
@@ -28,14 +26,10 @@ import java.util.*;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class LumenNetworkData extends SectionWorldData<LumenNetworkData, LumenNetworkData.LumenNodeSection> {
-
-    public static final Codec<LumenNetworkData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            WorldCacheDomain.SaveKey.CODEC.fieldOf("key").forGetter(CachedWorldData::getSaveKey)
-    ).apply(inst, key -> new LumenNetworkData(MiscUtil.cast(key))));
+public class LumenNetworkData extends AstralSectionData<LumenNetworkData.LumenNodeSection> {
 
     public LumenNetworkData(WorldCacheDomain.SaveKey<LumenNetworkData> key) {
-        super(key, LumenNodeSection.CODEC, PRECISION_CHUNK, true);
+        super(key, PRECISION_CHUNK);
     }
 
     @Override
@@ -78,6 +72,18 @@ public class LumenNetworkData extends SectionWorldData<LumenNetworkData, LumenNe
                 Codec.INT.fieldOf("sZ").forGetter(WorldSection::getSectionZ),
                 Codec.unboundedMap(CodecUtil.stringBlockPos(), LumenNode.CODEC).fieldOf("nodes").forGetter(data -> data.nodes)
         ).apply(inst, LumenNodeSection::new));
+
+        @Override
+        public void writeToNBT(CompoundTag tag) {
+            WorldCacheNbt.write(tag, CODEC, this);
+        }
+
+        @Override
+        public void readFromNBT(CompoundTag tag) {
+            LumenNodeSection loaded = WorldCacheNbt.read(tag, CODEC);
+            this.nodes.clear();
+            this.nodes.putAll(loaded.nodes);
+        }
 
         private final Map<BlockPos, LumenNode> nodes = new HashMap<>();
 

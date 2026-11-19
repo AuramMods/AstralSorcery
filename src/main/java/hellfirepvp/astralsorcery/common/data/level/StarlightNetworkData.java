@@ -15,12 +15,10 @@ import hellfirepvp.astralsorcery.common.starlight.api.ITransmissionTickable;
 import hellfirepvp.astralsorcery.common.starlight.api.TransmissionNode;
 import hellfirepvp.astralsorcery.common.starlight.api.TransmissionSourceNode;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import hellfirepvp.observerlib.common.data.CachedWorldData;
 import hellfirepvp.observerlib.common.data.WorldCacheDomain;
-import hellfirepvp.observerlib.common.data.base.SectionWorldData;
 import hellfirepvp.observerlib.common.data.base.WorldSection;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -32,16 +30,12 @@ import java.util.*;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class StarlightNetworkData extends SectionWorldData<StarlightNetworkData, StarlightNetworkData.ChunkNetworkData> {
-
-    public static final Codec<StarlightNetworkData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            WorldCacheDomain.SaveKey.CODEC.fieldOf("key").forGetter(CachedWorldData::getSaveKey)
-    ).apply(inst, key -> new StarlightNetworkData(MiscUtil.cast(key))));
+public class StarlightNetworkData extends AstralSectionData<StarlightNetworkData.ChunkNetworkData> {
 
     private final Map<BlockPos, TransmissionSourceNode> sources = new HashMap<>();
 
     public StarlightNetworkData(WorldCacheDomain.SaveKey<StarlightNetworkData> key) {
-        super(key, ChunkNetworkData.CODEC, PRECISION_CHUNK);
+        super(key, PRECISION_CHUNK);
     }
 
     @Override
@@ -98,6 +92,18 @@ public class StarlightNetworkData extends SectionWorldData<StarlightNetworkData,
                 Codec.INT.fieldOf("sZ").forGetter(WorldSection::getSectionZ),
                 Codec.unboundedMap(CodecUtil.stringBlockPos(), TransmissionNode.CODEC).fieldOf("nodes").forGetter(data -> data.nodes)
         ).apply(inst, ChunkNetworkData::new));
+
+        @Override
+        public void writeToNBT(CompoundTag tag) {
+            WorldCacheNbt.write(tag, CODEC, this);
+        }
+
+        @Override
+        public void readFromNBT(CompoundTag tag) {
+            ChunkNetworkData loaded = WorldCacheNbt.read(tag, CODEC);
+            this.nodes.clear();
+            this.nodes.putAll(loaded.nodes);
+        }
 
         private final Map<BlockPos, TransmissionNode> nodes = new HashMap<>();
 

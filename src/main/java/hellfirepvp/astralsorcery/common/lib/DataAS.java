@@ -25,15 +25,15 @@ public class DataAS {
     public static final WorldCacheDomain DOMAIN_AS = WorldCacheManager.createDomain(AstralSorcery.MODID);
 
     public static final WorldCacheDomain.SaveKey<RockCrystalData> KEY_ROCK_CRYSTAL_DATA =
-            DOMAIN_AS.createSaveKey("rock_crystals", RockCrystalData.CODEC, RockCrystalData::new);
+            DOMAIN_AS.createSaveKey("rock_crystals", RockCrystalData::new);
     public static final WorldCacheDomain.SaveKey<StarlightNetworkData> KEY_STARLIGHT_NETWORK_DATA =
-            DOMAIN_AS.createSaveKey("starlight_network", StarlightNetworkData.CODEC, StarlightNetworkData::new);
+            DOMAIN_AS.createSaveKey("starlight_network", StarlightNetworkData::new);
     public static final WorldCacheDomain.SaveKey<FocalPointData> KEY_FOCAL_POINT_DATA =
-            DOMAIN_AS.createSaveKey("focal_points", FocalPointData.CODEC, FocalPointData::new);
+            DOMAIN_AS.createSaveKey("focal_points", FocalPointData::new);
     public static final WorldCacheDomain.SaveKey<LumenNetworkData> KEY_LUMEN_NETWORK_DATA =
-            DOMAIN_AS.createSaveKey("lumen_network", LumenNetworkData.CODEC, LumenNetworkData::new);
+            DOMAIN_AS.createSaveKey("lumen_network", LumenNetworkData::new);
     public static final WorldCacheDomain.SaveKey<CelestialGatewayData> KEY_CELESTIAL_GATEWAY_DATA =
-            DOMAIN_AS.createSaveKey("celestial_gateways", CelestialGatewayData.CODEC, CelestialGatewayData::new);
+            DOMAIN_AS.createSaveKey("celestial_gateways", CelestialGatewayData::new);
 
     public static void init() {}
 

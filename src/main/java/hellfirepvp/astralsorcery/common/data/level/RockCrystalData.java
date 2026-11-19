@@ -10,14 +10,11 @@ package hellfirepvp.astralsorcery.common.data.level;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
-import hellfirepvp.observerlib.common.data.CachedWorldData;
 import hellfirepvp.observerlib.common.data.WorldCacheDomain;
-import hellfirepvp.observerlib.common.data.base.SectionWorldData;
 import hellfirepvp.observerlib.common.data.base.WorldSection;
-import hellfirepvp.observerlib.common.util.CodecUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
 
 import java.util.*;
@@ -29,14 +26,10 @@ import java.util.*;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class RockCrystalData extends SectionWorldData<RockCrystalData, RockCrystalData.Section> {
-
-    public static final Codec<RockCrystalData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            WorldCacheDomain.SaveKey.CODEC.fieldOf("key").forGetter(CachedWorldData::getSaveKey)
-    ).apply(inst, key -> new RockCrystalData(MiscUtil.cast(key))));
+public class RockCrystalData extends AstralSectionData<RockCrystalData.Section> {
 
     public RockCrystalData(WorldCacheDomain.SaveKey<RockCrystalData> key) {
-        super(key, Section.CODEC, PRECISION_REGION, true);
+        super(key, PRECISION_REGION);
     }
 
     @Override
@@ -85,6 +78,18 @@ public class RockCrystalData extends SectionWorldData<RockCrystalData, RockCryst
                 Codec.INT.fieldOf("sZ").forGetter(WorldSection::getSectionZ),
                 SetCodec.of(BlockPos.CODEC).fieldOf("positions").forGetter(Section::getCrystalPositions)
         ).apply(inst, Section::new));
+
+        @Override
+        public void writeToNBT(CompoundTag tag) {
+            WorldCacheNbt.write(tag, CODEC, this);
+        }
+
+        @Override
+        public void readFromNBT(CompoundTag tag) {
+            Section loaded = WorldCacheNbt.read(tag, CODEC);
+            this.crystalPositions.clear();
+            this.crystalPositions.addAll(loaded.crystalPositions);
+        }
 
         private final Set<BlockPos> crystalPositions = new HashSet<>();
 

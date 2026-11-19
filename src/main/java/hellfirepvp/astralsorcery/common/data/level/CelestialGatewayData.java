@@ -19,6 +19,7 @@ import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import hellfirepvp.observerlib.common.data.WorldCacheDomain;
 import hellfirepvp.observerlib.common.data.base.GlobalWorldData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
@@ -29,8 +30,6 @@ import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.ObjectUtils;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -40,54 +39,62 @@ import java.util.*;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class CelestialGatewayData extends GlobalWorldData<CelestialGatewayData> {
-
-    public static final Codec<CelestialGatewayData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            WorldCacheDomain.SaveKey.CODEC.fieldOf("key").forGetter(CelestialGatewayData::getSaveKey),
-            SetCodec.of(GatewayEntry.CODEC).fieldOf("entries").forGetter(CelestialGatewayData::getGatewayEntries)
-    ).apply(inst, (key, entries) -> new CelestialGatewayData(MiscUtil.cast(key), entries)));
+public class CelestialGatewayData extends GlobalWorldData {
 
     private final Map<BlockPos, GatewayEntry> gatewayEntries = new HashMap<>();
 
-    public CelestialGatewayData(WorldCacheDomain.SaveKey<CelestialGatewayData> key) {
-        this(key, Collections.emptySet());
-    }
+    private static final Codec<Set<GatewayEntry>> ENTRY_CODEC = SetCodec.of(GatewayEntry.CODEC);
 
-    private CelestialGatewayData(WorldCacheDomain.SaveKey<CelestialGatewayData> key, Set<GatewayEntry> entries) {
+    public CelestialGatewayData(WorldCacheDomain.SaveKey<CelestialGatewayData> key) {
         super(key);
-        entries.forEach(entry -> this.gatewayEntries.put(entry.getPos(), entry));
     }
 
     public Set<GatewayEntry> getGatewayEntries() {
-        return Set.copyOf(this.gatewayEntries.values());
+        return this.read(() -> Set.copyOf(this.gatewayEntries.values()));
     }
 
     public Optional<GatewayEntry> getGateway(BlockPos pos) {
-        return Optional.ofNullable(this.gatewayEntries.get(pos));
+        return this.read(() -> Optional.ofNullable(this.gatewayEntries.get(pos)));
     }
 
     public void addGateway(Level level, BlockPos pos, Component customName, DyeColor color) {
         this.removeGateway(level, pos);
 
         GatewayEntry entry = new GatewayEntry(pos, Optional.ofNullable(customName), color);
-        this.gatewayEntries.put(pos, entry);
-        this.markDirty();
+        this.write(() -> {
+            this.gatewayEntries.put(pos, entry);
+            this.markDirty();
+        });
         SyncDataManager.getInstance().getData(SyncDataTypesAS.CELESTIAL_GATEWAY).addEntry(level, entry);
     }
 
     public void removeGateway(Level level, BlockPos pos) {
-        GatewayEntry entry = this.gatewayEntries.remove(pos);
-        this.markDirty();
+        GatewayEntry entry = this.write(() -> {
+            GatewayEntry removed = this.gatewayEntries.remove(pos);
+            if (removed != null) {
+                this.markDirty();
+            }
+            return removed;
+        });
         if (entry != null) {
             SyncDataManager.getInstance().getData(SyncDataTypesAS.CELESTIAL_GATEWAY).removeEntry(level, entry);
         }
     }
 
     @Override
-    public void writeAdditionalData(File saveDir, File backupDir) throws IOException {}
+    public void writeToNBT(CompoundTag tag) {
+        WorldCacheNbt.write(tag, ENTRY_CODEC.fieldOf("entries").codec(), this.getGatewayEntries());
+    }
 
     @Override
-    public void readAdditionalData(File directory, FileLoader<?> fileLoader) {}
+    public void readFromNBT(CompoundTag tag) {
+        Set<GatewayEntry> entries = WorldCacheNbt.read(tag, ENTRY_CODEC.fieldOf("entries").codec());
+        this.gatewayEntries.clear();
+        entries.forEach(entry -> this.gatewayEntries.put(entry.getPos(), entry));
+    }
+
+    @Override
+    public void updateTick(Level level) {}
 
     @Override
     public void onLoad(Level world) {
@@ -112,9 +119,9 @@ public class CelestialGatewayData extends GlobalWorldData<CelestialGatewayData> 
         public static final StreamCodec<FriendlyByteBuf, GatewayEntry> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.BLOCK_POS,
                 GatewayEntry::getPos,
-                ComponentSerialization.OPTIONAL_STREAM_CODEC,
+                ByteBufCodecs.optional(ByteBufCodecs.COMPONENT),
                 entry -> Optional.ofNullable(entry.getCustomName()),
-                DyeColor.STREAM_CODEC,
+                CodecUtil.enumStreamCodec(DyeColor.class),
                 GatewayEntry::getColor,
                 GatewayEntry::new
         );
