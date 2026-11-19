@@ -20,9 +20,9 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.types.ArtifactEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -54,8 +54,8 @@ public class ArtifactEffectVeilItemAura extends ArtifactEffect implements Contin
             Codec.INT.fieldOf("duration").forGetter(ArtifactEffectVeilItemAura::getDuration),
             Codec.FLOAT.fieldOf("inventory_chance").forGetter(ArtifactEffectVeilItemAura::getInventoryChance)
     ).apply(inst, ArtifactEffectVeilItemAura::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectVeilItemAura> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, ArtifactEffect::getId,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectVeilItemAura> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION, ArtifactEffect::getId,
             ByteBufCodecs.INT, ArtifactEffectVeilItemAura::getRange,
             ByteBufCodecs.INT, ArtifactEffectVeilItemAura::getInterval,
             ByteBufCodecs.FLOAT, ArtifactEffectVeilItemAura::getChance,

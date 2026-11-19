@@ -26,8 +26,8 @@ import hellfirepvp.astralsorcery.common.recipe.liquid.LiquidStarlightRecipeInput
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +46,7 @@ public class LiquidStarlightOutputGrowSize extends LiquidStarlightRecipeOutputMo
 
     private static final LiquidStarlightOutputGrowSize INSTANCE = new LiquidStarlightOutputGrowSize();
     public static final MapCodec<LiquidStarlightOutputGrowSize> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputGrowSize> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightOutputGrowSize> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<LiquidStarlightOutputGrowSize> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private LiquidStarlightOutputGrowSize() {}

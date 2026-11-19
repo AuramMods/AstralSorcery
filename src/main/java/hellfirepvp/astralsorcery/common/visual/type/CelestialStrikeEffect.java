@@ -25,8 +25,8 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.visual.VectorPosEffect;
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class CelestialStrikeEffect extends VectorPosEffect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, CelestialStrikeEffect> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, CelestialStrikeEffect> STREAM_CODEC =
             VectorPosEffect.createCodec(CelestialStrikeEffect::new);
     public static final VisualEffectTypes.EffectType<CelestialStrikeEffect> TYPE =
             new VisualEffectTypes.EffectType<>(AstralSorcery.key("celestial_strike"), STREAM_CODEC);

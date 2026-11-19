@@ -19,9 +19,9 @@ import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -55,7 +55,7 @@ public class LiquidStarlightRecipe extends CustomRecipe<LiquidStarlightRecipe, L
             Codec.BOOL.fieldOf("consumes_inputs").orElse(true).forGetter(LiquidStarlightRecipe::consumesInputs)
     ).apply(inst, LiquidStarlightRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightRecipe> STREAM_CODEC = StreamCodec.of(LiquidStarlightRecipe::write, LiquidStarlightRecipe::read);
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightRecipe> STREAM_CODEC = StreamCodec.of(LiquidStarlightRecipe::write, LiquidStarlightRecipe::read);
 
     private final SizedIngredient input;
     private final List<SizedIngredient> otherInputs;
@@ -229,7 +229,7 @@ public class LiquidStarlightRecipe extends CustomRecipe<LiquidStarlightRecipe, L
         return RecipeTypesAS.LIQUID_STARLIGHT_TYPE;
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, LiquidStarlightRecipe recipe) {
+    private static void write(FriendlyByteBuf buf, LiquidStarlightRecipe recipe) {
         SizedIngredient.STREAM_CODEC.encode(buf, recipe.getInput());
         SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.getOtherInputs());
         buf.writeInt(recipe.getDuration());
@@ -240,7 +240,7 @@ public class LiquidStarlightRecipe extends CustomRecipe<LiquidStarlightRecipe, L
         buf.writeBoolean(recipe.consumesInputs());
     }
 
-    private static LiquidStarlightRecipe read(RegistryFriendlyByteBuf buf) {
+    private static LiquidStarlightRecipe read(FriendlyByteBuf buf) {
         SizedIngredient input = SizedIngredient.STREAM_CODEC.decode(buf);
         List<SizedIngredient> otherInputs = SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
         int duration = buf.readInt();

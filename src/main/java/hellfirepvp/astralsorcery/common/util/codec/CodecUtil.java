@@ -22,12 +22,8 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.*;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
 
 import java.util.Objects;
@@ -114,7 +110,7 @@ public class CodecUtil {
     }
 
     public static <T> StreamCodec<ByteBuf, TagKey<T>> tagKeyStreamCodec(ResourceKey<? extends Registry<T>> registry) {
-        return ResourceLocation.STREAM_CODEC.map(key -> TagKey.create(registry, key), TagKey::location);
+        return ByteBufCodecs.RESOURCE_LOCATION.map(key -> TagKey.create(registry, key), TagKey::location);
     }
 
     public static StreamCodec<ByteBuf, UUID> uuidStreamCodec() {
@@ -152,9 +148,9 @@ public class CodecUtil {
 
     public static <B extends ByteBuf, T> StreamCodec<B, WeightedEntry.Wrapper<T>> weightedEntryCodec(StreamCodec<B, T> entryCodec) {
         return StreamCodec.composite(
-                entryCodec, WeightedEntry.Wrapper::data,
-                ByteBufCodecs.INT, wrapper -> wrapper.weight().asInt(),
-                (data, weight) -> new WeightedEntry.Wrapper<>(data, Weight.of(weight))
+                entryCodec, WeightedEntry.Wrapper::getData,
+                ByteBufCodecs.INT, wrapper -> wrapper.getWeight().asInt(),
+                WeightedEntry::wrap
         );
     }
 
@@ -164,7 +160,7 @@ public class CodecUtil {
 
     public static <D, P> RecordCodecBuilder<D, P> defaulted(Codec<P> codec, String field, Supplier<P> _default, Function<D, P> getter, Predicate<P> emptyValidator) {
         return codec.optionalFieldOf(field)
-                .xmap(obj -> obj.orElse(_default.get()), value -> emptyValidator.test(value) ? Optional.empty() : Optional.of(value))
+                .xmap(obj -> obj.orElseGet(_default), value -> emptyValidator.test(value) ? Optional.empty() : Optional.of(value))
                 .forGetter(getter);
     }
 
@@ -173,8 +169,8 @@ public class CodecUtil {
     }
 
     public static <D, P> RecordCodecBuilder<D, P> lenientDefaulted(Codec<P> codec, String field, Supplier<P> _default, Function<D, P> getter, Predicate<P> emptyValidator) {
-        return codec.lenientOptionalFieldOf(field)
-                .xmap(obj -> obj.orElse(_default.get()), value -> emptyValidator.test(value) ? Optional.empty() : Optional.of(value))
+        return codec.optionalFieldOf(field)
+                .xmap(obj -> obj.orElseGet(_default), value -> emptyValidator.test(value) ? Optional.empty() : Optional.of(value))
                 .forGetter(getter);
     }
 
@@ -184,9 +180,9 @@ public class CodecUtil {
 
     public static <T> Codec<T> registryOr(Registry<T> registry, Codec<T> nonRegistryCodec) {
         return Codec.either(registry.byNameCodec(), nonRegistryCodec)
-                .xmap(either -> either.left().orElse(either.right().orElseThrow()),
+                .xmap(either -> either.map(Function.identity(), Function.identity()),
                       value -> {
-                          if (registry.containsValue(value)) {
+                          if (registry.getResourceKey(value).isPresent()) {
                               return Either.left(value);
                           }
                           return Either.right(value);

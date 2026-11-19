@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.network;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -41,7 +41,7 @@ public abstract class PlayPacketHandler<T extends CustomPacketPayload> {
         return new CustomPacketPayload.Type<>(NameUtil.prefixPath(AstralSorcery.key(name), "play/"));
     }
 
-    public abstract StreamCodec<RegistryFriendlyByteBuf, T> codec();
+    public abstract StreamCodec<FriendlyByteBuf, T> codec();
 
     public abstract void register(PayloadRegistrar registrar);
 

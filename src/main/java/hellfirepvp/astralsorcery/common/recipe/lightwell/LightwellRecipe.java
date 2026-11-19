@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObj
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -47,10 +47,10 @@ public class LightwellRecipe extends CustomRecipe<LightwellRecipe, LightwellReci
             Codec.FLOAT.fieldOf("shatter_multiplier").forGetter(LightwellRecipe::getShatterMultiplier)
     ).apply(inst, LightwellRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LightwellRecipe> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LightwellRecipe> STREAM_CODEC = StreamCodec.composite(
             ColorWrapper.STREAM_CODEC,
             LightwellRecipe::getCatalystColor,
-            Ingredient.CONTENTS_STREAM_CODEC,
+            ByteBufCodecs.INGREDIENT,
             LightwellRecipe::getInput,
             ByteBufCodecs.registry(Registries.FLUID),
             LightwellRecipe::getGeneratedFluid,

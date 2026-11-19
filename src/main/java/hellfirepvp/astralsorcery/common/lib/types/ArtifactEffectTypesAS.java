@@ -13,8 +13,8 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactEffect;
 import hellfirepvp.astralsorcery.common.artifact.effect.*;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -54,7 +54,7 @@ public class ArtifactEffectTypesAS {
 
     private static <T extends ArtifactEffect> ArtifactEffect.DeferredType<T> register(String name,
                                                                                       MapCodec<T> codec,
-                                                                                      StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+                                                                                      StreamCodec<FriendlyByteBuf, T> streamCodec) {
         return new ArtifactEffect.DeferredType<>(ARTIFACT_EFFECT_TYPES_REGISTER.register(name,
                 () -> new ArtifactEffect.Type<>(codec, streamCodec)));
     }

@@ -25,8 +25,8 @@ import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraftforge.fluids.FluidStack;
@@ -106,9 +106,9 @@ public class RecipeTypesAS {
 
     private static <T extends Recipe<?>> RegistryObject<CodecSerializer<T>> codecSerializer(String name,
                                                                                                                  MapCodec<T> codec,
-                                                                                                                 StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+                                                                                                                 StreamCodec<FriendlyByteBuf, T> streamCodec) {
         return RECIPE_SERIALIZER_REGISTER.register(name, () -> new CodecSerializer<>(codec, streamCodec));
     }
 
-    public record CodecSerializer<T extends Recipe<?>>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) implements RecipeSerializer<T> {}
+    public record CodecSerializer<T extends Recipe<?>>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) implements RecipeSerializer<T> {}
 }

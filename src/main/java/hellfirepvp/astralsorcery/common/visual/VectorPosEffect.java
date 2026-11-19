@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.visual;
 
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.function.Function;
@@ -43,7 +43,7 @@ public abstract class VectorPosEffect implements VisualEffectTypes.Effect {
         this.sendToNearby(sLevel, this.getBlockPos());
     }
 
-    protected static <T extends VectorPosEffect> StreamCodec<RegistryFriendlyByteBuf, T> createCodec(Function<Vector3, T> factory) {
+    protected static <T extends VectorPosEffect> StreamCodec<FriendlyByteBuf, T> createCodec(Function<Vector3, T> factory) {
         return StreamCodec.composite(Vector3.STREAM_CODEC, VectorPosEffect::getPos, factory);
     }
 }

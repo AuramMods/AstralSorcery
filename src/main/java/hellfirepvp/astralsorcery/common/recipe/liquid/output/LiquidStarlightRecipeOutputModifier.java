@@ -13,9 +13,9 @@ import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.recipe.liquid.LiquidStarlightRecipe;
 import hellfirepvp.astralsorcery.common.recipe.liquid.LiquidStarlightRecipeInput;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +34,7 @@ public abstract class LiquidStarlightRecipeOutputModifier {
 
     public static final Codec<LiquidStarlightRecipeOutputModifier> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LIQUID_STARLIGHT_OUTPUT_MODIFIER_TYPES)
             .dispatch(LiquidStarlightRecipeOutputModifier::getType, LiquidStarlightRecipeOutputModifier.Type::codec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightRecipeOutputModifier> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LIQUID_STARLIGHT_OUTPUT_MODIFIER_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightRecipeOutputModifier> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LIQUID_STARLIGHT_OUTPUT_MODIFIER_TYPES)
             .dispatch(LiquidStarlightRecipeOutputModifier::getType, LiquidStarlightRecipeOutputModifier.Type::streamCodec);
 
     public abstract LiquidStarlightRecipeOutputModifier.Type<?> getType();
@@ -50,6 +50,6 @@ public abstract class LiquidStarlightRecipeOutputModifier {
     @OnlyIn(Dist.CLIENT)
     public void playCraftingEffects(LiquidStarlightRecipe recipe, LiquidStarlightRecipeInput input, RandomSource rand, int craftingTick) {}
 
-    public record Type<T extends LiquidStarlightRecipeOutputModifier>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+    public record Type<T extends LiquidStarlightRecipeOutputModifier>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) {
     }
 }

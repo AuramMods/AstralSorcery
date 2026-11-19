@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 
@@ -33,7 +33,7 @@ public class AltarOutputSetFlag extends AltarRecipeOutputModifier {
     public static final MapCodec<AltarOutputSetFlag> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             FlagsComponent.Flag.CODEC.fieldOf("flag").forGetter(AltarOutputSetFlag::getFlag)
     ).apply(inst, AltarOutputSetFlag::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputSetFlag> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputSetFlag> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(FlagsComponent.Flag.class),
             AltarOutputSetFlag::getFlag,
             AltarOutputSetFlag::new);

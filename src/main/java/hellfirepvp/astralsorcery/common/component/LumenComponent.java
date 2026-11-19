@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import net.minecraft.core.Holder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 
 import java.util.Objects;
@@ -34,7 +34,7 @@ public record LumenComponent(Holder<Lumen> lumen) {
 
     public static final Codec<LumenComponent> CODEC =
             RegistriesAS.holderCodec(RegistriesAS.KEY_LUMEN).xmap(LumenComponent::new, LumenComponent::lumen);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenComponent> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, LumenComponent> STREAM_CODEC =
             ByteBufCodecs.holderRegistry(RegistriesAS.KEY_LUMEN).map(LumenComponent::new, LumenComponent::lumen);
 
     public static Optional<LumenComponent> of(Lumen lumen) {

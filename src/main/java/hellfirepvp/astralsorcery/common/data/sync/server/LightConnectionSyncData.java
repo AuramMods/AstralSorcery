@@ -19,9 +19,9 @@ import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -102,10 +102,10 @@ public class LightConnectionSyncData extends SyncData<LightConnectionSyncData.Cl
 
     public static class ClientSync extends ClientSyncData<LightConnectionClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.map(size -> new HashMap<>(), ResourceKey.streamCodec(Registries.DIMENSION),
-                        ByteBufCodecs.map(size2 -> new HashMap<>(), BlockPos.STREAM_CODEC,
-                                BlockPos.STREAM_CODEC.apply(SetCodec.streamOp()))),
+        public static final StreamCodec<FriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.map(size -> new HashMap<>(), ByteBufCodecs.resourceKey(Registries.DIMENSION),
+                        ByteBufCodecs.map(size2 -> new HashMap<>(), ByteBufCodecs.BLOCK_POS,
+                                ByteBufCodecs.BLOCK_POS.apply(SetCodec.streamOp()))),
                 syncData -> syncData.fullLinks,
                 ClientSync::new
         );
@@ -129,14 +129,14 @@ public class LightConnectionSyncData extends SyncData<LightConnectionSyncData.Cl
 
     public static class ClientDiffSync extends ClientSyncDiffData<LightConnectionClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.map(size -> new HashMap<>(), ResourceKey.streamCodec(Registries.DIMENSION),
-                        CodecUtil.pairStreamCodec(BlockPos.STREAM_CODEC).apply(SetCodec.streamOp())),
+        public static final StreamCodec<FriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.map(size -> new HashMap<>(), ByteBufCodecs.resourceKey(Registries.DIMENSION),
+                        CodecUtil.pairStreamCodec(ByteBufCodecs.BLOCK_POS).apply(SetCodec.streamOp())),
                 diffData -> diffData.addedConnections,
-                ByteBufCodecs.map(size -> new HashMap<>(), ResourceKey.streamCodec(Registries.DIMENSION),
-                        CodecUtil.pairStreamCodec(BlockPos.STREAM_CODEC).apply(SetCodec.streamOp())),
+                ByteBufCodecs.map(size -> new HashMap<>(), ByteBufCodecs.resourceKey(Registries.DIMENSION),
+                        CodecUtil.pairStreamCodec(ByteBufCodecs.BLOCK_POS).apply(SetCodec.streamOp())),
                 diffData -> diffData.removedConnections,
-                ResourceKey.streamCodec(Registries.DIMENSION).apply(SetCodec.streamOp()),
+                ByteBufCodecs.resourceKey(Registries.DIMENSION).apply(SetCodec.streamOp()),
                 diffData -> diffData.clearedDimensions,
                 ClientDiffSync::new
         );

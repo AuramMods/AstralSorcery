@@ -13,10 +13,9 @@ import hellfirepvp.astralsorcery.common.util.ChunkUtil;
 import hellfirepvp.astralsorcery.common.util.EntityMatchPredicate;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -193,11 +192,11 @@ public class TimeStopZone {
 
     public record Snapshot(UUID id, BlockPos offset, float range, Set<BlockPos> capturedBlockEntities, Set<Integer> capturedEntities) {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Snapshot> STREAM_CODEC = StreamCodec.composite(
-                UUIDUtil.STREAM_CODEC, Snapshot::id,
-                BlockPos.STREAM_CODEC, Snapshot::offset,
+        public static final StreamCodec<FriendlyByteBuf, Snapshot> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.UUID_CODEC, Snapshot::id,
+                ByteBufCodecs.BLOCK_POS, Snapshot::offset,
                 ByteBufCodecs.FLOAT, Snapshot::range,
-                BlockPos.STREAM_CODEC.apply(SetCodec.streamOp()), Snapshot::capturedBlockEntities,
+                ByteBufCodecs.BLOCK_POS.apply(SetCodec.streamOp()), Snapshot::capturedBlockEntities,
                 ByteBufCodecs.INT.apply(SetCodec.streamOp()), Snapshot::capturedEntities,
                 Snapshot::new);
 

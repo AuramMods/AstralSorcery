@@ -19,9 +19,9 @@ import hellfirepvp.astralsorcery.common.lib.types.SyncDataTypesAS;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import hellfirepvp.astralsorcery.common.util.data.DiffEntry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -106,9 +106,9 @@ public class CelestialGatewaySyncData extends SyncData<CelestialGatewaySyncData.
 
     public static class ClientSync extends ClientSyncData<CelestialGatewayClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         CelestialGatewayData.GatewayEntry.STREAM_CODEC.apply(SetCodec.streamOp())),
                 sync -> sync.allLevelGatewayEntries,
                 ClientSync::new
@@ -133,11 +133,11 @@ public class CelestialGatewaySyncData extends SyncData<CelestialGatewaySyncData.
 
     public static class ClientDiffSync extends ClientSyncDiffData<CelestialGatewayClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
-                ResourceKey.streamCodec(Registries.DIMENSION).apply(SetCodec.streamOp()),
+        public static final StreamCodec<FriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.resourceKey(Registries.DIMENSION).apply(SetCodec.streamOp()),
                 data -> data.removedLevels,
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         DiffEntry.streamCodec(CelestialGatewayData.GatewayEntry.STREAM_CODEC).apply(ByteBufCodecs.list())),
                 data -> data.entryChanges,
                 ClientDiffSync::new);

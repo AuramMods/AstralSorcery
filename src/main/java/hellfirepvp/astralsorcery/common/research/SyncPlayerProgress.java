@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ import java.util.Set;
  */
 public class SyncPlayerProgress {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SyncPlayerProgress> SYNC_CODEC = StreamCodec.of(SyncPlayerProgress::write, SyncPlayerProgress::read);
+    public static final StreamCodec<FriendlyByteBuf, SyncPlayerProgress> SYNC_CODEC = StreamCodec.of(SyncPlayerProgress::write, SyncPlayerProgress::read);
 
     private final Set<BaseConstellation> seenConstellations = new HashSet<>();
     private final Set<BaseConstellation> knownConstellations = new HashSet<>();
@@ -147,7 +147,7 @@ public class SyncPlayerProgress {
         );
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, SyncPlayerProgress prog) {
+    private static void write(FriendlyByteBuf buf, SyncPlayerProgress prog) {
         var cstCodec = ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS);
         var lumenCodec = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN);
 
@@ -165,7 +165,7 @@ public class SyncPlayerProgress {
         ByteBufCodecs.BOOL.encode(buf, prog.hasReceivedTome());
     }
 
-    private static SyncPlayerProgress read(RegistryFriendlyByteBuf buf) {
+    private static SyncPlayerProgress read(FriendlyByteBuf buf) {
         var cstCodec = ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS);
         var lumenCodec = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN);
 

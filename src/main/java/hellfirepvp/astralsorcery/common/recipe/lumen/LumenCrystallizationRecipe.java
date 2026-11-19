@@ -17,9 +17,9 @@ import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -43,10 +43,10 @@ public class LumenCrystallizationRecipe extends CustomRecipe<LumenCrystallizatio
             Codec.intRange(1, 1900).fieldOf("lumen_consumed_per_operation").forGetter(LumenCrystallizationRecipe::getLumenConsumedPerOperation)
     ).apply(inst, LumenCrystallizationRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenCrystallizationRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, LumenCrystallizationRecipe> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INGREDIENT,
             LumenCrystallizationRecipe::getInput,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)),
+            ByteBufCodecs.fromCodecWithRegistries(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)),
             LumenCrystallizationRecipe::getLumenToCrystallize,
             ByteBufCodecs.FLOAT,
             LumenCrystallizationRecipe::getCatalystShatterMultiplier,

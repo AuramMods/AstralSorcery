@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.data.sync.SyncDataManager;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request> {
 
     static final CustomPacketPayload.Type<PktSyncData.Request> TYPE = makeType("sync_data");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktSyncData.Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, PktSyncData.Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL,
             Request::syncAll,
             ClientSyncData.STREAM_CODEC.apply(ByteBufCodecs.list()),
@@ -63,7 +63,7 @@ public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request>
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, PktSyncData.Request> codec() {
+    public StreamCodec<FriendlyByteBuf, PktSyncData.Request> codec() {
         return CODEC;
     }
 

@@ -8,13 +8,14 @@
 
 package hellfirepvp.astralsorcery.common.visual;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.visual.type.*;
 import hellfirepvp.astralsorcery.common.network.play.PktPlayVisualEffect;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,7 +36,7 @@ import java.util.Map;
  */
 public class VisualEffectTypes {
 
-    public static final StreamCodec<ByteBuf, Effect> STREAM_CODEC = ResourceLocation.STREAM_CODEC
+    public static final StreamCodec<ByteBuf, Effect> STREAM_CODEC = ByteBufCodecs.RESOURCE_LOCATION
             .dispatch(effect -> effect.getType().key(), key -> MiscUtil.cast(getEffectType(key).streamCodec()));
 
     private static final Map<ResourceLocation, EffectType<?>> byName = new HashMap<>();
@@ -86,5 +87,5 @@ public class VisualEffectTypes {
 
     }
 
-    public record EffectType<T extends Effect>(ResourceLocation key, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
+    public record EffectType<T extends Effect>(ResourceLocation key, StreamCodec<FriendlyByteBuf, T> streamCodec) {}
 }

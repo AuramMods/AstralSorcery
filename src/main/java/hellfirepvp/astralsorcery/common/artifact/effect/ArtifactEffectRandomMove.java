@@ -17,9 +17,9 @@ import hellfirepvp.astralsorcery.common.lib.types.ArtifactEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.FloatRange;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -38,8 +38,8 @@ public class ArtifactEffectRandomMove extends ArtifactEffect {
             FloatRange.CODEC.fieldOf("distance").forGetter(ArtifactEffectRandomMove::getDistance),
             Codec.FLOAT.fieldOf("move_speed").forGetter(ArtifactEffectRandomMove::getMoveSpeed)
     ).apply(inst, ArtifactEffectRandomMove::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectRandomMove> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectRandomMove> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactEffect::getId,
             FloatRange.STREAM_CODEC,
             ArtifactEffectRandomMove::getDistance,

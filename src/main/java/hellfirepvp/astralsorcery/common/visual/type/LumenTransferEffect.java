@@ -27,9 +27,9 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class LumenTransferEffect implements VisualEffectTypes.Effect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenTransferEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenTransferEffect> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN),
             LumenTransferEffect::getLumen,
             Vector3.STREAM_CODEC.apply(ByteBufCodecs.list()),

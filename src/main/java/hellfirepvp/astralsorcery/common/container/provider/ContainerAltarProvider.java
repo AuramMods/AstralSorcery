@@ -15,7 +15,7 @@ import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.MenuTypeRegistryObject;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -54,7 +54,7 @@ public class ContainerAltarProvider<T extends ContainerAltar> extends ContainerP
     }
 
     @Override
-    public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
+    public void writeClientSideData(AbstractContainerMenu menu, FriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.getPos());
         buffer.writeEnum(this.getAltarType());
         if (menu instanceof ContainerAltar altarMenu) {
@@ -76,7 +76,7 @@ public class ContainerAltarProvider<T extends ContainerAltar> extends ContainerP
         }).orElse(null);
     }
 
-    public static <T extends ContainerAltar> T createClient(int windowId, Inventory inv, RegistryFriendlyByteBuf data) {
+    public static <T extends ContainerAltar> T createClient(int windowId, Inventory inv, FriendlyByteBuf data) {
         BlockPos pos = data.readBlockPos();
         TileAltar.AltarType altarType = data.readEnum(TileAltar.AltarType.class);
         return MiscUtil.getTileAt(inv.player.level(), pos, TileAltar.class, false).map(tile -> {

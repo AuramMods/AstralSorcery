@@ -9,9 +9,9 @@
 package hellfirepvp.astralsorcery.common.perk.source;
 
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.LogicalSide;
 //Each ModifierSource should be a AttributeModifierProvider in some way or subclass.
 public interface ModifierSource {
 
-    StreamCodec<RegistryFriendlyByteBuf, ModifierSource> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_PERK_MODIFIER_SOURCES)
+    StreamCodec<FriendlyByteBuf, ModifierSource> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_PERK_MODIFIER_SOURCES)
                     .dispatch(ModifierSource::getSourceProvider, ModifierSourceProvider::getModifierSourceSyncCodec);
 
     boolean canApplySource(Player player, LogicalSide dist);

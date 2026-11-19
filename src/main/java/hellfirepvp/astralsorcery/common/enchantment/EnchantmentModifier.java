@@ -15,11 +15,11 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -43,7 +43,7 @@ public final class EnchantmentModifier {
             Codec.INT.fieldOf("modifier").forGetter(EnchantmentModifier::getModifier)
     ).apply(inst, EnchantmentModifier::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnchantmentModifier> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, EnchantmentModifier> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(Type.class),
             EnchantmentModifier::getType,
             ByteBufCodecs.optional(ByteBufCodecs.holderRegistry(Registries.ENCHANTMENT)),

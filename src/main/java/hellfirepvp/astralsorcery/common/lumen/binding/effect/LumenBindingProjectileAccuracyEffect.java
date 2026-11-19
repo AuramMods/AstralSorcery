@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.lumen.binding.effect;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.event.ProjectileInaccuracyEvent;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -32,7 +32,7 @@ public class LumenBindingProjectileAccuracyEffect extends LumenBindingEffect {
 
     public static final LumenBindingProjectileAccuracyEffect INSTANCE = new LumenBindingProjectileAccuracyEffect();
     public static final MapCodec<LumenBindingProjectileAccuracyEffect> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingProjectileAccuracyEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingProjectileAccuracyEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     public static void attachEventListeners(IEventBus bus) {
         bus.addListener(LumenBindingProjectileAccuracyEffect::onProjectileAccuracy);

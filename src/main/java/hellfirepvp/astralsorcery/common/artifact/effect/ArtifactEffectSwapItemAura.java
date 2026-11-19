@@ -16,9 +16,9 @@ import hellfirepvp.astralsorcery.common.artifact.ContinuousArtifactEffect;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
 import hellfirepvp.astralsorcery.common.lib.types.ArtifactEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -50,8 +50,8 @@ public class ArtifactEffectSwapItemAura extends ArtifactEffect implements Contin
             Codec.INT.fieldOf("interval").forGetter(ArtifactEffectSwapItemAura::getInterval),
             Codec.FLOAT.fieldOf("chance").forGetter(ArtifactEffectSwapItemAura::getChance)
     ).apply(inst, ArtifactEffectSwapItemAura::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectSwapItemAura> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, ArtifactEffect::getId,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectSwapItemAura> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION, ArtifactEffect::getId,
             ByteBufCodecs.INT, ArtifactEffectSwapItemAura::getRange,
             ByteBufCodecs.INT, ArtifactEffectSwapItemAura::getInterval,
             ByteBufCodecs.FLOAT, ArtifactEffectSwapItemAura::getChance,

@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.perk.tree.AbstractPerk;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import hellfirepvp.astralsorcery.common.util.data.MapStream;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -33,11 +33,11 @@ import java.util.Set;
  */
 public class SyncPlayerPerkData {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SyncPlayerPerkData> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC.apply(SetCodec.streamOp()),
+    public static final StreamCodec<FriendlyByteBuf, SyncPlayerPerkData> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION.apply(SetCodec.streamOp()),
             SyncPlayerPerkData::getPointTokens,
             ByteBufCodecs.map(size -> new HashMap<>(),
-                    ResourceLocation.STREAM_CODEC,
+                    ByteBufCodecs.RESOURCE_LOCATION,
                     PlayerPerkData.AppliedPerkData.STREAM_CODEC),
             SyncPlayerPerkData::getPerks,
             ByteBufCodecs.DOUBLE,

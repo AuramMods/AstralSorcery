@@ -13,10 +13,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.MobEffectUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -41,7 +41,7 @@ public class LumenBindingExtendMobEffectsEffect extends LumenBindingEffect {
             Codec.INT.fieldOf("extension_ticks").forGetter(LumenBindingExtendMobEffectsEffect::getExtensionTicks),
             Codec.INT.fieldOf("cooldown_ticks").forGetter(LumenBindingExtendMobEffectsEffect::getCooldownTicks)
     ).apply(inst, LumenBindingExtendMobEffectsEffect::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingExtendMobEffectsEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingExtendMobEffectsEffect> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             LumenBindingExtendMobEffectsEffect::getExtensionTicks,
             ByteBufCodecs.INT,

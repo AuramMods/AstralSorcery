@@ -17,10 +17,10 @@ import hellfirepvp.astralsorcery.common.lib.types.ArtifactConditionTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.DescribedEntityPredicate;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -46,8 +46,8 @@ public class ArtifactConditionNearEntity extends ArtifactCondition {
             Codec.INT.fieldOf("range").forGetter(ArtifactConditionNearEntity::getRange),
             Codec.FLOAT.fieldOf("entityConsumptionChance").forGetter(ArtifactConditionNearEntity::getEntityConsumptionChance)
     ).apply(inst, ArtifactConditionNearEntity::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactConditionNearEntity> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactConditionNearEntity> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactCondition::getId,
             DescribedEntityPredicate.STREAM_CODEC,
             ArtifactConditionNearEntity::getEntityPredicate,

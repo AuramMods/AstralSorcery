@@ -12,8 +12,8 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
 import hellfirepvp.astralsorcery.common.lib.PerksAS;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSourceProvider;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -83,7 +83,7 @@ public class LumenBindingSourceProvider extends ModifierSourceProvider<LumenBind
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, LumenBindingSource> getModifierSourceSyncCodec() {
+    public StreamCodec<FriendlyByteBuf, LumenBindingSource> getModifierSourceSyncCodec() {
         return LumenBindingSource.STREAM_CODEC;
     }
 }

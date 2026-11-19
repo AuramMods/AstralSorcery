@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.lumen.binding.effect;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -37,7 +37,7 @@ public class LumenBindingPlaceLightEffect extends LumenBindingEffect {
 
     public static final LumenBindingPlaceLightEffect INSTANCE = new LumenBindingPlaceLightEffect();
     public static final MapCodec<LumenBindingPlaceLightEffect> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingPlaceLightEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingPlaceLightEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     public static void attachEventListeners(IEventBus bus) {
         bus.addListener(EventPriority.LOWEST, LumenBindingPlaceLightEffect::onBlockBreak);

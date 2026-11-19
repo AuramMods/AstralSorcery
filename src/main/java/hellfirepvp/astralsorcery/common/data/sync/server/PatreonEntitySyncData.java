@@ -16,10 +16,9 @@ import hellfirepvp.astralsorcery.common.lib.types.SyncDataTypesAS;
 import hellfirepvp.astralsorcery.common.patreon.PatreonEffect;
 import hellfirepvp.astralsorcery.common.patreon.entity.PatreonPartialEntity;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 
@@ -104,11 +103,11 @@ public class PatreonEntitySyncData extends SyncData<PatreonEntitySyncData.Client
 
     public static class ClientSync extends ClientSyncData<PatreonEntityClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(size -> new HashMap<>(),
-                        UUIDUtil.STREAM_CODEC,
+                        ByteBufCodecs.UUID_CODEC,
                         ByteBufCodecs.map(size -> new HashMap<>(),
-                                UUIDUtil.STREAM_CODEC,
+                                ByteBufCodecs.UUID_CODEC,
                                 PatreonPartialEntity.UpdateInfo.STREAM_CODEC)),
                 sync -> sync.flareUpdateMap,
                 ClientSync::new);
@@ -143,13 +142,13 @@ public class PatreonEntitySyncData extends SyncData<PatreonEntitySyncData.Client
 
     public static class ClientDiffSync extends ClientSyncDiffData<PatreonEntityClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
-                UUIDUtil.STREAM_CODEC.apply(SetCodec.streamOp()),
+        public static final StreamCodec<FriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.UUID_CODEC.apply(SetCodec.streamOp()),
                 sync -> sync.flareRemovals,
                 ByteBufCodecs.map(size -> new HashMap<>(),
-                        UUIDUtil.STREAM_CODEC,
+                        ByteBufCodecs.UUID_CODEC,
                         ByteBufCodecs.map(size -> new HashMap<>(),
-                                UUIDUtil.STREAM_CODEC,
+                                ByteBufCodecs.UUID_CODEC,
                                 PatreonPartialEntity.UpdateInfo.STREAM_CODEC)),
                 sync -> sync.flareUpdateMap,
                 ClientDiffSync::new);

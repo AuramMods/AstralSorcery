@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.lumen.binding.usage;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingUsageTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class CombinedLumenBindingUsage extends LumenBindingUsage {
     public static final MapCodec<CombinedLumenBindingUsage> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             LumenBindingUsage.CODEC.listOf().fieldOf("usages").forGetter(CombinedLumenBindingUsage::getUsages)
     ).apply(inst, CombinedLumenBindingUsage::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, CombinedLumenBindingUsage> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, CombinedLumenBindingUsage> STREAM_CODEC = StreamCodec.composite(
             LumenBindingUsage.STREAM_CODEC.apply(ByteBufCodecs.list()),
             CombinedLumenBindingUsage::getUsages,
             CombinedLumenBindingUsage::new);

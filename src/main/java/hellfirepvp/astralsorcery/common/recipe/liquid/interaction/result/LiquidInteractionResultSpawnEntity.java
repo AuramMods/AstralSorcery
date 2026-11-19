@@ -13,9 +13,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.lib.types.LiquidInteractionResultTypesAS;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -37,7 +37,7 @@ public class LiquidInteractionResultSpawnEntity extends LiquidInteractionResult 
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(LiquidInteractionResultSpawnEntity::getEntityType)
     ).apply(inst, LiquidInteractionResultSpawnEntity::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidInteractionResultSpawnEntity> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LiquidInteractionResultSpawnEntity> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(BuiltInRegistries.ENTITY_TYPE.key()),
             LiquidInteractionResultSpawnEntity::getEntityType,
             LiquidInteractionResultSpawnEntity::new);

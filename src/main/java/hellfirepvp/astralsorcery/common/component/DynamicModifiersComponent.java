@@ -13,10 +13,10 @@ import hellfirepvp.astralsorcery.common.perk.modifier.DynamicAttributeModifier;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +42,7 @@ public record DynamicModifiersComponent(List<DynamicAttributeModifier> modifiers
 
     public static final Codec<DynamicModifiersComponent> CODEC = Codec.list(DynamicAttributeModifier.CODEC)
             .xmap(DynamicModifiersComponent::new, DynamicModifiersComponent::modifiers);
-    public static final StreamCodec<RegistryFriendlyByteBuf, DynamicModifiersComponent> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, DynamicModifiersComponent> STREAM_CODEC =
             DynamicAttributeModifier.STREAM_CODEC.apply(ByteBufCodecs.list())
                     .map(DynamicModifiersComponent::new, DynamicModifiersComponent::modifiers);
 

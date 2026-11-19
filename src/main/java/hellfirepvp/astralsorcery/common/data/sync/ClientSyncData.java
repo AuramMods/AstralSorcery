@@ -9,9 +9,9 @@
 package hellfirepvp.astralsorcery.common.data.sync;
 
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -22,7 +22,7 @@ import net.minecraft.network.codec.StreamCodec;
  */
 public abstract class ClientSyncData<C extends ClientData> {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ClientSyncData<?>> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_SYNC_DATA_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, ClientSyncData<?>> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_SYNC_DATA_TYPES)
             .dispatch(ClientSyncData::type, SyncData.Type::syncCodec);
 
     protected C getClientData() {

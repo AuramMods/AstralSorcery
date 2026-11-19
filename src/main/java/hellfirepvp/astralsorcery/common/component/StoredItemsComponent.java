@@ -12,10 +12,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.data.OversizedItemStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.AttributeTooltipContext;
@@ -40,7 +40,7 @@ public record StoredItemsComponent(List<OversizedItemStack> contents) implements
     public static final Codec<StoredItemsComponent> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             OversizedItemStack.CODEC.listOf().fieldOf("contents").forGetter(StoredItemsComponent::contents)
     ).apply(inst, StoredItemsComponent::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, StoredItemsComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, StoredItemsComponent> STREAM_CODEC = StreamCodec.composite(
             OversizedItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
             StoredItemsComponent::contents,
             StoredItemsComponent::new);

@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.common.container;
 
 import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import hellfirepvp.astralsorcery.common.util.data.IntPoint;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
@@ -31,7 +31,7 @@ public class ContainerAltarIllumination extends ContainerAltar {
         this.addAltarGridSlots();
     }
 
-    public ContainerAltarIllumination(@Nullable MenuType<?> menuType, TileAltar tile, Inventory playerInv, int containerId, RegistryFriendlyByteBuf byteBuf) {
+    public ContainerAltarIllumination(@Nullable MenuType<?> menuType, TileAltar tile, Inventory playerInv, int containerId, FriendlyByteBuf byteBuf) {
         this(menuType, tile, playerInv, containerId);
     }
 

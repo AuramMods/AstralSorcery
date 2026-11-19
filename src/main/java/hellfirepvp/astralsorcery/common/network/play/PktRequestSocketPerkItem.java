@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.perk.tree.perk.socket.GemSocketPerk;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,10 +35,10 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktRequestSocketPerkItem extends PlayPacketHandler.ToServer<PktRequestSocketPerkItem.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("request_socket_perk_item");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(Action.class),
             Request::action,
-            ResourceLocation.STREAM_CODEC,
+            ByteBufCodecs.RESOURCE_LOCATION,
             Request::perkKey,
             ByteBufCodecs.INT,
             Request::inventorySlot,
@@ -60,7 +60,7 @@ public class PktRequestSocketPerkItem extends PlayPacketHandler.ToServer<PktRequ
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

@@ -8,13 +8,14 @@
 
 package hellfirepvp.astralsorcery.common.ingredient;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.IngredientsAS;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -47,7 +48,7 @@ public final class IngredientBridge implements ICustomIngredient {
     public static final IngredientBridge EMPTY = of(Ingredient.EMPTY);
     public static final MapCodec<IngredientBridge> CODEC = StringRepresentable.fromEnum(Type::values)
             .dispatchMap(ingredient -> ingredient.type, Type::getIngredientCodec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, IngredientBridge> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, IngredientBridge> STREAM_CODEC =
             Type.STREAM_CODEC.dispatch(ing -> ing.type, Type::getIngredientStreamCodec);
 
     private final Type type;
@@ -153,7 +154,7 @@ public final class IngredientBridge implements ICustomIngredient {
         ITEM(RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(IngredientBridge::getIngredient)
         ).apply(inst, IngredientBridge::of)), StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC,
+                ByteBufCodecs.INGREDIENT,
                 IngredientBridge::getIngredient,
                 IngredientBridge::of
         )),
@@ -165,12 +166,12 @@ public final class IngredientBridge implements ICustomIngredient {
                 IngredientBridge::of
         ));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, Type> STREAM_CODEC = MiscUtil.cast(CodecUtil.enumStreamCodec(Type.class));
+        private static final StreamCodec<FriendlyByteBuf, Type> STREAM_CODEC = MiscUtil.cast(CodecUtil.enumStreamCodec(Type.class));
 
         private final MapCodec<IngredientBridge> ingredientCodec;
-        private final StreamCodec<RegistryFriendlyByteBuf, IngredientBridge> ingredientStreamCodec;
+        private final StreamCodec<FriendlyByteBuf, IngredientBridge> ingredientStreamCodec;
 
-        Type(MapCodec<IngredientBridge> ingredientCodec, StreamCodec<RegistryFriendlyByteBuf, IngredientBridge> ingredientStreamCodec) {
+        Type(MapCodec<IngredientBridge> ingredientCodec, StreamCodec<FriendlyByteBuf, IngredientBridge> ingredientStreamCodec) {
             this.ingredientCodec = ingredientCodec;
             this.ingredientStreamCodec = ingredientStreamCodec;
         }
@@ -179,7 +180,7 @@ public final class IngredientBridge implements ICustomIngredient {
             return this.ingredientCodec;
         }
 
-        public StreamCodec<RegistryFriendlyByteBuf, ? extends IngredientBridge> getIngredientStreamCodec() {
+        public StreamCodec<FriendlyByteBuf, ? extends IngredientBridge> getIngredientStreamCodec() {
             return this.ingredientStreamCodec;
         }
 

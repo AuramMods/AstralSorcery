@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.item.AstrolabeItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +31,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktAdjustAstrolabeAngle extends PlayPacketHandler.ToServer<PktAdjustAstrolabeAngle.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("adjust_astrolabe_angle");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktAdjustAstrolabeAngle.Request> CODEC =
+    static final StreamCodec<FriendlyByteBuf, PktAdjustAstrolabeAngle.Request> CODEC =
             StreamCodec.composite(ByteBufCodecs.FLOAT, Request::newAngle, Request::new);
 
     public static final PktAdjustAstrolabeAngle HANDLER = new PktAdjustAstrolabeAngle();
@@ -45,7 +45,7 @@ public class PktAdjustAstrolabeAngle extends PlayPacketHandler.ToServer<PktAdjus
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

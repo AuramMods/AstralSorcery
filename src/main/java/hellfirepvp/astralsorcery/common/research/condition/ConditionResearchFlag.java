@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchFlag;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public record ConditionResearchFlag(ResearchFlag flag) implements ResearchNodeCo
     public static final MapCodec<ConditionResearchFlag> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             StringRepresentable.fromEnum(ResearchFlag::values).fieldOf("flag").forGetter(ConditionResearchFlag::flag)
     ).apply(inst, ConditionResearchFlag::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ConditionResearchFlag> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ConditionResearchFlag> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(ResearchFlag.class),
             ConditionResearchFlag::flag,
             ConditionResearchFlag::new);

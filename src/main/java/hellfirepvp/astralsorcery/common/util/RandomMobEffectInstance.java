@@ -14,11 +14,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -42,7 +42,7 @@ public class RandomMobEffectInstance {
     public static final Codec<RandomMobEffectInstance> CODEC = RecordCodecBuilder.create(inst -> effectFields(inst).and(
             SINGLE_CODEC.optionalFieldOf("hidden_effect").forGetter(RandomMobEffectInstance::getHiddenEffect)
     ).apply(inst, RandomMobEffectInstance::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, RandomMobEffectInstance> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, RandomMobEffectInstance> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.holderRegistry(Registries.MOB_EFFECT),
             RandomMobEffectInstance::getEffect,
             IntRange.STREAM_CODEC,

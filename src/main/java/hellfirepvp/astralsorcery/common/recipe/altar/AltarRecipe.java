@@ -26,9 +26,9 @@ import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObj
 import hellfirepvp.astralsorcery.common.util.level.DayTimeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -66,7 +66,7 @@ public class AltarRecipe extends CustomRecipe<AltarRecipe, AltarCraftingInput> {
             Codec.list(AltarRecipeOutputModifier.CODEC).fieldOf("output_modifiers").forGetter(AltarRecipe::getOutputModifiers)
     ).apply(inst, AltarRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarRecipe> STREAM_CODEC = StreamCodec.of(AltarRecipe::write, AltarRecipe::read);
+    public static final StreamCodec<FriendlyByteBuf, AltarRecipe> STREAM_CODEC = StreamCodec.of(AltarRecipe::write, AltarRecipe::read);
 
     private final TileAltar.AltarType requiredType;
     private final AltarRecipeGrid grid;
@@ -249,7 +249,7 @@ public class AltarRecipe extends CustomRecipe<AltarRecipe, AltarCraftingInput> {
         return RecipeTypesAS.ALTAR_CRAFTING_TYPE;
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, AltarRecipe recipe) {
+    private static void write(FriendlyByteBuf buf, AltarRecipe recipe) {
         TileAltar.AltarType.STREAM_CODEC.encode(buf, recipe.getRequiredType());
         AltarRecipeGrid.STREAM_CODEC.encode(buf, recipe.getGrid());
         ItemStack.LIST_STREAM_CODEC.encode(buf, recipe.getOutputs());
@@ -260,13 +260,13 @@ public class AltarRecipe extends CustomRecipe<AltarRecipe, AltarCraftingInput> {
         ByteBufCodecs.BOOL.encode(buf, recipe.mayChain());
         ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS).apply(SetCodec.streamOp()).encode(buf, recipe.getRequiredStarlight());
         LumenStack.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.getRequiredLumen());
-        FluidStack.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.getRequiredFluid());
+        ByteBufCodecs.FLUID_STACK.apply(ByteBufCodecs.list()).encode(buf, recipe.getRequiredFluid());
         SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.getRequiredAdditionalInputs());
         ByteBufCodecs.registry(RegistriesAS.KEY_ALTAR_EFFECTS).apply(SetCodec.streamOp()).encode(buf, recipe.getEffects());
         AltarRecipeOutputModifier.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.getOutputModifiers());
     }
 
-    private static AltarRecipe read(RegistryFriendlyByteBuf buf) {
+    private static AltarRecipe read(FriendlyByteBuf buf) {
         TileAltar.AltarType requiredType = TileAltar.AltarType.STREAM_CODEC.decode(buf);
         AltarRecipeGrid grid = AltarRecipeGrid.STREAM_CODEC.decode(buf);
         List<ItemStack> outputs = ItemStack.LIST_STREAM_CODEC.decode(buf);
@@ -277,7 +277,7 @@ public class AltarRecipe extends CustomRecipe<AltarRecipe, AltarCraftingInput> {
         boolean mayChain = ByteBufCodecs.BOOL.decode(buf);
         Set<BaseConstellation> requiredStarlightLevels = ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS).apply(SetCodec.streamOp()).decode(buf);
         List<LumenStack> requiredLumen = LumenStack.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
-        List<FluidStack> requiredFluid = FluidStack.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
+        List<FluidStack> requiredFluid = ByteBufCodecs.FLUID_STACK.apply(ByteBufCodecs.list()).decode(buf);
         List<SizedIngredient> requiredAdditionalInputs = SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
         Set<AltarEffect> effects = ByteBufCodecs.registry(RegistriesAS.KEY_ALTAR_EFFECTS).apply(SetCodec.streamOp()).decode(buf);
         List<AltarRecipeOutputModifier> outputModifiers = AltarRecipeOutputModifier.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);

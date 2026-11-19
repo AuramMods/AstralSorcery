@@ -19,9 +19,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -64,7 +64,7 @@ public class InfusionRecipe extends CustomRecipe<InfusionRecipe, InfusionRecipeI
             Codec.BOOL.fieldOf("accept_chalice_input").forGetter(InfusionRecipe::acceptChaliceInput)
     ).apply(inst, InfusionRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, InfusionRecipe> STREAM_CODEC = StreamCodec.of(InfusionRecipe::write, InfusionRecipe::read);
+    public static final StreamCodec<FriendlyByteBuf, InfusionRecipe> STREAM_CODEC = StreamCodec.of(InfusionRecipe::write, InfusionRecipe::read);
 
     private final Ingredient itemInput;
     private final Fluid fluidInput;
@@ -171,21 +171,21 @@ public class InfusionRecipe extends CustomRecipe<InfusionRecipe, InfusionRecipeI
         return RecipeTypesAS.INFUSION_TYPE;
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, InfusionRecipe recipe) {
-        Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.getItemInput());
+    private static void write(FriendlyByteBuf buf, InfusionRecipe recipe) {
+        ByteBufCodecs.INGREDIENT.encode(buf, recipe.getItemInput());
         ByteBufCodecs.registry(Registries.FLUID).encode(buf, recipe.getFluidInput());
         buf.writeInt(recipe.getDuration());
-        ItemStack.STREAM_CODEC.encode(buf, recipe.getOutput());
+        ByteBufCodecs.ITEM_STACK.encode(buf, recipe.getOutput());
         buf.writeFloat(recipe.getFluidConsumptionChance());
         buf.writeBoolean(recipe.consumeMultipleFluids());
         buf.writeBoolean(recipe.acceptChaliceInput());
     }
 
-    private static InfusionRecipe read(RegistryFriendlyByteBuf buf) {
-        Ingredient itemInput = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
+    private static InfusionRecipe read(FriendlyByteBuf buf) {
+        Ingredient itemInput = ByteBufCodecs.INGREDIENT.decode(buf);
         Fluid fluidInput = ByteBufCodecs.registry(Registries.FLUID).decode(buf);
         int duration = buf.readInt();
-        ItemStack output = ItemStack.STREAM_CODEC.decode(buf);
+        ItemStack output = ByteBufCodecs.ITEM_STACK.decode(buf);
         float fluidConsumptionChance = buf.readFloat();
         boolean consumeMultipleFluids = buf.readBoolean();
         boolean acceptChaliceInput = buf.readBoolean();

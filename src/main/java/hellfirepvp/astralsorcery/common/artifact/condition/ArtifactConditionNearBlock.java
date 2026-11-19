@@ -19,10 +19,10 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -46,8 +46,8 @@ public class ArtifactConditionNearBlock extends ArtifactCondition {
             Codec.INT.fieldOf("range").forGetter(ArtifactConditionNearBlock::getRange),
             Codec.FLOAT.fieldOf("blockConsumptionChance").forGetter(ArtifactConditionNearBlock::getBlockConsumptionChance)
     ).apply(inst, ArtifactConditionNearBlock::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactConditionNearBlock> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactConditionNearBlock> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactCondition::getId,
             BlockPredicate.STREAM_CODEC,
             ArtifactConditionNearBlock::getBlockPredicate,

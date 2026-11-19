@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.perk.data.PerkTreeData;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,7 +36,7 @@ import java.util.List;
 public class PktSyncPerkTree extends PlayPacketHandler.ToClient<PktSyncPerkTree.Request> {
 
     static final CustomPacketPayload.Type<PktSyncPerkTree.Request> TYPE = makeType("sync_perk_tree");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             CodecUtil.rawJsonObjectStreamCodec().apply(ByteBufCodecs.list()),
             Request::rawPerkTree,
             Request::new
@@ -55,7 +55,7 @@ public class PktSyncPerkTree extends PlayPacketHandler.ToClient<PktSyncPerkTree.
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

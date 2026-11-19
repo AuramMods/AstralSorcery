@@ -8,12 +8,13 @@
 
 package hellfirepvp.astralsorcery.common.recipe.liquid.interaction.result;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LiquidInteractionResultTypesAS;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -31,8 +32,8 @@ public class LiquidInteractionResultDropItem extends LiquidInteractionResult {
             ItemStack.CODEC.fieldOf("output").forGetter(LiquidInteractionResultDropItem::getOutput)
     ).apply(inst, LiquidInteractionResultDropItem::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidInteractionResultDropItem> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.STREAM_CODEC, LiquidInteractionResultDropItem::getOutput,
+    public static final StreamCodec<FriendlyByteBuf, LiquidInteractionResultDropItem> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.ITEM_STACK, LiquidInteractionResultDropItem::getOutput,
             LiquidInteractionResultDropItem::new);
 
     public static final Type<LiquidInteractionResultDropItem> TYPE = new Type<>(CODEC, STREAM_CODEC);

@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
 import hellfirepvp.astralsorcery.common.lumen.binding.data.LumenBindingTypeLoader;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -35,14 +35,14 @@ import java.util.Map;
 public class PktSyncLumenBindingTypes extends PlayPacketHandler.ToClient<PktSyncLumenBindingTypes.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("sync_lumen_binding_types");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.map(size -> new HashMap<>(),
-                    ResourceLocation.STREAM_CODEC,
+                    ByteBufCodecs.RESOURCE_LOCATION,
                     ByteBufCodecs.fromCodecWithRegistries(LumenBindingType.CODEC)),
             Request::bindings,
             ByteBufCodecs.map(size -> new HashMap<>(),
-                    ResourceKey.streamCodec(RegistriesAS.KEY_LUMEN),
-                    ResourceLocation.STREAM_CODEC),
+                    ByteBufCodecs.resourceKey(RegistriesAS.KEY_LUMEN),
+                    ByteBufCodecs.RESOURCE_LOCATION),
             Request::lumenApplicationMapping,
             Request::new
     );
@@ -59,7 +59,7 @@ public class PktSyncLumenBindingTypes extends PlayPacketHandler.ToClient<PktSync
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

@@ -14,9 +14,9 @@ import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
@@ -41,7 +41,7 @@ public class AltarOutputSetBlock extends AltarRecipeOutputModifier {
     public static final MapCodec<AltarOutputSetBlock> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             WeightedEntry.Wrapper.codec(BlockState.CODEC).listOf().fieldOf("block_states").forGetter(AltarOutputSetBlock::getBlockStates)
     ).apply(inst, AltarOutputSetBlock::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputSetBlock> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputSetBlock> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodecWithRegistries(WeightedEntry.Wrapper.codec(BlockState.CODEC)).apply(ByteBufCodecs.list()),
             AltarOutputSetBlock::getBlockStates,
             AltarOutputSetBlock::new);

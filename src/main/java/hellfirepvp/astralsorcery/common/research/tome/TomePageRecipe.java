@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.research.tome;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.client.screen.tome.page.RenderPage;
@@ -20,8 +21,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -47,10 +48,10 @@ public record TomePageRecipe(ResourceKey<RecipeType<?>> type, ResourceLocation r
             ResourceKey.codec(Registries.RECIPE_TYPE).fieldOf("recipe_type").forGetter(TomePageRecipe::type),
             ResourceLocation.CODEC.fieldOf("recipeId").forGetter(TomePageRecipe::recipeId)
     ).apply(inst, TomePageRecipe::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TomePageRecipe> STREAM_CODEC = StreamCodec.composite(
-            ResourceKey.streamCodec(Registries.RECIPE_TYPE),
+    public static final StreamCodec<FriendlyByteBuf, TomePageRecipe> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.resourceKey(Registries.RECIPE_TYPE),
             TomePageRecipe::type,
-            ResourceLocation.STREAM_CODEC,
+            ByteBufCodecs.RESOURCE_LOCATION,
             TomePageRecipe::recipeId,
             TomePageRecipe::new);
 

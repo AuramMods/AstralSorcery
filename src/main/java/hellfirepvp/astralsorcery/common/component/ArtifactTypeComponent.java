@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.component;
 import com.mojang.serialization.Codec;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactType;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import java.util.Objects;
 
@@ -28,7 +28,7 @@ public record ArtifactTypeComponent(ArtifactType type) {
 
     public static final Codec<ArtifactTypeComponent> CODEC =
             RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_TYPES).xmap(ArtifactTypeComponent::new, ArtifactTypeComponent::type);
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactTypeComponent> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, ArtifactTypeComponent> STREAM_CODEC =
             ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_TYPES).map(ArtifactTypeComponent::new, ArtifactTypeComponent::type);
 
     @Override

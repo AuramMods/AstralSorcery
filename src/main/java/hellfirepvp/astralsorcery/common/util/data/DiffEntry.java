@@ -8,9 +8,9 @@
 
 package hellfirepvp.astralsorcery.common.util.data;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -21,11 +21,11 @@ import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
  */
 public record DiffEntry<T>(T value, DiffEntry.Type type) {
 
-    public static <T> StreamCodec<RegistryFriendlyByteBuf, DiffEntry<T>> streamCodec(StreamCodec<RegistryFriendlyByteBuf, T> valueCodec) {
+    public static <T> StreamCodec<FriendlyByteBuf, DiffEntry<T>> streamCodec(StreamCodec<FriendlyByteBuf, T> valueCodec) {
         return StreamCodec.composite(
                 valueCodec,
                 DiffEntry::value,
-                NeoForgeStreamCodecs.enumCodec(Type.class),
+                CodecUtil.enumStreamCodec(Type.class),
                 DiffEntry::type,
                 DiffEntry::new);
     }

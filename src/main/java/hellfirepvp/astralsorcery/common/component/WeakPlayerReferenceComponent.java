@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.component;
 
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.Util;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -30,7 +30,7 @@ public record WeakPlayerReferenceComponent(UUID playerUUID) {
 
     public static final WeakPlayerReferenceComponent NONE = new WeakPlayerReferenceComponent(Util.NIL_UUID);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, WeakPlayerReferenceComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, WeakPlayerReferenceComponent> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.uuidStreamCodec(),
             WeakPlayerReferenceComponent::playerUUID,
             WeakPlayerReferenceComponent::new

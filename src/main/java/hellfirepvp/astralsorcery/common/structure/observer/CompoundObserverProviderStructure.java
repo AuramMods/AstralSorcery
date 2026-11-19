@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.structure.observer;
 
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

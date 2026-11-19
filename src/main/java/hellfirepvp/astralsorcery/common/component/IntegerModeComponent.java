@@ -10,9 +10,9 @@ package hellfirepvp.astralsorcery.common.component;
 
 import com.mojang.serialization.Codec;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ public record IntegerModeComponent(int mode) {
 
     public static final Codec<IntegerModeComponent> CODEC = Codec.INT.xmap(IntegerModeComponent::new, IntegerModeComponent::mode);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, IntegerModeComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, IntegerModeComponent> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             IntegerModeComponent::mode,
             IntegerModeComponent::new);

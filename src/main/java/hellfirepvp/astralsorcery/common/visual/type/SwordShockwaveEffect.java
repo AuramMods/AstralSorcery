@@ -21,9 +21,9 @@ import hellfirepvp.astralsorcery.common.visual.VectorPosEffect;
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
  */
 public class SwordShockwaveEffect extends VectorPosEffect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SwordShockwaveEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, SwordShockwaveEffect> STREAM_CODEC = StreamCodec.composite(
             Vector3.STREAM_CODEC,
             VectorPosEffect::getPos,
             ByteBufCodecs.VAR_INT,

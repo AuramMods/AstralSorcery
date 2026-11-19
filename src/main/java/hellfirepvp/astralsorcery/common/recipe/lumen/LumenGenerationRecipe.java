@@ -17,9 +17,9 @@ import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -48,7 +48,7 @@ public class LumenGenerationRecipe extends CustomRecipe<LumenGenerationRecipe, L
             Codec.FLOAT.fieldOf("catalyst_shatter_multiplier").forGetter(LumenGenerationRecipe::getCatalystShatterMultiplier),
             Codec.unboundedMap(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), Codec.INT).fieldOf("lumen_combination_inputs").orElse(Collections.emptyMap()).forGetter(LumenGenerationRecipe::getLumenCombinationInputs)
     ).apply(inst, LumenGenerationRecipe::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenGenerationRecipe> STREAM_CODEC = StreamCodec.of(LumenGenerationRecipe::write, LumenGenerationRecipe::read);
+    public static final StreamCodec<FriendlyByteBuf, LumenGenerationRecipe> STREAM_CODEC = StreamCodec.of(LumenGenerationRecipe::write, LumenGenerationRecipe::read);
 
     private final Ingredient input;
     private final Lumen producedLumen;
@@ -126,25 +126,25 @@ public class LumenGenerationRecipe extends CustomRecipe<LumenGenerationRecipe, L
         return RecipeTypesAS.LUMEN_GENERATION_TYPE;
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, LumenGenerationRecipe recipe) {
-        Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.getInput());
-        ByteBufCodecs.fromCodecWithRegistriesTrusted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)).encode(buf, recipe.getProducedLumen());
+    private static void write(FriendlyByteBuf buf, LumenGenerationRecipe recipe) {
+        ByteBufCodecs.INGREDIENT.encode(buf, recipe.getInput());
+        ByteBufCodecs.fromCodecWithRegistries(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)).encode(buf, recipe.getProducedLumen());
         ByteBufCodecs.INT.encode(buf, recipe.getProducedLumenAmount());
         ByteBufCodecs.FLOAT.encode(buf, recipe.getProductionAttemptMultiplier());
         ByteBufCodecs.FLOAT.encode(buf, recipe.getAttemptStarlightConsumption());
         ByteBufCodecs.FLOAT.encode(buf, recipe.getCatalystShatterMultiplier());
-        ByteBufCodecs.map(i -> (Map<Lumen, Integer>) new HashMap<Lumen, Integer>(), ByteBufCodecs.fromCodecWithRegistriesTrusted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)), ByteBufCodecs.INT)
+        ByteBufCodecs.map(i -> (Map<Lumen, Integer>) new HashMap<Lumen, Integer>(), ByteBufCodecs.fromCodecWithRegistries(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)), ByteBufCodecs.INT)
                 .encode(buf, recipe.getLumenCombinationInputs());
     }
 
-    private static LumenGenerationRecipe read(RegistryFriendlyByteBuf buf) {
-        Ingredient input = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
-        Lumen producedLumen = ByteBufCodecs.fromCodecWithRegistriesTrusted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)).decode(buf);
+    private static LumenGenerationRecipe read(FriendlyByteBuf buf) {
+        Ingredient input = ByteBufCodecs.INGREDIENT.decode(buf);
+        Lumen producedLumen = ByteBufCodecs.fromCodecWithRegistries(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)).decode(buf);
         int producedLumenAmount = ByteBufCodecs.INT.decode(buf);
         float productionAttemptMultiplier = ByteBufCodecs.FLOAT.decode(buf);
         float attemptStarlightConsumption = ByteBufCodecs.FLOAT.decode(buf);
         float catalystShatterMultiplier = ByteBufCodecs.FLOAT.decode(buf);
-        Map<Lumen, Integer> lumenCombinationInputs = ByteBufCodecs.map(i -> new HashMap<>(), ByteBufCodecs.fromCodecWithRegistriesTrusted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)), ByteBufCodecs.INT).decode(buf);
+        Map<Lumen, Integer> lumenCombinationInputs = ByteBufCodecs.map(i -> new HashMap<>(), ByteBufCodecs.fromCodecWithRegistries(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)), ByteBufCodecs.INT).decode(buf);
         return new LumenGenerationRecipe(input, producedLumen, producedLumenAmount, productionAttemptMultiplier, attemptStarlightConsumption, catalystShatterMultiplier, lumenCombinationInputs);
     }
 }

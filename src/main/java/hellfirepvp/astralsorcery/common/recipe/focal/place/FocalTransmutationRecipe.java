@@ -21,9 +21,9 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
@@ -62,16 +62,16 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
             Codec.BOOL.fieldOf("requires_focused_starlight").forGetter(FocalTransmutationRecipe::requiresFocusedStarlight)
     ).apply(inst, FocalTransmutationRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FocalTransmutationRecipe> STREAM_CODEC = CodecUtil.streamComposite(
+    public static final StreamCodec<FriendlyByteBuf, FocalTransmutationRecipe> STREAM_CODEC = CodecUtil.streamComposite(
             ByteBufCodecs.INT,
             FocalTransmutationRecipe::getDuration,
             ColorWrapper.STREAM_CODEC,
             FocalTransmutationRecipe::getColor,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockPredicate.CODEC).apply(ByteBufCodecs.list()),
+            ByteBufCodecs.fromCodecWithRegistries(BlockPredicate.CODEC).apply(ByteBufCodecs.list()),
             FocalTransmutationRecipe::getInputPredicates,
-            Ingredient.CONTENTS_STREAM_CODEC,
+            ByteBufCodecs.INGREDIENT,
             FocalTransmutationRecipe::getInputDisplay,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(WeightedEntry.Wrapper.codec(BlockState.CODEC)).apply(ByteBufCodecs.list()),
+            ByteBufCodecs.fromCodecWithRegistries(WeightedEntry.Wrapper.codec(BlockState.CODEC)).apply(ByteBufCodecs.list()),
             FocalTransmutationRecipe::getOutputStates,
             ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS)),
             FocalTransmutationRecipe::getRequiredConstellation,

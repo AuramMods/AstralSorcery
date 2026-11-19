@@ -34,11 +34,11 @@ import hellfirepvp.astralsorcery.common.util.NameUtil;
 import hellfirepvp.astralsorcery.common.util.data.FloatPoint;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
 import net.minecraft.Util;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -66,7 +66,7 @@ public abstract class AbstractPerk<T extends AbstractPerk.Data> implements Modif
 
     public static final Codec<AbstractPerk<?>> DATAPACK_CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_TYPES)
             .dispatch(AbstractPerk::getType, PerkType::perkCodec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AbstractPerk<?>> TO_CLIENT_PERKTREE_CODEC = StreamCodec.of(
+    public static final StreamCodec<FriendlyByteBuf, AbstractPerk<?>> TO_CLIENT_PERKTREE_CODEC = StreamCodec.of(
             (buf, perk) -> buf.writeResourceLocation(perk.getKey()),
             buf -> PerkTree.getInstance().getPerk(LogicalSide.CLIENT, buf.readResourceLocation()).orElseThrow()
     );
@@ -351,7 +351,7 @@ public abstract class AbstractPerk<T extends AbstractPerk.Data> implements Modif
             );
         }
         public static final MapCodec<Data> CODEC = RecordCodecBuilder.mapCodec(inst -> dataFields(inst).apply(inst, Data::new));
-        public static final StreamCodec<RegistryFriendlyByteBuf, Data> SYNC_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, Data> SYNC_CODEC = StreamCodec.composite(
                 ByteBufCodecs.BOOL,
                 Data::isSealed,
                 Data::new

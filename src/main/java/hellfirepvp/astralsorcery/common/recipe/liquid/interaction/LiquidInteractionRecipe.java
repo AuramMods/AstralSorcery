@@ -16,9 +16,9 @@ import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.recipe.liquid.interaction.result.LiquidInteractionResult;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -52,7 +52,7 @@ public class LiquidInteractionRecipe extends CustomRecipe<LiquidInteractionRecip
             LiquidInteractionResult.CODEC.fieldOf("result").forGetter(LiquidInteractionRecipe::getResult)
     ).apply(inst, LiquidInteractionRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidInteractionRecipe> STREAM_CODEC = StreamCodec.of(
+    public static final StreamCodec<FriendlyByteBuf, LiquidInteractionRecipe> STREAM_CODEC = StreamCodec.of(
             LiquidInteractionRecipe::write,
             LiquidInteractionRecipe::read);
 
@@ -209,7 +209,7 @@ public class LiquidInteractionRecipe extends CustomRecipe<LiquidInteractionRecip
         return null;
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, LiquidInteractionRecipe recipe) {
+    private static void write(FriendlyByteBuf buf, LiquidInteractionRecipe recipe) {
         SizedFluidIngredient.STREAM_CODEC.encode(buf, recipe.reactantA);
         SizedFluidIngredient.STREAM_CODEC.encode(buf, recipe.reactantB);
         ByteBufCodecs.FLOAT.encode(buf, recipe.chanceConsumeA);
@@ -218,7 +218,7 @@ public class LiquidInteractionRecipe extends CustomRecipe<LiquidInteractionRecip
         LiquidInteractionResult.STREAM_CODEC.encode(buf, recipe.result);
     }
 
-    private static LiquidInteractionRecipe read(RegistryFriendlyByteBuf buf) {
+    private static LiquidInteractionRecipe read(FriendlyByteBuf buf) {
         SizedFluidIngredient reactantA = SizedFluidIngredient.STREAM_CODEC.decode(buf);
         SizedFluidIngredient reactantB = SizedFluidIngredient.STREAM_CODEC.decode(buf);
         float chanceA = ByteBufCodecs.FLOAT.decode(buf);

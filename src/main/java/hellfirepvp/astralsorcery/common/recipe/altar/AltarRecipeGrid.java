@@ -16,8 +16,8 @@ import hellfirepvp.astralsorcery.common.ingredient.IngredientBridge;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.CharacterCodec;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -43,7 +43,7 @@ public class AltarRecipeGrid {
                     .orElseGet(() -> DataResult.error(() -> "Grid is unpacked and cannot be serialized"))
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarRecipeGrid> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, AltarRecipeGrid> STREAM_CODEC =
             StreamCodec.of(AltarRecipeGrid::write, AltarRecipeGrid::read);
 
     private final NonNullList<IngredientBridge> inputs = NonNullList.withSize(9, IngredientBridge.EMPTY);
@@ -104,7 +104,7 @@ public class AltarRecipeGrid {
         return DataResult.success(grid);
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, AltarRecipeGrid recipe) {
+    private static void write(FriendlyByteBuf buf, AltarRecipeGrid recipe) {
         for (IngredientBridge ingredient : recipe.inputs) {
             IngredientBridge.STREAM_CODEC.encode(buf, ingredient);
         }
@@ -113,7 +113,7 @@ public class AltarRecipeGrid {
         }
     }
 
-    private static AltarRecipeGrid read(RegistryFriendlyByteBuf buf) {
+    private static AltarRecipeGrid read(FriendlyByteBuf buf) {
         AltarRecipeGrid grid = new AltarRecipeGrid(null);
         grid.inputs.replaceAll(ingredient -> IngredientBridge.STREAM_CODEC.decode(buf));
         grid.relayInputs.replaceAll(ingredient -> IngredientBridge.STREAM_CODEC.decode(buf));

@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,7 +39,7 @@ public class AttunedConstellationComponent extends ConstellationPaperComponent {
     public static final Codec<AttunedConstellationComponent> CODEC = ConstellationPaperComponent.CODEC
             .xmap(AttunedConstellationComponent::wrap, Function.identity());
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AttunedConstellationComponent> STREAM_CODEC = ConstellationPaperComponent.STREAM_CODEC
+    public static final StreamCodec<FriendlyByteBuf, AttunedConstellationComponent> STREAM_CODEC = ConstellationPaperComponent.STREAM_CODEC
             .map(AttunedConstellationComponent::wrap, Function.identity());
 
     public AttunedConstellationComponent(@Nullable BaseConstellation constellation) {

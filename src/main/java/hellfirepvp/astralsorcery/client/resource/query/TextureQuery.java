@@ -15,8 +15,7 @@ import hellfirepvp.astralsorcery.client.resource.AssetLibrary;
 import hellfirepvp.astralsorcery.client.resource.AssetLocation;
 import hellfirepvp.astralsorcery.common.util.ClientObject;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,7 +36,7 @@ public class TextureQuery {
             StringRepresentable.fromEnum(AssetLocation::values).fieldOf("location").forGetter(query -> query.location),
             Codec.STRING.listOf().fieldOf("path").forGetter(TextureQuery::getPath)
     ).apply(inst, TextureQuery::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TextureQuery> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, TextureQuery> STREAM_CODEC =
             StreamCodec.of(TextureQuery::write, TextureQuery::read);
 
     private final AssetLocation location;
@@ -70,13 +69,13 @@ public class TextureQuery {
         return this.resource.get();
     }
 
-    private static TextureQuery read(RegistryFriendlyByteBuf buf) {
+    private static TextureQuery read(FriendlyByteBuf buf) {
         AssetLocation location = buf.readEnum(AssetLocation.class);
         String[] path = buf.readArray(String[]::new, FriendlyByteBuf::readUtf);
         return new TextureQuery(location, path);
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, TextureQuery textureQuery) {
+    private static void write(FriendlyByteBuf buf, TextureQuery textureQuery) {
         buf.writeEnum(textureQuery.location);
         buf.writeArray(textureQuery.path, FriendlyByteBuf::writeUtf);
     }

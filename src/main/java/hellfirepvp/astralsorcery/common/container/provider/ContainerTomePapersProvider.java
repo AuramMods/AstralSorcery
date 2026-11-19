@@ -12,7 +12,7 @@ import hellfirepvp.astralsorcery.common.container.ContainerTomePapers;
 import hellfirepvp.astralsorcery.common.container.base.ContainerProviderCustom;
 import hellfirepvp.astralsorcery.common.lib.MenuTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.MenuTypeRegistryObject;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,7 +42,7 @@ public class ContainerTomePapersProvider extends ContainerProviderCustom<Contain
     }
 
     @Override
-    public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
+    public void writeClientSideData(AbstractContainerMenu menu, FriendlyByteBuf buffer) {
         buffer.writeInt(this.tomeSlotId);
     }
 
@@ -56,7 +56,7 @@ public class ContainerTomePapersProvider extends ContainerProviderCustom<Contain
         return new ContainerTomePapers(MenuTypesAS.TOME_PAPERS.type(), playerInventory, tomeSlotId, containerId);
     }
 
-    public static ContainerTomePapers createClient(int windowId, Inventory inv, RegistryFriendlyByteBuf data) {
+    public static ContainerTomePapers createClient(int windowId, Inventory inv, FriendlyByteBuf data) {
         return new ContainerTomePapers(MenuTypesAS.TOME_PAPERS.type(), inv, data.readInt(), windowId);
     }
 }

@@ -16,11 +16,11 @@ import hellfirepvp.astralsorcery.common.lib.types.ArtifactConditionTypesAS;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -49,16 +49,16 @@ public class ArtifactConditionDamageType extends ArtifactCondition implements On
             ComponentSerialization.CODEC.fieldOf("hiddenDescription").forGetter(ArtifactConditionDamageType::getHiddenDescription),
             ComponentSerialization.CODEC.fieldOf("clearDescription").forGetter(ArtifactConditionDamageType::getClearDescription)
     ).apply(inst, ArtifactConditionDamageType::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactConditionDamageType> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactConditionDamageType> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactCondition::getId,
-            ResourceKey.streamCodec(Registries.DAMAGE_TYPE).apply(ByteBufCodecs.list()),
+            ByteBufCodecs.resourceKey(Registries.DAMAGE_TYPE).apply(ByteBufCodecs.list()),
             ArtifactConditionDamageType::getDamageTypes,
             CodecUtil.tagKeyStreamCodec(Registries.DAMAGE_TYPE).apply(ByteBufCodecs.list()),
             ArtifactConditionDamageType::getDamageTypeTags,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionDamageType::getHiddenDescription,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionDamageType::getClearDescription,
             ArtifactConditionDamageType::new);
 

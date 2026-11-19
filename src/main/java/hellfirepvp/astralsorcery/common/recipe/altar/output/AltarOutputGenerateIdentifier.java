@@ -13,8 +13,8 @@ import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
@@ -30,7 +30,7 @@ public class AltarOutputGenerateIdentifier extends AltarRecipeOutputModifier {
 
     public static final AltarOutputGenerateIdentifier INSTANCE = new AltarOutputGenerateIdentifier();
     public static final MapCodec<AltarOutputGenerateIdentifier> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputGenerateIdentifier> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputGenerateIdentifier> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<AltarOutputGenerateIdentifier> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private AltarOutputGenerateIdentifier() {}

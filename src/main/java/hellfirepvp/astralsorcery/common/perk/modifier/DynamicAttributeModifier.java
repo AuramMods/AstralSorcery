@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.perk.type.base.ModifierType;
 import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.util.MutableIdentity;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import java.util.function.Supplier;
 
@@ -36,7 +36,7 @@ public class DynamicAttributeModifier extends PerkAttributeModifier {
             CodecUtil.enumCodec(ModifierType.class).fieldOf("mode").forGetter(DynamicAttributeModifier::getMode),
             Codec.FLOAT.fieldOf("value").forGetter(DynamicAttributeModifier::getRawValue)
     ).apply(inst, DynamicAttributeModifier::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, DynamicAttributeModifier> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, DynamicAttributeModifier> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,
             MutableIdentity::getIdentifier,
             ByteBufCodecs.registry(RegistriesAS.KEY_PERK_ATTRIBUTE_TYPES),

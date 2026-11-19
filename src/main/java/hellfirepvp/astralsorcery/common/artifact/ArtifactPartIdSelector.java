@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.artifact;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
@@ -31,10 +31,10 @@ public class ArtifactPartIdSelector {
             Codec.INT.fieldOf("weight").forGetter(ArtifactPartIdSelector::getWeight),
             Codec.list(ResourceLocation.CODEC).fieldOf("conflicts").forGetter(selector -> List.copyOf(selector.conflicts))
     ).apply(inst, ArtifactPartIdSelector::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactPartIdSelector> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ArtifactPartIdSelector> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             ArtifactPartIdSelector::getWeight,
-            ResourceLocation.STREAM_CODEC.apply(SetCodec.streamOp()),
+            ByteBufCodecs.RESOURCE_LOCATION.apply(SetCodec.streamOp()),
             ArtifactPartIdSelector::getConflicts,
             ArtifactPartIdSelector::new);
 

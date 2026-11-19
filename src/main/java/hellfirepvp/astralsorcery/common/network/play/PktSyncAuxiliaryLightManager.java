@@ -10,9 +10,9 @@ package hellfirepvp.astralsorcery.common.network.play;
 
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -29,8 +29,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktSyncAuxiliaryLightManager extends PlayPacketHandler.ToClient<PktSyncAuxiliaryLightManager.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("sync_aux_light_manager");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC,
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+            ByteBufCodecs.BLOCK_POS,
             Request::pos,
             ByteBufCodecs.INT,
             Request::lightLevel,
@@ -48,7 +48,7 @@ public class PktSyncAuxiliaryLightManager extends PlayPacketHandler.ToClient<Pkt
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

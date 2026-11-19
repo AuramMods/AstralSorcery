@@ -13,10 +13,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.FlagExecutor;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +40,7 @@ public class LumenBindingDamageBurstEffect extends LumenBindingEffect {
             Codec.FLOAT.fieldOf("radius_blocks").forGetter(LumenBindingDamageBurstEffect::getRadiusBlocks),
             Codec.FLOAT.fieldOf("damage_multiplier").forGetter(LumenBindingDamageBurstEffect::getDamageMultiplier)
     ).apply(inst, LumenBindingDamageBurstEffect::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingDamageBurstEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingDamageBurstEffect> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT,
             LumenBindingDamageBurstEffect::getRadiusBlocks,
             ByteBufCodecs.FLOAT,

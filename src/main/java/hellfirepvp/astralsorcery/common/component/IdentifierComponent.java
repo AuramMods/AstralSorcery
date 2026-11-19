@@ -13,8 +13,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.Util;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
@@ -35,7 +35,7 @@ public record IdentifierComponent(UUID id) {
             CodecUtil.uuidCodec().fieldOf("id").forGetter(IdentifierComponent::id)
     ).apply(inst, IdentifierComponent::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, IdentifierComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, IdentifierComponent> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.uuidStreamCodec(),
             IdentifierComponent::id,
             IdentifierComponent::new

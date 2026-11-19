@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.network.play;
 
 import hellfirepvp.astralsorcery.common.linking.session.LinkSessionHelper;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -26,7 +26,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktRequestCancelLinkSession extends PlayPacketHandler.ToServer<PktRequestCancelLinkSession.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("request_cancel_link_session");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.unit(Request.INSTANCE);
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.unit(Request.INSTANCE);
 
     public static final PktRequestCancelLinkSession HANDLER = new PktRequestCancelLinkSession();
 
@@ -39,7 +39,7 @@ public class PktRequestCancelLinkSession extends PlayPacketHandler.ToServer<PktR
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

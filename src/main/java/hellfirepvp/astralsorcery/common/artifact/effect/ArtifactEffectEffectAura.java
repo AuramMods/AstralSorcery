@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.lib.types.ArtifactEffectTypesAS;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -51,10 +51,10 @@ public class ArtifactEffectEffectAura extends ArtifactEffect implements Continuo
             Codec.INT.fieldOf("range").forGetter(ArtifactEffectEffectAura::getRange),
             MobEffectInstance.CODEC.listOf().fieldOf("effects").forGetter(ArtifactEffectEffectAura::getEffects)
     ).apply(inst, ArtifactEffectEffectAura::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectEffectAura> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, ArtifactEffect::getId,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectEffectAura> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION, ArtifactEffect::getId,
             ByteBufCodecs.INT, ArtifactEffectEffectAura::getRange,
-            MobEffectInstance.STREAM_CODEC.apply(ByteBufCodecs.list()), ArtifactEffectEffectAura::getEffects,
+            ByteBufCodecs.MOB_EFFECT_INSTANCE.apply(ByteBufCodecs.list()), ArtifactEffectEffectAura::getEffects,
             ArtifactEffectEffectAura::new);
 
     private final int range;

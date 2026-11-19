@@ -12,9 +12,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -33,7 +33,7 @@ public abstract class ArtifactEffect {
 
     public static final Codec<ArtifactEffect> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_EFFECT_TYPES)
             .dispatch(ArtifactEffect::unwrapType, ArtifactEffect.Type::codec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_EFFECT_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_EFFECT_TYPES)
             .dispatch(ArtifactEffect::unwrapType, ArtifactEffect.Type::streamCodec);
 
     private final ResourceLocation id;
@@ -54,7 +54,7 @@ public abstract class ArtifactEffect {
 
     public abstract void applyEffect(RandomSource rand, ServerLevel sLevel, ItemEntityArtifact artifact);
 
-    public record Type<T extends ArtifactEffect>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
+    public record Type<T extends ArtifactEffect>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) {}
 
     public record DeferredType<T extends ArtifactEffect>(RegistryObject<ArtifactEffect.Type<T>> holder) {}
 

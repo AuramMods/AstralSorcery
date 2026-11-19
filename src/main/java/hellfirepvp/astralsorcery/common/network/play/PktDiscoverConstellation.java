@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.research.ResearchHelper;
 import hellfirepvp.astralsorcery.common.research.ResearchMessageHelper;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -30,7 +30,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktDiscoverConstellation extends PlayPacketHandler.ToServer<PktDiscoverConstellation.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("discover_constellation");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktDiscoverConstellation.Request> CODEC =
+    static final StreamCodec<FriendlyByteBuf, PktDiscoverConstellation.Request> CODEC =
             StreamCodec.composite(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS), Request::constellation, Request::new);
 
     public static final PktDiscoverConstellation HANDLER = new PktDiscoverConstellation();
@@ -44,7 +44,7 @@ public class PktDiscoverConstellation extends PlayPacketHandler.ToServer<PktDisc
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

@@ -17,9 +17,9 @@ import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
 import hellfirepvp.astralsorcery.common.lib.types.ArtifactEffectTypesAS;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -52,8 +52,8 @@ public class ArtifactEffectEatFoodAura extends ArtifactEffect implements Continu
             Codec.INT.fieldOf("interval").forGetter(ArtifactEffectEatFoodAura::getInterval),
             Codec.FLOAT.fieldOf("chance").forGetter(ArtifactEffectEatFoodAura::getChance)
     ).apply(inst, ArtifactEffectEatFoodAura::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectEatFoodAura> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, ArtifactEffect::getId,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectEatFoodAura> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION, ArtifactEffect::getId,
             ByteBufCodecs.INT, ArtifactEffectEatFoodAura::getRange,
             ByteBufCodecs.INT, ArtifactEffectEatFoodAura::getInterval,
             ByteBufCodecs.FLOAT, ArtifactEffectEatFoodAura::getChance,

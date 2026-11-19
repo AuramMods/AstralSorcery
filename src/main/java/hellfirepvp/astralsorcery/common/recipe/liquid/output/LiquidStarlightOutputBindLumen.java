@@ -35,8 +35,8 @@ import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -64,7 +64,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
 
     private static final LiquidStarlightOutputBindLumen INSTANCE = new LiquidStarlightOutputBindLumen();
     public static final MapCodec<LiquidStarlightOutputBindLumen> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputBindLumen> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightOutputBindLumen> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<LiquidStarlightOutputBindLumen> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private final RandomSource rand = RandomSource.create();

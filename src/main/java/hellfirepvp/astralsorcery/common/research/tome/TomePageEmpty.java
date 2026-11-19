@@ -13,8 +13,8 @@ import hellfirepvp.astralsorcery.client.screen.tome.page.RenderPage;
 import hellfirepvp.astralsorcery.client.screen.tome.page.RenderPageEmpty;
 import hellfirepvp.astralsorcery.common.lib.types.TomePageTypesAS;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 public final class TomePageEmpty implements TomePage {
 
     public static final MapCodec<TomePageEmpty> CODEC = MapCodec.unit(TomePageEmpty::getInstance);
-    public static final StreamCodec<RegistryFriendlyByteBuf, TomePageEmpty> STREAM_CODEC = StreamCodec.unit(TomePageEmpty.getInstance());
+    public static final StreamCodec<FriendlyByteBuf, TomePageEmpty> STREAM_CODEC = StreamCodec.unit(TomePageEmpty.getInstance());
 
     private static final TomePageEmpty INSTANCE = new TomePageEmpty();
 

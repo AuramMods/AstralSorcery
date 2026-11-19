@@ -28,8 +28,8 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.Holder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +50,7 @@ public class LiquidStarlightOutputFillLumen extends LiquidStarlightRecipeOutputM
 
     private static final LiquidStarlightOutputFillLumen INSTANCE = new LiquidStarlightOutputFillLumen();
     public static final MapCodec<LiquidStarlightOutputFillLumen> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputFillLumen> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightOutputFillLumen> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<LiquidStarlightOutputFillLumen> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private LiquidStarlightOutputFillLumen() {}

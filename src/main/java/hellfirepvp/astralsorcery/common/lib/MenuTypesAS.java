@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.container.provider.ContainerAltarProvide
 import hellfirepvp.astralsorcery.common.container.provider.ContainerTomePapersProvider;
 import hellfirepvp.astralsorcery.common.util.data.MenuTypeRegistryObject;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;

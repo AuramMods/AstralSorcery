@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.util.BlockUtil;
 import hellfirepvp.astralsorcery.common.util.data.RandomWeightedList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -42,14 +42,14 @@ public class ArtifactEffectPlaceBlocks extends ArtifactEffect {
             Codec.FLOAT.fieldOf("place_chance").forGetter(ArtifactEffectPlaceBlocks::getPlaceChance),
             RandomWeightedList.codec(BlockState.CODEC).fieldOf("palette").forGetter(ArtifactEffectPlaceBlocks::getPalette)
     ).apply(inst, ArtifactEffectPlaceBlocks::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectPlaceBlocks> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectPlaceBlocks> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactEffect::getId,
             ByteBufCodecs.INT,
             ArtifactEffectPlaceBlocks::getRange,
             ByteBufCodecs.FLOAT,
             ArtifactEffectPlaceBlocks::getPlaceChance,
-            RandomWeightedList.streamCodec(ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockState.CODEC)),
+            RandomWeightedList.streamCodec(ByteBufCodecs.fromCodecWithRegistries(BlockState.CODEC)),
             ArtifactEffectPlaceBlocks::getPalette,
             ArtifactEffectPlaceBlocks::new);
 

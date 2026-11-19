@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,7 +41,7 @@ public record TomePageLumenDescription(Lumen lumen, List<LumenBindingType.SlotTy
             RegistriesAS.codec(RegistriesAS.KEY_LUMEN).fieldOf("lumen").forGetter(TomePageLumenDescription::lumen),
             StringRepresentable.fromEnum(LumenBindingType.SlotType::values).listOf().fieldOf("slots").forGetter(TomePageLumenDescription::slots)
     ).apply(inst, TomePageLumenDescription::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TomePageLumenDescription> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, TomePageLumenDescription> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN),
             TomePageLumenDescription::lumen,
             CodecUtil.enumStreamCodec(LumenBindingType.SlotType.class).apply(ByteBufCodecs.list()),

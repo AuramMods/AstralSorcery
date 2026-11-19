@@ -23,9 +23,9 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColumnPos;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,7 +46,7 @@ public abstract class FocalPointNode {
     public static final Codec<FocalPointNode> CODEC = RegistriesAS.codec(RegistriesAS.KEY_FOCAL_NODE_TYPES)
             .dispatch(FocalPointNode::getType, FocalPointNode.Type::codec);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FocalPointNode> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_FOCAL_NODE_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, FocalPointNode> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_FOCAL_NODE_TYPES)
             .dispatch(FocalPointNode::getType, FocalPointNode.Type::syncCodec);
 
     private final ColumnPos pos;
@@ -119,5 +119,5 @@ public abstract class FocalPointNode {
 
     public abstract Type<?> getType();
 
-    public record Type<T extends FocalPointNode>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> syncCodec) {}
+    public record Type<T extends FocalPointNode>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> syncCodec) {}
 }

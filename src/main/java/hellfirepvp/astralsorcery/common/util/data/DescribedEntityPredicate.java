@@ -13,11 +13,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -42,8 +41,8 @@ public record DescribedEntityPredicate(List<ResourceKey<EntityType<?>>> entityTy
             ResourceKey.codec(Registries.ENTITY_TYPE).listOf().fieldOf("damageTypes").forGetter(DescribedEntityPredicate::entityTypes),
             TagKey.codec(Registries.ENTITY_TYPE).listOf().fieldOf("damageTypeTags").forGetter(DescribedEntityPredicate::entityTags)
     ).apply(inst, DescribedEntityPredicate::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, DescribedEntityPredicate> STREAM_CODEC = StreamCodec.composite(
-            ResourceKey.streamCodec(Registries.ENTITY_TYPE).apply(ByteBufCodecs.list()),
+    public static final StreamCodec<FriendlyByteBuf, DescribedEntityPredicate> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.resourceKey(Registries.ENTITY_TYPE).apply(ByteBufCodecs.list()),
             DescribedEntityPredicate::entityTypes,
             CodecUtil.tagKeyStreamCodec(Registries.ENTITY_TYPE).apply(ByteBufCodecs.list()),
             DescribedEntityPredicate::entityTags,

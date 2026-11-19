@@ -22,9 +22,9 @@ import hellfirepvp.observerlib.api.structure.MatchableStructure;
 import hellfirepvp.observerlib.api.util.StructureBlockArray;
 import hellfirepvp.observerlib.common.change.ObserverProviderStructure;
 import hellfirepvp.observerlib.common.registry.RegistryProviders;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -46,7 +46,7 @@ public record TomePageStructure(ObserverProvider<?> structureObserver, int struc
             RegistryProviders.getRegistry().byNameCodec().fieldOf("structureObserver").forGetter(TomePageStructure::structureObserver),
             Codec.INT.fieldOf("structureIndex").forGetter(TomePageStructure::structureIndex)
     ).apply(inst, TomePageStructure::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TomePageStructure> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, TomePageStructure> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(RegistryProviders.REGISTRY_KEY),
             TomePageStructure::structureObserver,
             ByteBufCodecs.INT,

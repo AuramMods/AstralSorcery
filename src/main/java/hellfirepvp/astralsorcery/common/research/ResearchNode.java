@@ -18,10 +18,10 @@ import hellfirepvp.astralsorcery.common.research.tome.TomePage;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +49,7 @@ public class ResearchNode {
             ResearchNodeCondition.CODEC.listOf().fieldOf("conditions").forGetter(ResearchNode::getConditions),
             BuiltInRegistries.ITEM.byNameCodec().listOf().fieldOf("lookupIndexItems").forGetter(ResearchNode::getLookupIndexItems)
     ).apply(inst, ResearchNode::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ResearchNode> SYNC_CODEC = StreamCodec.of(ResearchNode::write, ResearchNode::read);
+    public static final StreamCodec<FriendlyByteBuf, ResearchNode> SYNC_CODEC = StreamCodec.of(ResearchNode::write, ResearchNode::read);
 
     private final ResourceLocation key;
     private final ResearchTier tier;
@@ -164,28 +164,28 @@ public class ResearchNode {
         return Component.translatable(this.cacheDescriptionId);
     }
 
-    private static void write(RegistryFriendlyByteBuf buf, ResearchNode node) {
+    private static void write(FriendlyByteBuf buf, ResearchNode node) {
         buf.writeResourceLocation(node.key);
         buf.writeEnum(node.tier);
         buf.writeFloat(node.posX);
         buf.writeFloat(node.posY);
         TextureQuery.STREAM_CODEC.encode(buf, node.backgroundTexture);
-        ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, node.renderItemStacks);
+        ByteBufCodecs.ITEM_STACK.apply(ByteBufCodecs.list()).encode(buf, node.renderItemStacks);
         TomePage.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, node.pages);
-        ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, node.connections);
+        ByteBufCodecs.RESOURCE_LOCATION.apply(ByteBufCodecs.list()).encode(buf, node.connections);
         ResearchNodeCondition.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, node.conditions);
         ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list()).encode(buf, node.lookupIndexItems);
     }
 
-    private static ResearchNode read(RegistryFriendlyByteBuf buf) {
+    private static ResearchNode read(FriendlyByteBuf buf) {
         ResourceLocation key = buf.readResourceLocation();
         ResearchTier tier = buf.readEnum(ResearchTier.class);
         float posX = buf.readFloat();
         float posY = buf.readFloat();
         TextureQuery backgroundTexture = TextureQuery.STREAM_CODEC.decode(buf);
-        List<ItemStack> stacks = ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
+        List<ItemStack> stacks = ByteBufCodecs.ITEM_STACK.apply(ByteBufCodecs.list()).decode(buf);
         List<TomePage> pages = TomePage.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
-        List<ResourceLocation> connections = ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
+        List<ResourceLocation> connections = ByteBufCodecs.RESOURCE_LOCATION.apply(ByteBufCodecs.list()).decode(buf);
         List<ResearchNodeCondition> conditions = ResearchNodeCondition.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
         List<Item> lookupIndexItems = ByteBufCodecs.registry(Registries.ITEM).apply(ByteBufCodecs.list()).decode(buf);
         return new ResearchNode(key, tier, posX, posY, backgroundTexture, stacks, pages, connections, conditions, lookupIndexItems);

@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe.liquid.output;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
@@ -22,8 +23,8 @@ import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -43,8 +44,8 @@ public class LiquidStarlightOutputDropItem extends LiquidStarlightRecipeOutputMo
             ItemStack.CODEC.fieldOf("result").forGetter(LiquidStarlightOutputDropItem::getResult)
     ).apply(inst, LiquidStarlightOutputDropItem::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputDropItem> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightOutputDropItem> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.ITEM_STACK,
             LiquidStarlightOutputDropItem::getResult,
             LiquidStarlightOutputDropItem::new);
     public static final Type<LiquidStarlightOutputDropItem> TYPE = new Type<>(CODEC, STREAM_CODEC);

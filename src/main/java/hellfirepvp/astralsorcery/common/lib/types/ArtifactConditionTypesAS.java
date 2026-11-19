@@ -13,8 +13,8 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactCondition;
 import hellfirepvp.astralsorcery.common.artifact.condition.*;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -44,7 +44,7 @@ public class ArtifactConditionTypesAS {
 
     private static <T extends ArtifactCondition> ArtifactCondition.DeferredType<T> register(String name,
                                                                                             MapCodec<T> codec,
-                                                                                            StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+                                                                                            StreamCodec<FriendlyByteBuf, T> streamCodec) {
         return new ArtifactCondition.DeferredType<>(ARTIFACT_CONDITION_TYPES_REGISTER.register(name,
                 () -> new ArtifactCondition.Type<>(codec, streamCodec)));
     }

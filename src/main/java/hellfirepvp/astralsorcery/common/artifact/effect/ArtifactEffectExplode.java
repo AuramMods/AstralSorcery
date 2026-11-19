@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.artifact.ArtifactEffect;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
 import hellfirepvp.astralsorcery.common.lib.types.ArtifactEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -38,8 +38,8 @@ public class ArtifactEffectExplode extends ArtifactEffect {
             Codec.INT.fieldOf("range").forGetter(ArtifactEffectExplode::getRange),
             Level.ExplosionInteraction.CODEC.fieldOf("interaction").forGetter(ArtifactEffectExplode::getInteraction)
     ).apply(inst, ArtifactEffectExplode::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectExplode> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectExplode> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactEffect::getId,
             ByteBufCodecs.INT,
             ArtifactEffectExplode::getRange,

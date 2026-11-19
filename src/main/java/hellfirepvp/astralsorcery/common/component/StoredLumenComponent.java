@@ -20,11 +20,11 @@ import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
 import hellfirepvp.astralsorcery.common.lumen.binding.data.LumenBindingTypeLoader;
 import hellfirepvp.astralsorcery.common.lumen.capability.LumenHandlerItemFactory;
 import net.minecraft.Util;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -54,14 +54,14 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
             Codec.unboundedMap(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), ResourceLocation.CODEC).fieldOf("lumenBindings").forGetter(StoredLumenComponent::boundLumen)
     ).apply(inst, StoredLumenComponent::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, StoredLumenComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, StoredLumenComponent> STREAM_CODEC = StreamCodec.composite(
             StoredLumen.STREAM_CODEC.apply(ByteBufCodecs.list()),
             StoredLumenComponent::storedLumen,
             StoredLumenDisplay.STREAM_CODEC.apply(ByteBufCodecs.list()),
             StoredLumenComponent::lumenDisplay,
             Properties.STREAM_CODEC,
             StoredLumenComponent::properties,
-            ByteBufCodecs.map(size -> new HashMap<>(), ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN), ResourceLocation.STREAM_CODEC),
+            ByteBufCodecs.map(size -> new HashMap<>(), ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN), ByteBufCodecs.RESOURCE_LOCATION),
             StoredLumenComponent::boundLumen,
             StoredLumenComponent::new);
 
@@ -248,7 +248,7 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
                 Codec.INT.fieldOf("maxAmount").forGetter(StoredLumen::maxAmount)
         ).apply(inst, StoredLumen::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, StoredLumen> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, StoredLumen> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN),
                 StoredLumen::lumen,
                 ByteBufCodecs.INT,
@@ -287,12 +287,12 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
                 ComponentSerialization.CODEC.fieldOf("message").forGetter(StoredLumenDisplay::message)
         ).apply(inst, StoredLumenDisplay::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, StoredLumenDisplay> STREAM_CODEC = StreamCodec.composite(
-                ResourceKey.streamCodec(RegistriesAS.KEY_LUMEN),
+        public static final StreamCodec<FriendlyByteBuf, StoredLumenDisplay> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.resourceKey(RegistriesAS.KEY_LUMEN),
                 StoredLumenDisplay::lumen,
                 ByteBufCodecs.BOOL,
                 StoredLumenDisplay::alwaysShow,
-                ComponentSerialization.STREAM_CODEC,
+                ByteBufCodecs.COMPONENT,
                 StoredLumenDisplay::message,
                 StoredLumenDisplay::new
         );
@@ -320,14 +320,14 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
                 Codec.BOOL.fieldOf("canFill").forGetter(Properties::canFill),
                 ResourceKey.codec(RegistriesAS.KEY_LUMEN).listOf().fieldOf("accepted").forGetter(Properties::accepted)
         ).apply(inst, Properties::new));
-        public static StreamCodec<RegistryFriendlyByteBuf, Properties> STREAM_CODEC = StreamCodec.composite(
+        public static StreamCodec<FriendlyByteBuf, Properties> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.INT,
                 Properties::capacity,
                 ByteBufCodecs.BOOL,
                 Properties::canDrain,
                 ByteBufCodecs.BOOL,
                 Properties::canFill,
-                ResourceKey.streamCodec(RegistriesAS.KEY_LUMEN).apply(ByteBufCodecs.list()),
+                ByteBufCodecs.resourceKey(RegistriesAS.KEY_LUMEN).apply(ByteBufCodecs.list()),
                 Properties::accepted,
                 Properties::new
         );

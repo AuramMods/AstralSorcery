@@ -12,8 +12,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -73,7 +71,7 @@ public record SetCodec<E>(Codec<E> elementCodec) implements Codec<Set<E>> {
 
         public void accept(final T value) {
             final DataResult<Pair<E, T>> elementResult = elementCodec.decode(ops, value);
-            elementResult.resultOrPartial().ifPresent(pair -> elements.add(pair.getFirst()));
+            elementResult.resultOrPartial(message -> {}).ifPresent(pair -> elements.add(pair.getFirst()));
             result = result.apply2stable((result, element) -> result, elementResult);
         }
 

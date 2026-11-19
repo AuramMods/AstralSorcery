@@ -16,9 +16,9 @@ import hellfirepvp.astralsorcery.common.lib.types.SyncDataTypesAS;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import hellfirepvp.astralsorcery.common.util.time.TimeStopZone;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -95,9 +95,9 @@ public class TimeStopZoneSyncData extends SyncData<TimeStopZoneSyncData.ClientSy
 
     public static class ClientDiffSync extends ClientSyncDiffData<TimeStopZoneClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         ByteBufCodecs.map(HashMap::new,
                                 TimeStopZone.Snapshot.STREAM_CODEC,
                                 ByteBufCodecs.BOOL)),
@@ -138,9 +138,9 @@ public class TimeStopZoneSyncData extends SyncData<TimeStopZoneSyncData.ClientSy
 
     public static class ClientSync extends ClientSyncData<TimeStopZoneClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         TimeStopZone.Snapshot.STREAM_CODEC.apply(SetCodec.streamOp())),
                 data -> data.zones,
                 ClientSync::new

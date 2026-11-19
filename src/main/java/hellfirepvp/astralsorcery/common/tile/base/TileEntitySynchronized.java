@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.tile.base;
 
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;

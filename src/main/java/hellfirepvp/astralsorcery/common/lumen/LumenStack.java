@@ -12,9 +12,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ public final class LumenStack {
             RegistriesAS.codec(RegistriesAS.KEY_LUMEN).optionalFieldOf("lumen").forGetter(LumenStack::getLumenOpt),
             Codec.INT.fieldOf("amount").forGetter(LumenStack::getAmount)
     ).apply(inst, LumenStack::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenStack> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenStack> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN)),
             LumenStack::getLumenOpt,
             ByteBufCodecs.INT,

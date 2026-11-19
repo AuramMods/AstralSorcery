@@ -24,7 +24,7 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.IntPoint;
 import hellfirepvp.astralsorcery.common.util.data.MenuTypeRegistryObject;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -161,7 +161,7 @@ public abstract class ContainerAltar extends ContainerTileEntity<TileAltar> impl
         return this;
     }
 
-    public void writeClientData(RegistryFriendlyByteBuf buf) {}
+    public void writeClientData(FriendlyByteBuf buf) {}
 
     public static class Type {
 
@@ -183,7 +183,7 @@ public abstract class ContainerAltar extends ContainerTileEntity<TileAltar> impl
             return this.containerProvider.createContainer(this.menuType.type(), tile, playerInv, containerId);
         }
 
-        public ContainerAltar provideClientContainer(TileAltar tile, Inventory playerInv, int containerId, RegistryFriendlyByteBuf byteBuf) {
+        public ContainerAltar provideClientContainer(TileAltar tile, Inventory playerInv, int containerId, FriendlyByteBuf byteBuf) {
             return this.clientContainerProvider.createContainer(this.menuType.type(), tile, playerInv, containerId, byteBuf);
         }
     }
@@ -196,7 +196,7 @@ public abstract class ContainerAltar extends ContainerTileEntity<TileAltar> impl
 
     public interface ClientProvider {
 
-        ContainerAltar createContainer(MenuType<? extends ContainerAltar> menuType, TileAltar tile, Inventory playerInv, int containerId, RegistryFriendlyByteBuf byteBuf);
+        ContainerAltar createContainer(MenuType<? extends ContainerAltar> menuType, TileAltar tile, Inventory playerInv, int containerId, FriendlyByteBuf byteBuf);
 
     }
 }

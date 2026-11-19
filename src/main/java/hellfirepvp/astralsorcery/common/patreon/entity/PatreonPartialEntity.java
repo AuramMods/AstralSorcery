@@ -8,13 +8,14 @@
 
 package hellfirepvp.astralsorcery.common.patreon.entity;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.client.util.RenderVectorUtil;
 import hellfirepvp.astralsorcery.common.patreon.PatreonEffect;
 import hellfirepvp.astralsorcery.common.patreon.PatreonEffectHelper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -178,8 +179,8 @@ public class PatreonPartialEntity {
                              Vector3 position,
                              Vector3 previousPosition) {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, UpdateInfo> STREAM_CODEC = StreamCodec.composite(
-                ResourceKey.streamCodec(Registries.DIMENSION),
+        public static final StreamCodec<FriendlyByteBuf, UpdateInfo> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.resourceKey(Registries.DIMENSION),
                 UpdateInfo::lastTickedDimension,
                 Vector3.STREAM_CODEC,
                 UpdateInfo::position,

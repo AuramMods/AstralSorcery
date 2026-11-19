@@ -10,11 +10,11 @@ package hellfirepvp.astralsorcery.common.util.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ public class OversizedItemStack {
             ItemStack.CODEC.fieldOf("stack").forGetter(OversizedItemStack::getStack),
             Codec.INT.fieldOf("count").forGetter(OversizedItemStack::getCount)
     ).apply(inst, OversizedItemStack::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, OversizedItemStack> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, OversizedItemStack> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.ITEM_STACK,
             OversizedItemStack::getStack,
             ByteBufCodecs.INT,
             OversizedItemStack::getCount,

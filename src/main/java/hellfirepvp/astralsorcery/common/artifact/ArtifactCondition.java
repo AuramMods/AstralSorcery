@@ -13,10 +13,10 @@ import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -36,7 +36,7 @@ public abstract class ArtifactCondition {
 
     public static final Codec<ArtifactCondition> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_CONDITION_TYPES)
             .dispatch(ArtifactCondition::unwrapType, ArtifactCondition.Type::codec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactCondition> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_CONDITION_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, ArtifactCondition> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_CONDITION_TYPES)
             .dispatch(ArtifactCondition::unwrapType, ArtifactCondition.Type::streamCodec);
 
     private final ResourceLocation id;
@@ -61,7 +61,7 @@ public abstract class ArtifactCondition {
 
     public abstract Component getDisplayHint(RandomSource rand, boolean wasSuccessful);
 
-    public record Type<T extends ArtifactCondition>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
+    public record Type<T extends ArtifactCondition>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) {}
 
     public record DeferredType<T extends ArtifactCondition>(RegistryObject<ArtifactCondition.Type<T>> holder) {}
 

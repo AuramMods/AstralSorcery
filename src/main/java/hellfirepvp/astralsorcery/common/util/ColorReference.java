@@ -14,8 +14,8 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
@@ -48,7 +48,7 @@ public interface ColorReference {
         }
     };
     Codec<ColorReference> CODEC = ResourceLocation.CODEC.dispatch(ColorReference::getId, REFERENCES::get);
-    StreamCodec<ByteBuf, ColorReference> STREAM_CODEC = ResourceLocation.STREAM_CODEC.dispatch(ColorReference::getId, STREAM_REFERENCES::get);
+    StreamCodec<ByteBuf, ColorReference> STREAM_CODEC = ByteBufCodecs.RESOURCE_LOCATION.dispatch(ColorReference::getId, STREAM_REFERENCES::get);
     ColorReference WHITE = RGB.of(0xFFFFFF);
 
     int color();

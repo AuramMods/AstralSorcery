@@ -17,9 +17,9 @@ import hellfirepvp.astralsorcery.client.screen.tome.page.RenderPageEmpty;
 import hellfirepvp.astralsorcery.client.screen.tome.page.RenderPageText;
 import hellfirepvp.astralsorcery.common.lib.types.TomePageTypesAS;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,7 +37,7 @@ public record TomePageText(String textKey) implements TomePage {
     public static final MapCodec<TomePageText> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.STRING.fieldOf("textKey").forGetter(TomePageText::textKey)
     ).apply(inst, TomePageText::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TomePageText> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, TomePageText> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,
             TomePageText::textKey,
             TomePageText::new);

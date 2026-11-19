@@ -11,8 +11,8 @@ package hellfirepvp.astralsorcery.common.perk.source;
 import hellfirepvp.astralsorcery.common.network.play.PktSyncModifierSource;
 import hellfirepvp.astralsorcery.common.perk.PerkApplicationManager;
 import hellfirepvp.astralsorcery.common.perk.PerkManager;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
@@ -39,7 +39,7 @@ public abstract class ModifierSourceProvider<T extends ModifierSource> {
 
     protected abstract void removeModifiers(ServerPlayer playerEntity);
 
-    public abstract StreamCodec<RegistryFriendlyByteBuf, T> getModifierSourceSyncCodec();
+    public abstract StreamCodec<FriendlyByteBuf, T> getModifierSourceSyncCodec();
 
     @Nullable
     private T getCachedSource(ServerPlayer player, ResourceLocation identifier) {

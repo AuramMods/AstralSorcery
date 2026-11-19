@@ -15,11 +15,10 @@ import hellfirepvp.astralsorcery.common.perk.tree.AbstractPerk;
 import hellfirepvp.astralsorcery.common.perk.tree.PerkDataType;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.LogicalSide;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -36,7 +35,7 @@ import java.util.Optional;
 public class PktSyncPerkActivity extends PlayPacketHandler.ToClient<PktSyncPerkActivity.Request> {
 
     static final CustomPacketPayload.Type<PktSyncPerkActivity.Request> TYPE = makeType("sync_perk_activity");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktSyncPerkActivity.Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, PktSyncPerkActivity.Request> CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(Type.class),
             Request::actionType,
             ByteBufCodecs.optional(AbstractPerk.TO_CLIENT_PERKTREE_CODEC),
@@ -69,7 +68,7 @@ public class PktSyncPerkActivity extends PlayPacketHandler.ToClient<PktSyncPerkA
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

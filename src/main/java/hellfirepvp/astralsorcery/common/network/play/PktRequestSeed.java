@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.network.play;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.util.level.LevelEffectSeedCache;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -29,8 +29,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktRequestSeed extends PlayPacketHandler.BiDirectional<PktRequestSeed.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("request_seed");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
-            ResourceKey.streamCodec(Registries.DIMENSION),
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+            ByteBufCodecs.resourceKey(Registries.DIMENSION),
             Request::dimKey,
             ByteBufCodecs.INT,
             Request::session,
@@ -50,7 +50,7 @@ public class PktRequestSeed extends PlayPacketHandler.BiDirectional<PktRequestSe
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

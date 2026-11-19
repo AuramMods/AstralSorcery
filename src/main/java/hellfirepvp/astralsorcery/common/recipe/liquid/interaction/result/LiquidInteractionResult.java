@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.recipe.liquid.interaction.result;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -29,7 +29,7 @@ public abstract class LiquidInteractionResult {
 
     public static final Codec<LiquidInteractionResult> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LIQUID_INTERACTION_RESULT_TYPES)
             .dispatch(LiquidInteractionResult::getType, LiquidInteractionResult.Type::codec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidInteractionResult> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, LiquidInteractionResult> STREAM_CODEC =
             ByteBufCodecs.registry(RegistriesAS.KEY_LIQUID_INTERACTION_RESULT_TYPES)
                     .dispatch(LiquidInteractionResult::getType, LiquidInteractionResult.Type::streamCodec);
 
@@ -39,5 +39,5 @@ public abstract class LiquidInteractionResult {
 
     public abstract void apply(ServerLevel level, Vec3 at);
 
-    public record Type<T extends LiquidInteractionResult>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
+    public record Type<T extends LiquidInteractionResult>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) {}
 }

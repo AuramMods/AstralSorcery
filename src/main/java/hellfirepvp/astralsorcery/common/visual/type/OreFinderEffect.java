@@ -21,9 +21,9 @@ import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,8 +45,8 @@ import java.util.Map;
  */
 public class OreFinderEffect implements VisualEffectTypes.Effect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, OreFinderEffect> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.map(size -> new HashMap<>(), ByteBufCodecs.fromCodecTrusted(BlockState.CODEC), BlockPos.STREAM_CODEC.apply(ByteBufCodecs.list())),
+    public static final StreamCodec<FriendlyByteBuf, OreFinderEffect> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.map(size -> new HashMap<>(), ByteBufCodecs.fromCodec(BlockState.CODEC), ByteBufCodecs.BLOCK_POS.apply(ByteBufCodecs.list())),
             effect -> effect.effectStates,
             OreFinderEffect::new);
     public static final VisualEffectTypes.EffectType<OreFinderEffect> TYPE =

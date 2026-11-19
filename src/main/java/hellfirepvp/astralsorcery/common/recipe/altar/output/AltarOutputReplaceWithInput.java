@@ -14,9 +14,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 
@@ -35,7 +35,7 @@ public class AltarOutputReplaceWithInput extends AltarRecipeOutputModifier {
             StringRepresentable.fromEnum(SlotType::values).fieldOf("slot_type").forGetter(AltarOutputReplaceWithInput::getSlotType),
             Codec.intRange(0, 25).fieldOf("input_slot").forGetter(AltarOutputReplaceWithInput::getInputSlot)
     ).apply(inst, AltarOutputReplaceWithInput::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputReplaceWithInput> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputReplaceWithInput> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(SlotType.class),
             AltarOutputReplaceWithInput::getSlotType,
             ByteBufCodecs.INT,

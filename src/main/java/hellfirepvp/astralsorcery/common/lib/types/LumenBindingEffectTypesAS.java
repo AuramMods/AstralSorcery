@@ -12,8 +12,8 @@ import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.binding.effect.*;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -55,7 +55,7 @@ public class LumenBindingEffectTypesAS {
 
     private static <T extends LumenBindingEffect> LumenBindingEffect.DeferredType<T> register(String name,
                                                                                               MapCodec<T> codec,
-                                                                                              StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+                                                                                              StreamCodec<FriendlyByteBuf, T> streamCodec) {
         return new LumenBindingEffect.DeferredType<>(LUMEN_BINDING_USAGE_TYPES_REGISTER.register(name,
                 () -> new LumenBindingEffect.Type<>(codec, streamCodec)));
     }

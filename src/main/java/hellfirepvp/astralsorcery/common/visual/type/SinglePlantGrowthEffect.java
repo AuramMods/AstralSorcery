@@ -18,8 +18,8 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.visual.BlockPosEffect;
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -31,7 +31,7 @@ import net.minecraft.util.RandomSource;
  */
 public class SinglePlantGrowthEffect extends BlockPosEffect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SinglePlantGrowthEffect> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, SinglePlantGrowthEffect> STREAM_CODEC =
             BlockPosEffect.createCodec(SinglePlantGrowthEffect::new);
     public static final VisualEffectTypes.EffectType<SinglePlantGrowthEffect> TYPE =
             new VisualEffectTypes.EffectType<>(AstralSorcery.key("single_plant_growth"), STREAM_CODEC);

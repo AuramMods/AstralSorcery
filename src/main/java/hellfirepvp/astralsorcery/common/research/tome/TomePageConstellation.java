@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lib.types.TomePageTypesAS;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -38,7 +38,7 @@ public record TomePageConstellation(BaseConstellation constellation) implements 
     public static final MapCodec<TomePageConstellation> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).fieldOf("structureObserver").forGetter(TomePageConstellation::constellation)
     ).apply(inst, TomePageConstellation::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TomePageConstellation> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, TomePageConstellation> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS),
             TomePageConstellation::constellation,
             TomePageConstellation::new);

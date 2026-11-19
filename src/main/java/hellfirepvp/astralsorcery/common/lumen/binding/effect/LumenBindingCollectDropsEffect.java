@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.data.MapStream;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +39,7 @@ public class LumenBindingCollectDropsEffect extends LumenBindingEffect {
 
     public static final LumenBindingCollectDropsEffect INSTANCE = new LumenBindingCollectDropsEffect();
     public static final MapCodec<LumenBindingCollectDropsEffect> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingCollectDropsEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingCollectDropsEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     public static void attachEventListeners(IEventBus bus) {
         bus.addListener(EventPriority.LOWEST, LumenBindingCollectDropsEffect::onBlockDrops);

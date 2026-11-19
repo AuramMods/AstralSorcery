@@ -12,9 +12,8 @@ import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
 import hellfirepvp.astralsorcery.common.research.data.ResearchNodeLoader;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -30,7 +29,7 @@ import java.util.List;
 public class PktSyncResearchNodes extends PlayPacketHandler.ToClient<PktSyncResearchNodes.Request> {
 
     static final CustomPacketPayload.Type<PktSyncResearchNodes.Request> TYPE = makeType("sync_research_nodes");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktSyncResearchNodes.Request> CODEC =
+    static final StreamCodec<FriendlyByteBuf, PktSyncResearchNodes.Request> CODEC =
             ResearchNode.SYNC_CODEC.apply(ByteBufCodecs.list()).map(Request::new, Request::nodes);
 
     public static final PktSyncResearchNodes HANDLER = new PktSyncResearchNodes();
@@ -44,7 +43,7 @@ public class PktSyncResearchNodes extends PlayPacketHandler.ToClient<PktSyncRese
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

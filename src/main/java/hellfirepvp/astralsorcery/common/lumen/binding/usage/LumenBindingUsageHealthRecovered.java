@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.lumen.binding.usage;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingUsageTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 
@@ -28,7 +28,7 @@ public class LumenBindingUsageHealthRecovered extends LumenBindingUsage {
 
     public static final MapCodec<LumenBindingUsageHealthRecovered> CODEC = RecordCodecBuilder.mapCodec(inst ->
             codecFields(inst).apply(inst, LumenBindingUsageHealthRecovered::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingUsageHealthRecovered> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingUsageHealthRecovered> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             LumenBindingUsageHealthRecovered::getLumenCost,
             ByteBufCodecs.FLOAT,

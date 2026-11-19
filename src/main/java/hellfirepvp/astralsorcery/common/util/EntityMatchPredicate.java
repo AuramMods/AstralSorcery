@@ -12,9 +12,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 
 import java.util.Optional;
@@ -34,8 +34,8 @@ public class EntityMatchPredicate {
             Codec.BOOL.fieldOf("targetPlayers").forGetter(EntityMatchPredicate::doesTargetPlayers),
             EntityPredicate.CODEC.fieldOf("entityPredicate").forGetter(EntityMatchPredicate::getEntityPredicate)
     ).apply(inst, EntityMatchPredicate::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, EntityMatchPredicate> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), EntityMatchPredicate::getOwnerId,
+    public static final StreamCodec<FriendlyByteBuf, EntityMatchPredicate> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.optional(ByteBufCodecs.UUID_CODEC), EntityMatchPredicate::getOwnerId,
             ByteBufCodecs.BOOL, EntityMatchPredicate::doesTargetPlayers,
             (id, targetPlayers) -> new EntityMatchPredicate(id, targetPlayers, EntityPredicate.Builder.entity().build())
     );

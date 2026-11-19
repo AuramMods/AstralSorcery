@@ -8,12 +8,12 @@
 
 package hellfirepvp.astralsorcery.common.util.data;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -42,8 +42,8 @@ public class CodecDispatchMap<T extends CodecDispatchMap.DataEntry<? extends E>,
                 .dispatch(this.nameResolver, key -> this.get(key).map(DataEntry::getCodec).orElseThrow());
     }
 
-    public StreamCodec<RegistryFriendlyByteBuf, E> streamCodec() {
-        StreamCodec<RegistryFriendlyByteBuf, ResourceLocation> keyCodec = MiscUtil.cast(ResourceLocation.STREAM_CODEC);
+    public StreamCodec<FriendlyByteBuf, E> streamCodec() {
+        StreamCodec<FriendlyByteBuf, ResourceLocation> keyCodec = MiscUtil.cast(ByteBufCodecs.RESOURCE_LOCATION);
         return keyCodec.dispatch(this.nameResolver, key -> this.get(key).map(DataEntry::getStreamCodec).orElseThrow());
     }
 
@@ -61,7 +61,7 @@ public class CodecDispatchMap<T extends CodecDispatchMap.DataEntry<? extends E>,
 
         public abstract MapCodec<E> getCodec();
 
-        public abstract StreamCodec<RegistryFriendlyByteBuf, E> getStreamCodec();
+        public abstract StreamCodec<FriendlyByteBuf, E> getStreamCodec();
 
     }
 

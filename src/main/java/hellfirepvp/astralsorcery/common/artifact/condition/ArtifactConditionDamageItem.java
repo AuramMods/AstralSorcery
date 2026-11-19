@@ -14,11 +14,11 @@ import hellfirepvp.astralsorcery.common.artifact.ArtifactCondition;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
 import hellfirepvp.astralsorcery.common.lib.types.ArtifactConditionTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -44,14 +44,14 @@ public class ArtifactConditionDamageItem extends ArtifactCondition implements On
             ComponentSerialization.CODEC.fieldOf("hiddenDescription").forGetter(ArtifactConditionDamageItem::getHiddenDescription),
             ComponentSerialization.CODEC.fieldOf("clearDescription").forGetter(ArtifactConditionDamageItem::getClearDescription)
     ).apply(inst, ArtifactConditionDamageItem::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactConditionDamageItem> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactConditionDamageItem> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactCondition::getId,
-            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ByteBufCodecs.INGREDIENT.apply(ByteBufCodecs.list()),
             ArtifactConditionDamageItem::getItems,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionDamageItem::getHiddenDescription,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionDamageItem::getClearDescription,
             ArtifactConditionDamageItem::new);
 

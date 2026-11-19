@@ -33,9 +33,9 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.Holder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
@@ -66,7 +66,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
             WeightedEntry.Wrapper.codec(RegistriesAS.codec(RegistriesAS.KEY_CRYSTAL_PROPERTIES)).listOf()
                     .fieldOf("properties").forGetter(LiquidStarlightOutputEngraveLumen::getProperties)
     ).apply(inst, LiquidStarlightOutputEngraveLumen::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputEngraveLumen> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightOutputEngraveLumen> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.weightedEntryCodec(ByteBufCodecs.registry(RegistriesAS.KEY_CRYSTAL_PROPERTIES)).apply(ByteBufCodecs.list()), LiquidStarlightOutputEngraveLumen::getProperties,
             LiquidStarlightOutputEngraveLumen::new
     );

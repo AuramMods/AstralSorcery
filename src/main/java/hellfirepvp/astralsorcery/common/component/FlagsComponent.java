@@ -9,9 +9,9 @@
 package hellfirepvp.astralsorcery.common.component;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.Locale;
@@ -30,7 +30,7 @@ public record FlagsComponent(int flags) {
 
     public static final Codec<FlagsComponent> CODEC = Codec.INT.xmap(FlagsComponent::new, FlagsComponent::flags);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FlagsComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, FlagsComponent> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             FlagsComponent::flags,
             FlagsComponent::new);

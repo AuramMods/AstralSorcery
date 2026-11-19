@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.util.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 
 import java.util.*;
@@ -46,12 +46,12 @@ public class RandomWeightedList<T> {
         ).apply(inst, Entry::new));
     }
 
-    public static <T> StreamCodec<RegistryFriendlyByteBuf, RandomWeightedList<T>> streamCodec(StreamCodec<RegistryFriendlyByteBuf, T> elementStreamCodec) {
+    public static <T> StreamCodec<FriendlyByteBuf, RandomWeightedList<T>> streamCodec(StreamCodec<FriendlyByteBuf, T> elementStreamCodec) {
         return entryStreamCodec(elementStreamCodec).apply(ByteBufCodecs.list())
                 .map(RandomWeightedList::new, palette -> palette.entries);
     }
 
-    private static <T> StreamCodec<RegistryFriendlyByteBuf, Entry<T>> entryStreamCodec(StreamCodec<RegistryFriendlyByteBuf, T> elementStreamCodec) {
+    private static <T> StreamCodec<FriendlyByteBuf, Entry<T>> entryStreamCodec(StreamCodec<FriendlyByteBuf, T> elementStreamCodec) {
         return StreamCodec.composite(
                 elementStreamCodec,
                 Entry::value,

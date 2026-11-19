@@ -13,10 +13,10 @@ import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public interface ResearchNodeCondition {
 
     Codec<ResearchNodeCondition> CODEC = RegistriesAS.codec(RegistriesAS.KEY_RESEARCH_NODE_CONDITION_TYPES)
             .dispatch(ResearchNodeCondition::getType, ResearchNodeCondition.Type::codec);
-    StreamCodec<RegistryFriendlyByteBuf, ResearchNodeCondition> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_RESEARCH_NODE_CONDITION_TYPES)
+    StreamCodec<FriendlyByteBuf, ResearchNodeCondition> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_RESEARCH_NODE_CONDITION_TYPES)
             .dispatch(ResearchNodeCondition::getType, ResearchNodeCondition.Type::syncCodec);
 
     default ResearchNodeVisibility.Type getSuggestedVisibility(ResearchNode node, PlayerProgress progress) {
@@ -44,6 +44,6 @@ public interface ResearchNodeCondition {
 
     Type<?> getType();
 
-    record Type<T extends ResearchNodeCondition>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> syncCodec) {}
+    record Type<T extends ResearchNodeCondition>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> syncCodec) {}
 
 }

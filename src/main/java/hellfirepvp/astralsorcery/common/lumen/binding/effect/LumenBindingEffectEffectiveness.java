@@ -12,10 +12,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -33,7 +33,7 @@ public class LumenBindingEffectEffectiveness extends LumenBindingEffect {
     public static final MapCodec<LumenBindingEffectEffectiveness> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.FLOAT.fieldOf("effect_multiplier").forGetter(LumenBindingEffectEffectiveness::getEffectMultiplier)
     ).apply(inst, LumenBindingEffectEffectiveness::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingEffectEffectiveness> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingEffectEffectiveness> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT,
             LumenBindingEffectEffectiveness::getEffectMultiplier,
             LumenBindingEffectEffectiveness::new);

@@ -12,10 +12,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -43,7 +43,7 @@ public class LumenBindingAbsorbDamageEffect extends LumenBindingEffect {
             Codec.INT.fieldOf("amplifier").forGetter(LumenBindingAbsorbDamageEffect::getAmplifier),
             Codec.INT.fieldOf("cooldown_ticks").forGetter(LumenBindingAbsorbDamageEffect::getCooldownTicks)
     ).apply(inst, LumenBindingAbsorbDamageEffect::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingAbsorbDamageEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingAbsorbDamageEffect> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT,
             LumenBindingAbsorbDamageEffect::getThreshold,
             ByteBufCodecs.INT,

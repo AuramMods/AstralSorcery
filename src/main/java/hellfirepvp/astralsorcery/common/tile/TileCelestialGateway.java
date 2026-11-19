@@ -40,7 +40,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;

@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.AstralSorcery;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -36,8 +36,8 @@ public record VeiledItemStackComponent(ItemStack appearance, Optional<Long> expi
             Codec.BOOL.fieldOf("known").forGetter(VeiledItemStackComponent::known)
     ).apply(inst, VeiledItemStackComponent::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, VeiledItemStackComponent> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.STREAM_CODEC, VeiledItemStackComponent::appearance,
+    public static final StreamCodec<FriendlyByteBuf, VeiledItemStackComponent> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.ITEM_STACK, VeiledItemStackComponent::appearance,
             ByteBufCodecs.optional(ByteBufCodecs.VAR_LONG), VeiledItemStackComponent::expiryGameTick,
             ByteBufCodecs.BOOL, VeiledItemStackComponent::known,
             VeiledItemStackComponent::new);

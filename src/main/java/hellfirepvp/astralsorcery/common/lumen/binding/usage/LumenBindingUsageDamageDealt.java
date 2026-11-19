@@ -12,9 +12,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingUsageTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -32,7 +32,7 @@ public class LumenBindingUsageDamageDealt extends LumenBindingUsage {
             codecFields(inst).and(
                     Codec.BOOL.fieldOf("direct").forGetter(LumenBindingUsageDamageDealt::isDirect)
             ).apply(inst, LumenBindingUsageDamageDealt::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingUsageDamageDealt> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingUsageDamageDealt> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             LumenBindingUsageDamageDealt::getLumenCost,
             ByteBufCodecs.FLOAT,

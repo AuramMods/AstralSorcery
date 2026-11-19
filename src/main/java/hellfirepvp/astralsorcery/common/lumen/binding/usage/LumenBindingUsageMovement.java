@@ -12,9 +12,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingUsageTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -38,14 +38,14 @@ public class LumenBindingUsageMovement extends LumenBindingUsage {
                     Codec.FLOAT.fieldOf("stat_multiplier").forGetter(LumenBindingUsageMovement::getStatMultiplier),
                     ResourceLocation.CODEC.listOf().fieldOf("stat_id").forGetter(LumenBindingUsageMovement::getStatIds)
             )).apply(inst, LumenBindingUsageMovement::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingUsageMovement> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingUsageMovement> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             LumenBindingUsageMovement::getLumenCost,
             ByteBufCodecs.FLOAT,
             LumenBindingUsageMovement::getConsumptionChance,
             ByteBufCodecs.FLOAT,
             LumenBindingUsageMovement::getStatMultiplier,
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ByteBufCodecs.RESOURCE_LOCATION.apply(ByteBufCodecs.list()),
             LumenBindingUsageMovement::getStatIds,
             LumenBindingUsageMovement::new);
 

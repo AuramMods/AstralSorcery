@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.visual.type;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
@@ -17,8 +18,8 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,7 +43,7 @@ public class ChaliceLiquidInteractionEffect implements VisualEffectTypes.Effect 
     private static final float PARTICLE_STEP_LENGTH = 0.3F;
     private static final int GENERIC_PASSES = 2;
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ChaliceLiquidInteractionEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ChaliceLiquidInteractionEffect> STREAM_CODEC = StreamCodec.composite(
             Segment.STREAM_CODEC, ChaliceLiquidInteractionEffect::getFirst,
             Segment.OPTIONAL_STREAM_CODEC, ChaliceLiquidInteractionEffect::getSecondOptional,
             ChaliceLiquidInteractionEffect::new);
@@ -130,16 +131,16 @@ public class ChaliceLiquidInteractionEffect implements VisualEffectTypes.Effect 
 
     public record Segment(Vector3 from, Vector3 to, FluidStack fluid) {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Segment> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, Segment> STREAM_CODEC = StreamCodec.composite(
                 Vector3.STREAM_CODEC, Segment::from,
                 Vector3.STREAM_CODEC, Segment::to,
-                FluidStack.STREAM_CODEC, Segment::fluid,
+                ByteBufCodecs.FLUID_STACK, Segment::fluid,
                 Segment::new);
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Optional<Segment>> OPTIONAL_STREAM_CODEC =
+        public static final StreamCodec<FriendlyByteBuf, Optional<Segment>> OPTIONAL_STREAM_CODEC =
                 new StreamCodec<>() {
                     @Override
-                    public Optional<Segment> decode(RegistryFriendlyByteBuf buf) {
+                    public Optional<Segment> decode(FriendlyByteBuf buf) {
                         if (!buf.readBoolean()) {
                             return Optional.empty();
                         }
@@ -147,7 +148,7 @@ public class ChaliceLiquidInteractionEffect implements VisualEffectTypes.Effect 
                     }
 
                     @Override
-                    public void encode(RegistryFriendlyByteBuf buf, Optional<Segment> value) {
+                    public void encode(FriendlyByteBuf buf, Optional<Segment> value) {
                         buf.writeBoolean(value.isPresent());
                         value.ifPresent(segment -> STREAM_CODEC.encode(buf, segment));
                     }

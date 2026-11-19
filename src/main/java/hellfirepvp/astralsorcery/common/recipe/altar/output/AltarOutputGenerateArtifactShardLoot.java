@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
@@ -39,7 +39,7 @@ public class AltarOutputGenerateArtifactShardLoot extends AltarRecipeOutputModif
     public static final MapCodec<AltarOutputGenerateArtifactShardLoot> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             IntRange.CODEC.fieldOf("count_range").forGetter(AltarOutputGenerateArtifactShardLoot::getCountRange)
     ).apply(inst, AltarOutputGenerateArtifactShardLoot::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputGenerateArtifactShardLoot> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputGenerateArtifactShardLoot> STREAM_CODEC = StreamCodec.composite(
             IntRange.STREAM_CODEC,
             AltarOutputGenerateArtifactShardLoot::getCountRange,
             AltarOutputGenerateArtifactShardLoot::new);

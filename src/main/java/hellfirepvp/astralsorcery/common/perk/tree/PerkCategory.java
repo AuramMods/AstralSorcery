@@ -15,7 +15,7 @@ import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 

@@ -12,7 +12,7 @@ import hellfirepvp.astralsorcery.common.structure.PatternAltarT2Expanded;
 import hellfirepvp.astralsorcery.common.structure.observer.CompoundChangeObserverStructure;
 import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import hellfirepvp.astralsorcery.common.util.data.IntPoint;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
@@ -43,7 +43,7 @@ public class ContainerAltarResonance extends ContainerAltar {
         this.initSlots(playerInv, tile);
     }
 
-    public ContainerAltarResonance(@Nullable MenuType<?> menuType, TileAltar tile, Inventory playerInv, int containerId, RegistryFriendlyByteBuf byteBuf) {
+    public ContainerAltarResonance(@Nullable MenuType<?> menuType, TileAltar tile, Inventory playerInv, int containerId, FriendlyByteBuf byteBuf) {
         super(menuType, tile, playerInv, containerId);
         this.isExpanded = byteBuf.readBoolean();
         this.initSlots(playerInv, tile);
@@ -73,7 +73,7 @@ public class ContainerAltarResonance extends ContainerAltar {
     }
 
     @Override
-    public void writeClientData(RegistryFriendlyByteBuf buf) {
+    public void writeClientData(FriendlyByteBuf buf) {
         super.writeClientData(buf);
         buf.writeBoolean(this.isExpanded);
     }

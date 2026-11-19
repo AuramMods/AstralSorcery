@@ -24,9 +24,9 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.codec.HashComparedCodec;
 import hellfirepvp.astralsorcery.common.util.data.MapStream;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -358,7 +358,7 @@ public class PlayerPerkData {
                 Codec.unboundedMap(StringRepresentable.fromEnum(PerkAllocationType::values), Codec.list(CodecUtil.uuidCodec()))
                         .fieldOf("usedAllocationTokens").forGetter(d -> d.usedAllocationTokens)
         ).apply(inst, AppliedPerkData::new));
-        public static final StreamCodec<RegistryFriendlyByteBuf, AppliedPerkData<?>> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, AppliedPerkData<?>> STREAM_CODEC = StreamCodec.composite(
                 PerkDataType.DATA_SYNC_CODEC,
                 AppliedPerkData::getPerkData,
                 CodecUtil.enumStreamCodec(PerkAllocationType.class).apply(SetCodec.streamOp()),

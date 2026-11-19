@@ -25,9 +25,9 @@ import hellfirepvp.astralsorcery.common.research.ResearchHelper;
 import hellfirepvp.astralsorcery.common.research.perk.PerkAllocation;
 import hellfirepvp.astralsorcery.common.research.perk.PerkAllocationType;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -169,10 +169,10 @@ public class KeyPerkTreeConnector extends AttributeModifierPerk<KeyPerkTreeConne
     public static class Data extends AbstractPerk.Data {
 
         public static final MapCodec<Data> CODEC = RecordCodecBuilder.mapCodec(inst -> perkTokenFields(inst).apply(inst, Data::new));
-        public static final StreamCodec<RegistryFriendlyByteBuf, Data> SYNC_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, Data> SYNC_CODEC = StreamCodec.composite(
                 ByteBufCodecs.BOOL,
                 Data::isSealed,
-                ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()),
+                ByteBufCodecs.RESOURCE_LOCATION.apply(ByteBufCodecs.list()),
                 Data::getPerkTokens,
                 Data::new
         );

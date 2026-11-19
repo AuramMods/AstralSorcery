@@ -12,8 +12,8 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
 import hellfirepvp.astralsorcery.common.lib.PerksAS;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSourceProvider;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -88,7 +88,7 @@ public class EquipmentSourceProvider extends ModifierSourceProvider<EquipmentMod
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, EquipmentModifierSource> getModifierSourceSyncCodec() {
+    public StreamCodec<FriendlyByteBuf, EquipmentModifierSource> getModifierSourceSyncCodec() {
         return EquipmentModifierSource.STREAM_CODEC;
     }
 }

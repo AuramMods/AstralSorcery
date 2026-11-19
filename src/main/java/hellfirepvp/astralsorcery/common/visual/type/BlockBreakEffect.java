@@ -21,9 +21,9 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,8 +38,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public class BlockBreakEffect extends BlockPosEffect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BlockBreakEffect> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, BlockBreakEffect> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BLOCK_POS,
             BlockPosEffect::getBlockPos,
             ByteBufCodecs.fromCodecWithRegistries(BlockState.CODEC),
             BlockBreakEffect::getState,

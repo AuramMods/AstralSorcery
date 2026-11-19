@@ -8,16 +8,16 @@
 
 package hellfirepvp.astralsorcery.common.recipe.altar.output;
 
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.research.*;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -31,8 +31,8 @@ public class AltarOutputUpdateResearchTier extends AltarRecipeOutputModifier {
     public static final MapCodec<AltarOutputUpdateResearchTier> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResearchTier.CODEC.fieldOf("tier").forGetter(AltarOutputUpdateResearchTier::getTier)
     ).apply(inst, AltarOutputUpdateResearchTier::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputUpdateResearchTier> STREAM_CODEC = StreamCodec.composite(
-            NeoForgeStreamCodecs.enumCodec(ResearchTier.class),
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputUpdateResearchTier> STREAM_CODEC = StreamCodec.composite(
+            CodecUtil.enumStreamCodec(ResearchTier.class),
             AltarOutputUpdateResearchTier::getTier,
             AltarOutputUpdateResearchTier::new);
     public static final Type<AltarOutputUpdateResearchTier> TYPE = new Type<>(CODEC, STREAM_CODEC);

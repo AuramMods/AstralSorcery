@@ -16,11 +16,11 @@ import hellfirepvp.astralsorcery.common.lib.types.ArtifactConditionTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -46,14 +46,14 @@ public class ArtifactConditionInStructure extends ArtifactCondition {
             ComponentSerialization.CODEC.fieldOf("hiddenDescription").forGetter(ArtifactConditionInStructure::getHiddenStructureDescription),
             ComponentSerialization.CODEC.fieldOf("clearDescription").forGetter(ArtifactConditionInStructure::getClearStructureDescription)
     ).apply(inst, ArtifactConditionInStructure::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactConditionInStructure> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactConditionInStructure> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactCondition::getId,
-            ResourceKey.streamCodec(Registries.STRUCTURE).apply(ByteBufCodecs.list()),
+            ByteBufCodecs.resourceKey(Registries.STRUCTURE).apply(ByteBufCodecs.list()),
             ArtifactConditionInStructure::getValidStructures,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionInStructure::getHiddenStructureDescription,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionInStructure::getClearStructureDescription,
             ArtifactConditionInStructure::new);
 

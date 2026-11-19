@@ -26,8 +26,8 @@ import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +50,7 @@ public class LiquidStarlightOutputMergeCrystal extends LiquidStarlightRecipeOutp
 
     private static final LiquidStarlightOutputMergeCrystal INSTANCE = new LiquidStarlightOutputMergeCrystal();
     public static final MapCodec<LiquidStarlightOutputMergeCrystal> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputMergeCrystal> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightOutputMergeCrystal> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<LiquidStarlightOutputMergeCrystal> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private LiquidStarlightOutputMergeCrystal() {}

@@ -33,11 +33,11 @@ import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -247,10 +247,10 @@ public class GemSocketPerk extends AttributeModifierPerk<GemSocketPerk.Data> {
         }
 
         public static final MapCodec<Data> CODEC = RecordCodecBuilder.mapCodec(inst -> gemDataFields(inst).apply(inst, Data::new));
-        public static final StreamCodec<RegistryFriendlyByteBuf, Data> SYNC_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, Data> SYNC_CODEC = StreamCodec.composite(
                 ByteBufCodecs.BOOL,
                 Data::isSealed,
-                ItemStack.OPTIONAL_STREAM_CODEC,
+                ByteBufCodecs.ITEM_STACK,
                 Data::getGemStack,
                 Data::new
         );

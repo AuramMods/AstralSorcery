@@ -13,9 +13,9 @@ import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -29,7 +29,7 @@ public abstract class AltarRecipeOutputModifier {
 
     public static final Codec<AltarRecipeOutputModifier> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ALTAR_OUTPUT_MODIFIER_TYPES)
             .dispatch(AltarRecipeOutputModifier::getType, AltarRecipeOutputModifier.Type::codec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarRecipeOutputModifier> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ALTAR_OUTPUT_MODIFIER_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, AltarRecipeOutputModifier> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ALTAR_OUTPUT_MODIFIER_TYPES)
             .dispatch(AltarRecipeOutputModifier::getType, AltarRecipeOutputModifier.Type::streamCodec);
 
     public abstract AltarRecipeOutputModifier.Type<?> getType();
@@ -40,6 +40,6 @@ public abstract class AltarRecipeOutputModifier {
         return this.modifyOutput(output, input, registries);
     }
 
-    public record Type<T extends AltarRecipeOutputModifier>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
+    public record Type<T extends AltarRecipeOutputModifier>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) {
     }
 }

@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.perk.source.provider.equipment;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.PerksAS;
@@ -17,8 +18,8 @@ import hellfirepvp.astralsorcery.common.perk.source.AttributeModifierProvider;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSource;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSourceProvider;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -35,10 +36,10 @@ import java.util.*;
  */
 public class EquipmentModifierSource implements ModifierSource, AttributeModifierProvider {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, EquipmentModifierSource> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, EquipmentModifierSource> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(EquipmentSlot.class),
             src -> src.slot,
-            ItemStack.STREAM_CODEC,
+            ByteBufCodecs.ITEM_STACK,
             src -> src.itemStack,
             EquipmentModifierSource::new
     );

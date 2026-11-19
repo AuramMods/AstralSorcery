@@ -19,10 +19,10 @@ import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBinding;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
@@ -45,7 +45,7 @@ public abstract class LumenBindingEffect {
 
     public static final Codec<LumenBindingEffect> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LUMEN_BINDING_EFFECT_TYPES)
             .dispatch(LumenBindingEffect::unwrapType, LumenBindingEffect.Type::codec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN_BINDING_EFFECT_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN_BINDING_EFFECT_TYPES)
             .dispatch(LumenBindingEffect::unwrapType, LumenBindingEffect.Type::streamCodec);
 
     public static final LumenBindingEffect NONE = new LumenBindingEffect() {
@@ -123,7 +123,7 @@ public abstract class LumenBindingEffect {
         return this.getType().holder().get();
     }
 
-    public record Type<T extends LumenBindingEffect>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
+    public record Type<T extends LumenBindingEffect>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) {}
 
     public record DeferredType<T extends LumenBindingEffect>(
             RegistryObject<LumenBindingEffect.Type<T>> holder) {}

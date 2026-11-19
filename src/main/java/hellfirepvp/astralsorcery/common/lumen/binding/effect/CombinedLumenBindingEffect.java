@@ -11,10 +11,10 @@ package hellfirepvp.astralsorcery.common.lumen.binding.effect;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
@@ -35,7 +35,7 @@ public class CombinedLumenBindingEffect extends LumenBindingEffect {
     public static final MapCodec<CombinedLumenBindingEffect> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             LumenBindingEffect.CODEC.listOf().fieldOf("effects").forGetter(CombinedLumenBindingEffect::getEffects)
     ).apply(inst, CombinedLumenBindingEffect::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, CombinedLumenBindingEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, CombinedLumenBindingEffect> STREAM_CODEC = StreamCodec.composite(
             LumenBindingEffect.STREAM_CODEC.apply(ByteBufCodecs.list()),
             CombinedLumenBindingEffect::getEffects,
             CombinedLumenBindingEffect::new);

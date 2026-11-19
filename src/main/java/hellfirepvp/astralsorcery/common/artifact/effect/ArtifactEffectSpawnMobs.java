@@ -22,9 +22,9 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -47,8 +47,8 @@ public class ArtifactEffectSpawnMobs extends ArtifactEffect {
             IntRange.CODEC.fieldOf("spawn_count").forGetter(ArtifactEffectSpawnMobs::getSpawnCount),
             RandomWeightedList.codec(BuiltInRegistries.ENTITY_TYPE.byNameCodec()).fieldOf("spawnable_types").forGetter(ArtifactEffectSpawnMobs::getSpawnableTypes)
     ).apply(inst, ArtifactEffectSpawnMobs::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffectSpawnMobs> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactEffectSpawnMobs> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactEffect::getId,
             ByteBufCodecs.INT,
             ArtifactEffectSpawnMobs::getRange,

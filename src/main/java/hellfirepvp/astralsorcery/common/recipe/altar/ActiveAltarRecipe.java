@@ -33,11 +33,10 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.util.inventory.InventoryView;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
@@ -691,14 +690,14 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
                 Codec.INT.fieldOf("input_index").forGetter(input -> input.inputIndex),
                 CodecUtil.uuidCodec().optionalFieldOf("captured_entity_uuid").forGetter(AdditionalInput::getCapturedEntityUUID)
         ).apply(inst, AdditionalInput::new));
-        public static final StreamCodec<? super RegistryFriendlyByteBuf, AdditionalInput> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<? super FriendlyByteBuf, AdditionalInput> STREAM_CODEC = StreamCodec.composite(
                 Vector3.STREAM_CODEC,
                 input -> input.targetPosition.copy(),
                 ByteBufCodecs.BOOL,
                 AdditionalInput::isItem,
                 ByteBufCodecs.INT,
                 AdditionalInput::getInputIndex,
-                ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC),
+                ByteBufCodecs.optional(ByteBufCodecs.UUID_CODEC),
                 input -> Optional.ofNullable(input.capturedEntityUUID),
                 AdditionalInput::new);
 

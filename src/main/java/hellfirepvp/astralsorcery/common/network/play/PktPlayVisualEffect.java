@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.network.play;
 
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -26,7 +26,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktPlayVisualEffect extends PlayPacketHandler.ToClient<PktPlayVisualEffect.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("play_visual_effect");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktPlayVisualEffect.Request> CODEC =
+    static final StreamCodec<FriendlyByteBuf, PktPlayVisualEffect.Request> CODEC =
             StreamCodec.composite(VisualEffectTypes.STREAM_CODEC, Request::effect, Request::new);
 
     public static final PktPlayVisualEffect HANDLER = new PktPlayVisualEffect();
@@ -40,7 +40,7 @@ public class PktPlayVisualEffect extends PlayPacketHandler.ToClient<PktPlayVisua
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

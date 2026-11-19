@@ -57,7 +57,7 @@ import hellfirepvp.observerlib.common.change.ObserverProviderStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -73,7 +73,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
@@ -530,7 +529,7 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
                 type(MenuTypesAS.ALTAR_RADIANCE, ContainerAltarRadiance::new, ContainerAltarRadiance::new));
 
         public static final Codec<AltarType> CODEC = StringRepresentable.fromEnum(AltarType::values);
-        public static final StreamCodec<FriendlyByteBuf, AltarType> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(AltarType.class);
+        public static final StreamCodec<FriendlyByteBuf, AltarType> STREAM_CODEC = CodecUtil.enumStreamCodec(AltarType.class);
 
         private final ResearchTier requiredTier;
         private final ObserverRegistryObject requiredStructure;

@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.focal.node.FocalPointNode;
 import hellfirepvp.astralsorcery.common.util.data.DiffEntry;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -150,7 +150,7 @@ public class FocalPointSyncData extends SyncData<FocalPointSyncData.ClientSync, 
 
     private static class LevelData {
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, LevelData> STREAM_CODEC = StreamCodec.composite(
+        private static final StreamCodec<FriendlyByteBuf, LevelData> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(HashMap::new,
                         ByteBufCodecs.VAR_LONG.map(ChunkPos::new, ChunkPos::toLong),
                         FocalPointNode.STREAM_CODEC.apply(ByteBufCodecs.list())),
@@ -172,9 +172,9 @@ public class FocalPointSyncData extends SyncData<FocalPointSyncData.ClientSync, 
 
     public static class ClientSync extends ClientSyncData<FocalPointClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         LevelData.STREAM_CODEC),
                 data -> data.levelData,
                 ClientSync::new);
@@ -200,11 +200,11 @@ public class FocalPointSyncData extends SyncData<FocalPointSyncData.ClientSync, 
 
     public static class ClientDiffSync extends ClientSyncDiffData<FocalPointClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
-                ResourceKey.streamCodec(Registries.DIMENSION).apply(SetCodec.streamOp()),
+        public static final StreamCodec<FriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.resourceKey(Registries.DIMENSION).apply(SetCodec.streamOp()),
                 data -> data.levelClearBuffer,
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         DiffEntry.streamCodec(FocalPointNode.STREAM_CODEC).apply(ByteBufCodecs.list())),
                 data -> data.nodeChanges,
                 ClientDiffSync::new);

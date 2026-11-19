@@ -19,9 +19,9 @@ import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -52,12 +52,12 @@ public class FocalCombineRecipe extends CustomRecipe<FocalCombineRecipe, FocalCo
             RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("required_constellation").forGetter(FocalCombineRecipe::getRequiredConstellation)
     ).apply(instance, FocalCombineRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FocalCombineRecipe> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, FocalCombineRecipe> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             FocalCombineRecipe::getDuration,
             ColorWrapper.STREAM_CODEC,
             FocalCombineRecipe::getColor,
-            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ByteBufCodecs.INGREDIENT.apply(ByteBufCodecs.list()),
             FocalCombineRecipe::getInputs,
             ItemStack.LIST_STREAM_CODEC,
             FocalCombineRecipe::getOutputs,

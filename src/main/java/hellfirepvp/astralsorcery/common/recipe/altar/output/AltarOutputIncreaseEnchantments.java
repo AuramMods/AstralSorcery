@@ -15,10 +15,10 @@ import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +38,7 @@ public class AltarOutputIncreaseEnchantments extends AltarRecipeOutputModifier {
             Codec.FLOAT.fieldOf("additional_level_chance").forGetter(AltarOutputIncreaseEnchantments::getAdditionalLevelChance)
     ).apply(inst, AltarOutputIncreaseEnchantments::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputIncreaseEnchantments> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputIncreaseEnchantments> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT,
             AltarOutputIncreaseEnchantments::getAdditionalLevelChance,
             AltarOutputIncreaseEnchantments::new);

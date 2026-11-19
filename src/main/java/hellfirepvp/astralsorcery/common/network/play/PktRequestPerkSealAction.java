@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.network.play;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.client.screen.tome.TomePerkTreeScreen;
 import hellfirepvp.astralsorcery.common.item.PerkSealItem;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
@@ -18,8 +19,8 @@ import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.research.perk.PerkAllocation;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,10 +37,10 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktRequestPerkSealAction extends PlayPacketHandler.BiDirectional<PktRequestPerkSealAction.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("request_perk_seal_action");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(Action.class),
             Request::action,
-            ResourceLocation.STREAM_CODEC,
+            ByteBufCodecs.RESOURCE_LOCATION,
             Request::perkKey,
             Request::new
     );
@@ -101,7 +102,7 @@ public class PktRequestPerkSealAction extends PlayPacketHandler.BiDirectional<Pk
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

@@ -21,8 +21,8 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,7 +37,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public class RockCrystalSparkle extends BlockPosEffect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, RockCrystalSparkle> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, RockCrystalSparkle> STREAM_CODEC =
             BlockPosEffect.createCodec(RockCrystalSparkle::new);
     public static final VisualEffectTypes.EffectType<RockCrystalSparkle> TYPE =
             new VisualEffectTypes.EffectType<>(AstralSorcery.key("rock_crystal_sparkle"), STREAM_CODEC);

@@ -20,8 +20,8 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,7 +36,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public class FocalPointCombineSparkle extends VectorPosEffect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FocalPointCombineSparkle> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, FocalPointCombineSparkle> STREAM_CODEC = StreamCodec.composite(
             Vector3.STREAM_CODEC,
             FocalPointCombineSparkle::getPos,
             ColorWrapper.STREAM_CODEC,

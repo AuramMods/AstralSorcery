@@ -15,10 +15,10 @@ import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.RandomMobEffectInstance;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import net.minecraft.core.Holder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,7 +42,7 @@ public class LumenBindingHitAddEffectEffect extends LumenBindingEffect {
             RandomMobEffectInstance.CODEC.fieldOf("effect").forGetter(LumenBindingHitAddEffectEffect::getEffect),
             Codec.FLOAT.fieldOf("chance").forGetter(LumenBindingHitAddEffectEffect::getChance)
     ).apply(inst, LumenBindingHitAddEffectEffect::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingHitAddEffectEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingHitAddEffectEffect> STREAM_CODEC = StreamCodec.composite(
             RandomMobEffectInstance.STREAM_CODEC,
             LumenBindingHitAddEffectEffect::getEffect,
             ByteBufCodecs.FLOAT,

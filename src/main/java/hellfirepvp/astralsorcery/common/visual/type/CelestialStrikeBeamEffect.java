@@ -16,8 +16,8 @@ import hellfirepvp.astralsorcery.client.lib.EffectTemplatesAS;
 import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class CelestialStrikeBeamEffect implements VisualEffectTypes.Effect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, CelestialStrikeBeamEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, CelestialStrikeBeamEffect> STREAM_CODEC = StreamCodec.composite(
             Vector3.STREAM_CODEC,
             CelestialStrikeBeamEffect::getFrom,
             Vector3.STREAM_CODEC,

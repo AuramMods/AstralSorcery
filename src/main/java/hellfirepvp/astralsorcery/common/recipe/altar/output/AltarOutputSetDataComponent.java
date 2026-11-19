@@ -14,9 +14,9 @@ import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -30,7 +30,7 @@ public class AltarOutputSetDataComponent<T> extends AltarRecipeOutputModifier {
 
     public static final MapCodec<AltarOutputSetDataComponent<?>> CODEC =
             DataComponentType.CODEC.dispatchMap("component_type", AltarOutputSetDataComponent::getComponentType, AltarOutputSetDataComponent::makeCodec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputSetDataComponent<?>> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputSetDataComponent<?>> STREAM_CODEC =
             DataComponentType.STREAM_CODEC.dispatch(AltarOutputSetDataComponent::getComponentType, AltarOutputSetDataComponent::makeStreamCodec);
     public static final Type<AltarOutputSetDataComponent<?>> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
@@ -40,11 +40,11 @@ public class AltarOutputSetDataComponent<T> extends AltarRecipeOutputModifier {
         ).apply(instance, value -> new AltarOutputSetDataComponent<>(type, MiscUtil.cast(value))));
     }
 
-    private static StreamCodec<RegistryFriendlyByteBuf, AltarOutputSetDataComponent<?>> makeStreamCodec(DataComponentType<?> type) {
+    private static StreamCodec<FriendlyByteBuf, AltarOutputSetDataComponent<?>> makeStreamCodec(DataComponentType<?> type) {
         return StreamCodec.composite(
                 DataComponentType.STREAM_CODEC,
                 AltarOutputSetDataComponent::getComponentType,
-                ByteBufCodecs.fromCodecWithRegistriesTrusted(type.codecOrThrow()),
+                ByteBufCodecs.fromCodecWithRegistries(type.codecOrThrow()),
                 cmp -> MiscUtil.cast(cmp.getValue()),
                 (cmp, val) -> new AltarOutputSetDataComponent<>(type, MiscUtil.cast(val)));
     }

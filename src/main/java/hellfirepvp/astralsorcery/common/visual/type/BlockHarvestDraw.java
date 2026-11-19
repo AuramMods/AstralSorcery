@@ -18,8 +18,8 @@ import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -33,7 +33,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public class BlockHarvestDraw implements VisualEffectTypes.Effect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BlockHarvestDraw> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, BlockHarvestDraw> STREAM_CODEC = StreamCodec.composite(
             Vector3.STREAM_CODEC,
             BlockHarvestDraw::getFrom,
             Vector3.STREAM_CODEC,

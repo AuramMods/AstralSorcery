@@ -10,9 +10,9 @@ package hellfirepvp.astralsorcery.common.network.play;
 
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.perk.PerkLevelManager;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
@@ -28,7 +28,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktSyncPerkLevels extends PlayPacketHandler.ToClient<PktSyncPerkLevels.Request> {
 
     static final CustomPacketPayload.Type<PktSyncPerkLevels.Request> TYPE = makeType("sync_perk_levels");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktSyncPerkLevels.Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, PktSyncPerkLevels.Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             Request::maxPerkLevel,
             Request::new
@@ -45,7 +45,7 @@ public class PktSyncPerkLevels extends PlayPacketHandler.ToClient<PktSyncPerkLev
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

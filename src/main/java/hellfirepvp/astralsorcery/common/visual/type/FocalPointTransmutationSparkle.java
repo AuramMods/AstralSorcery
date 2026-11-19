@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.visual.type;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
@@ -22,8 +23,8 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -40,8 +41,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public class FocalPointTransmutationSparkle extends BlockPosEffect {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FocalPointTransmutationSparkle> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, FocalPointTransmutationSparkle> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BLOCK_POS,
             FocalPointTransmutationSparkle::getBlockPos,
             ColorWrapper.STREAM_CODEC,
             FocalPointTransmutationSparkle::getColor,

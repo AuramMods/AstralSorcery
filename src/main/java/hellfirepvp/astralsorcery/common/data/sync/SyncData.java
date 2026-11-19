@@ -8,8 +8,8 @@
 
 package hellfirepvp.astralsorcery.common.data.sync;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.function.Supplier;
@@ -40,6 +40,6 @@ public abstract class SyncData<SA extends ClientSyncData<C>, SD extends ClientSy
     public record Type<D extends SyncData<SA, SD, C>, SA extends ClientSyncData<C>, SD extends ClientSyncDiffData<C>, C extends ClientData>(
             Supplier<D> dataProvider,
             Supplier<C> clientDataProvider,
-            StreamCodec<RegistryFriendlyByteBuf, SA> syncCodec,
-            StreamCodec<RegistryFriendlyByteBuf, SD> syncDiffCodec) {}
+            StreamCodec<FriendlyByteBuf, SA> syncCodec,
+            StreamCodec<FriendlyByteBuf, SD> syncDiffCodec) {}
 }

@@ -11,8 +11,8 @@ package hellfirepvp.astralsorcery.common.perk.source.provider;
 import hellfirepvp.astralsorcery.common.perk.data.PerkTree;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSourceProvider;
 import hellfirepvp.astralsorcery.common.perk.tree.AbstractPerk;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.LogicalSide;
  */
 public class PerkSourceProvider extends ModifierSourceProvider<AbstractPerk<?>> {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AbstractPerk<?>> STREAM_CODEC = StreamCodec.of(
+    public static final StreamCodec<FriendlyByteBuf, AbstractPerk<?>> STREAM_CODEC = StreamCodec.of(
             (buf, perk) -> buf.writeResourceLocation(perk.getKey()),
             buf -> PerkTree.getInstance().getPerk(LogicalSide.CLIENT, buf.readResourceLocation()).orElseThrow()
     );
@@ -37,7 +37,7 @@ public class PerkSourceProvider extends ModifierSourceProvider<AbstractPerk<?>> 
     protected void removeModifiers(ServerPlayer playerEntity) {}
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, AbstractPerk<?>> getModifierSourceSyncCodec() {
+    public StreamCodec<FriendlyByteBuf, AbstractPerk<?>> getModifierSourceSyncCodec() {
         return STREAM_CODEC;
     }
 }

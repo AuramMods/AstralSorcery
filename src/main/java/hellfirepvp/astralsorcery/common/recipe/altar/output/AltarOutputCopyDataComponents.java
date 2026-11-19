@@ -19,9 +19,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 
@@ -45,7 +45,7 @@ public class AltarOutputCopyDataComponents extends AltarOutputReplaceWithInput {
             Codec.BOOL.fieldOf("copy_all").forGetter(AltarOutputCopyDataComponents::isCopyAll),
             BuiltInRegistries.DATA_COMPONENT_TYPE.byNameCodec().listOf().fieldOf("components_to_copy").forGetter(AltarOutputCopyDataComponents::getComponentsToCopy)
     ).apply(inst, AltarOutputCopyDataComponents::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputCopyDataComponents> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputCopyDataComponents> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(AltarOutputReplaceWithInput.SlotType.class),
             AltarOutputCopyDataComponents::getSlotType,
             ByteBufCodecs.INT,

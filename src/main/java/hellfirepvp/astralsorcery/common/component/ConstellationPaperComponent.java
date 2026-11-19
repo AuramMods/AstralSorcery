@@ -17,10 +17,10 @@ import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.AttributeTooltipContext;
@@ -46,7 +46,7 @@ public class ConstellationPaperComponent implements DynamicTooltipComponent {
                     .forGetter(ConstellationPaperComponent::getConstellation)
     ).apply(inst, cst -> cst.map(ConstellationPaperComponent::new).orElse(EMPTY)));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ConstellationPaperComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ConstellationPaperComponent> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS)),
             ConstellationPaperComponent::getConstellation,
             cst -> cst.map(ConstellationPaperComponent::new).orElse(EMPTY)

@@ -21,10 +21,10 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
@@ -51,7 +51,7 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
             WeightedEntry.Wrapper.codec(RegistriesAS.codec(RegistriesAS.KEY_CRYSTAL_PROPERTIES)).listOf()
                     .fieldOf("properties").forGetter(AltarOutputEngraveLumen::getProperties)
     ).apply(inst, AltarOutputEngraveLumen::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputEngraveLumen> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputEngraveLumen> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.weightedEntryCodec(ByteBufCodecs.registry(RegistriesAS.KEY_CRYSTAL_PROPERTIES)).apply(ByteBufCodecs.list()), AltarOutputEngraveLumen::getProperties,
             AltarOutputEngraveLumen::new
     );

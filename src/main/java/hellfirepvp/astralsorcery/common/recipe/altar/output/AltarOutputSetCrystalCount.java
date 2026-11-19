@@ -16,9 +16,9 @@ import hellfirepvp.astralsorcery.common.lib.CrystalPropertiesAS;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
@@ -34,7 +34,7 @@ public class AltarOutputSetCrystalCount extends AltarRecipeOutputModifier {
     public static final MapCodec<AltarOutputSetCrystalCount> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.INT.fieldOf("count_per_size").forGetter(AltarOutputSetCrystalCount::getCountPerSize)
     ).apply(inst, AltarOutputSetCrystalCount::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputSetCrystalCount> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputSetCrystalCount> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             AltarOutputSetCrystalCount::getCountPerSize,
             AltarOutputSetCrystalCount::new);

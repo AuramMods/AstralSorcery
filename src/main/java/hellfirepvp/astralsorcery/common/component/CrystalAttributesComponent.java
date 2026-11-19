@@ -13,11 +13,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.crystal.CrystalProperty;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -42,7 +42,7 @@ public class CrystalAttributesComponent implements DynamicTooltipComponent {
             TieredAttribute.CODEC.listOf().fieldOf("attributes").forGetter(CrystalAttributesComponent::getAttributes)
     ).apply(inst, CrystalAttributesComponent::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, CrystalAttributesComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, CrystalAttributesComponent> STREAM_CODEC = StreamCodec.composite(
             GenerationProperties.STREAM_CODEC,
             CrystalAttributesComponent::getProperties,
             TieredAttribute.STREAM_CODEC.apply(ByteBufCodecs.list()),
@@ -168,7 +168,7 @@ public class CrystalAttributesComponent implements DynamicTooltipComponent {
                 Codec.INT.fieldOf("tier").forGetter(TieredAttribute::getTier)
         ).apply(inst, TieredAttribute::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, TieredAttribute> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, TieredAttribute> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.registry(RegistriesAS.KEY_CRYSTAL_PROPERTIES),
                 TieredAttribute::getProperty,
                 ByteBufCodecs.INT,
@@ -212,7 +212,7 @@ public class CrystalAttributesComponent implements DynamicTooltipComponent {
                 Codec.INT.fieldOf("max_tier_count").forGetter(GenerationProperties::maxTierCount)
         ).apply(inst, GenerationProperties::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, GenerationProperties> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, GenerationProperties> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.INT,
                 GenerationProperties::generateCount,
                 ByteBufCodecs.INT,

@@ -11,10 +11,10 @@ package hellfirepvp.astralsorcery.common.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.AttributeTooltipContext;
@@ -40,8 +40,8 @@ public record BlockStateStorageComponent(List<BlockState> storedStates) implemen
                     .forGetter(BlockStateStorageComponent::storedStates)
     ).apply(inst, BlockStateStorageComponent::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BlockStateStorageComponent> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockState.CODEC.listOf()),
+    public static final StreamCodec<FriendlyByteBuf, BlockStateStorageComponent> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.fromCodecWithRegistries(BlockState.CODEC.listOf()),
             BlockStateStorageComponent::storedStates,
             BlockStateStorageComponent::new
     );

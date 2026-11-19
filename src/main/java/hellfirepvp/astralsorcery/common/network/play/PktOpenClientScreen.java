@@ -11,15 +11,15 @@ package hellfirepvp.astralsorcery.common.network.play;
 import hellfirepvp.astralsorcery.common.item.TomeItem;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class PktOpenClientScreen extends PlayPacketHandler.ToClient<PktOpenClientScreen.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("open_client_screen");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC =
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC =
             StreamCodec.composite(CodecUtil.enumStreamCodec(ScreenType.class), Request::screenType, Request::new);
 
     public static final PktOpenClientScreen HANDLER = new PktOpenClientScreen();
@@ -33,7 +33,7 @@ public class PktOpenClientScreen extends PlayPacketHandler.ToClient<PktOpenClien
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

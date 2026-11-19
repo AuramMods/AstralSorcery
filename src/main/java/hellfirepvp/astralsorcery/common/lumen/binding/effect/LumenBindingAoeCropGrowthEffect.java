@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.CropUtil;
 import hellfirepvp.astralsorcery.common.visual.type.SinglePlantGrowthEffect;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -40,7 +40,7 @@ public class LumenBindingAoeCropGrowthEffect extends LumenBindingEffect {
 
     public static final LumenBindingAoeCropGrowthEffect INSTANCE = new LumenBindingAoeCropGrowthEffect();
     public static final MapCodec<LumenBindingAoeCropGrowthEffect> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingAoeCropGrowthEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingAoeCropGrowthEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     public static void attachEventListeners(IEventBus bus) {
         bus.addListener(EventPriority.LOWEST, LumenBindingAoeCropGrowthEffect::onBlockBreak);

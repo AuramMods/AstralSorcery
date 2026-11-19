@@ -15,8 +15,8 @@ import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -34,7 +34,7 @@ public class AltarOutputMergeCrystalProperties extends AltarRecipeOutputModifier
 
     public static final AltarOutputMergeCrystalProperties INSTANCE = new AltarOutputMergeCrystalProperties();
     public static final MapCodec<AltarOutputMergeCrystalProperties> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputMergeCrystalProperties> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputMergeCrystalProperties> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<AltarOutputMergeCrystalProperties> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private AltarOutputMergeCrystalProperties() {}

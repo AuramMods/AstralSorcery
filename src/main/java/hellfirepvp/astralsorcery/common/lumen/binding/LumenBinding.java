@@ -13,7 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lumen.binding.effect.LumenBindingEffect;
 import hellfirepvp.astralsorcery.common.lumen.binding.usage.LumenBindingUsage;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
 
 import java.util.List;
 import java.util.stream.Collectors;

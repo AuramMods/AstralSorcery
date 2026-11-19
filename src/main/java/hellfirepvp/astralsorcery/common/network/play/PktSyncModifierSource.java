@@ -8,17 +8,17 @@
 
 package hellfirepvp.astralsorcery.common.network.play;
 
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.perk.PerkApplicationManager;
 import hellfirepvp.astralsorcery.common.perk.PerkManager;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSource;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Optional;
@@ -33,8 +33,8 @@ import java.util.Optional;
 public class PktSyncModifierSource extends PlayPacketHandler.ToClient<PktSyncModifierSource.Request> {
 
     static final CustomPacketPayload.Type<PktSyncModifierSource.Request> TYPE = makeType("sync_modifier_source");
-    static final StreamCodec<RegistryFriendlyByteBuf, PktSyncModifierSource.Request> CODEC = StreamCodec.composite(
-            NeoForgeStreamCodecs.enumCodec(ActionType.class),
+    static final StreamCodec<FriendlyByteBuf, PktSyncModifierSource.Request> CODEC = StreamCodec.composite(
+            CodecUtil.enumStreamCodec(ActionType.class),
             Request::action,
             ByteBufCodecs.optional(ModifierSource.STREAM_CODEC),
             Request::existingSource,
@@ -62,7 +62,7 @@ public class PktSyncModifierSource extends PlayPacketHandler.ToClient<PktSyncMod
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

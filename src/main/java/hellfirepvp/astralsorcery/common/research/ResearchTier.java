@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.research;
 
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import com.mojang.serialization.Codec;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.resource.AssetLocation;
@@ -17,9 +18,8 @@ import hellfirepvp.astralsorcery.common.util.data.IntRectangle;
 import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +42,7 @@ public enum ResearchTier implements StringRepresentable {
     RADIANCE(5, -3);
 
     public static final Codec<ResearchTier> CODEC = StringRepresentable.fromEnum(ResearchTier::values);
-    public static final StreamCodec<FriendlyByteBuf, ResearchTier> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(ResearchTier.class);
+    public static final StreamCodec<FriendlyByteBuf, ResearchTier> STREAM_CODEC = CodecUtil.enumStreamCodec(ResearchTier.class);
 
     private final String descriptionId;
     private final TextureQuery cloudTexture;

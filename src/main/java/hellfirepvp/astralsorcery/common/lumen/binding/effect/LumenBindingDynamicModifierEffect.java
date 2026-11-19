@@ -24,11 +24,11 @@ import hellfirepvp.astralsorcery.common.perk.source.provider.equipment.Equipment
 import hellfirepvp.astralsorcery.common.perk.type.base.ModifierType;
 import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +53,7 @@ public class LumenBindingDynamicModifierEffect extends LumenBindingEffect implem
     public static final MapCodec<LumenBindingDynamicModifierEffect> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             DynamicAttributeModifier.CODEC.listOf().fieldOf("modifiers").forGetter(LumenBindingDynamicModifierEffect::getModifiers)
     ).apply(inst, LumenBindingDynamicModifierEffect::of));
-    public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingDynamicModifierEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LumenBindingDynamicModifierEffect> STREAM_CODEC = StreamCodec.composite(
             DynamicAttributeModifier.STREAM_CODEC.apply(ByteBufCodecs.list()),
             LumenBindingDynamicModifierEffect::getModifiers,
             LumenBindingDynamicModifierEffect::new);

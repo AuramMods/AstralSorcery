@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.artifact.condition;
 
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactCondition;
@@ -16,10 +17,10 @@ import hellfirepvp.astralsorcery.common.lib.types.ArtifactConditionTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -46,14 +47,14 @@ public class ArtifactConditionInDimension extends ArtifactCondition {
             ComponentSerialization.CODEC.fieldOf("hiddenDescription").forGetter(ArtifactConditionInDimension::getHiddenDescription),
             ComponentSerialization.CODEC.fieldOf("clearDescription").forGetter(ArtifactConditionInDimension::getClearDescription)
     ).apply(inst, ArtifactConditionInDimension::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactConditionInDimension> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<FriendlyByteBuf, ArtifactConditionInDimension> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactCondition::getId,
-            ResourceKey.streamCodec(Registries.DIMENSION_TYPE),
+            ByteBufCodecs.resourceKey(Registries.DIMENSION_TYPE),
             ArtifactConditionInDimension::getDimensionType,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionInDimension::getHiddenDescription,
-            ComponentSerialization.STREAM_CODEC,
+            ByteBufCodecs.COMPONENT,
             ArtifactConditionInDimension::getClearDescription,
             ArtifactConditionInDimension::new);
 

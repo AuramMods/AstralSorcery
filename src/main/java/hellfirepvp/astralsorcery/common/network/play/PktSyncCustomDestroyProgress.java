@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.network.play;
 import hellfirepvp.astralsorcery.client.helper.ClientBlockDestroyProgressHelper;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -27,12 +27,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktSyncCustomDestroyProgress extends PlayPacketHandler.ToClient<PktSyncCustomDestroyProgress.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("sync_custom_destroy_progress");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             Request::entityId,
-            BlockPos.STREAM_CODEC,
+            ByteBufCodecs.BLOCK_POS,
             Request::originPos,
-            BlockPos.STREAM_CODEC,
+            ByteBufCodecs.BLOCK_POS,
             Request::breakPos,
             ByteBufCodecs.INT,
             Request::progress,
@@ -54,7 +54,7 @@ public class PktSyncCustomDestroyProgress extends PlayPacketHandler.ToClient<Pkt
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

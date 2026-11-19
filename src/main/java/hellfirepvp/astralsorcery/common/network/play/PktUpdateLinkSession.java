@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.network.play;
 import hellfirepvp.astralsorcery.client.helper.ClientLinkHelper;
 import hellfirepvp.astralsorcery.common.linking.session.ActiveLinkSession;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,7 +31,7 @@ import java.util.Optional;
 public class PktUpdateLinkSession extends PlayPacketHandler.ToClient<PktUpdateLinkSession.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("update_link_session");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.fromCodec(ActiveLinkSession.CODEC)),
             Request::session,
             Request::new
@@ -52,7 +52,7 @@ public class PktUpdateLinkSession extends PlayPacketHandler.ToClient<PktUpdateLi
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.common.container.base;
 
 import hellfirepvp.astralsorcery.common.util.data.MenuTypeRegistryObject;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -40,7 +40,7 @@ public abstract class ContainerProviderCustom<T extends AbstractContainerMenu> i
     }
 
     @Override
-    public abstract void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer);
+    public abstract void writeClientSideData(AbstractContainerMenu menu, FriendlyByteBuf buffer);
 
     @Nullable
     @Override

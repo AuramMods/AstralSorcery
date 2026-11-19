@@ -12,7 +12,7 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -125,7 +125,7 @@ public class DataComponentsAS {
     public static RegistryObject<DataComponentType<StoredPlayerProgressComponent>> STORED_PLAYER_PROGRESS =
             COMPONENT_TYPE_REGISTER.register("stored_player_progress", () -> DataComponentType.<StoredPlayerProgressComponent>builder()
                     .persistent(StoredPlayerProgressComponent.CODEC)
-                    .networkSynchronized(ByteBufCodecs.fromCodecWithRegistriesTrusted(StoredPlayerProgressComponent.CODEC))
+                    .networkSynchronized(ByteBufCodecs.fromCodecWithRegistries(StoredPlayerProgressComponent.CODEC))
                     .build());
 
     public static RegistryObject<DataComponentType<VeiledItemStackComponent>> VEILED =

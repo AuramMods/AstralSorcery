@@ -15,9 +15,9 @@ import hellfirepvp.astralsorcery.common.data.sync.client.TimeStopEntityClientDat
 import hellfirepvp.astralsorcery.common.lib.types.SyncDataTypesAS;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -87,9 +87,9 @@ public class TimeStopEntitySyncData extends SyncData<TimeStopEntitySyncData.Clie
 
     public static class ClientDiffSync extends ClientSyncDiffData<TimeStopEntityClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ClientDiffSync> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         ByteBufCodecs.map(HashMap::new,
                                 ByteBufCodecs.INT,
                                 ByteBufCodecs.BOOL)),
@@ -128,9 +128,9 @@ public class TimeStopEntitySyncData extends SyncData<TimeStopEntitySyncData.Clie
 
     public static class ClientSync extends ClientSyncData<TimeStopEntityClientData> {
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ClientSync> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.map(HashMap::new,
-                        ResourceKey.streamCodec(Registries.DIMENSION),
+                        ByteBufCodecs.resourceKey(Registries.DIMENSION),
                         ByteBufCodecs.INT.apply(SetCodec.streamOp())),
                 data -> data.entities,
                 ClientSync::new

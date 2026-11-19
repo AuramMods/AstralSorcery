@@ -28,8 +28,8 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -47,7 +47,7 @@ public class LiquidStarlightOutputFormGemCrystalCluster extends LiquidStarlightR
 
     private static final LiquidStarlightOutputFormGemCrystalCluster INSTANCE = new LiquidStarlightOutputFormGemCrystalCluster();
     public static final MapCodec<LiquidStarlightOutputFormGemCrystalCluster> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputFormGemCrystalCluster> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, LiquidStarlightOutputFormGemCrystalCluster> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<LiquidStarlightOutputFormGemCrystalCluster> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private LiquidStarlightOutputFormGemCrystalCluster() {}

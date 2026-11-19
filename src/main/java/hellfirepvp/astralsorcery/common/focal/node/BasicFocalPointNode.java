@@ -47,9 +47,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -85,11 +85,11 @@ public class BasicFocalPointNode extends FocalPointNode {
                     CodecUtil.defaulted(Codec.BOOL, "didClearFlowers", () -> false, BasicFocalPointNode::didClearFlowers)
             ).apply(inst, BasicFocalPointNode::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BasicFocalPointNode> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, BasicFocalPointNode> STREAM_CODEC = StreamCodec.composite(
             ColumnPos.STREAM_CODEC, BasicFocalPointNode::getPos,
             ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS), BasicFocalPointNode::getConstellation,
             ByteBufCodecs.VAR_LONG, FocalPointNode::getTicksExisted,
-            ByteBufCodecs.optional(BlockPos.STREAM_CODEC), BasicFocalPointNode::getFocalPosition,
+            ByteBufCodecs.optional(ByteBufCodecs.BLOCK_POS), BasicFocalPointNode::getFocalPosition,
             ByteBufCodecs.BOOL, BasicFocalPointNode::didClearFlowers,
             BasicFocalPointNode::new);
 

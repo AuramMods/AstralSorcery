@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.perk.tree;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import java.util.function.Supplier;
 
@@ -24,11 +24,11 @@ import java.util.function.Supplier;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public record PerkDataType<D extends AbstractPerk.Data>(MapCodec<D> codec, StreamCodec<RegistryFriendlyByteBuf, D> syncCodec, Supplier<D> emptyDataFn) {
+public record PerkDataType<D extends AbstractPerk.Data>(MapCodec<D> codec, StreamCodec<FriendlyByteBuf, D> syncCodec, Supplier<D> emptyDataFn) {
 
     public static final Codec<AbstractPerk.Data> DATA_CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_DATA_TYPES)
             .dispatch(AbstractPerk.Data::getType, PerkDataType::codec);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AbstractPerk.Data> DATA_SYNC_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_PERK_DATA_TYPES)
+    public static final StreamCodec<FriendlyByteBuf, AbstractPerk.Data> DATA_SYNC_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_PERK_DATA_TYPES)
             .dispatch(AbstractPerk.Data::getType, PerkDataType::syncCodec);
 
 }

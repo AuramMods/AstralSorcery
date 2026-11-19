@@ -15,11 +15,11 @@ import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lib.types.ResearchNodeConditionTypesAS;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class ConditionConstellation implements ResearchNodeCondition {
             RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).listOf().fieldOf("any_constellations").forGetter(condition -> condition.anyConstellations)
     ).apply(inst, ConditionConstellation::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ConditionConstellation> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ConditionConstellation> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS).apply(ByteBufCodecs.list()),
             condition -> condition.anyConstellations,
             ConditionConstellation::new);

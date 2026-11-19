@@ -19,11 +19,11 @@ import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import hellfirepvp.observerlib.common.data.WorldCacheDomain;
 import hellfirepvp.observerlib.common.data.base.GlobalWorldData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.ObjectUtils;
@@ -109,8 +109,8 @@ public class CelestialGatewayData extends GlobalWorldData<CelestialGatewayData> 
                 DyeColor.CODEC.fieldOf("color").forGetter(GatewayEntry::getColor)
         ).apply(inst, GatewayEntry::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, GatewayEntry> STREAM_CODEC = StreamCodec.composite(
-                BlockPos.STREAM_CODEC,
+        public static final StreamCodec<FriendlyByteBuf, GatewayEntry> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.BLOCK_POS,
                 GatewayEntry::getPos,
                 ComponentSerialization.OPTIONAL_STREAM_CODEC,
                 entry -> Optional.ofNullable(entry.getCustomName()),

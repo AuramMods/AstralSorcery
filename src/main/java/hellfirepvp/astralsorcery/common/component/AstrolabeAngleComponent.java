@@ -12,10 +12,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.AttributeTooltipContext;
@@ -39,7 +39,7 @@ public record AstrolabeAngleComponent(float angle, boolean matchesAll) implement
             Codec.BOOL.fieldOf("matches_all").forGetter(AstrolabeAngleComponent::matchesAll)
     ).apply(inst, AstrolabeAngleComponent::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AstrolabeAngleComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, AstrolabeAngleComponent> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT,
             AstrolabeAngleComponent::angle,
             ByteBufCodecs.BOOL,

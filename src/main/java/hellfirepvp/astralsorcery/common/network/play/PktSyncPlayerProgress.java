@@ -12,8 +12,8 @@ import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.research.SyncPlayerProgress;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -27,7 +27,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktSyncPlayerProgress extends PlayPacketHandler.ToClient<PktSyncPlayerProgress.Request> {
 
     static final CustomPacketPayload.Type<Request> TYPE = makeType("sync_player_progress");
-    static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.composite(
+    static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             SyncPlayerProgress.SYNC_CODEC,
             Request::progress,
             Request::new
@@ -44,7 +44,7 @@ public class PktSyncPlayerProgress extends PlayPacketHandler.ToClient<PktSyncPla
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, Request> codec() {
+    public StreamCodec<FriendlyByteBuf, Request> codec() {
         return CODEC;
     }
 

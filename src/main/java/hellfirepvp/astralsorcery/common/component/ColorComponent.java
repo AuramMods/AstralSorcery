@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.component;
 
 import com.mojang.serialization.Codec;
 import hellfirepvp.astralsorcery.common.util.ColorReference;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
 import java.util.Objects;
@@ -31,7 +31,7 @@ public record ColorComponent(ColorReference reference) {
 
     public static final Codec<ColorComponent> CODEC = ColorReference.CODEC.xmap(ColorComponent::new, ColorComponent::reference);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ColorComponent> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ColorComponent> STREAM_CODEC = StreamCodec.composite(
             ColorReference.STREAM_CODEC,
             ColorComponent::reference,
             ColorComponent::new);

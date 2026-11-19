@@ -17,9 +17,9 @@ import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
+import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 
@@ -37,7 +37,7 @@ public class AltarOutputAddEnchantmentModifier extends AltarRecipeOutputModifier
 
     public static final AltarOutputAddEnchantmentModifier INSTANCE = new AltarOutputAddEnchantmentModifier();
     public static final MapCodec<AltarOutputAddEnchantmentModifier> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputAddEnchantmentModifier> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final StreamCodec<FriendlyByteBuf, AltarOutputAddEnchantmentModifier> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<AltarOutputAddEnchantmentModifier> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private AltarOutputAddEnchantmentModifier() {}
