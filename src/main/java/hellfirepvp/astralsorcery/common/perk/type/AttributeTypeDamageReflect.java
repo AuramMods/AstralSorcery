@@ -16,12 +16,12 @@ import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.DamageUtil;
 import hellfirepvp.astralsorcery.common.util.FlagExecutor;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -42,7 +42,7 @@ public class AttributeTypeDamageReflect extends PerkAttributeType {
         eventBus.addListener(this::onDamageTaken);
     }
 
-    private void onDamageTaken(LivingDamageEvent.Post event) {
+    private void onDamageTaken(DamageResolutionEvent.Applied event) {
         if (FlagExecutor.isFlagSet(FlagExecutor.Flag.DAMAGE_REFLECT_ATTACK)) return;
         if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
         if (!(event.getEntity() instanceof Player player)) return;
@@ -56,7 +56,7 @@ public class AttributeTypeDamageReflect extends PerkAttributeType {
                 .modifyValue(player, progress, this, 0F);
         reflectPercent = AttributeEvent.postProcessModded(player, this, reflectPercent);
 
-        float damageToReflect = event.getNewDamage() * reflectPercent;
+        float damageToReflect = event.getAmount() * reflectPercent;
         if (damageToReflect <= 0) return;
 
         FlagExecutor.run(FlagExecutor.Flag.DAMAGE_REFLECT_ATTACK, () -> {

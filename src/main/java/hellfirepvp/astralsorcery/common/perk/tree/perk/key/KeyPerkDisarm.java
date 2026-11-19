@@ -24,6 +24,7 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -34,7 +35,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -64,10 +64,10 @@ public class KeyPerkDisarm extends KeyPerk {
     @Override
     protected void attachEventListeners(SidedEventBus sidedEventBus) {
         super.attachEventListeners(sidedEventBus);
-        sidedEventBus.addListener(LivingDamageEvent.Post.class, SidedEventBus.entityEvent(), this::onAttacked);
+        sidedEventBus.addListener(DamageResolutionEvent.Applied.class, SidedEventBus.entityEvent(), this::onAttacked);
     }
 
-    private void onAttacked(LivingDamageEvent.Post event) {
+    private void onAttacked(DamageResolutionEvent.Applied event) {
         Entity source = event.getSource().getEntity();
         if (!(source instanceof ServerPlayer sPlayer)) return;
         LogicalSide side = this.getSide(sPlayer);

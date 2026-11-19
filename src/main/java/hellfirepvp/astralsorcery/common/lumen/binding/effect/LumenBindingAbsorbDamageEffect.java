@@ -12,6 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -81,7 +81,7 @@ public class LumenBindingAbsorbDamageEffect extends LumenBindingEffect {
         bus.addListener(LumenBindingAbsorbDamageEffect::onDamageTaken);
     }
 
-    private static void onDamageTaken(LivingDamageEvent.Post event) {
+    private static void onDamageTaken(DamageResolutionEvent.Applied event) {
         if (!(event.getEntity() instanceof ServerPlayer sPlayer)) return;
 
         long gameTime = sPlayer.level().getGameTime();
@@ -89,7 +89,7 @@ public class LumenBindingAbsorbDamageEffect extends LumenBindingEffect {
         if (cooldowns.getOrDefault(uuid, 0L) > gameTime) return;
 
         forEachEffect(sPlayer, LumenBindingAbsorbDamageEffect.class, (stack, effect) -> {
-            if (event.getNewDamage() >= effect.getThreshold() && effect.getDurationTicks() > 0) {
+            if (event.getAmount() >= effect.getThreshold() && effect.getDurationTicks() > 0) {
                 return effect;
             }
             return null;

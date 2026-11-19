@@ -14,11 +14,11 @@ import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -39,7 +39,7 @@ public class AttributeTypeDamageReduction extends PerkAttributeType {
         eventBus.addListener(this::onDamage);
     }
 
-    private void onDamage(LivingDamageEvent.Pre event) {
+    private void onDamage(DamageResolutionEvent.BeforeAbsorption event) {
         if (event.getEntity() instanceof ServerPlayer sPlayer) {
             LogicalSide side = SidedHelper.getSide(sPlayer);
             if (!this.hasTypeApplied(sPlayer, side)) return;
@@ -52,7 +52,7 @@ public class AttributeTypeDamageReduction extends PerkAttributeType {
             reduction = AttributeEvent.postProcessModded(sPlayer, this, reduction);
 
             reduction = Mth.clamp(1F - reduction, 0F, 1F);
-            event.setNewDamage(event.getNewDamage() - event.getNewDamage() * reduction);
+            event.setAmount(event.getAmount() - event.getAmount() * reduction);
         }
     }
 }

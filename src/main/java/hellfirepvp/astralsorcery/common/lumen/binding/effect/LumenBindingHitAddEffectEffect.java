@@ -14,6 +14,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.RandomMobEffectInstance;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -25,7 +26,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class LumenBindingHitAddEffectEffect extends LumenBindingEffect {
         bus.addListener(LumenBindingHitAddEffectEffect::onDamageDealt);
     }
 
-    private static void onDamageDealt(LivingDamageEvent.Post event) {
+    private static void onDamageDealt(DamageResolutionEvent.Applied event) {
         if (event.getSource().getDirectEntity() instanceof LivingEntity attacker) {
             if (attacker.level().isClientSide()) return;
 

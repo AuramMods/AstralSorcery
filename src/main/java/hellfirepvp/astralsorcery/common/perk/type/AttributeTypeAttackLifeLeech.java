@@ -14,10 +14,10 @@ import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -38,8 +38,8 @@ public class AttributeTypeAttackLifeLeech extends PerkAttributeType {
         eventBus.addListener(this::onDamageDealt);
     }
 
-    private void onDamageDealt(LivingDamageEvent.Post event) {
-        if (event.getSource().isDirect() && event.getSource().getDirectEntity() instanceof Player player) {
+    private void onDamageDealt(DamageResolutionEvent.Applied event) {
+        if (!event.getSource().isIndirect() && event.getSource().getDirectEntity() instanceof Player player) {
             LogicalSide side = SidedHelper.getSide(player);
             if (!this.hasTypeApplied(player, side)) return;
 
@@ -50,7 +50,7 @@ public class AttributeTypeAttackLifeLeech extends PerkAttributeType {
                     .modifyValue(player, progress, this, 0);
             leechPerc = AttributeEvent.postProcessModded(player, this, leechPerc);
             if (leechPerc > 0) {
-                float toLeech = event.getNewDamage() * leechPerc;
+                float toLeech = event.getAmount() * leechPerc;
                 if (toLeech > 0) {
                     player.heal(toLeech);
                 }

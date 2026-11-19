@@ -13,6 +13,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.FlagExecutor;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class LumenBindingDamageBurstEffect extends LumenBindingEffect {
         bus.addListener(LumenBindingDamageBurstEffect::onDamagePost);
     }
 
-    private static void onDamagePost(LivingDamageEvent.Post event) {
+    private static void onDamagePost(DamageResolutionEvent.Applied event) {
         if (FlagExecutor.isFlagSet(FlagExecutor.Flag.AOE_DAMAGE_BURST)) return;
 
         if (!(event.getSource().getDirectEntity() instanceof ServerPlayer attackerSPlayer)) return;

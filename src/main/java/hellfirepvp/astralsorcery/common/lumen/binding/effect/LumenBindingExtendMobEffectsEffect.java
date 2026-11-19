@@ -13,6 +13,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.MobEffectUtil;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
@@ -24,7 +25,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.*;
 
@@ -74,7 +74,7 @@ public class LumenBindingExtendMobEffectsEffect extends LumenBindingEffect {
         bus.addListener(LumenBindingExtendMobEffectsEffect::onDamageTaken);
     }
 
-    private static void onDamageTaken(LivingDamageEvent.Post event) {
+    private static void onDamageTaken(DamageResolutionEvent.Applied event) {
         if (!(event.getEntity() instanceof ServerPlayer sPlayer)) return;
 
         long gameTime = sPlayer.level().getGameTime();

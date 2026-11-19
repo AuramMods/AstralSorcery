@@ -21,6 +21,7 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.FlagExecutor;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +35,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -63,10 +63,10 @@ public class KeyPerkRangeAreaOfEffect extends KeyPerk {
     @Override
     protected void attachEventListeners(SidedEventBus sidedEventBus) {
         super.attachEventListeners(sidedEventBus);
-        sidedEventBus.addListener(EventPriority.LOW, LivingDamageEvent.Pre.class, SidedEventBus.entityEvent(), this::onDamage);
+        sidedEventBus.addListener(EventPriority.LOW, DamageResolutionEvent.BeforeAbsorption.class, SidedEventBus.entityEvent(), this::onDamage);
     }
 
-    private void onDamage(LivingDamageEvent.Pre event) {
+    private void onDamage(DamageResolutionEvent.BeforeAbsorption event) {
         DamageSource source = event.getSource();
         if (source.isDirect()) return;
         LivingEntity target = event.getEntity();
@@ -88,7 +88,7 @@ public class KeyPerkRangeAreaOfEffect extends KeyPerk {
                 if (sPlayer.isAlliedTo(livingTarget)) return;
                 if (livingTarget.isInvulnerable()) return;
 
-                double dmg = 1F + sPlayer.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO) * event.getNewDamage();
+                double dmg = 1F + sPlayer.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO) * event.getAmount();
                 dmg = EnchantmentHelper.modifyDamage(sLevel, attackStack, livingTarget, source, (float) dmg);
 
                 livingTarget.hurt(source, (float) dmg);

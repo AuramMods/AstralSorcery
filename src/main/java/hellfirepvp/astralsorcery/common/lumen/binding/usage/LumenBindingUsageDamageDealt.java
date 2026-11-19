@@ -12,12 +12,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingUsageTypesAS;
+import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -60,12 +60,12 @@ public class LumenBindingUsageDamageDealt extends LumenBindingUsage {
         bus.addListener(LumenBindingUsageDamageDealt::onDamageDealtDirectly);
     }
 
-    private static void onDamageDealtDirectly(LivingDamageEvent.Post event) {
+    private static void onDamageDealtDirectly(DamageResolutionEvent.Applied event) {
         if (event.getSource().getDirectEntity() instanceof LivingEntity attacker) {
             if (attacker.level().isClientSide()) return;
 
             forEachUsage(attacker, LumenBindingUsageDamageDealt.class, (stack, usage) -> {
-                if (usage.isDirect() != event.getSource().isDirect()) return;
+                if (usage.isDirect() == event.getSource().isIndirect()) return;
 
                 drainUsedLumen(attacker, stack, usage, 1F);
             });
