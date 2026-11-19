@@ -1,0 +1,147 @@
+--- a/build.gradle
++++ b/build.gradle
+@@ -1,16 +1,11 @@
+ plugins {
+     id 'idea'
+     id 'maven-publish'
+-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
++    id 'net.minecraftforge.gradle' version '6.0.54'
+     id 'org.spongepowered.mixin'
+-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+ }
+-version = mod_version + getGHActionVersionSuffix()
++version = "$mod_version-forge-$minecraft_version"
+ group = mod_group_id
+-
+-repositories {
+-    mavenLocal()
+-}
+ 
+ base {
+     archivesName = mod_id
+@@ -121,50 +116,42 @@
+                 "Implementation-Title": project.name,
+                 "Implementation-Version": "${version}",
+                 "Implementation-Vendor" : "hellfirepvp",
+-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
++                "MixinConfigs": "observerlib.mixins.json",
+         ])
+     }
+ }
+ 
+-def reobfFile = file("$buildDir/reobfJar/output.jar")
+-def reobfArtifact = artifacts.add('default', reobfFile) {
+-    type 'jar'
+-    builtBy 'reobfJar'
++tasks.named('jar', Jar).configure {
++    finalizedBy 'reobfJar'
++    preserveFileTimestamps = false
++    reproducibleFileOrder = true
++    from('LICENCE') {
++        rename { 'LICENSE-ObserverLib.txt' }
++    }
+ }
+ 
+ publishing {
+     publications {
+         register('mavenJava', MavenPublication) {
+-            from components.java
++            artifactId = 'observerlib'
++            artifact jar
+         }
+     }
+ 
+     repositories {
+         maven {
+-            url = System.getenv("MVN_URL")
+-            credentials {
+-                username = System.getenv("MVN_USER")
+-                password = System.getenv("MVN_PASS")
+-            }
++            name = 'port'
++            url = uri(providers.gradleProperty('observerlib_repository').get())
+         }
+     }
+ }
+ 
++tasks.named('publishMavenJavaPublicationToPortRepository').configure {
++    dependsOn 'reobfJar'
++}
++
+ tasks.withType(JavaCompile).configureEach {
+     options.encoding = 'UTF-8'
+-}
+-
+-static def getGHActionVersionSuffix() {
+-    if (System.getenv("GITHUB_RUN_NUMBER") != null) {
+-        return "." + System.getenv("GITHUB_RUN_NUMBER")
+-    }
+-    return ".local"
+-}
+-
+-tasks.register('printVersion') {
+-    doLast {
+-        println("version:" + project.version)
+-    }
+ }
+ 
+ if (System.getProperty("idea.sync.active") == "true") {
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -1,6 +1,5 @@
+ pluginManagement {
+     repositories {
+-        mavenLocal()
+         gradlePluginPortal()
+         maven { url = 'https://maven.minecraftforge.net/' }
+         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+@@ -8,12 +7,12 @@
+     resolutionStrategy {
+         eachPlugin {
+             if (requested.id.toString() == 'org.spongepowered.mixin') {
+-                useModule("org.spongepowered:mixingradle:0.7-SNAPSHOT")
++                useModule("org.spongepowered:mixingradle:0.7.38")
+             }
+         }
+     }
+ }
+ 
+ plugins {
+-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
++    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
+ }
+--- a/gradle.properties
++++ b/gradle.properties
+@@ -2,8 +2,8 @@
+ org.gradle.daemon=false
+ 
+ minecraft_version=1.20.1
+-minecraft_version_range=[1.20.1,1.20.4)
+-forge_version=47.1.3
++minecraft_version_range=[1.20.1]
++forge_version=47.4.28
+ forge_version_range=[47.1,)
+ mapping_channel=official
+ mapping_version=1.20.1
+--- a/src/main/resources/META-INF/mods.toml
++++ b/src/main/resources/META-INF/mods.toml
+@@ -2,10 +2,6 @@
+ loaderVersion="[47,)"
+ license="GNU Lesser General Public License v3.0"
+ issueTrackerURL="https://github.com/HellFirePvP/ObserverLib/issues"
+-[[accessTransformers]]
+-file="META-INF/accesstransformer.cfg"
+-[[mixins]]
+-config="observerlib.mixins.json"
+ [[mods]]
+ modId="observerlib"
+ version="${mod_version}"
+@@ -24,6 +20,6 @@
+ [[dependencies.observerlib]]
+     modId="minecraft"
+     mandatory=true
+-    versionRange="[1.20.1,1.20.4)"
++    versionRange="[1.20.1]"
+     ordering="NONE"
+     side="BOTH"
+\ No newline at end of file

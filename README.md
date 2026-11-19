@@ -1,9 +1,34 @@
 # Astral Sorcery
 
-Astral Sorcery is a magic mod for [Minecraft NeoForge](https://neoforged.net/) 
-focused around harnessing the powers of starlight and the constellations.
+Astral Sorcery is a magic mod focused around harnessing the powers of
+starlight and the constellations. This branch is a Minecraft 1.20.1 Forge
+backport of HellFirePvP's [Astral Sorcery](https://github.com/HellFirePvP/AstralSorcery).
+See the original [license](LICENSE) for the terms of use.
+
+## Building the Forge backport
+
+Use JDK 17. Build ObserverLib once, then build Astral Sorcery with the
+checked-in Gradle wrapper.
+
+```sh
+./scripts/build-observerlib.sh
+./gradlew build
+```
+
+The ObserverLib script fetches the pinned upstream Forge source, applies
+the tracked build patch, and builds and reobfuscates the mod. It stores the
+result in the worktree's `.gradle/observerlib/maven` repository, including
+the separate ObserverLib jar required to run the port. The script uses
+`curl`, `unzip`, and `git`.
+
+The development run directories are under `run/`. Use `runServer` for a
+headless dedicated server, `runGameTestServer` for GameTests, and `runData`
+for data generation. The `runClient` and `runClient2` profiles start with
+the narrator and audio muted. Run client verification in a virtual
+display to keep it off the host desktop. Pass `-PintegrationMods=true`
+to include JEI and Jade in the development run classpath.
 
 ## Links
 
-#### Curse Forge: [Project Link](https://www.curseforge.com/minecraft/mc-mods/astral-sorcery)
-#### Discord: [Astral Sorcery on Discord](https://discord.gg/MhWMfR8HUf)
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/astral-sorcery)
+- [Discord](https://discord.gg/MhWMfR8HUf)

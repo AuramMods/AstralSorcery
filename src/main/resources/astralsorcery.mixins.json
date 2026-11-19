@@ -3,6 +3,7 @@
     "minVersion": "0.8",
     "package": "hellfirepvp.astralsorcery.mixin",
     "compatibilityLevel": "JAVA_17",
+    "refmap": "astralsorcery.refmap.json",
     "mixins": [
         "MixinAttributeInstance",
         "MixinInventory",
