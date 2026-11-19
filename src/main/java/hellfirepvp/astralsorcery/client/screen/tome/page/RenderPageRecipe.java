@@ -63,7 +63,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -121,7 +121,8 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
         return Optional.ofNullable(Minecraft.getInstance().getConnection())
                 .map(ClientPacketListener::getRecipeManager)
                 .flatMap(recipeManager -> recipeManager.byKey(this.recipeId))
-                .filter(recipe -> recipe.value().getType() == this.recipeType.get())
+                .filter(recipe -> recipe.getType() == this.recipeType.get())
+                .map(RecipeHolder::of)
                 .map(MiscUtil::cast);
     }
 

@@ -13,7 +13,7 @@ import hellfirepvp.astralsorcery.common.util.ChunkUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColumnPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.Optional;

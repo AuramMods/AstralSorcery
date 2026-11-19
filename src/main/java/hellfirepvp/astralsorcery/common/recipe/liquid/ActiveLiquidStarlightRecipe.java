@@ -16,7 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 

@@ -8,15 +8,16 @@
 
 package hellfirepvp.astralsorcery.common.recipe;
 
+import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -28,14 +29,24 @@ import java.util.function.Supplier;
  */
 public abstract class CustomRecipe<R extends CustomRecipe<R, T>, T extends CustomRecipeInput> implements Recipe<T> {
 
+    private ResourceLocation id = AstralSorcery.key("unregistered_recipe");
     private String group = "";
+
+    public final void setId(ResourceLocation id) {
+        this.id = id;
+    }
+
+    @Override
+    public final ResourceLocation getId() {
+        return this.id;
+    }
 
     public abstract boolean consumeInputs(T input, HolderLookup.Provider registries);
 
     public abstract void createOutput(T input, HolderLookup.Provider registries);
 
     @Override
-    public ItemStack assemble(T input, HolderLookup.Provider registries) {
+    public ItemStack assemble(T input, RegistryAccess registries) {
         this.createOutput(input, registries);
         return ItemStack.EMPTY;
     }
@@ -46,7 +57,7 @@ public abstract class CustomRecipe<R extends CustomRecipe<R, T>, T extends Custo
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries) {
+    public ItemStack getResultItem(RegistryAccess registries) {
         return ItemStack.EMPTY;
     }
 

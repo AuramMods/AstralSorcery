@@ -9,9 +9,13 @@
 package hellfirepvp.astralsorcery.common.lib;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.item.LumenCrystalItem;
+import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.recipe.RecipeChangeColor;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarRecipe;
 import hellfirepvp.astralsorcery.common.recipe.focal.drop.FocalCombineRecipe;
@@ -24,6 +28,10 @@ import hellfirepvp.astralsorcery.common.recipe.lumen.LumenCrystallizationRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
@@ -104,11 +112,34 @@ public class RecipeTypesAS {
         return RECIPE_SERIALIZER_REGISTER.register(name, () -> new SimpleCraftingRecipeSerializer<>(factory));
     }
 
-    private static <T extends Recipe<?>> RegistryObject<CodecSerializer<T>> codecSerializer(String name,
+    private static <T extends CustomRecipe<T, ?>> RegistryObject<CodecSerializer<T>> codecSerializer(String name,
                                                                                                                  MapCodec<T> codec,
                                                                                                                  StreamCodec<FriendlyByteBuf, T> streamCodec) {
         return RECIPE_SERIALIZER_REGISTER.register(name, () -> new CodecSerializer<>(codec, streamCodec));
     }
 
-    public record CodecSerializer<T extends Recipe<?>>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) implements RecipeSerializer<T> {}
+    public record CodecSerializer<T extends CustomRecipe<T, ?>>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) implements RecipeSerializer<T> {
+
+        @Override
+        public T fromJson(ResourceLocation id, JsonObject json) {
+            var ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+            T recipe = this.codec.codec().parse(ops, json).getOrThrow(false, message -> {
+                throw new JsonSyntaxException("Invalid Astral Sorcery recipe " + id + ": " + message);
+            });
+            recipe.setId(id);
+            return recipe;
+        }
+
+        @Override
+        public T fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
+            T recipe = this.streamCodec.decode(buffer);
+            recipe.setId(id);
+            return recipe;
+        }
+
+        @Override
+        public void toNetwork(FriendlyByteBuf buffer, T recipe) {
+            this.streamCodec.encode(buffer, recipe);
+        }
+    }
 }

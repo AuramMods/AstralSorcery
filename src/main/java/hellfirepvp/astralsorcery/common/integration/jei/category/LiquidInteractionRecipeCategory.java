@@ -40,7 +40,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -135,9 +134,8 @@ public class LiquidInteractionRecipeCategory extends ASRecipeCategory<LiquidInte
         }
 
         int totalWeight = 0;
-        for (RecipeHolder<LiquidInteractionRecipe> holder :
+        for (LiquidInteractionRecipe other :
                 mc.level.getRecipeManager().getAllRecipesFor(RecipeTypesAS.LIQUID_INTERACTION_TYPE.get())) {
-            LiquidInteractionRecipe other = holder.value();
             if (sharesReactants(recipe, other)) {
                 totalWeight += other.getWeight();
             }

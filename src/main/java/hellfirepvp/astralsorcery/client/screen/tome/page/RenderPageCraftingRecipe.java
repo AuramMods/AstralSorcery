@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.client.screen.tome.page;
 
+import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import hellfirepvp.astralsorcery.client.lib.TexturesAS;
 import hellfirepvp.astralsorcery.common.lib.constants.ColorsAS;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;

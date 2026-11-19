@@ -242,7 +242,7 @@ public class GemSocketPerk extends AttributeModifierPerk<GemSocketPerk.Data> {
 
         protected static <T extends Data> Products.P2<RecordCodecBuilder.Mu<T>, Boolean, ItemStack> gemDataFields(RecordCodecBuilder.Instance<T> instance) {
             return dataFields(instance).and(
-                    CodecUtil.defaulted(ItemStack.OPTIONAL_CODEC, "gemStack", () -> ItemStack.EMPTY, Data::getGemStack)
+                    CodecUtil.defaulted(ItemStack.CODEC, "gemStack", () -> ItemStack.EMPTY, Data::getGemStack, ItemStack::isEmpty)
             );
         }
 

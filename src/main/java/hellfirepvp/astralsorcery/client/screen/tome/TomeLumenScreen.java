@@ -32,7 +32,6 @@ import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lib.SoundsAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
-import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.research.ResearchTier;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
@@ -108,8 +107,7 @@ public class TomeLumenScreen extends TomeScreen implements TomeStarParallaxLayer
     private static void buildLumenConnections() {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection == null) return;
-        connection.getRecipeManager().getAllRecipesFor(RecipeTypesAS.LUMEN_GENERATION_TYPE.get()).forEach(recipeHolder -> {
-            LumenGenerationRecipe recipe = recipeHolder.value();
+        connection.getRecipeManager().getAllRecipesFor(RecipeTypesAS.LUMEN_GENERATION_TYPE.get()).forEach(recipe -> {
             Lumen generated = recipe.getProducedLumen();
             recipe.getLumenCombinationInputs().keySet().forEach(lumenInput -> {
                 lumenConnections.add(new Connection(lumenInput, generated));

@@ -13,7 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
@@ -65,7 +65,6 @@ public class LazyRecipeHolder<T extends Recipe<?>> {
     public T resolveRecipe(Level level) {
         if (this.recipe == null && level != null) {
             this.recipe = MiscUtil.cast(level.getRecipeManager().byKey(this.recipeId)
-                    .map(RecipeHolder::value)
                     .orElse(null));
         }
         return this.recipe;

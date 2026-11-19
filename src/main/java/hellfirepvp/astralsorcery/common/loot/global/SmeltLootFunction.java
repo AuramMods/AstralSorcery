@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -68,7 +68,7 @@ public class SmeltLootFunction extends LootModifier {
                 .filter(stack -> !stack.isEmpty())
                 .map(lootStack -> {
                     return RecipeFinder.of(level).findSmeltingRecipe(lootStack).map(recipeHolder -> {
-                        SingleRecipeInput input = new SingleRecipeInput(lootStack);
+                        SimpleContainer input = new SimpleContainer(lootStack);
                         AbstractCookingRecipe recipe = recipeHolder.value();
                         ItemStack result = recipe.assemble(input, level.registryAccess());
                         float exp = recipe.getExperience();

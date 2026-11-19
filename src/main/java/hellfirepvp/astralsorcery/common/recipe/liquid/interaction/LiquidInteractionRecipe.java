@@ -20,7 +20,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -181,10 +180,10 @@ public class LiquidInteractionRecipe extends CustomRecipe<LiquidInteractionRecip
 
     public static List<LiquidInteractionRecipe> findMatching(Level level, FluidStack fluidA, FluidStack fluidB) {
         List<LiquidInteractionRecipe> matches = new ArrayList<>();
-        for (RecipeHolder<LiquidInteractionRecipe> holder :
+        for (LiquidInteractionRecipe recipe :
                 level.getRecipeManager().getAllRecipesFor(RecipeTypesAS.LIQUID_INTERACTION_TYPE.get())) {
-            if (holder.value().matches(fluidA, fluidB)) {
-                matches.add(holder.value());
+            if (recipe.matches(fluidA, fluidB)) {
+                matches.add(recipe);
             }
         }
         return matches;

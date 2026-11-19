@@ -49,7 +49,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -153,7 +153,7 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
     }
 
     public Optional<RecipeHolder<InfusionRecipe>> findMatchingRecipe(Level level) {
-        return level.getRecipeManager().getRecipeFor(RecipeTypesAS.INFUSION_TYPE.get(), this.createInput(level), level);
+        return level.getRecipeManager().getRecipeFor(RecipeTypesAS.INFUSION_TYPE.get(), this.createInput(level), level).map(RecipeHolder::of);
     }
 
     public InfusionRecipeInput createInput(Level level) {

@@ -8,8 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.SimpleContainer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -18,16 +17,10 @@ import net.minecraft.world.item.crafting.RecipeInput;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public abstract class CustomRecipeInput implements RecipeInput {
+public abstract class CustomRecipeInput extends SimpleContainer {
 
-    @Override
-    public ItemStack getItem(int index) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public int size() {
-        return 0;
+    protected CustomRecipeInput() {
+        super(0);
     }
 
     @Override

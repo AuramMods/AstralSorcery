@@ -17,7 +17,7 @@ import hellfirepvp.astralsorcery.common.tile.TileInfuser;
 import hellfirepvp.astralsorcery.common.util.codec.SetCodec;
 import hellfirepvp.astralsorcery.common.util.data.LazyRecipeHolder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;

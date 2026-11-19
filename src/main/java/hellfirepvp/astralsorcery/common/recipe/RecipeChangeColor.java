@@ -10,18 +10,18 @@ package hellfirepvp.astralsorcery.common.recipe;
 
 import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.common.component.ColorComponent;
-import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.util.ColorReference;
 import net.minecraft.world.item.Item;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -41,21 +41,21 @@ public class RecipeChangeColor extends CustomRecipe {
     private final RegistryObject<? extends RecipeSerializer<?>> serializer;
     private final RegisteredItemLike<? extends Item> targetItem;
 
-    public RecipeChangeColor(CraftingBookCategory category,
+    public RecipeChangeColor(ResourceLocation id, CraftingBookCategory category,
                              RegistryObject<? extends RecipeSerializer<?>> serializer,
                              RegisteredItemLike<? extends Item> targetItem) {
-        super(category);
+        super(id, category);
         this.serializer = serializer;
         this.targetItem = targetItem;
     }
 
     @Override
-    public boolean matches(CraftingInput input, Level level) {
+    public boolean matches(CraftingContainer input, Level level) {
         return this.findRecipeComponents(input).isPresent();
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(CraftingContainer input, RegistryAccess registries) {
         return this.findRecipeComponents(input).map(tpl -> {
             ItemStack result = tpl.getA().copyWithCount(1);
             DataComponentsAS.COLOR.set(result, new ColorComponent(ColorReference.Dye.of(tpl.getB())));
@@ -63,12 +63,12 @@ public class RecipeChangeColor extends CustomRecipe {
         }).orElse(ItemStack.EMPTY);
     }
 
-    private Optional<Tuple<ItemStack, DyeColor>> findRecipeComponents(CraftingInput input) {
+    private Optional<Tuple<ItemStack, DyeColor>> findRecipeComponents(CraftingContainer input) {
         ItemStack foundItem = ItemStack.EMPTY;
         DyeColor foundColor = null;
         int foundItems = 0;
 
-        for (int slot = 0; slot < input.size(); slot++) {
+        for (int slot = 0; slot < input.getContainerSize(); slot++) {
             ItemStack stack = input.getItem(slot);
             if (stack.isEmpty()) continue;
             foundItems++;
@@ -102,15 +102,15 @@ public class RecipeChangeColor extends CustomRecipe {
 
     public static class IlluminationWandChangeColor extends RecipeChangeColor {
 
-        public IlluminationWandChangeColor(CraftingBookCategory category) {
-            super(category, RecipeTypesAS.ILLUMINATION_WAND_CHANGE_COLOR_SERIALIZER, ItemsAS.ILLUMINATION_WAND);
+        public IlluminationWandChangeColor(ResourceLocation id, CraftingBookCategory category) {
+            super(id, category, RecipeTypesAS.ILLUMINATION_WAND_CHANGE_COLOR_SERIALIZER, ItemsAS.ILLUMINATION_WAND);
         }
     }
 
     public static class CelestialGatewayChangeColor extends RecipeChangeColor {
 
-        public CelestialGatewayChangeColor(CraftingBookCategory category) {
-            super(category, RecipeTypesAS.CELESTIAL_GATEWAY_CHANGE_COLOR_SERIALIZER, ItemsAS.BLOCK_CELESTIAL_GATEWAY);
+        public CelestialGatewayChangeColor(ResourceLocation id, CraftingBookCategory category) {
+            super(id, category, RecipeTypesAS.CELESTIAL_GATEWAY_CHANGE_COLOR_SERIALIZER, ItemsAS.BLOCK_CELESTIAL_GATEWAY);
         }
     }
 }
