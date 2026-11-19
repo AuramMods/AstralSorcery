@@ -10,14 +10,10 @@ package hellfirepvp.astralsorcery.common.util;
 
 import hellfirepvp.astralsorcery.common.config.server.LootTableConfig;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
-import hellfirepvp.astralsorcery.common.util.data.Vector3;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -50,13 +46,13 @@ public class LootUtil {
 
     public static List<ItemStack> generateArtifactLoot(ServerLevel sLevel, IntRange range, RandomSource rand) {
         ResourceLocation table = LootTableConfig.CONFIG.getRandomArtifactShardLootTable(rand);
-        LootTable loot = sLevel.getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, table));
+        LootTable loot = sLevel.getServer().getLootData().getLootTable(table);
         LootParams params = new LootParams.Builder(sLevel).withLuck(1).create(LootContextParamSets.EMPTY);
 
         List<ItemStack> result = new ArrayList<>();
         int generateCount = range.getRandom(rand);
         do {
-            List<ItemStack> generated = loot.getRandomItems(params, rand);
+            List<ItemStack> generated = loot.getRandomItems(params, rand.nextLong());
             if (generated.isEmpty()) return List.of();
             result.addAll(generated);
         } while (result.size() < generateCount);

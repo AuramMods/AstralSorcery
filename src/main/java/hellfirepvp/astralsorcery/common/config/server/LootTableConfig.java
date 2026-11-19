@@ -10,11 +10,9 @@ package hellfirepvp.astralsorcery.common.config.server;
 
 import hellfirepvp.astralsorcery.common.config.ConfigEntry;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
@@ -44,11 +42,11 @@ public class LootTableConfig extends ConfigEntry {
         this.constellationPaperLootTables = cfgBuilder
                 .comment("Loot tables that get constellation paper added to them on load")
                 .translation(translationKey("constellationPaperLootTables"))
-                .defineList("constellationPaperLootTables", this.getDefaultList(), () -> "minecraft:loot_table", s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
+                .defineListAllowEmpty("constellationPaperLootTables", this.getDefaultList(), s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
         this.artifactShardLootTables = cfgBuilder
                 .comment("Loot tables that the artifact shard loot table item can generate. Temporary use until a proper feature is added")
                 .translation(translationKey("artifactShardLootTables"))
-                .defineList("artifactShardLootTables", this.getDefaultArtifactShardList(), () -> "minecraft:loot_table", s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
+                .defineListAllowEmpty("artifactShardLootTables", this.getDefaultArtifactShardList(), s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
     }
 
     private List<String> getDefaultList() {
@@ -63,7 +61,7 @@ public class LootTableConfig extends ConfigEntry {
                 BuiltInLootTables.SHIPWRECK_MAP,
                 BuiltInLootTables.END_CITY_TREASURE,
                 BuiltInLootTables.SIMPLE_DUNGEON
-        ).map(ResourceKey::location).map(ResourceLocation::toString).toList();
+        ).map(ResourceLocation::toString).toList();
     }
 
     private List<String> getDefaultArtifactShardList() {
@@ -74,7 +72,7 @@ public class LootTableConfig extends ConfigEntry {
                 BuiltInLootTables.ABANDONED_MINESHAFT,
                 BuiltInLootTables.BURIED_TREASURE,
                 BuiltInLootTables.SHIPWRECK_SUPPLY
-        ).map(ResourceKey::location).map(ResourceLocation::toString).toList();
+        ).map(ResourceLocation::toString).toList();
     }
 
     public boolean canAddConstellationPaper(ResourceLocation lootTableId) {
@@ -84,8 +82,8 @@ public class LootTableConfig extends ConfigEntry {
     public ResourceLocation getRandomArtifactShardLootTable(RandomSource rand) {
         List<? extends String> list = this.artifactShardLootTables.get();
         if (list.isEmpty()) {
-            return BuiltInLootTables.DESERT_PYRAMID.location();
+            return BuiltInLootTables.DESERT_PYRAMID;
         }
-        return MiscUtil.getRandomEntry(list, rand).map(ResourceLocation::parse).orElse(BuiltInLootTables.DESERT_PYRAMID.location());
+        return MiscUtil.getRandomEntry(list, rand).map(ResourceLocation::tryParse).orElse(BuiltInLootTables.DESERT_PYRAMID);
     }
 }

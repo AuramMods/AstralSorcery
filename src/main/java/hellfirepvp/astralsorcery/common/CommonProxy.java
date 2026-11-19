@@ -103,14 +103,12 @@ public class CommonProxy {
 
     private BaseConfiguration commonConfig;
     private BaseConfiguration serverConfig;
-    private BaseConfiguration startupConfig;
 
     private final List<ServerLifecycleListener> serverLifecycleListeners = new ArrayList<>();
 
     public void init() {
-        this.commonConfig = BaseConfiguration.simple(ModConfig.Type.COMMON);
+        this.commonConfig = BaseConfiguration.simple(ModConfig.Type.COMMON, AstralSorcery.MODID + "-startup.toml");
         this.serverConfig = BaseConfiguration.simple(ModConfig.Type.SERVER);
-        this.startupConfig = BaseConfiguration.simple(ModConfig.Type.STARTUP);
 
         DataAS.init();
         VisualEffectTypes.init();
@@ -139,7 +137,6 @@ public class CommonProxy {
         this.initConfigurations();
         this.commonConfig.build();
         this.serverConfig.build();
-        this.startupConfig.build();
     }
 
     public void initConfigurations() {
@@ -150,7 +147,7 @@ public class CommonProxy {
         this.serverConfig.addConfigEntry(TilesConfig.CONFIG);
         this.serverConfig.addConfigEntry(ArtifactConfig.CONFIG);
 
-        this.startupConfig.addConfigEntry(LootTableConfig.CONFIG);
+        this.commonConfig.addConfigEntry(LootTableConfig.CONFIG);
 
         TilesConfig.CONFIG.newSubSection(TileTreeBeacon.CONFIG);
 
@@ -271,11 +268,11 @@ public class CommonProxy {
 
     private void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
         ItemsAS.ITEM_REGISTER.getEntries().forEach(holder -> {
-            holder.asOptional()
-                    .filter(item -> item instanceof CreativeTabItem)
-                    .map(item -> (CreativeTabItem) item)
-                    .filter(item -> item.isInTab(event.getTab()))
-                    .ifPresent(item -> item.fillCreativeTab(event::accept));
+            holder.ifPresent(item -> {
+                if (item instanceof CreativeTabItem tabItem && tabItem.isInTab(event.getTab())) {
+                    tabItem.fillCreativeTab(event::accept);
+                }
+            });
         });
     }
 }

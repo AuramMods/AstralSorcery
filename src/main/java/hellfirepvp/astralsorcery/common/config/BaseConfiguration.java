@@ -38,7 +38,8 @@ public abstract class BaseConfiguration {
     private boolean built = false;
 
     protected BaseConfiguration(ModConfig.Type configType) {
-        this(configType, AstralSorcery.MODID);
+        this(configType, configType == ModConfig.Type.SERVER ? AstralSorcery.MODID + ".toml" :
+                AstralSorcery.MODID + "-" + configType.extension() + ".toml");
     }
 
     protected BaseConfiguration(ModConfig.Type configType, String fileName) {
@@ -48,6 +49,10 @@ public abstract class BaseConfiguration {
 
     public static BaseConfiguration simple(ModConfig.Type configType) {
         return new BaseConfiguration(configType) {};
+    }
+
+    public static BaseConfiguration simple(ModConfig.Type configType, String fileName) {
+        return new BaseConfiguration(configType, fileName) {};
     }
 
     protected void onReload() {}
@@ -79,10 +84,7 @@ public abstract class BaseConfiguration {
     }
 
     private void make(ForgeConfigSpec spec) {
-        String fileName = this.configType == ModConfig.Type.SERVER ?
-                String.format("%s.toml", this.fileName) :
-                String.format("%s-%s.toml", this.fileName, this.configType.extension());
-        AstralSorcery.getInstance().getLoadingContext().registerConfig(this.configType, spec, fileName);
+        AstralSorcery.getInstance().getLoadingContext().registerConfig(this.configType, spec, this.fileName);
 
         REGISTERED_CONFIGS.put(this.configType, this);
     }
