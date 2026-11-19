@@ -8,23 +8,19 @@
 
 package hellfirepvp.astralsorcery.common.lumen.binding.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.data.reload.RegistryJsonDataLoader;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
 import hellfirepvp.astralsorcery.common.util.data.MapStream;
-import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.fml.LogicalSide;
 
 import java.util.HashMap;
@@ -38,9 +34,8 @@ import java.util.Optional;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class LumenBindingTypeLoader extends SimpleJsonResourceReloadListener {
+public class LumenBindingTypeLoader extends RegistryJsonDataLoader {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final LumenBindingTypeLoader INSTANCE = new LumenBindingTypeLoader();
 
     private final Map<ResourceLocation, LumenBindingType> bindings = new HashMap<>();
@@ -50,7 +45,7 @@ public class LumenBindingTypeLoader extends SimpleJsonResourceReloadListener {
     private final Map<ResourceKey<Lumen>, ResourceLocation> clientLumenApplicationMapping = new HashMap<>();
 
     private LumenBindingTypeLoader() {
-        super(GSON, "lumen_binding");
+        super("lumen_binding");
     }
 
     public static LumenBindingTypeLoader getInstance() {
@@ -96,7 +91,7 @@ public class LumenBindingTypeLoader extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> dataMap, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> dataMap, RegistryAccess registries) {
         Map<ResourceLocation, JsonObject> loadableFiles = MapStream.of(dataMap)
                 .filterValue(JsonElement::isJsonObject)
                 .mapValue(JsonElement::getAsJsonObject)
@@ -112,17 +107,17 @@ public class LumenBindingTypeLoader extends SimpleJsonResourceReloadListener {
 
         this.bindings.clear();
         this.lumenApplicationMapping.clear();
-        RegistryOps<JsonElement> ops = this.getRegistryLookup().createSerializationContext(JsonOps.INSTANCE);
+        RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registries);
         mappings.forEach((key, obj) -> {
-            LumenBindingTypeMapping.CODEC.parse(ops, obj)
-                    .ifError(error -> AstralSorcery.LOG.warn("Failed to load lumen binding type mapping {}: {}", key, error.message()))
-                    .ifSuccess(mapping -> this.lumenApplicationMapping.putAll(mapping.getMapping()));
+            var result = LumenBindingTypeMapping.CODEC.parse(ops, obj);
+            result.error().ifPresent(error -> AstralSorcery.LOG.warn("Failed to load lumen binding type mapping {}: {}", key, error.message()));
+            result.result().ifPresent(mapping -> this.lumenApplicationMapping.putAll(mapping.getMapping()));
         });
 
         bindingTypes.forEach((key, obj) -> {
-            LumenBindingType.CODEC.parse(ops, obj)
-                    .ifError(error -> AstralSorcery.LOG.warn("Failed to load lumen binding type {}: {}", key, error.message()))
-                    .ifSuccess(bindingType -> this.bindings.put(key, bindingType));
+            var result = LumenBindingType.CODEC.parse(ops, obj);
+            result.error().ifPresent(error -> AstralSorcery.LOG.warn("Failed to load lumen binding type {}: {}", key, error.message()));
+            result.result().ifPresent(bindingType -> this.bindings.put(key, bindingType));
         });
     }
 }

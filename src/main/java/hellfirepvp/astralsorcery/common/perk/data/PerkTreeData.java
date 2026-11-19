@@ -35,12 +35,12 @@ public final class PerkTreeData {
     }
 
     public static PerkTreeData load(List<JsonObject> perkData, HolderLookup.Provider registries) {
-        RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
+        RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registries);
         Set<RawPerkData> perks = new HashSet<>();
         for (JsonObject obj : perkData) {
-            RawPerkData.CODEC.parse(ops, obj)
-                    .ifError(error -> AstralSorcery.LOG.warn("Failed to load a perk: {}", error.message()))
-                    .ifSuccess(perks::add);
+            var result = RawPerkData.CODEC.parse(ops, obj);
+            result.error().ifPresent(error -> AstralSorcery.LOG.warn("Failed to load a perk: {}", error.message()));
+            result.result().ifPresent(perks::add);
         }
         return new PerkTreeData(perkData, perks);
     }

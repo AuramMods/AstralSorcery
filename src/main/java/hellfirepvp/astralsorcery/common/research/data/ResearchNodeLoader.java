@@ -11,7 +11,6 @@ package hellfirepvp.astralsorcery.common.research.data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
@@ -85,13 +84,8 @@ public class ResearchNodeLoader extends SimpleJsonResourceReloadListener {
                 .filter(JsonElement::isJsonObject)
                 .map(JsonElement::getAsJsonObject)
                 .map(obj -> ResearchNode.CODEC.parse(JsonOps.INSTANCE, obj))
-                .peek(result -> {
-                    if (result.error().isPresent()) {
-                        AstralSorcery.LOG.error("Failed to load research node: {}", result.error().get());
-                    }
-                })
-                .filter(DataResult::isSuccess)
-                .map(DataResult::getOrThrow)
+                .peek(result -> result.error().ifPresent(error -> AstralSorcery.LOG.error("Failed to load research node: {}", error.message())))
+                .flatMap(result -> result.result().stream())
                 .forEach(newNode -> {
                     this.nodeMap.put(newNode.getKey(), newNode);
                     this.nodes.add(newNode);

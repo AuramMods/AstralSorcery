@@ -8,22 +8,16 @@
 
 package hellfirepvp.astralsorcery.common.perk.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.data.reload.RegistryJsonDataLoader;
 import hellfirepvp.astralsorcery.common.util.data.MapStream;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -32,13 +26,12 @@ import java.util.stream.Collectors;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class PerkTreeLoader extends SimpleJsonResourceReloadListener {
+public class PerkTreeLoader extends RegistryJsonDataLoader {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final PerkTreeLoader INSTANCE = new PerkTreeLoader();
 
     private PerkTreeLoader() {
-        super(GSON, "perks");
+        super("perks");
     }
 
     public static PerkTreeLoader getInstance() {
@@ -46,7 +39,7 @@ public class PerkTreeLoader extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> dataMap, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> dataMap, RegistryAccess registries) {
         List<JsonObject> perkObjects = MapStream.of(dataMap)
                 .filterValue(JsonElement::isJsonObject)
                 .mapValue(JsonElement::getAsJsonObject)
@@ -54,7 +47,7 @@ public class PerkTreeLoader extends SimpleJsonResourceReloadListener {
                 .toList();
 
         AstralSorcery.LOG.info("Loading perk tree with {} perks.", perkObjects.size());
-        PerkTreeData data = PerkTreeData.load(perkObjects, this.getRegistryLookup());
+        PerkTreeData data = PerkTreeData.load(perkObjects, registries);
         PerkTree.getInstance().updateOriginPerkTree(data);
     }
 }

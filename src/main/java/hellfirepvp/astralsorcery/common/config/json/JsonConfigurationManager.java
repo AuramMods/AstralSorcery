@@ -15,6 +15,7 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import hellfirepvp.astralsorcery.AstralSorcery;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -53,7 +54,7 @@ public class JsonConfigurationManager {
     public void loadRegistries(MinecraftServer server) {
         Path cfgDir = FMLPaths.CONFIGDIR.get().resolve(AstralSorcery.MODID);
         if (!cfgDir.toFile().exists()) cfgDir.toFile().mkdirs();
-        DynamicOps<JsonElement> jsonOps = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+        DynamicOps<JsonElement> jsonOps = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
         this.registries.forEach((name, registry) -> {
             File cfgFile = cfgDir.resolve(name + ".json").toFile();
             if (!cfgFile.exists()) {
@@ -66,7 +67,8 @@ public class JsonConfigurationManager {
 
     private <T> void createDefaultRegistry(File cfgFile, DynamicOps<JsonElement> jsonOps, JsonDataRegistry<T> registry) {
         List<T> defaultValues = registry.getDefaultValues();
-        JsonElement json = registry.elementCodec().listOf().encodeStart(jsonOps, defaultValues).getOrThrow();
+        JsonElement json = registry.elementCodec().listOf().encodeStart(jsonOps, defaultValues)
+                .getOrThrow(false, message -> AstralSorcery.LOG.error("Failed to encode {}: {}", cfgFile.getName(), message));
 
         try (FileWriter writer = new FileWriter(cfgFile)) {
             writer.write(GSON.toJson(json));
@@ -79,7 +81,8 @@ public class JsonConfigurationManager {
     private <T> void loadRegistry(File cfgFile, DynamicOps<JsonElement> jsonOps, JsonDataRegistry<T> registry) {
         try (FileReader reader = new FileReader(cfgFile)) {
             JsonElement json = JsonParser.parseReader(reader);
-            List<T> values = registry.elementCodec().listOf().parse(jsonOps, json).getOrThrow();
+            List<T> values = registry.elementCodec().listOf().parse(jsonOps, json)
+                    .getOrThrow(false, message -> AstralSorcery.LOG.error("Failed to decode {}: {}", cfgFile.getName(), message));
             registry.setLoadedValues(values);
             AstralSorcery.LOG.info("Loaded {} entries for JSON registry '{}'", values.size(), cfgFile.getName());
         } catch (IOException e) {

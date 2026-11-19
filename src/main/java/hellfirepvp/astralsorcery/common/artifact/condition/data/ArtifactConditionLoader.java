@@ -8,22 +8,19 @@
 
 package hellfirepvp.astralsorcery.common.artifact.condition.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.data.reload.RegistryJsonDataLoader;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactCondition;
 import hellfirepvp.astralsorcery.common.artifact.SelectableArtifactCondition;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.MapStream;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.profiling.ProfilerFiller;
 
 import java.util.*;
 
@@ -34,16 +31,15 @@ import java.util.*;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class ArtifactConditionLoader extends SimpleJsonResourceReloadListener {
+public class ArtifactConditionLoader extends RegistryJsonDataLoader {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final ArtifactConditionLoader INSTANCE = new ArtifactConditionLoader();
 
     private final Set<SelectableArtifactCondition> conditions = new HashSet<>();
     private final Map<ArtifactCondition.Type<?>, Set<SelectableArtifactCondition>> byTypeConditions = new HashMap<>();
 
     private ArtifactConditionLoader() {
-        super(GSON, "artifact_conditions");
+        super("artifact_conditions");
     }
 
     public static ArtifactConditionLoader getInstance() {
@@ -69,7 +65,7 @@ public class ArtifactConditionLoader extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> dataMap, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> dataMap, RegistryAccess registries) {
         Map<ResourceLocation, JsonObject> conditionObjects = MapStream.of(dataMap)
                 .filterValue(JsonElement::isJsonObject)
                 .mapValue(JsonElement::getAsJsonObject)
@@ -77,16 +73,14 @@ public class ArtifactConditionLoader extends SimpleJsonResourceReloadListener {
         AstralSorcery.LOG.info("Loading artifact conditions with {} conditions.", conditionObjects.size());
 
         this.conditions.clear();
-        RegistryOps<JsonElement> ops = this.getRegistryLookup().createSerializationContext(JsonOps.INSTANCE);
+        RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registries);
         conditionObjects.forEach((key, obj) -> {
-            SelectableArtifactCondition.CODEC.parse(ops, obj)
-                    .ifError(error -> AstralSorcery.LOG.warn("Failed to load artifact condition {}: {}", key, error.message()))
-                    .ifSuccess(condition -> {
-                        this.conditions.add(condition);
-                        this.byTypeConditions
-                                .computeIfAbsent(condition.condition().unwrapType(), t -> new HashSet<>())
-                                .add(condition);
-                    });
+            var result = SelectableArtifactCondition.CODEC.parse(ops, obj);
+            result.error().ifPresent(error -> AstralSorcery.LOG.warn("Failed to load artifact condition {}: {}", key, error.message()));
+            result.result().ifPresent(condition -> {
+                this.conditions.add(condition);
+                this.byTypeConditions.computeIfAbsent(condition.condition().unwrapType(), t -> new HashSet<>()).add(condition);
+            });
         });
     }
 }

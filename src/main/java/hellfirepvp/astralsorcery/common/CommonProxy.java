@@ -259,11 +259,11 @@ public class CommonProxy {
 
     private void onRegisterReloadListeners(AddReloadListenerEvent event) {
         event.addListener(ResearchNodeLoader.getInstance());
-        event.addListener(PerkTreeLoader.getInstance());
-        event.addListener(ArtifactConditionLoader.getInstance());
-        event.addListener(ArtifactEffectLoader.getPositiveInstance());
-        event.addListener(ArtifactEffectLoader.getNegativeInstance());
-        event.addListener(LumenBindingTypeLoader.getInstance());
+        PerkTreeLoader.getInstance().registerReloadListener(event);
+        ArtifactConditionLoader.getInstance().registerReloadListener(event);
+        ArtifactEffectLoader.getPositiveInstance().registerReloadListener(event);
+        ArtifactEffectLoader.getNegativeInstance().registerReloadListener(event);
+        LumenBindingTypeLoader.getInstance().registerReloadListener(event);
     }
 
     private void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
