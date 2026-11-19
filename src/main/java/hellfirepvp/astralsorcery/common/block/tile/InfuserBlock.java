@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
@@ -18,11 +17,10 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,8 +35,6 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class InfuserBlock extends BaseTickTileBlock<TileInfuser> {
 
-    public static MapCodec<InfuserBlock> CODEC = simpleCodec(InfuserBlock::new);
-
     public InfuserBlock(Properties properties) {
         this(properties, TileEntitiesAS.INFUSER);
     }
@@ -48,29 +44,23 @@ public class InfuserBlock extends BaseTickTileBlock<TileInfuser> {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.isClientSide()) return ItemInteractionResult.SUCCESS;
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         return MiscUtil.getTileAt(level, pos, TileInfuser.class, true).map(infuser -> {
             ItemStack held = player.getItemInHand(hand);
 
-            if (hand == InteractionHand.MAIN_HAND && stack.is(ItemsAS.WAND.get()) &&
+            if (hand == InteractionHand.MAIN_HAND && held.is(ItemsAS.WAND.get()) &&
                     infuser.getTileData().getActiveRecipe().isEmpty()) {
                 return infuser.findMatchingRecipe(level).map(recipe -> {
                     infuser.startCrafting(level, recipe);
-                    return ItemInteractionResult.SUCCESS;
-                }).orElse(ItemInteractionResult.CONSUME);
+                    return InteractionResult.SUCCESS;
+                }).orElse(InteractionResult.CONSUME);
             }
 
-            return MiscUtil.firstNonNull(
-                    () -> InteractUtil.tryPlaceItemIntoBlock(held, player, level, pos)
-            ).orElse(ItemInteractionResult.SUCCESS);
-        }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
+            InteractUtil.tryPlaceItemIntoBlock(held, player, level, pos);
+            return InteractionResult.SUCCESS;
+        }).orElse(InteractionResult.PASS);
     }
 
     @Override
@@ -79,7 +69,7 @@ public class InfuserBlock extends BaseTickTileBlock<TileInfuser> {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 }

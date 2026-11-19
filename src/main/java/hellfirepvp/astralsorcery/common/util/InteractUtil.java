@@ -9,20 +9,17 @@
 package hellfirepvp.astralsorcery.common.util;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -42,7 +39,7 @@ import java.util.function.Consumer;
 public class InteractUtil {
 
     @Nullable
-    public static ItemInteractionResult tryTransferFluidIntoBlock(ItemStack heldStack, Player player, Level level, BlockPos pos, Consumer<ItemStack> stackUpdateFn) {
+    public static InteractionResult tryTransferFluidIntoBlock(ItemStack heldStack, Player player, Level level, BlockPos pos, Consumer<ItemStack> stackUpdateFn) {
         IFluidHandler target = MiscUtil.getTileAt(level, pos, BlockEntity.class, true)
                 .map(blockEntity -> blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null))
                 .orElse(null);
@@ -53,11 +50,11 @@ public class InteractUtil {
         FluidActionResult far = FluidUtil.tryEmptyContainer(heldStack, target, FluidType.BUCKET_VOLUME, player, true);
         if (!far.isSuccess()) return null;
         if (!player.isCreative()) stackUpdateFn.accept(far.getResult());
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Nullable
-    public static ItemInteractionResult tryTransferFluidFromBlock(ItemStack heldStack, Player player, Level level, BlockPos pos, Consumer<ItemStack> stackUpdateFn) {
+    public static InteractionResult tryTransferFluidFromBlock(ItemStack heldStack, Player player, Level level, BlockPos pos, Consumer<ItemStack> stackUpdateFn) {
         IFluidHandler target = MiscUtil.getTileAt(level, pos, BlockEntity.class, true)
                 .map(blockEntity -> blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null))
                 .orElse(null);
@@ -68,11 +65,11 @@ public class InteractUtil {
         FluidActionResult far = FluidUtil.tryFillContainer(heldStack, target, FluidType.BUCKET_VOLUME, player, true);
         if (!far.isSuccess()) return null;
         if (!player.isCreative()) stackUpdateFn.accept(far.getResult());
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Nullable
-    public static ItemInteractionResult tryPlaceItemIntoBlock(ItemStack heldStack, Player player, Level level, BlockPos pos) {
+    public static InteractionResult tryPlaceItemIntoBlock(ItemStack heldStack, Player player, Level level, BlockPos pos) {
         IItemHandler target = MiscUtil.getTileAt(level, pos, BlockEntity.class, true)
                 .map(blockEntity -> blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null))
                 .orElse(null);
@@ -81,7 +78,7 @@ public class InteractUtil {
         }
 
         boolean playPickupSound = false;
-        ItemInteractionResult result = null;
+        InteractionResult result = null;
         //Extract 1 item that can be found
         for (int slot = 0; slot < target.getSlots(); slot++) {
             ItemStack invSlot = target.extractItem(slot, 64, false);
@@ -90,7 +87,7 @@ public class InteractUtil {
                     ItemUtil.dropItem(level, player.position(), invSlot);
                 }
                 playPickupSound = true;
-                result = ItemInteractionResult.SUCCESS;
+                result = InteractionResult.SUCCESS;
                 break;
             }
         }
@@ -104,7 +101,7 @@ public class InteractUtil {
                     if (!player.isCreative()) {
                         heldStack.shrink(inserted);
                     }
-                    result = ItemInteractionResult.SUCCESS;
+                    result = InteractionResult.SUCCESS;
                     break;
                 }
             }

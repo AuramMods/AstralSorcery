@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.component.ColorComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
@@ -22,14 +21,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -49,8 +47,6 @@ import org.jetbrains.annotations.Nullable;
  * Date: 07.09.2026 / 10:00
  */
 public class CaveIlluminatorBlock extends BaseTickTileBlock<TileCaveIlluminator> {
-
-    public static MapCodec<CaveIlluminatorBlock> CODEC = simpleCodec(CaveIlluminatorBlock::new);
 
     private static final VoxelShape SHAPE = createShape();
 
@@ -74,7 +70,7 @@ public class CaveIlluminatorBlock extends BaseTickTileBlock<TileCaveIlluminator>
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -91,15 +87,16 @@ public class CaveIlluminatorBlock extends BaseTickTileBlock<TileCaveIlluminator>
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
         if (!stack.is(ItemsAS.ILLUMINATION_WAND.get())) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
 
-        if (level.isClientSide()) return ItemInteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         if (!(level instanceof ServerLevel sLevel) || !(player instanceof ServerPlayer)) {
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         return MiscUtil.getTileAt(level, pos, TileCaveIlluminator.class, true).map(tile -> {
@@ -107,27 +104,22 @@ public class CaveIlluminatorBlock extends BaseTickTileBlock<TileCaveIlluminator>
             DyeColor dyeColor = colorCmp.reference().asDyeColor().orElse(DyeColor.YELLOW);
             tile.onWandUsed(dyeColor);
             ServerSoundHelper.playSoundAround(SoundsAS.ILLUMINATION_WAND_LIGHT, sLevel, pos, 0.6F, 1F);
-            return ItemInteractionResult.SUCCESS;
-        }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
+            return InteractionResult.SUCCESS;
+        }).orElse(InteractionResult.PASS);
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
     protected BlockEntityTicker<TileCaveIlluminator> createTicker() {
         return this.ticker();
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 }

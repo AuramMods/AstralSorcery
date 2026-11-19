@@ -15,7 +15,7 @@ import hellfirepvp.astralsorcery.common.util.InteractUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -64,8 +64,8 @@ public class LightwellBlock extends FluidLitTileBlock<TileLightwell> {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.isClientSide()) return ItemInteractionResult.SUCCESS;
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         return MiscUtil.getTileAt(level, pos, TileLightwell.class, true).map(lightwell -> {
             ItemStack held = player.getItemInHand(hand);
@@ -73,8 +73,8 @@ public class LightwellBlock extends FluidLitTileBlock<TileLightwell> {
             return MiscUtil.firstNonNull(
                     () -> InteractUtil.tryTransferFluidFromBlock(held, player, level, pos, newStack -> InteractUtil.handleContainerReplacement(player, newStack, hand)),
                     () -> InteractUtil.tryPlaceItemIntoBlock(held, player, level, pos)
-            ).orElse(ItemInteractionResult.SUCCESS);
-        }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
+            ).orElse(InteractionResult.SUCCESS);
+        }).orElse(InteractionResult.PASS);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class LightwellBlock extends FluidLitTileBlock<TileLightwell> {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 }

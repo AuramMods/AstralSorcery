@@ -8,8 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.container.provider.ContainerAltarProvider;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
@@ -20,12 +18,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,11 +39,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class AltarBlock extends BaseTickTileBlock<TileAltar> {
 
-    public static final MapCodec<AltarBlock> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            propertiesCodec(),
-            TileAltar.AltarType.CODEC.fieldOf("altar_type").forGetter(AltarBlock::getAltarType)
-    ).apply(inst, AltarBlock::new));
-
     private final TileAltar.AltarType altarType;
 
     public AltarBlock(Properties properties, TileAltar.AltarType altarType) {
@@ -59,32 +51,33 @@ public class AltarBlock extends BaseTickTileBlock<TileAltar> {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return this.getAltarType().getShape();
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return this.getAltarType().getCollisionShape();
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND && player instanceof ServerPlayer sPlayer) {
             return MiscUtil.getTileAt(level, pos, TileAltar.class, true).map(altar -> {
                 if (stack.is(ItemsAS.WAND.get())) {
-                    if (altar.getTileData().getActiveRecipe().isPresent()) return ItemInteractionResult.CONSUME;
-                    if (!altar.getTileData().hasStructure()) return ItemInteractionResult.CONSUME;
+                    if (altar.getTileData().getActiveRecipe().isPresent()) return InteractionResult.CONSUME;
+                    if (!altar.getTileData().hasStructure()) return InteractionResult.CONSUME;
                     return altar.findMatchingRecipe(level, sPlayer.getUUID()).map(recipe -> {
                         altar.startCrafting(recipe, sPlayer.getUUID());
-                        return ItemInteractionResult.SUCCESS;
-                    }).orElse(ItemInteractionResult.CONSUME);
+                        return InteractionResult.SUCCESS;
+                    }).orElse(InteractionResult.CONSUME);
                 }
                 ContainerAltarProvider.openAltar(altar).open(sPlayer);
-                return ItemInteractionResult.CONSUME;
-            }).orElse(ItemInteractionResult.CONSUME);
+                return InteractionResult.CONSUME;
+            }).orElse(InteractionResult.CONSUME);
         }
-        return ItemInteractionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Override
@@ -107,17 +100,12 @@ public class AltarBlock extends BaseTickTileBlock<TileAltar> {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
     protected BlockEntityTicker<TileAltar> createTicker() {
         return this.ticker();
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 }
