@@ -145,3 +145,36 @@
      ordering="NONE"
      side="BOTH"
 \ No newline at end of file
+--- a/src/main/java/hellfirepvp/observerlib/common/data/base/SectionWorldData.java
++++ b/src/main/java/hellfirepvp/observerlib/common/data/base/SectionWorldData.java
+@@ -192,7 +192,7 @@
+ 
+     @Override
+     public final void readData(File baseDirectory) throws IOException {
+-        String identifier = getSaveKey().getIdentifier();
++        String prefix = getSaveKey().getIdentifier() + "_";
+ 
+         File generalSaveFile = new File(baseDirectory, "general.dat");
+         if (generalSaveFile.exists()) {
+@@ -208,14 +208,17 @@
+                 continue;
+             }
+             fileName = fileName.substring(0, fileName.length() - 4);
+-            String[] ptrn = fileName.split("_");
+-            if (ptrn.length != 3 || !ptrn[0].equalsIgnoreCase(identifier)) {
++            if (!fileName.regionMatches(true, 0, prefix, 0, prefix.length())) {
++                continue;
++            }
++            String[] coordinates = fileName.substring(prefix.length()).split("_", -1);
++            if (coordinates.length != 2) {
+                 continue;
+             }
+             int sX, sZ;
+             try {
+-                sX = Integer.parseInt(ptrn[1]);
+-                sZ = Integer.parseInt(ptrn[2]);
++                sX = Integer.parseInt(coordinates[0]);
++                sZ = Integer.parseInt(coordinates[1]);
+             } catch (NumberFormatException exc) {
+                 continue;
+             }
