@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe.infusion;
 
+import hellfirepvp.astralsorcery.common.ingredient.IngredientJson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -55,7 +56,7 @@ public class InfusionRecipe extends CustomRecipe<InfusionRecipe, InfusionRecipeI
     private static final RandomSource rand = RandomSource.create();
 
     public static final MapCodec<InfusionRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            Ingredient.CODEC.fieldOf("item_input").forGetter(InfusionRecipe::getItemInput),
+            IngredientJson.CODEC.fieldOf("item_input").forGetter(InfusionRecipe::getItemInput),
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid_input").forGetter(InfusionRecipe::getFluidInput),
             Codec.INT.fieldOf("duration").forGetter(InfusionRecipe::getDuration),
             ItemStack.CODEC.fieldOf("output").forGetter(InfusionRecipe::getOutput),

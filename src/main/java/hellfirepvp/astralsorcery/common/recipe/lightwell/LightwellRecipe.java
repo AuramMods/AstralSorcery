@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe.lightwell;
 
+import hellfirepvp.astralsorcery.common.ingredient.IngredientJson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,7 +27,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.FluidIngredient;
 
 import java.util.function.Supplier;
 
@@ -41,7 +42,7 @@ public class LightwellRecipe extends CustomRecipe<LightwellRecipe, LightwellReci
 
     public static final MapCodec<LightwellRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ColorWrapper.CODEC.fieldOf("catalyst_color").forGetter(LightwellRecipe::getCatalystColor),
-            Ingredient.CODEC.fieldOf("input").forGetter(LightwellRecipe::getInput),
+            IngredientJson.CODEC.fieldOf("input").forGetter(LightwellRecipe::getInput),
             BuiltInRegistries.FLUID.byNameCodec().fieldOf("generated_fluid").forGetter(LightwellRecipe::getGeneratedFluid),
             Codec.FLOAT.fieldOf("production_multiplier").forGetter(LightwellRecipe::getProductionMultiplier),
             Codec.FLOAT.fieldOf("shatter_multiplier").forGetter(LightwellRecipe::getShatterMultiplier)

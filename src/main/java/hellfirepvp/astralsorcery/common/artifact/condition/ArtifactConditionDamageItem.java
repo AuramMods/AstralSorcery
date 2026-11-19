@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.artifact.condition;
 
+import hellfirepvp.astralsorcery.common.ingredient.IngredientJson;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactCondition;
@@ -40,7 +41,7 @@ public class ArtifactConditionDamageItem extends ArtifactCondition implements On
 
     public static final MapCodec<ArtifactConditionDamageItem> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(ArtifactCondition::getId),
-            Ingredient.CODEC.listOf().fieldOf("items").forGetter(ArtifactConditionDamageItem::getItems),
+            IngredientJson.CODEC.listOf().fieldOf("items").forGetter(ArtifactConditionDamageItem::getItems),
             ComponentSerialization.CODEC.fieldOf("hiddenDescription").forGetter(ArtifactConditionDamageItem::getHiddenDescription),
             ComponentSerialization.CODEC.fieldOf("clearDescription").forGetter(ArtifactConditionDamageItem::getClearDescription)
     ).apply(inst, ArtifactConditionDamageItem::new));

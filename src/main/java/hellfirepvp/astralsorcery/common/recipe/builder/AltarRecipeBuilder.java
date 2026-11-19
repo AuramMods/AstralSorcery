@@ -36,9 +36,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 import net.minecraftforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 

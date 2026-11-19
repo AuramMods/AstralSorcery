@@ -25,7 +25,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe.focal.place;
 
+import hellfirepvp.astralsorcery.common.ingredient.IngredientJson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -56,7 +57,7 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
             Codec.INT.fieldOf("duration").forGetter(FocalTransmutationRecipe::getDuration),
             ColorWrapper.CODEC.fieldOf("color").forGetter(FocalTransmutationRecipe::getColor),
             BlockPredicate.CODEC.listOf().fieldOf("input_predicates").forGetter(FocalTransmutationRecipe::getInputPredicates),
-            Ingredient.CODEC.fieldOf("input_display_stacks").forGetter(FocalTransmutationRecipe::getInputDisplay),
+            IngredientJson.CODEC.fieldOf("input_display_stacks").forGetter(FocalTransmutationRecipe::getInputDisplay),
             WeightedEntry.Wrapper.codec(BlockState.CODEC).listOf().fieldOf("output_states").forGetter(FocalTransmutationRecipe::getOutputStates),
             RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("required_constellation").forGetter(FocalTransmutationRecipe::getRequiredConstellation),
             Codec.BOOL.fieldOf("requires_focused_starlight").forGetter(FocalTransmutationRecipe::requiresFocusedStarlight)

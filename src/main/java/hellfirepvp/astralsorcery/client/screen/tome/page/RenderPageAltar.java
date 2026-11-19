@@ -64,7 +64,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 import net.minecraftforge.fluids.FluidStack;
 import org.joml.Vector2f;
 

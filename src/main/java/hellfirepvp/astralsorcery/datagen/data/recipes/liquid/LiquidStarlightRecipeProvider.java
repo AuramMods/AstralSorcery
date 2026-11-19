@@ -27,7 +27,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

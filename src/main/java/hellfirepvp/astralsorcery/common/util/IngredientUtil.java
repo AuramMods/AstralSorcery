@@ -18,14 +18,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.FluidIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -93,13 +91,6 @@ public class IngredientUtil {
     }
 
     public static List<Fluid> guessFluids(FluidIngredient ingredient) {
-        List<Fluid> fluids = new ArrayList<>();
-        for (FluidStack stack : ingredient.getStacks()) {
-            if (!fluids.contains(stack.getFluid())) {
-                fluids.add(stack.getFluid());
-            }
-        }
-        fluids.sort(Comparator.comparing(Fluid::toString));
-        return fluids;
+        return ingredient.fluids().distinct().sorted(Comparator.comparing(Fluid::toString)).toList();
     }
 }

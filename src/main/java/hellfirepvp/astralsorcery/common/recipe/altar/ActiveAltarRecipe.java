@@ -51,7 +51,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;

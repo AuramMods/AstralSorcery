@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe.focal.drop;
 
+import hellfirepvp.astralsorcery.common.ingredient.IngredientJson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -47,7 +48,7 @@ public class FocalCombineRecipe extends CustomRecipe<FocalCombineRecipe, FocalCo
     public static final MapCodec<FocalCombineRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("duration").forGetter(FocalCombineRecipe::getDuration),
             ColorWrapper.CODEC.fieldOf("color").forGetter(FocalCombineRecipe::getColor),
-            Ingredient.CODEC.listOf().fieldOf("inputs").forGetter(FocalCombineRecipe::getInputs),
+            IngredientJson.CODEC.listOf().fieldOf("inputs").forGetter(FocalCombineRecipe::getInputs),
             ItemStack.CODEC.listOf().fieldOf("outputs").forGetter(FocalCombineRecipe::getOutputs),
             RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("required_constellation").forGetter(FocalCombineRecipe::getRequiredConstellation)
     ).apply(instance, FocalCombineRecipe::new));

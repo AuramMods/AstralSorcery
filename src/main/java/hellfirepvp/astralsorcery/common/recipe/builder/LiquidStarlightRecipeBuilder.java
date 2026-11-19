@@ -22,7 +22,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

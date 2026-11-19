@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe.lumen;
 
+import hellfirepvp.astralsorcery.common.ingredient.IngredientJson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -40,7 +41,7 @@ import java.util.function.Supplier;
 public class LumenGenerationRecipe extends CustomRecipe<LumenGenerationRecipe, LumenGenerationRecipeInput> {
 
     public static final MapCodec<LumenGenerationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            Ingredient.CODEC.fieldOf("input").forGetter(LumenGenerationRecipe::getInput),
+            IngredientJson.CODEC.fieldOf("input").forGetter(LumenGenerationRecipe::getInput),
             RegistriesAS.codec(RegistriesAS.KEY_LUMEN).fieldOf("produced_lumen").forGetter(LumenGenerationRecipe::getProducedLumen),
             Codec.INT.fieldOf("produced_lumen_amount").forGetter(LumenGenerationRecipe::getProducedLumenAmount),
             Codec.FLOAT.fieldOf("production_attempt_multiplier").forGetter(LumenGenerationRecipe::getProductionAttemptMultiplier),

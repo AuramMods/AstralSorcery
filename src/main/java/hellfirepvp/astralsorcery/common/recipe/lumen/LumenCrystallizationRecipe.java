@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.recipe.lumen;
 
+import hellfirepvp.astralsorcery.common.ingredient.IngredientJson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -37,7 +38,7 @@ import java.util.function.Supplier;
 public class LumenCrystallizationRecipe extends CustomRecipe<LumenCrystallizationRecipe, LumenCrystallizationRecipeInput> {
 
     public static final MapCodec<LumenCrystallizationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            Ingredient.CODEC.fieldOf("input").forGetter(LumenCrystallizationRecipe::getInput),
+            IngredientJson.CODEC.fieldOf("input").forGetter(LumenCrystallizationRecipe::getInput),
             RegistriesAS.codec(RegistriesAS.KEY_LUMEN).fieldOf("lumen_to_crystallize").forGetter(LumenCrystallizationRecipe::getLumenToCrystallize),
             Codec.FLOAT.fieldOf("catalyst_shatter_multiplier").forGetter(LumenCrystallizationRecipe::getCatalystShatterMultiplier),
             Codec.intRange(1, 1900).fieldOf("lumen_consumed_per_operation").forGetter(LumenCrystallizationRecipe::getLumenConsumedPerOperation)

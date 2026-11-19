@@ -25,8 +25,6 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.VoidFluidHandler;
-import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -152,7 +150,7 @@ public final class IngredientBridge implements ICustomIngredient {
     public enum Type implements StringRepresentable {
 
         ITEM(RecordCodecBuilder.mapCodec(inst -> inst.group(
-                Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(IngredientBridge::getIngredient)
+                IngredientJson.NONEMPTY_CODEC.fieldOf("ingredient").forGetter(IngredientBridge::getIngredient)
         ).apply(inst, IngredientBridge::of)), StreamCodec.composite(
                 ByteBufCodecs.INGREDIENT,
                 IngredientBridge::getIngredient,

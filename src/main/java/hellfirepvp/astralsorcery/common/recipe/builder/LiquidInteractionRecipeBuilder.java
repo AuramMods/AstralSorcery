@@ -21,7 +21,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
