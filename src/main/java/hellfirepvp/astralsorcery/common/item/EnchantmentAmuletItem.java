@@ -32,9 +32,9 @@ public class EnchantmentAmuletItem extends ItemCustom implements ItemDynamicColo
 
     public EnchantmentAmuletItem() {
         super(new Properties()
-                .component(DataComponentsAS.ENCHANTMENT_MODIFIERS, EnchantmentModifierComponent.EMPTY)
                 .rarity(EnumExtensions.RARITY_RELIC)
                 .stacksTo(1));
+        DataComponentsAS.ENCHANTMENT_MODIFIERS.setDefault(this, EnchantmentModifierComponent.EMPTY);
     }
 
     @Override
@@ -42,11 +42,11 @@ public class EnchantmentAmuletItem extends ItemCustom implements ItemDynamicColo
         super.inventoryTick(stack, level, entity, slotId, isSelected);
 
         if (!level.isClientSide()) {
-            if (!stack.has(DataComponentsAS.COLOR)) {
+            if (!DataComponentsAS.COLOR.has(stack)) {
                 this.generateAmuletColor(stack);
             }
-            if (stack.getOrDefault(DataComponentsAS.ENCHANTMENT_MODIFIERS, EnchantmentModifierComponent.EMPTY).isEmpty()) {
-                stack.set(DataComponentsAS.ENCHANTMENT_MODIFIERS, EnchantmentAmuletGenerator.generateModifiers(level.registryAccess()));
+            if (DataComponentsAS.ENCHANTMENT_MODIFIERS.getOrDefault(stack, EnchantmentModifierComponent.EMPTY).isEmpty()) {
+                DataComponentsAS.ENCHANTMENT_MODIFIERS.set(stack, EnchantmentAmuletGenerator.generateModifiers(level.registryAccess()));
             }
         }
     }
@@ -63,7 +63,7 @@ public class EnchantmentAmuletItem extends ItemCustom implements ItemDynamicColo
             int color = ColorWrapper.ofHSB(rand.nextFloat(), 0.7F, 1.0F).getColor() | 0xFF000000;
             cmp = new ColorComponent(ColorReference.RGB.of(color));
         }
-        stack.set(DataComponentsAS.COLOR, cmp);
+        DataComponentsAS.COLOR.set(stack, cmp);
     }
 
 
@@ -71,8 +71,8 @@ public class EnchantmentAmuletItem extends ItemCustom implements ItemDynamicColo
     public int getColor(ItemStack stack, long clientTick, int tintIndex) {
         if (tintIndex != 1) return 0xFFFFFFFF;
 
-        if (stack.has(DataComponentsAS.COLOR)) {
-            return stack.getOrDefault(DataComponentsAS.COLOR, ColorComponent.WHITE).reference().color() | 0xFF000000;
+        if (DataComponentsAS.COLOR.has(stack)) {
+            return DataComponentsAS.COLOR.getOrDefault(stack, ColorComponent.WHITE).reference().color() | 0xFF000000;
         }
 
         int tick = (int) (clientTick % 100000L);

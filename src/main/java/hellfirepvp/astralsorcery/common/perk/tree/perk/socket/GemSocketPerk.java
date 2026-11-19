@@ -99,7 +99,7 @@ public class GemSocketPerk extends AttributeModifierPerk<GemSocketPerk.Data> {
             if (contained.getItem() instanceof GemSocketItem gemSocketItem) {
                 modifiers.addAll(gemSocketItem.getModifiers(contained, this, player, side));
             } else {
-                modifiers.addAll(contained.getOrDefault(DataComponentsAS.DYNAMIC_MODIFIERS, DynamicModifiersComponent.EMPTY).modifiers());
+                modifiers.addAll(DataComponentsAS.DYNAMIC_MODIFIERS.getOrDefault(contained, DynamicModifiersComponent.EMPTY).modifiers());
             }
         }
         return modifiers;

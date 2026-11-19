@@ -44,8 +44,8 @@ public class IridescentCrystalAxeItem extends CrystalAxeItem {
     public IridescentCrystalAxeItem() {
         super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
                 .setNoRepair()
-                .component(DataComponentsAS.DYNAMIC_MODIFIERS, new DynamicModifiersComponent(List.of(MINING_SPEED_MODIFIER)))
                 .attributes(axeAttributes()));
+        DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, new DynamicModifiersComponent(List.of(MINING_SPEED_MODIFIER)));
     }
 
     @Override

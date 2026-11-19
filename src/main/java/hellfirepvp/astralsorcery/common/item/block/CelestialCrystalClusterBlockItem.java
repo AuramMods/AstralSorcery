@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 public class CelestialCrystalClusterBlockItem extends BlockItemCustom {
 
     public CelestialCrystalClusterBlockItem(Block block) {
-        super(block, new Properties()
-                .component(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty()));
+        super(block, new Properties());
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.setDefault(this, CrystalAttributesComponent.defaultEmpty());
     }
 
     @Override

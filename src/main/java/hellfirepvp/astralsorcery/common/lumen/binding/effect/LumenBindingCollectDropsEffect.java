@@ -61,14 +61,14 @@ public class LumenBindingCollectDropsEffect extends LumenBindingEffect {
                     singularity = sPlayer.getInventory().getItem(slotId);
                 }
 
-                StoredItemsComponent cmp = singularity.getOrDefault(DataComponentsAS.STORED_ITEMS, StoredItemsComponent.EMPTY);
+                StoredItemsComponent cmp = DataComponentsAS.STORED_ITEMS.getOrDefault(singularity, StoredItemsComponent.EMPTY);
                 for (ItemEntity itemEntity : event.getDrops()) {
                     if (itemEntity.isRemoved()) continue;
 
                     cmp = cmp.accept(itemEntity.getItem());
                     itemEntity.discard();
                 }
-                singularity.set(DataComponentsAS.STORED_ITEMS, cmp);
+                DataComponentsAS.STORED_ITEMS.set(singularity, cmp);
                 sPlayer.getInventory().setItem(slotId, singularity);
             });
         }

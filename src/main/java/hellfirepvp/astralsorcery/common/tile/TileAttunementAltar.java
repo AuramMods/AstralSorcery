@@ -351,9 +351,9 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
                 return;
             }
 
-            MiscUtil.getMainOrOffHand(player, stack -> stack.has(DataComponentsAS.CONSTELLATION_PAPER)).ifPresent(tpl -> {
+            MiscUtil.getMainOrOffHand(player, stack -> DataComponentsAS.CONSTELLATION_PAPER.has(stack)).ifPresent(tpl -> {
                 ItemStack held = tpl.getB();
-                held.get(DataComponentsAS.CONSTELLATION_PAPER).getConstellation().ifPresent(cst -> {
+                DataComponentsAS.CONSTELLATION_PAPER.get(held).getConstellation().ifPresent(cst -> {
                     PlayerProgress progress = ResearchManager.getProgress(player, LogicalSide.CLIENT);
                     if (progress.hasDiscoveredConstellation(cst)) {
                         float night = DayTimeHelper.getCurrentDaytimeDistribution(level);

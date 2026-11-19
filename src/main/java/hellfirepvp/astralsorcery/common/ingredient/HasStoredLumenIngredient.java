@@ -41,7 +41,7 @@ public class HasStoredLumenIngredient implements ICustomIngredient {
     @Override
     public boolean test(ItemStack stack) {
         if (stack.equals(displayStack)) return true; //Hard-test against specifically created display objects
-        return !stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY).isEmpty();
+        return !DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY).isEmpty();
     }
 
     @Override

@@ -60,7 +60,7 @@ public abstract class LumenBindingEffect {
     }
 
     protected float getEffectMultiplier(ItemStack stack, LogicalSide side) {
-        StoredLumenComponent storedLumenCmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        StoredLumenComponent storedLumenCmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
         return 1F + storedLumenCmp.getBinding(side, LumenAS.PRISMATIC)
                 .flatMap(type -> type.getBinding(stack))
                 .map(LumenBinding::getEffect)
@@ -103,7 +103,7 @@ public abstract class LumenBindingEffect {
     }
 
     private static <R> List<R> forEachEffectTypes(LivingEntity entity, ItemStack stack, BiFunction<Lumen, LumenBinding, List<R>> consumeFn) {
-        StoredLumenComponent storedLumenCmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        StoredLumenComponent storedLumenCmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
         if (storedLumenCmp.isEmpty()) return List.of();
         LogicalSide side = SidedHelper.getSide(entity);
 

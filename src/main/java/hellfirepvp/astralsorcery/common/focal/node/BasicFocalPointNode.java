@@ -214,7 +214,7 @@ public class BasicFocalPointNode extends FocalPointNode {
                 if (RenderAstrolabeOverlay.isDrawing()) {
                     sextant = RenderAstrolabeOverlay.getDrawingItem();
                 }
-                AstrolabeAngleComponent cmp = sextant.getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
+                AstrolabeAngleComponent cmp = DataComponentsAS.ASTROLABE_ANGLE.getOrDefault(sextant, AstrolabeAngleComponent.DEFAULT);
                 float requiredAngle = LevelSkyHandler.getContext(pl.level())
                         .map(LevelSkyContext::getConstellationHandler)
                         .map(cstHandler -> cstHandler.getAngle(this.getConstellation()))

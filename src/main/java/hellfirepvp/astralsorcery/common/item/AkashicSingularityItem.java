@@ -38,8 +38,8 @@ public class AkashicSingularityItem extends ItemCustom {
     public AkashicSingularityItem() {
         super(new Properties()
                 .stacksTo(1)
-                .rarity(EnumExtensions.RARITY_RELIC)
-                .component(DataComponentsAS.STORED_ITEMS, StoredItemsComponent.EMPTY));
+                .rarity(EnumExtensions.RARITY_RELIC));
+        DataComponentsAS.STORED_ITEMS.setDefault(this, StoredItemsComponent.EMPTY);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class AkashicSingularityItem extends ItemCustom {
     }
 
     private void removeAndDrop(ServerLevel sLevel, Player player, InteractionHand usedHand, ItemStack stack) {
-        StoredItemsComponent storedItems = stack.getOrDefault(DataComponentsAS.STORED_ITEMS, StoredItemsComponent.EMPTY);
+        StoredItemsComponent storedItems = DataComponentsAS.STORED_ITEMS.getOrDefault(stack, StoredItemsComponent.EMPTY);
 
         Tuple<StoredItemsComponent, List<ItemStack>> decomposeResult = storedItems.decomposeStackCount(25);
         decomposeResult.getB().forEach(result -> {
@@ -73,7 +73,7 @@ public class AkashicSingularityItem extends ItemCustom {
         });
 
         storedItems = decomposeResult.getA();
-        stack.set(DataComponentsAS.STORED_ITEMS, storedItems);
+        DataComponentsAS.STORED_ITEMS.set(stack, storedItems);
         if (storedItems.isEmpty()) {
             player.setItemInHand(usedHand, ItemStack.EMPTY);
         }

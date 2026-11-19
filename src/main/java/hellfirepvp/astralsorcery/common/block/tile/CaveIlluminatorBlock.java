@@ -103,7 +103,7 @@ public class CaveIlluminatorBlock extends BaseTickTileBlock<TileCaveIlluminator>
         }
 
         return MiscUtil.getTileAt(level, pos, TileCaveIlluminator.class, true).map(tile -> {
-            ColorComponent colorCmp = stack.getOrDefault(DataComponentsAS.COLOR, ColorComponent.DEFAULT_YELLOW);
+            ColorComponent colorCmp = DataComponentsAS.COLOR.getOrDefault(stack, ColorComponent.DEFAULT_YELLOW);
             DyeColor dyeColor = colorCmp.reference().asDyeColor().orElse(DyeColor.YELLOW);
             tile.onWandUsed(dyeColor);
             ServerSoundHelper.playSoundAround(SoundsAS.ILLUMINATION_WAND_LIGHT, sLevel, pos, 0.6F, 1F);

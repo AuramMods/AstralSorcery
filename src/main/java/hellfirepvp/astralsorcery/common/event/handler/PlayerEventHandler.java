@@ -54,8 +54,8 @@ public class PlayerEventHandler {
         PlayerProgress prog = ResearchManager.getProgress(sPlayer, LogicalSide.SERVER);
         if (!prog.isValid()) return;
 
-        if (stack.has(DataComponentsAS.LUMEN)) {
-            LumenComponent cmp = stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY);
+        if (DataComponentsAS.LUMEN.has(stack)) {
+            LumenComponent cmp = DataComponentsAS.LUMEN.getOrDefault(stack, LumenComponent.EMPTY);
             Lumen lumen = cmp.lumen().value();
             if (!prog.hasDiscoveredLumen(lumen) && lumen != LumenAS.NONE.get()) {
                 List<Lumen> newlyDiscovered = ResearchHelper.discoverLumen(sPlayer, RecipeUtil.findAnyLumenMakingUp(sPlayer.serverLevel(), lumen));
@@ -66,8 +66,8 @@ public class PlayerEventHandler {
             }
         }
 
-        if (stack.has(DataComponentsAS.STORED_LUMEN)) {
-            StoredLumenComponent cmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        if (DataComponentsAS.STORED_LUMEN.has(stack)) {
+            StoredLumenComponent cmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
             Set<Lumen> foundLumen = new HashSet<>();
             cmp.storedLumen().forEach(stored -> foundLumen.add(stored.lumen()));
             foundLumen.addAll(cmp.boundLumen().keySet());

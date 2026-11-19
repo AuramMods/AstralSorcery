@@ -30,8 +30,8 @@ public class LumenHandlerItemFactory {
     protected Function<Lumen, Integer> capacityGetter = lumen -> 1000;
     protected LumenHandlerView.InputFilter inputFilter = LumenHandlerView.InputFilter.NO_FILTER;
     protected LumenHandlerView.ExtractFilter extractFilter = LumenHandlerView.ExtractFilter.NO_FILTER;
-    private Function<ItemStack, StoredLumenComponent> componentGetter = stack -> stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
-    private BiConsumer<ItemStack, StoredLumenComponent> componentSetter = (stack, cmp) -> stack.set(DataComponentsAS.STORED_LUMEN, cmp);
+    private Function<ItemStack, StoredLumenComponent> componentGetter = stack -> DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
+    private BiConsumer<ItemStack, StoredLumenComponent> componentSetter = (stack, cmp) -> DataComponentsAS.STORED_LUMEN.set(stack, cmp);
 
     protected LumenHandlerItemFactory() {}
 

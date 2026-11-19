@@ -55,8 +55,8 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
 
     public ConstellationPaperItem() {
         super(new Properties()
-                .stacksTo(1)
-                .component(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY));
+                .stacksTo(1));
+        DataComponentsAS.CONSTELLATION_PAPER.setDefault(this, ConstellationPaperComponent.EMPTY);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
 
         RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
             ItemStack stack = new ItemStack(this);
-            stack.set(DataComponentsAS.CONSTELLATION_PAPER, new ConstellationPaperComponent(cst));
+            DataComponentsAS.CONSTELLATION_PAPER.set(stack, new ConstellationPaperComponent(cst));
             tabItems.accept(stack);
         });
     }
@@ -79,7 +79,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        ConstellationPaperComponent cmp = stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY);
+        ConstellationPaperComponent cmp = DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(stack, ConstellationPaperComponent.EMPTY);
         if (cmp.getConstellation().isEmpty()) {
             tooltipComponents.add(Component.translatable("item.astralsorcery.constellation_paper.empty")
                     .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
@@ -93,7 +93,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
         if (entity instanceof ServerPlayer sPlayer) {
             PlayerProgress progress = ResearchManager.getProgress(sPlayer, LogicalSide.SERVER);
             if (progress.isValid()) {
-                ConstellationPaperComponent cmp = stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY);
+                ConstellationPaperComponent cmp = DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(stack, ConstellationPaperComponent.EMPTY);
                 if (cmp.getConstellation().isEmpty()) {
                     List<BaseConstellation> constellations = new ArrayList<>();
                     RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
@@ -103,7 +103,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
                     });
 
                     MiscUtil.getRandomEntry(constellations, rand).ifPresent(cst -> {
-                        stack.set(DataComponentsAS.CONSTELLATION_PAPER, new ConstellationPaperComponent(cst));
+                        DataComponentsAS.CONSTELLATION_PAPER.set(stack, new ConstellationPaperComponent(cst));
                     });
                 }
 
@@ -122,7 +122,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack held = player.getItemInHand(usedHand);
 
-        return held.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY).getConstellation().map(cst -> {
+        return DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(held, ConstellationPaperComponent.EMPTY).getConstellation().map(cst -> {
             if (level.isClientSide()) {
                 this.openConstellationScreen(cst);
                 return InteractionResultHolder.success(held);
@@ -146,7 +146,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
     @Nullable
     public Entity createEntity(Level level, Entity location, ItemStack stack) {
         if (location instanceof ItemEntity itemEntity) {
-            ColorWrapper cstColor = stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY)
+            ColorWrapper cstColor = DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(stack, ConstellationPaperComponent.EMPTY)
                     .getConstellation()
                     .map(BaseConstellation::getConstellationColor)
                     .orElse(null);
@@ -160,7 +160,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
     public int getColor(ItemStack stack, long tick, int tintIndex) {
         if (tintIndex != 1) return 0xFFFFFFFF;
 
-        ConstellationPaperComponent cmp = stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY);
+        ConstellationPaperComponent cmp = DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(stack, ConstellationPaperComponent.EMPTY);
         return cmp.getConstellation()
                 .map(BaseConstellation::getConstellationColor)
                 .map(ColorWrapper::getColor)

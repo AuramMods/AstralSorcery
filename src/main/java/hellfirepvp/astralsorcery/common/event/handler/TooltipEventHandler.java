@@ -62,10 +62,10 @@ public class TooltipEventHandler {
     }
 
     public static void addStoredLumenTooltip(ItemStack stack, Consumer<Component> tooltipAdder) {
-        if (stack.has(DataComponentsAS.STORED_LUMEN) && stack.has(DataComponentsAS.IDENTIFIER)) {
-            IdentifierComponent idCmp = stack.getOrDefault(DataComponentsAS.IDENTIFIER, IdentifierComponent.NONE);
+        if (DataComponentsAS.STORED_LUMEN.has(stack) && DataComponentsAS.IDENTIFIER.has(stack)) {
+            IdentifierComponent idCmp = DataComponentsAS.IDENTIFIER.getOrDefault(stack, IdentifierComponent.NONE);
             if (!idCmp.id().equals(Util.NIL_UUID)) {
-                tooltipAdder.accept(Component.literal(stack.get(DataComponentsAS.IDENTIFIER).id().toString()));
+                tooltipAdder.accept(Component.literal(DataComponentsAS.IDENTIFIER.get(stack).id().toString()));
             }
         }
     }

@@ -36,8 +36,8 @@ public class DynamismGemItem extends ItemCustom implements GemSocketItem {
 
     public DynamismGemItem(GemType gemType) {
         super(new Properties()
-                .component(DataComponentsAS.DYNAMIC_MODIFIERS, DynamicModifiersComponent.EMPTY)
                 .stacksTo(1));
+        DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, DynamicModifiersComponent.EMPTY);
         this.gemType = gemType;
     }
 
@@ -49,7 +49,7 @@ public class DynamismGemItem extends ItemCustom implements GemSocketItem {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!(level instanceof ServerLevel)) return;
 
-        if (stack.getOrDefault(DataComponentsAS.DYNAMIC_MODIFIERS, DynamicModifiersComponent.EMPTY).modifiers().isEmpty()) {
+        if (DataComponentsAS.DYNAMIC_MODIFIERS.getOrDefault(stack, DynamicModifiersComponent.EMPTY).modifiers().isEmpty()) {
             DynamismGemModifierHelper.rollGem(stack);
         }
     }

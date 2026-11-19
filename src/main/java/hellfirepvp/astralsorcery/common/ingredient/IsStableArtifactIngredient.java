@@ -40,7 +40,7 @@ public class IsStableArtifactIngredient implements ICustomIngredient {
 
     @Override
     public boolean test(ItemStack stack) {
-        ArtifactComponent cmp = stack.get(DataComponentsAS.ARTIFACT);
+        ArtifactComponent cmp = DataComponentsAS.ARTIFACT.get(stack);
         return cmp != null && cmp.stability() == ArtifactStability.STABLE;
     }
 
@@ -51,10 +51,10 @@ public class IsStableArtifactIngredient implements ICustomIngredient {
         return RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
                 .map(ArtifactItem::create)
                 .peek(artifact -> {
-                    ArtifactComponent cmp = artifact.get(DataComponentsAS.ARTIFACT);
+                    ArtifactComponent cmp = DataComponentsAS.ARTIFACT.get(artifact);
                     if (cmp != null) {
                         cmp = cmp.changeStability(ArtifactStability.STABLE);
-                        artifact.set(DataComponentsAS.ARTIFACT, cmp);
+                        DataComponentsAS.ARTIFACT.set(artifact, cmp);
                     }
                     artifact.set(DataComponents.ITEM_NAME, display);
                 });

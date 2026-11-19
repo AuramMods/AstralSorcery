@@ -51,7 +51,7 @@ public interface CrystalToolItem extends CreativeTabItem {
     @Override
     default void fillCreativeTab(Consumer<ItemStack> tabItems) {
         ItemStack stack = new ItemStack(this);
-        stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty()
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, CrystalAttributesComponent.defaultEmpty()
                 .setAttributeTier(CrystalPropertiesAS.SIZE.get(), CrystalPropertiesAS.SIZE.get().getMaxTier() * this.getCrystalCount())
                 .setAttributeTier(CrystalPropertiesAS.CUT.get(), CrystalPropertiesAS.CUT.get().getMaxTier() * this.getCrystalCount())
                 .setAttributeTier(CrystalPropertiesAS.TOOL_EFFICIENCY.get(), CrystalPropertiesAS.TOOL_EFFICIENCY.get().getMaxTier() * this.getCrystalCount())

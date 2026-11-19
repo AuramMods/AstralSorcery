@@ -90,7 +90,7 @@ public abstract class LumenBindingUsage {
     }
 
     private static void forEachUsedTypes(LivingEntity entity, ItemStack stack, BiConsumer<Lumen, LumenBinding> consumeFn) {
-        StoredLumenComponent storedLumenCmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        StoredLumenComponent storedLumenCmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
         if (storedLumenCmp.isEmpty()) return;
         LogicalSide side = SidedHelper.getSide(entity);
 

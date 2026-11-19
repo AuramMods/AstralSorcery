@@ -12,47 +12,37 @@ import com.mojang.serialization.Codec;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
-import net.minecraft.core.Holder;
-import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.Objects;
 import java.util.Optional;
 
-/**
- * This class is part of the Astral Sorcery Mod
- * The complete source code for this mod can be found on GitHub.
- * Class: LumenComponent
- * Created by HellFirePvP
- * Date: 07.09.2026 / 10:00
- */
-public record LumenComponent(Holder<Lumen> lumen) {
+public record LumenComponent(ResourceKey<Lumen> key) {
 
-    public static final LumenComponent EMPTY = new LumenComponent(LumenAS.NONE);
+    public static final LumenComponent EMPTY = new LumenComponent(LumenAS.NONE.getKey());
 
-    public static final Codec<LumenComponent> CODEC =
-            RegistriesAS.holderCodec(RegistriesAS.KEY_LUMEN).xmap(LumenComponent::new, LumenComponent::lumen);
-    public static final StreamCodec<FriendlyByteBuf, LumenComponent> STREAM_CODEC =
-            ByteBufCodecs.holderRegistry(RegistriesAS.KEY_LUMEN).map(LumenComponent::new, LumenComponent::lumen);
+    public static final Codec<LumenComponent> CODEC = ResourceLocation.CODEC.xmap(
+            id -> new LumenComponent(ResourceKey.create(RegistriesAS.KEY_LUMEN, id)), component -> component.key().location());
+    public static final StreamCodec<ByteBuf, LumenComponent> STREAM_CODEC =
+            ByteBufCodecs.resourceKey(RegistriesAS.KEY_LUMEN).map(LumenComponent::new, LumenComponent::key);
+
+    public LumenComponent(LumenAS.DeferredLumen<?> lumen) {
+        this(lumen.getKey());
+    }
+
+    public LumenComponent(Holder<Lumen> lumen) {
+        this(lumen.unwrapKey().orElseGet(() -> RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(lumen.value()).orElseThrow()));
+    }
 
     public static Optional<LumenComponent> of(Lumen lumen) {
-        return RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(lumen)
-                .flatMap(RegistriesAS.REGISTRY_LUMEN.get()::getHolder)
-                .map(LumenComponent::new);
+        return RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(lumen).map(LumenComponent::new);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        LumenComponent that = (LumenComponent) o;
-        return Objects.equals(lumen, that.lumen);
+    public Holder<Lumen> lumen() {
+        return RegistriesAS.REGISTRY_LUMEN.get().getHolderOrThrow(this.key);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(lumen);
-    }
-
 }

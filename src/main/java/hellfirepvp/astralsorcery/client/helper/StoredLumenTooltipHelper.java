@@ -38,9 +38,9 @@ public class StoredLumenTooltipHelper {
 
     private static void onTooltipGather(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
-        if (stack.has(DataComponentsAS.STORED_LUMEN) && stack.has(DataComponentsAS.IDENTIFIER)) {
-            IdentifierComponent idCmp = stack.getOrDefault(DataComponentsAS.IDENTIFIER, IdentifierComponent.NONE);
-            StoredLumenComponent cmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        if (DataComponentsAS.STORED_LUMEN.has(stack) && DataComponentsAS.IDENTIFIER.has(stack)) {
+            IdentifierComponent idCmp = DataComponentsAS.IDENTIFIER.getOrDefault(stack, IdentifierComponent.NONE);
+            StoredLumenComponent cmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
             if (idCmp.id().equals(Util.NIL_UUID)) return;
             String idStr = idCmp.id().toString();
 

@@ -89,8 +89,8 @@ public class LumenBindingType {
     }
 
     public static void applyBinding(Lumen lumen, ResourceLocation bindingTypeId, ItemStack stack) {
-        StoredLumenComponent storedCmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
-        stack.set(DataComponentsAS.STORED_LUMEN, storedCmp.applyBinding(lumen, bindingTypeId));
+        StoredLumenComponent storedCmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
+        DataComponentsAS.STORED_LUMEN.set(stack, storedCmp.applyBinding(lumen, bindingTypeId));
         IdentifierComponent.createOrOverwriteIdentifier(stack);
     }
 

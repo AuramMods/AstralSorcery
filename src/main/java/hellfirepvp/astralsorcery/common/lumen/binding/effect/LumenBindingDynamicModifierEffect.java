@@ -108,7 +108,7 @@ public class LumenBindingDynamicModifierEffect extends LumenBindingEffect implem
 
     @Override
     public Collection<PerkAttributeModifier> getModifiers(ItemStack stack, Player player, LogicalSide side, boolean ignoreRequirements) {
-        StoredLumenComponent storedLumenCmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        StoredLumenComponent storedLumenCmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
         if (!storedLumenCmp.isEmpty() && storedLumenCmp.hasBinding(LumenAS.PRISMATIC)) {
             float multiplier = this.getEffectMultiplier(stack, side);
             return this.getModifiers().stream()

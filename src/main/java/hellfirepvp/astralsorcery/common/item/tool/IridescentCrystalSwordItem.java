@@ -89,8 +89,8 @@ public class IridescentCrystalSwordItem extends CrystalSwordItem {
     public IridescentCrystalSwordItem() {
         super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
                 .setNoRepair()
-                .component(DataComponentsAS.DYNAMIC_MODIFIERS, new DynamicModifiersComponent(List.of(BASE_CRIT_MODIFIER)))
                 .attributes(swordAttributes()));
+        DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, new DynamicModifiersComponent(List.of(BASE_CRIT_MODIFIER)));
     }
 
     @Override

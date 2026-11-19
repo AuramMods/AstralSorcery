@@ -41,10 +41,10 @@ public class AltarOutputMergeCrystalProperties extends AltarRecipeOutputModifier
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-        CrystalAttributesComponent cmp = output.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(output, CrystalAttributesComponent.defaultEmpty());
         List<CrystalAttributesComponent> inputs = new ArrayList<>();
         for (ItemStack stack : input.getGridInputs()) {
-            CrystalAttributesComponent inputCmp = stack.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+            CrystalAttributesComponent inputCmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(stack, CrystalAttributesComponent.defaultEmpty());
             inputs.add(inputCmp);
             for (CrystalAttributesComponent.TieredAttribute attr : inputCmp.getAttributes()) {
                 int existing = cmp.getAttributeTier(attr);
@@ -55,7 +55,7 @@ public class AltarOutputMergeCrystalProperties extends AltarRecipeOutputModifier
                 CrystalPropertyEvent.Merge.Type.ALTAR_RECIPE_MERGE, inputs, cmp);
         MinecraftForge.EVENT_BUS.post(merge);
 
-        output.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, merge.getResultComponent());
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.set(output, merge.getResultComponent());
         CrystalToolItem.updateModifiers(output);
         return output;
     }

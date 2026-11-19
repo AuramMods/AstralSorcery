@@ -74,9 +74,9 @@ public class LiquidStarlightOutputFormCrystalCluster extends LiquidStarlightReci
 
         if (level.setBlockAndUpdate(pos, BlocksAS.CELESTIAL_CRYSTAL_CLUSTER.get().defaultBlockState())) {
             MiscUtil.getTileAt(level, pos, TileCelestialCrystalCluster.class, true).ifPresent(tile -> {
-                CrystalAttributesComponent defaultCelestialComponent = ItemsAS.CELESTIAL_CRYSTAL.get().components()
-                        .getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES.get(), CrystalAttributesComponent.defaultEmpty());
-                CrystalAttributesComponent cmp = input.getTriggerEntity().getItem().getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+                CrystalAttributesComponent defaultCelestialComponent = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(ItemsAS.CELESTIAL_CRYSTAL.toStack(),
+                        CrystalAttributesComponent.defaultEmpty());
+                CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(input.getTriggerEntity().getItem(), CrystalAttributesComponent.defaultEmpty());
                 CrystalAttributesComponent prev = cmp;
 
                 cmp = cmp.setProperties(defaultCelestialComponent.getProperties());

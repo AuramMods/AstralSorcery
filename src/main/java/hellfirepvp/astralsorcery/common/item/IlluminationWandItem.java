@@ -51,8 +51,8 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
 
     public IlluminationWandItem() {
         super(new Properties()
-                .component(DataComponentsAS.COLOR, DEFAULT_COLOR)
                 .stacksTo(1));
+        DataComponentsAS.COLOR.setDefault(this, DEFAULT_COLOR);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
 
         BlockState flareState = BlocksAS.FLARE_LIGHT.get()
                 .defaultBlockState()
-                .setValue(FlareLightBlock.COLOR, stack.getOrDefault(DataComponentsAS.COLOR, DEFAULT_COLOR).reference().asDyeColor().orElse(DyeColor.YELLOW));
+                .setValue(FlareLightBlock.COLOR, DataComponentsAS.COLOR.getOrDefault(stack, DEFAULT_COLOR).reference().asDyeColor().orElse(DyeColor.YELLOW));
         BlockPos placePos = pos;
         if (!BlockUtil.isReplaceable(sLevel, placePos)) {
             placePos = placePos.relative(dir);
@@ -118,7 +118,7 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
                 //TODO lumen cost
                 MiscUtil.getTileAt(sLevel, pos, TileTranslucentBlock.class, true).ifPresent(tile -> {
                     tile.getTileData().setStoredState(state);
-                    tile.getTileData().setDyeColor(stack.getOrDefault(DataComponentsAS.COLOR, DEFAULT_COLOR).reference().asDyeColor().orElse(DyeColor.YELLOW));
+                    tile.getTileData().setDyeColor(DataComponentsAS.COLOR.getOrDefault(stack, DEFAULT_COLOR).reference().asDyeColor().orElse(DyeColor.YELLOW));
                     tile.getTileData().setOwnerId(sPlayer.getUUID());
 
                     tile.getTileData().markForUpdate();
@@ -135,7 +135,7 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
     public int getColor(ItemStack stack, long tick, int tintIndex) {
         if (tintIndex != 1) return 0xFFFFFFFF;
 
-        ColorComponent cmp = stack.getOrDefault(DataComponentsAS.COLOR, DEFAULT_COLOR);
+        ColorComponent cmp = DataComponentsAS.COLOR.getOrDefault(stack, DEFAULT_COLOR);
         return cmp.reference().color() | 0xFF000000;
     }
 }

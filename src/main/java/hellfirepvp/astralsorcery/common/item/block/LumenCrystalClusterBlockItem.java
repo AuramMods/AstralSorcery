@@ -33,8 +33,8 @@ import java.util.function.Consumer;
 public class LumenCrystalClusterBlockItem extends BlockItemCustom implements ItemDynamicColor {
 
     public LumenCrystalClusterBlockItem(Block block) {
-        super(block, new Properties()
-                .component(DataComponentsAS.LUMEN, LumenComponent.EMPTY));
+        super(block, new Properties());
+        DataComponentsAS.LUMEN.setDefault(this, LumenComponent.EMPTY);
     }
 
     @Override
@@ -61,14 +61,14 @@ public class LumenCrystalClusterBlockItem extends BlockItemCustom implements Ite
     public static ItemStack getCluster(Holder<Lumen> lumen, int stage) {
         ItemStack stack = ItemsAS.BLOCK_LUMEN_CRYSTAL_CLUSTER.toStack();
         setStage(stack, stage);
-        stack.set(DataComponentsAS.LUMEN, new LumenComponent(lumen));
+        DataComponentsAS.LUMEN.set(stack, new LumenComponent(lumen));
         return stack;
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        if (stack.has(DataComponentsAS.LUMEN)) {
-            Lumen lumen = stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen().value();
+        if (DataComponentsAS.LUMEN.has(stack)) {
+            Lumen lumen = DataComponentsAS.LUMEN.getOrDefault(stack, LumenComponent.EMPTY).lumen().value();
             if (lumen != LumenAS.NONE.get()) {
                 Component lumenName = lumen.getName();
                 return Component.translatable("block.astralsorcery.lumen_crystal_cluster.typed", lumenName);
@@ -98,8 +98,8 @@ public class LumenCrystalClusterBlockItem extends BlockItemCustom implements Ite
     @Override
     public int getColor(ItemStack stack, long tick, int tintIndex) {
         //tintIndex == 1 &&
-        if (stack.has(DataComponentsAS.LUMEN)) {
-            return stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen().value().getColor(tick).getColor();
+        if (DataComponentsAS.LUMEN.has(stack)) {
+            return DataComponentsAS.LUMEN.getOrDefault(stack, LumenComponent.EMPTY).lumen().value().getColor(tick).getColor();
         }
         return 0xFFFFFF;
     }

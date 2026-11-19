@@ -74,7 +74,7 @@ public class CelestialGatewayBlock extends BaseTickTileBlock<TileCelestialGatewa
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        ColorComponent cmp = stack.get(DataComponentsAS.COLOR);
+        ColorComponent cmp = DataComponentsAS.COLOR.get(stack);
         if (cmp != null) {
             cmp.reference().asDyeColor().ifPresent(dyeColor -> {
                 tooltipComponents.add(ColorUtil.getColorName(dyeColor).withColor(dyeColor.getTextColor()));
@@ -90,7 +90,7 @@ public class CelestialGatewayBlock extends BaseTickTileBlock<TileCelestialGatewa
                 stack.set(DataComponents.CUSTOM_NAME, gateway.getCustomName());
             }
             if (gateway.getTileData().getColor() != null) {
-                stack.set(DataComponentsAS.COLOR, new ColorComponent(ColorReference.Dye.of(gateway.getTileData().getColor())));
+                DataComponentsAS.COLOR.set(stack, new ColorComponent(ColorReference.Dye.of(gateway.getTileData().getColor())));
             }
         });
         return stack;
@@ -106,7 +106,7 @@ public class CelestialGatewayBlock extends BaseTickTileBlock<TileCelestialGatewa
                 if (customName != null) {
                     tile.getTileData().setCustomName(customName);
                 }
-                Optional.ofNullable(stack.get(DataComponentsAS.COLOR))
+                Optional.ofNullable(DataComponentsAS.COLOR.get(stack))
                         .flatMap(cmp -> cmp.reference().asDyeColor())
                         .ifPresent(dyeColor -> tile.getTileData().setColor(dyeColor));
                 tile.getTileData().markForUpdate();

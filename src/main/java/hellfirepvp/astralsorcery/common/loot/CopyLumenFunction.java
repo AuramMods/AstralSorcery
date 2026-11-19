@@ -56,7 +56,7 @@ public class CopyLumenFunction extends LootItemConditionalFunction {
                     Holder<Lumen> lumenRef = RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(lumenContainer.getLumen())
                             .flatMap(RegistriesAS.REGISTRY_LUMEN.get()::getHolder).orElse(null);
                     if (lumenRef != null && !lumenRef.is(LumenAS.NONE.getKey())) {
-                        stack.set(DataComponentsAS.LUMEN, new LumenComponent(lumenRef));
+                        DataComponentsAS.LUMEN.set(stack, new LumenComponent(lumenRef));
                     }
                 }
             }

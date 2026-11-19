@@ -14,14 +14,13 @@ import hellfirepvp.astralsorcery.common.enchantment.EnchantmentAmuletGenerator;
 import hellfirepvp.astralsorcery.common.enchantment.EnchantmentModifier;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
+import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +43,13 @@ public class AltarOutputAddEnchantmentModifier extends AltarRecipeOutputModifier
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-        EnchantmentModifierComponent comp = output.get(DataComponentsAS.ENCHANTMENT_MODIFIERS);
+        EnchantmentModifierComponent comp = DataComponentsAS.ENCHANTMENT_MODIFIERS.get(output);
         if (comp != null) {
             List<EnchantmentModifier> modifiers = new ArrayList<>(comp.modifiers());
             EnchantmentModifier newMod = EnchantmentAmuletGenerator.generateAnyModifier(registries);
             if (newMod != null) {
                 modifiers.add(newMod);
-                output.set(DataComponentsAS.ENCHANTMENT_MODIFIERS, new EnchantmentModifierComponent(modifiers));
+                DataComponentsAS.ENCHANTMENT_MODIFIERS.set(output, new EnchantmentModifierComponent(modifiers));
             }
         }
         return output;
@@ -58,9 +57,7 @@ public class AltarOutputAddEnchantmentModifier extends AltarRecipeOutputModifier
 
     @Override
     public ItemStack modifyOutputForDisplay(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries, long tick) {
-        ItemLore lore = output.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
-        lore = lore.withLineAdded(Component.translatable("recipe.astralsorcery.result.add_enchantment_modifier").withStyle(ChatFormatting.GRAY));
-        output.set(DataComponents.LORE, lore);
+        ItemUtil.appendLore(output, Component.translatable("recipe.astralsorcery.result.add_enchantment_modifier").withStyle(ChatFormatting.GRAY));
         return output;
     }
 

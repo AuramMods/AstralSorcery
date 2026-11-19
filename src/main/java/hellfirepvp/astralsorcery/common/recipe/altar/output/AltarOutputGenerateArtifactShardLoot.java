@@ -15,15 +15,14 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.util.LootUtil;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
+import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 
 import java.util.List;
 
@@ -62,21 +61,19 @@ public class AltarOutputGenerateArtifactShardLoot extends AltarRecipeOutputModif
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
         if (input.getAltar().getLevel() instanceof ServerLevel sLevel) {
-            StoredItemsComponent cmp = output.getOrDefault(DataComponentsAS.STORED_ITEMS, StoredItemsComponent.EMPTY);
+            StoredItemsComponent cmp = DataComponentsAS.STORED_ITEMS.getOrDefault(output, StoredItemsComponent.EMPTY);
             List<ItemStack> generatedLoot = LootUtil.generateArtifactLoot(sLevel, this.countRange, sLevel.getRandom());
             for (ItemStack generated : generatedLoot) {
                 cmp = cmp.accept(generated);
             }
-            output.set(DataComponentsAS.STORED_ITEMS, cmp);
+            DataComponentsAS.STORED_ITEMS.set(output, cmp);
         }
         return output;
     }
 
     @Override
     public ItemStack modifyOutputForDisplay(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries, long tick) {
-        ItemLore lore = output.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
-        lore = lore.withLineAdded(Component.translatable("recipe.astralsorcery.result.generate_artifact_shard_loot").withStyle(ChatFormatting.GRAY));
-        output.set(DataComponents.LORE, lore);
+        ItemUtil.appendLore(output, Component.translatable("recipe.astralsorcery.result.generate_artifact_shard_loot").withStyle(ChatFormatting.GRAY));
         return output;
     }
 

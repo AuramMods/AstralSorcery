@@ -115,9 +115,9 @@ public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystal
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (stack.has(DataComponentsAS.LUMEN)) {
+        if (DataComponentsAS.LUMEN.has(stack)) {
             MiscUtil.getTileAt(level, pos, TileLumenCrystalCluster.class, true).ifPresent(cluster -> {
-                Lumen lumen = stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen().value();
+                Lumen lumen = DataComponentsAS.LUMEN.getOrDefault(stack, LumenComponent.EMPTY).lumen().value();
                 cluster.getTileData().setLumen(lumen);
                 cluster.getTileData().markForUpdate();
             });
@@ -130,7 +130,7 @@ public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystal
         LumenCrystalClusterBlockItem.setStage(stack, state.getValue(STAGE));
         MiscUtil.getTileAt(level, pos, TileLumenCrystalCluster.class, true).ifPresent(cluster -> {
             LumenComponent.of(cluster.getTileData().getLumen()).ifPresent(lumenCmp -> {
-                stack.set(DataComponentsAS.LUMEN, lumenCmp);
+                DataComponentsAS.LUMEN.set(stack, lumenCmp);
             });
         });
         return stack;

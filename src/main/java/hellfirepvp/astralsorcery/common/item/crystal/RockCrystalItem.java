@@ -41,15 +41,16 @@ public class RockCrystalItem extends ItemCustom implements AttuneableItem {
     }
 
     protected RockCrystalItem(CrystalAttributesComponent emptyComponent) {
-        super(new Properties().stacksTo(1).component(DataComponentsAS.CRYSTAL_ATTRIBUTES, emptyComponent));
+        super(new Properties().stacksTo(1));
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.setDefault(this, emptyComponent);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!level.isClientSide()) {
-            CrystalAttributesComponent cmp = stack.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+            CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(stack, CrystalAttributesComponent.defaultEmpty());
             if (cmp.isEmpty()) {
-                stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalPropertyGenerator.generateRandomProperties(cmp));
+                DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, CrystalPropertyGenerator.generateRandomProperties(cmp));
             }
         }
     }

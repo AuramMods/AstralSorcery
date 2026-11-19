@@ -54,7 +54,7 @@ public class ArtifactShardItem extends ItemCustom {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (level instanceof ServerLevel) {
-            if (!stack.has(DataComponentsAS.ARTIFACT_TYPE)) {
+            if (!DataComponentsAS.ARTIFACT_TYPE.has(stack)) {
                 stack.shrink(stack.getCount());
             }
         }
@@ -62,14 +62,14 @@ public class ArtifactShardItem extends ItemCustom {
 
     public static ItemStack createShard(ArtifactType type) {
         ItemStack stack = ItemsAS.ARTIFACT_SHARD.toStack();
-        stack.set(DataComponentsAS.ARTIFACT_TYPE, new ArtifactTypeComponent(type));
+        DataComponentsAS.ARTIFACT_TYPE.set(stack, new ArtifactTypeComponent(type));
         return stack;
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        if (stack.has(DataComponentsAS.ARTIFACT_TYPE)) {
-            ArtifactType type = stack.get(DataComponentsAS.ARTIFACT_TYPE).type();
+        if (DataComponentsAS.ARTIFACT_TYPE.has(stack)) {
+            ArtifactType type = DataComponentsAS.ARTIFACT_TYPE.get(stack).type();
             return Component.translatable("item.astralsorcery.artifact_shard.format", type.getName());
         }
         return super.getName(stack);

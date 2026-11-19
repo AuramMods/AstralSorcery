@@ -475,14 +475,13 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
         }
 
         public Optional<BaseConstellation> getFocusedConstellation() {
-            return this.getFocusItem()
-                    .getOrDefault(DataComponentsAS.ATTUNED_CONSTELLATION, AttunedConstellationComponent.EMPTY)
+            return DataComponentsAS.ATTUNED_CONSTELLATION.getOrDefault(this.getFocusItem(), AttunedConstellationComponent.EMPTY)
                     .getConstellation();
         }
 
         public boolean canSetFocusItem(ItemStack stack) {
             return stack.is(TagsAS.Items.FUNCTIONAL_ALTAR_CONSTELLATION_ITEM) &&
-                    stack.getOrDefault(DataComponentsAS.ATTUNED_CONSTELLATION, AttunedConstellationComponent.EMPTY).getConstellation().isPresent();
+                    DataComponentsAS.ATTUNED_CONSTELLATION.getOrDefault(stack, AttunedConstellationComponent.EMPTY).getConstellation().isPresent();
         }
 
         public AltarType getAltarType() {

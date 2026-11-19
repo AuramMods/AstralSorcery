@@ -13,12 +13,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import hellfirepvp.astralsorcery.common.component.StackDataType;
+import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
@@ -26,9 +24,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -43,7 +38,7 @@ public class AltarOutputCopyDataComponents extends AltarOutputReplaceWithInput {
             StringRepresentable.fromEnum(AltarOutputReplaceWithInput.SlotType::values).fieldOf("slot_type").forGetter(AltarOutputCopyDataComponents::getSlotType),
             Codec.intRange(0, 25).fieldOf("input_slot").forGetter(AltarOutputCopyDataComponents::getInputSlot),
             Codec.BOOL.fieldOf("copy_all").forGetter(AltarOutputCopyDataComponents::isCopyAll),
-            BuiltInRegistries.DATA_COMPONENT_TYPE.byNameCodec().listOf().fieldOf("components_to_copy").forGetter(AltarOutputCopyDataComponents::getComponentsToCopy)
+            DataComponentsAS.TYPE_CODEC.listOf().fieldOf("components_to_copy").forGetter(AltarOutputCopyDataComponents::getComponentsToCopy)
     ).apply(inst, AltarOutputCopyDataComponents::new));
     public static final StreamCodec<FriendlyByteBuf, AltarOutputCopyDataComponents> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(AltarOutputReplaceWithInput.SlotType.class),
@@ -52,25 +47,21 @@ public class AltarOutputCopyDataComponents extends AltarOutputReplaceWithInput {
             AltarOutputCopyDataComponents::getInputSlot,
             ByteBufCodecs.BOOL,
             AltarOutputCopyDataComponents::isCopyAll,
-            ByteBufCodecs.registry(Registries.DATA_COMPONENT_TYPE).apply(ByteBufCodecs.list()),
+            DataComponentsAS.TYPE_STREAM_CODEC.apply(ByteBufCodecs.list()),
             AltarOutputCopyDataComponents::getComponentsToCopy,
             AltarOutputCopyDataComponents::new);
     public static final Type<AltarOutputCopyDataComponents> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
     private final boolean copyAll;
-    private final List<DataComponentType<?>> componentsToCopy;
+    private final List<StackDataType<?>> componentsToCopy;
 
-    private AltarOutputCopyDataComponents(AltarOutputReplaceWithInput.SlotType slotType, int inputSlot, boolean copyAll, List<DataComponentType<?>> componentsToCopy) {
+    private AltarOutputCopyDataComponents(AltarOutputReplaceWithInput.SlotType slotType, int inputSlot, boolean copyAll, List<StackDataType<?>> componentsToCopy) {
         super(slotType, inputSlot);
         this.copyAll = copyAll;
         this.componentsToCopy = componentsToCopy;
     }
 
-    public static AltarOutputCopyDataComponents of(SlotType slotType, int inputSlot, Supplier<? extends DataComponentType<?>>... types) {
-        return of(slotType, inputSlot, Stream.of(types).map(Supplier::get).toArray(DataComponentType[]::new));
-    }
-
-    public static AltarOutputCopyDataComponents of(SlotType slotType, int inputSlot, DataComponentType<?>... types) {
+    public static AltarOutputCopyDataComponents of(SlotType slotType, int inputSlot, StackDataType<?>... types) {
         return new AltarOutputCopyDataComponents(slotType, inputSlot, false, List.of(types));
     }
 
@@ -82,23 +73,20 @@ public class AltarOutputCopyDataComponents extends AltarOutputReplaceWithInput {
         return this.copyAll;
     }
 
-    public List<DataComponentType<?>> getComponentsToCopy() {
+    public List<StackDataType<?>> getComponentsToCopy() {
         return this.componentsToCopy;
     }
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
         ItemStack source = super.modifyOutput(output, input, registries);
-        if (this.isCopyAll()) {
-            source.getComponents().forEach(typedComponent -> {
-                output.set(typedComponent.type(), MiscUtil.cast(typedComponent.value()));
-            });
-        } else {
-            this.getComponentsToCopy().forEach(type -> {
-                if (source.has(type)) {
-                    output.set(type, MiscUtil.cast(source.get(type)));
-                }
-            });
+        if (!source.isEmpty()) {
+            if (this.isCopyAll()) {
+                StackDataType.copyOtherTags(source, output);
+                DataComponentsAS.values().forEach(type -> type.copy(source, output));
+            } else {
+                this.componentsToCopy.forEach(type -> type.copy(source, output));
+            }
         }
         CrystalToolItem.updateModifiers(output);
         return output;

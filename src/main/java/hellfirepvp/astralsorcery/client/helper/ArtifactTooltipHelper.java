@@ -41,8 +41,8 @@ public class ArtifactTooltipHelper {
     private static void onTooltipGather(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
         Rarity rarity = stack.getRarity();
-        if (rarity == EnumExtensions.RARITY_ARTIFACT.getValue() && stack.has(DataComponentsAS.IDENTIFIER)) {
-            IdentifierComponent idCmp = stack.getOrDefault(DataComponentsAS.IDENTIFIER, IdentifierComponent.NONE);
+        if (rarity == EnumExtensions.RARITY_ARTIFACT && DataComponentsAS.IDENTIFIER.has(stack)) {
+            IdentifierComponent idCmp = DataComponentsAS.IDENTIFIER.getOrDefault(stack, IdentifierComponent.NONE);
             if (idCmp.id().equals(Util.NIL_UUID)) return;
 
             String nameStr = stack.getHoverName().getString();

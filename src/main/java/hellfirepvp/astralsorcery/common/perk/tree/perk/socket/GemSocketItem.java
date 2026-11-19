@@ -79,7 +79,7 @@ public interface GemSocketItem {
      * @return the list of modifiers
      */
     default <T extends GemSocketPerk> List<DynamicAttributeModifier> getModifiers(ItemStack stack, T perk, Player player, LogicalSide side) {
-        return stack.getOrDefault(DataComponentsAS.DYNAMIC_MODIFIERS, DynamicModifiersComponent.EMPTY).modifiers();
+        return DataComponentsAS.DYNAMIC_MODIFIERS.getOrDefault(stack, DynamicModifiersComponent.EMPTY).modifiers();
     }
 
     /**

@@ -103,7 +103,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
     @Override
     public void createOutput(LiquidStarlightRecipe recipe, LiquidStarlightRecipeInput input) {
         ItemStack crystal = input.getTriggerEntity().getItem().copyWithCount(1);
-        CrystalAttributesComponent cmp = crystal.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(crystal, CrystalAttributesComponent.defaultEmpty());
 
         if (cmp.getTotalTierCount() >= cmp.getProperties().maxTierCount()) return;
 
@@ -119,7 +119,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
                         CrystalPropertyEvent.Change.Type.ENGRAVE_PROPERTY, prev, cmp);
                 MinecraftForge.EVENT_BUS.post(engraved);
 
-                crystal.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, engraved.getResultComponent());
+                DataComponentsAS.CRYSTAL_ATTRIBUTES.set(crystal, engraved.getResultComponent());
                 CrystalToolItem.updateModifiers(crystal);
             }
         }
@@ -136,7 +136,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
 
         Holder<Lumen> lumenRef = LumenAS.NONE;
         for (ItemEntity other : input.getOtherEntities()) {
-            Holder<Lumen> otherRef = other.getItem().getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen();
+            Holder<Lumen> otherRef = DataComponentsAS.LUMEN.getOrDefault(other.getItem(), LumenComponent.EMPTY).lumen();
             if (!otherRef.is(LumenAS.NONE.getKey())) {
                 lumenRef = otherRef;
                 break;

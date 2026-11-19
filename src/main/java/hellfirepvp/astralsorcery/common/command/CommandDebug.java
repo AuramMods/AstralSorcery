@@ -106,17 +106,17 @@ public class CommandDebug {
                     new StoredLumenComponent.StoredLumen(LumenAS.VICIO.get(), 200, 1000)
                     //new StoredLumenComponent.StoredLumen(LumenAS.LUMEN_PRIMAL.get(), 0, 1000)
             ));
-            held.set(DataComponentsAS.STORED_LUMEN, lumenCmp);
+            DataComponentsAS.STORED_LUMEN.set(held, lumenCmp);
             IdentifierComponent.createIdentifierIfNotExists(held);*/
 
-            //held.set(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY
+            //DataComponentsAS.STORED_LUMEN.set(held, StoredLumenComponent.EMPTY
             //        .updateLumenStack(LumenAS.AEVITAS.get(), StoredLumenComponent.DEFAULT_CAPACITY, StoredLumenComponent.DEFAULT_CAPACITY));
             //LumenBindingType.applyBinding(LumenAS.AEVITAS.get(), LumenAS.AEVITAS.getId(), held);
 
             //DynamicModifiersComponent cmp = DynamicModifiersComponent.EMPTY;
             //cmp = cmp.add(new DynamicAttributeModifier("testing5t",
             //        PerksAS.AttributeTypes.BLOCK_BREAK_SPEED.get(), ModifierType.STACKING_MULTIPLY, 6F));
-            //held.set(DataComponentsAS.DYNAMIC_MODIFIERS, cmp);
+            //DataComponentsAS.DYNAMIC_MODIFIERS.set(held, cmp);
             //IdentifierComponent.createIdentifierIfNotExists(held);
         }
         return Command.SINGLE_SUCCESS;

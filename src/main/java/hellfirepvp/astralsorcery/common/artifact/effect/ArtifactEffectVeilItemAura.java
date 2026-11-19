@@ -154,7 +154,7 @@ public class ArtifactEffectVeilItemAura extends ArtifactEffect implements Contin
             } while (appearance.isEmpty() || ItemStack.isSameItem(appearance, held));
         }
 
-        held.set(DataComponentsAS.VEILED, VeiledItemStackComponent.timeout(appearance, sLevel, this.getDuration(), false));
+        DataComponentsAS.VEILED.set(held, VeiledItemStackComponent.timeout(appearance, sLevel, this.getDuration(), false));
     }
 
     public static class Builder {

@@ -13,7 +13,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentType;
+import hellfirepvp.astralsorcery.common.component.StackDataType;
+import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
@@ -29,39 +30,37 @@ import net.minecraft.world.item.ItemStack;
 public class AltarOutputSetDataComponent<T> extends AltarRecipeOutputModifier {
 
     public static final MapCodec<AltarOutputSetDataComponent<?>> CODEC =
-            DataComponentType.CODEC.dispatchMap("component_type", AltarOutputSetDataComponent::getComponentType, AltarOutputSetDataComponent::makeCodec);
+            DataComponentsAS.TYPE_CODEC.dispatchMap("component_type", AltarOutputSetDataComponent::getComponentType, type -> makeCodec(type).codec());
     public static final StreamCodec<FriendlyByteBuf, AltarOutputSetDataComponent<?>> STREAM_CODEC =
-            DataComponentType.STREAM_CODEC.dispatch(AltarOutputSetDataComponent::getComponentType, AltarOutputSetDataComponent::makeStreamCodec);
+            DataComponentsAS.TYPE_STREAM_CODEC.dispatch(AltarOutputSetDataComponent::getComponentType, AltarOutputSetDataComponent::makeStreamCodec);
     public static final Type<AltarOutputSetDataComponent<?>> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
-    private static MapCodec<AltarOutputSetDataComponent<?>> makeCodec(DataComponentType<?> type) {
+    private static MapCodec<AltarOutputSetDataComponent<?>> makeCodec(StackDataType<?> type) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                type.codecOrThrow().fieldOf("value").forGetter(cmp -> MiscUtil.cast(cmp.getValue()))
+                type.codec().fieldOf("value").forGetter(cmp -> MiscUtil.cast(cmp.getValue()))
         ).apply(instance, value -> new AltarOutputSetDataComponent<>(type, MiscUtil.cast(value))));
     }
 
-    private static StreamCodec<FriendlyByteBuf, AltarOutputSetDataComponent<?>> makeStreamCodec(DataComponentType<?> type) {
+    private static StreamCodec<FriendlyByteBuf, AltarOutputSetDataComponent<?>> makeStreamCodec(StackDataType<?> type) {
         return StreamCodec.composite(
-                DataComponentType.STREAM_CODEC,
-                AltarOutputSetDataComponent::getComponentType,
-                ByteBufCodecs.fromCodecWithRegistries(type.codecOrThrow()),
+                ByteBufCodecs.fromCodecWithRegistries(type.codec()),
                 cmp -> MiscUtil.cast(cmp.getValue()),
-                (cmp, val) -> new AltarOutputSetDataComponent<>(type, MiscUtil.cast(val)));
+                val -> new AltarOutputSetDataComponent<>(type, MiscUtil.cast(val)));
     }
 
-    private final DataComponentType<T> componentType;
+    private final StackDataType<T> componentType;
     private final T value;
 
-    private AltarOutputSetDataComponent(DataComponentType<T> componentType, T value) {
+    private AltarOutputSetDataComponent(StackDataType<T> componentType, T value) {
         this.componentType = componentType;
         this.value = value;
     }
 
-    public static <T> AltarOutputSetDataComponent<T> of(DataComponentType<T> componentType, T value) {
+    public static <T> AltarOutputSetDataComponent<T> of(StackDataType<T> componentType, T value) {
         return new AltarOutputSetDataComponent<>(componentType, value);
     }
 
-    public DataComponentType<T> getComponentType() {
+    public StackDataType<T> getComponentType() {
         return this.componentType;
     }
 
@@ -71,7 +70,7 @@ public class AltarOutputSetDataComponent<T> extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-        output.set(this.componentType, this.value);
+        this.componentType.set(output, this.value);
         return output;
     }
 

@@ -61,10 +61,10 @@ public class BlinkWandItem extends ItemCustom {
 
     public BlinkWandItem() {
         super(new Properties()
-                .component(DataComponentsAS.MODE, IntegerModeComponent.ZERO)
-                .component(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY
-                        .updateProperties(properties -> properties.allowFill().allowAccept(LumenAS.VICIO)))
                 .stacksTo(1));
+        DataComponentsAS.MODE.setDefault(this, IntegerModeComponent.ZERO);
+        DataComponentsAS.STORED_LUMEN.setDefault(this, StoredLumenComponent.EMPTY
+                        .updateProperties(properties -> properties.allowFill().allowAccept(LumenAS.VICIO)));
     }
 
     @Override
@@ -217,11 +217,11 @@ public class BlinkWandItem extends ItemCustom {
     }
 
     public static BlinkMode getBlinkMode(ItemStack stack) {
-        return stack.getOrDefault(DataComponentsAS.MODE, IntegerModeComponent.ZERO).getMode(BlinkMode.class);
+        return DataComponentsAS.MODE.getOrDefault(stack, IntegerModeComponent.ZERO).getMode(BlinkMode.class);
     }
 
     public static void setBlinkMode(ItemStack stack, BlinkMode mode) {
-        stack.set(DataComponentsAS.MODE, new IntegerModeComponent(mode.ordinal()));
+        DataComponentsAS.MODE.set(stack, new IntegerModeComponent(mode.ordinal()));
     }
 
     public enum BlinkMode {

@@ -71,7 +71,7 @@ public class LiquidStarlightOutputFillLumen extends LiquidStarlightRecipeOutputM
 
     @Override
     public boolean isValidInputForOutput(LiquidStarlightRecipeInput input, List<ItemEntity> otherValidInputs) {
-        Holder<Lumen> lumenRef = input.getTriggerEntity().getItem().getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen();
+        Holder<Lumen> lumenRef = DataComponentsAS.LUMEN.getOrDefault(input.getTriggerEntity().getItem(), LumenComponent.EMPTY).lumen();
         if (lumenRef.is(LumenAS.NONE.getKey())) return false;
         return !this.findStorageItemStack(otherValidInputs, lumenRef.value()).isEmpty();
     }
@@ -81,7 +81,7 @@ public class LiquidStarlightOutputFillLumen extends LiquidStarlightRecipeOutputM
         ItemEntity inputEntity = input.getTriggerEntity();
         Level level = inputEntity.level();
 
-        Holder<Lumen> lumenRef = inputEntity.getItem().getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen();
+        Holder<Lumen> lumenRef = DataComponentsAS.LUMEN.getOrDefault(inputEntity.getItem(), LumenComponent.EMPTY).lumen();
         if (lumenRef.is(LumenAS.NONE.getKey())) return;
         Lumen lumen = lumenRef.value();
 
@@ -89,11 +89,11 @@ public class LiquidStarlightOutputFillLumen extends LiquidStarlightRecipeOutputM
         if (storeOutput.isEmpty()) return;
 
         ItemStack output = storeOutput.copyWithCount(1);
-        StoredLumenComponent cmp = output.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        StoredLumenComponent cmp = DataComponentsAS.STORED_LUMEN.getOrDefault(output, StoredLumenComponent.EMPTY);
         int storeMaxAmount = cmp.getStoredLumen(lumen).map(StoredLumenComponent.StoredLumen::maxAmount).orElse(cmp.properties().capacity());
         int storedAmount = cmp.getStoredLumen(lumen).map(StoredLumenComponent.StoredLumen::amount).orElse(0);
         cmp = cmp.updateLumenStack(lumen, Math.min(storedAmount + StoredLumenComponent.DEFAULT_CAPACITY, storeMaxAmount), storeMaxAmount);
-        output.set(DataComponentsAS.STORED_LUMEN, cmp);
+        DataComponentsAS.STORED_LUMEN.set(output, cmp);
         IdentifierComponent.createIdentifierIfNotExists(output);
 
         ItemUtil.dropItem(level, inputEntity.getX(), inputEntity.getY(), inputEntity.getZ(), output);
@@ -104,7 +104,7 @@ public class LiquidStarlightOutputFillLumen extends LiquidStarlightRecipeOutputM
         return inputs.stream()
                 .map(ItemEntity::getItem)
                 .filter(stack -> {
-                    StoredLumenComponent cmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+                    StoredLumenComponent cmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
                     return cmp.canStoreFromExistingLumen(storeType);
                 })
                 .findFirst()
@@ -117,7 +117,7 @@ public class LiquidStarlightOutputFillLumen extends LiquidStarlightRecipeOutputM
         super.playCraftingEffects(recipe, input, rand, craftingTick);
 
         ItemEntity inputEntity = input.getTriggerEntity();
-        Holder<Lumen> lumenRef = inputEntity.getItem().getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen();
+        Holder<Lumen> lumenRef = DataComponentsAS.LUMEN.getOrDefault(inputEntity.getItem(), LumenComponent.EMPTY).lumen();
         if (lumenRef.is(LumenAS.NONE.getKey())) return;
         Lumen lumen = lumenRef.value();
 

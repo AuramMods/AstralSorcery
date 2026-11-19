@@ -12,9 +12,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
+import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
@@ -22,7 +22,6 @@ import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 /**
@@ -82,9 +81,7 @@ public class AltarOutputIncreaseEnchantments extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutputForDisplay(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries, long tick) {
-        ItemLore lore = output.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
-        lore = lore.withLineAdded(Component.translatable("recipe.astralsorcery.result.increase_enchantment").withStyle(ChatFormatting.GRAY));
-        output.set(DataComponents.LORE, lore);
+        ItemUtil.appendLore(output, Component.translatable("recipe.astralsorcery.result.increase_enchantment").withStyle(ChatFormatting.GRAY));
         return output;
     }
 

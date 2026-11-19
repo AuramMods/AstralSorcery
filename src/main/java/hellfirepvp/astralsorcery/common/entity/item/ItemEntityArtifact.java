@@ -138,12 +138,12 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
     }
 
     public Optional<ArtifactComponent> getArtifactComponent() {
-        return Optional.ofNullable(this.getItem().get(DataComponentsAS.ARTIFACT));
+        return Optional.ofNullable(DataComponentsAS.ARTIFACT.get(this.getItem()));
     }
 
     public void setArtifactComponent(ArtifactComponent component) {
         ItemStack stack = this.getItem().copy();
-        stack.set(DataComponentsAS.ARTIFACT, component);
+        DataComponentsAS.ARTIFACT.set(stack, component);
         this.setItem(stack);
     }
 

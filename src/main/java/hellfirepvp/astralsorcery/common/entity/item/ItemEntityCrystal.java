@@ -69,7 +69,7 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
         if (!(crystalStack.getItem() instanceof RockCrystalItem thisItem)) {
             return;
         }
-        CrystalAttributesComponent thisAttributes = crystalStack.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent thisAttributes = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(crystalStack, CrystalAttributesComponent.defaultEmpty());
         if (thisAttributes.isEmpty()) {
             return;
         }
@@ -137,12 +137,12 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
         thisAttributes = results.getFirst();
 
         ItemStack thisStack = this.getItem();
-        thisStack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, thisAttributes);
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.set(thisStack, thisAttributes);
 
         List<CrystalAttributesComponent> otherComponents = results.subList(1, results.size());
         for (CrystalAttributesComponent other : otherComponents) {
             ItemStack otherStack = splitCrystal.copy();
-            otherStack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, other);
+            DataComponentsAS.CRYSTAL_ATTRIBUTES.set(otherStack, other);
             ItemUtil.dropItemNaturally(this.level(), this.getX(), this.getY() + 0.25F, this.getZ(), otherStack);
         }
         return true;

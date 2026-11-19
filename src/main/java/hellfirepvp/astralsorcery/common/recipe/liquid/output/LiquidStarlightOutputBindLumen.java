@@ -98,7 +98,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
                 .orElse(ItemStack.EMPTY);
         if (bindableInput.isEmpty()) return;
 
-        Holder<Lumen> lumenRef = inputEntity.getItem().getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen();
+        Holder<Lumen> lumenRef = DataComponentsAS.LUMEN.getOrDefault(inputEntity.getItem(), LumenComponent.EMPTY).lumen();
         if (lumenRef.is(LumenAS.NONE.getKey())) return;
         Lumen lumen = lumenRef.value();
 
@@ -107,7 +107,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
 
             if (IsLumenBindableIngredient.INSTANCE.isPotionLumenBindable(output)) {
                 if (lumenRef.is(LumenAS.PRISMATIC.getKey())) {
-                    FlagsComponent cmp = output.getOrDefault(DataComponentsAS.FLAGS, FlagsComponent.EMPTY);
+                    FlagsComponent cmp = DataComponentsAS.FLAGS.getOrDefault(output, FlagsComponent.EMPTY);
                     if (!cmp.isSet(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN)) {
 
                         PotionContents contents = output.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
@@ -120,8 +120,8 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
                         output.set(DataComponents.POTION_CONTENTS, newContents);
 
                         cmp = cmp.setFlag(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN);
-                        output.set(DataComponentsAS.FLAGS, cmp);
-                        output.set(DataComponents.RARITY, EnumExtensions.RARITY_RELIC.getValue());
+                        DataComponentsAS.FLAGS.set(output, cmp);
+                        DataComponentsAS.RARITY.set(output, EnumExtensions.RARITY_RELIC);
                     }
                 } else {
                     LumenBindingTypeLoader.getInstance().getBindingType(side, bindingKey).ifPresent(bindingType -> {
@@ -130,7 +130,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
                             contents = new PotionContents(Optional.empty(), contents.customColor(), contents.customEffects());
                             contents = contents.withEffectAdded(effect);
                             output.set(DataComponents.POTION_CONTENTS, contents);
-                            output.set(DataComponents.RARITY, EnumExtensions.RARITY_RELIC.getValue());
+                            DataComponentsAS.RARITY.set(output, EnumExtensions.RARITY_RELIC);
 
                             ItemUtil.dropItem(level, inputEntity.getX(), inputEntity.getY(), inputEntity.getZ(), output);
                             recipe.consumeItemInputs(input);
@@ -140,7 +140,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
                 return;
             }
 
-            StoredLumenComponent cmp = output.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+            StoredLumenComponent cmp = DataComponentsAS.STORED_LUMEN.getOrDefault(output, StoredLumenComponent.EMPTY);
             int storeMaxAmount = cmp.getStoredLumen(lumen).map(StoredLumenComponent.StoredLumen::maxAmount).orElse(cmp.properties().capacity());
             int storedAmount = cmp.getStoredLumen(lumen).map(StoredLumenComponent.StoredLumen::amount).orElse(0);
 
@@ -156,7 +156,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
 
             cmp = cmp.updateLumenStack(lumen, Math.min(storedAmount + StoredLumenComponent.DEFAULT_CAPACITY, storeMaxAmount), storeMaxAmount);
             cmp = cmp.updateProperties(StoredLumenComponent.Properties::allowFill);
-            output.set(DataComponentsAS.STORED_LUMEN, cmp);
+            DataComponentsAS.STORED_LUMEN.set(output, cmp);
             LumenBindingType.applyBinding(lumen, bindingKey, output);
 
             ItemUtil.dropItemNaturally(level, inputEntity.getX(), inputEntity.getY(), inputEntity.getZ(), output);
@@ -170,7 +170,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
         super.playCraftingEffects(recipe, input, rand, craftingTick);
 
         ItemEntity inputEntity = input.getTriggerEntity();
-        Holder<Lumen> lumenRef = inputEntity.getItem().getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen();
+        Holder<Lumen> lumenRef = DataComponentsAS.LUMEN.getOrDefault(inputEntity.getItem(), LumenComponent.EMPTY).lumen();
         if (lumenRef.is(LumenAS.NONE.getKey())) return;
         Lumen lumen = lumenRef.value();
 

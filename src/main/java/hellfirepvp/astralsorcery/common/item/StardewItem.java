@@ -11,11 +11,11 @@ package hellfirepvp.astralsorcery.common.item;
 import hellfirepvp.astralsorcery.common.item.base.CauldronInteractableItem;
 import hellfirepvp.astralsorcery.common.item.base.CreativeTabItem;
 import hellfirepvp.astralsorcery.common.item.base.ItemDynamicColor;
+import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -100,7 +100,7 @@ public class StardewItem extends PotionItem implements ItemDynamicColor, Creativ
 
         if (stack.getDamageValue() >= stack.getMaxDamage()) {
             stack.remove(DataComponents.POTION_CONTENTS);
-            stack.set(DataComponents.RARITY, ItemsAS.STARDEW.asItem().getDefaultInstance().getRarity());
+            DataComponentsAS.RARITY.set(stack, ItemsAS.STARDEW.asItem().getDefaultInstance().getRarity());
         }
 
         entity.gameEvent(GameEvent.DRINK);

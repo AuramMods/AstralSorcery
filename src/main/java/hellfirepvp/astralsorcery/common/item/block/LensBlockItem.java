@@ -27,14 +27,14 @@ import java.util.function.Consumer;
 public class LensBlockItem extends BlockItemCustom {
 
     public LensBlockItem(Block block) {
-        super(block, new Properties()
-                .component(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty()));
+        super(block, new Properties());
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.setDefault(this, CrystalAttributesComponent.defaultEmpty());
     }
 
     @Override
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
         ItemStack stack = new ItemStack(this);
-        stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty()
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, CrystalAttributesComponent.defaultEmpty()
                 .setAttributeTier(CrystalPropertiesAS.PURITY, CrystalPropertiesAS.PURITY.get().getMaxTier()));
         tabItems.accept(stack);
     }

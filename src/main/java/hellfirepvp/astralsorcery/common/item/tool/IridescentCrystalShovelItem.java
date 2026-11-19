@@ -45,8 +45,8 @@ public class IridescentCrystalShovelItem extends CrystalShovelItem {
     public IridescentCrystalShovelItem() {
         super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
                 .setNoRepair()
-                .component(DataComponentsAS.DYNAMIC_MODIFIERS, new DynamicModifiersComponent(List.of(MINING_SIZE_MODIFIER)))
                 .attributes(shovelAttributes()));
+        DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, new DynamicModifiersComponent(List.of(MINING_SIZE_MODIFIER)));
     }
 
     @Override

@@ -115,7 +115,7 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
             return;
         }
 
-        int multiplier = Math.max(1, catalyst.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty()).getTotalTierCount());
+        int multiplier = Math.max(1, DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(catalyst, CrystalAttributesComponent.defaultEmpty()).getTotalTierCount());
         double gainAttempts = Math.max(1, Math.sqrt(multiplier));
         gainAttempts *= this.activeRecipe.getProductionMultiplier();
 

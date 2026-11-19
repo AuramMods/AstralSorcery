@@ -10,12 +10,11 @@ package hellfirepvp.astralsorcery.common.integration.jei.base;
 
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
-import net.minecraft.core.component.DataComponentType;
+import hellfirepvp.astralsorcery.common.component.StackDataType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -26,14 +25,10 @@ import java.util.function.Supplier;
  */
 public class ComponentSubtypeInterpreter<T> implements ISubtypeInterpreter<ItemStack> {
 
-    private final DataComponentType<T> componentType;
-    private Function<T, ?> valueDataExtractor;
+    private final StackDataType<T> componentType;
+    private final Function<T, ?> valueDataExtractor;
 
-    public ComponentSubtypeInterpreter(Supplier<? extends DataComponentType<T>> componentType, Function<T, ?> valueDataExtractor) {
-        this(componentType.get(), valueDataExtractor);
-    }
-
-    public ComponentSubtypeInterpreter(DataComponentType<T> componentType, Function<T, ?> valueDataExtractor) {
+    public ComponentSubtypeInterpreter(StackDataType<T> componentType, Function<T, ?> valueDataExtractor) {
         this.componentType = componentType;
         this.valueDataExtractor = valueDataExtractor;
     }
@@ -41,7 +36,7 @@ public class ComponentSubtypeInterpreter<T> implements ISubtypeInterpreter<ItemS
     @Nullable
     @Override
     public Object getSubtypeData(ItemStack ingredient, UidContext context) {
-        T component = ingredient.get(this.componentType);
+        T component = this.componentType.get(ingredient);
         if (component == null) return null;
         return this.valueDataExtractor.apply(component);
     }

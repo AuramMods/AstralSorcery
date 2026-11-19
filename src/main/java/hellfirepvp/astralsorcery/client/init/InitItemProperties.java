@@ -49,21 +49,21 @@ public class InitItemProperties {
             return (float) LumenCrystalClusterBlockItem.getStage(stack) / LumenCrystalClusterBlock.STAGE.getPossibleValues().size();
         });
         ItemProperties.register(ItemsAS.KNOWLEDGE_SHARE.asItem(), AstralSorcery.key("written"), (stack, level, entity, seed) -> {
-            StoredPlayerProgressComponent cmp = stack.getOrDefault(DataComponentsAS.STORED_PLAYER_PROGRESS, StoredPlayerProgressComponent.EMPTY);
+            StoredPlayerProgressComponent cmp = DataComponentsAS.STORED_PLAYER_PROGRESS.getOrDefault(stack, StoredPlayerProgressComponent.EMPTY);
             return cmp.creative() || cmp.progress().isPresent() ? 1F : 0F;
         });
         ItemProperties.register(ItemsAS.ARTIFACT.asItem(), AstralSorcery.key("artifact_type"), (stack, level, entity, seed) -> {
-            if (!stack.has(DataComponentsAS.ARTIFACT)) return 0F;
-            ArtifactType artifactType = stack.get(DataComponentsAS.ARTIFACT).artifactType();
+            if (!DataComponentsAS.ARTIFACT.has(stack)) return 0F;
+            ArtifactType artifactType = DataComponentsAS.ARTIFACT.get(stack).artifactType();
             return RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().getId(artifactType) / (float) RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().size();
         });
         ItemProperties.register(ItemsAS.ARTIFACT_SHARD.asItem(), AstralSorcery.key("artifact_type"), (stack, level, entity, seed) -> {
-            if (!stack.has(DataComponentsAS.ARTIFACT_TYPE)) return 0F;
-            ArtifactType artifactType = stack.get(DataComponentsAS.ARTIFACT_TYPE).type();
+            if (!DataComponentsAS.ARTIFACT_TYPE.has(stack)) return 0F;
+            ArtifactType artifactType = DataComponentsAS.ARTIFACT_TYPE.get(stack).type();
             return RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().getId(artifactType) / (float) RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().size();
         });
         ItemProperties.register(ItemsAS.LUMEN_CRYSTAL.asItem(), AstralSorcery.key("prismatic"), (stack, level, entity, seed) -> {
-            return stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen().is(LumenAS.PRISMATIC.getKey()) ? 1F : 0F;
+            return DataComponentsAS.LUMEN.getOrDefault(stack, LumenComponent.EMPTY).lumen().is(LumenAS.PRISMATIC.getKey()) ? 1F : 0F;
         });
         ItemProperties.register(ItemsAS.STARDEW.asItem(), AstralSorcery.key("filled"), (stack, level, entity, seed) -> {
             if (!StardewItem.isWater(stack) && StardewItem.isEmpty(stack)) return 0F;

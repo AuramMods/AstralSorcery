@@ -263,7 +263,7 @@ public class AstralResearchNodeProvider extends ResearchNodeDataProvider {
                 .build(registrar);
 
         ItemStack knowledgeShare = ItemsAS.KNOWLEDGE_SHARE.toStack();
-        knowledgeShare.set(DataComponentsAS.STORED_PLAYER_PROGRESS, StoredPlayerProgressComponent.CREATIVE);
+        DataComponentsAS.STORED_PLAYER_PROGRESS.set(knowledgeShare, StoredPlayerProgressComponent.CREATIVE);
         ResearchNode knowledgeSharingScroll = ResearchNodeBuilder.create(AstralSorcery.key("knowledge_sharing_scroll"), ResearchTier.ILLUMINATION, 0, -5)
                 .addDisplayItem(knowledgeShare)
                 .addPage(new TomePageText(text("knowledge_sharing_scroll", 0)))

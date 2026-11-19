@@ -14,15 +14,14 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.perk.DynamismGemModifierHelper;
 import hellfirepvp.astralsorcery.common.perk.modifier.DynamicAttributeModifier;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
+import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class AltarOutputAddGemModifier extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-       DynamicModifiersComponent modifiers = output.get(DataComponentsAS.DYNAMIC_MODIFIERS);
+       DynamicModifiersComponent modifiers = DataComponentsAS.DYNAMIC_MODIFIERS.get(output);
        if (modifiers != null) {
            List<DynamicAttributeModifier> mods = new ArrayList<>(modifiers.modifiers());
            int attempts = 50;
@@ -56,7 +55,7 @@ public class AltarOutputAddGemModifier extends AltarRecipeOutputModifier {
            } while (newMod == null && attempts > 0);
            if (newMod != null) {
                 mods.add(newMod);
-                output.set(DataComponentsAS.DYNAMIC_MODIFIERS, new DynamicModifiersComponent(mods));
+                DataComponentsAS.DYNAMIC_MODIFIERS.set(output, new DynamicModifiersComponent(mods));
            }
        }
         return output;
@@ -64,9 +63,7 @@ public class AltarOutputAddGemModifier extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutputForDisplay(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries, long tick) {
-        ItemLore lore = output.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
-        lore = lore.withLineAdded(Component.translatable("recipe.astralsorcery.result.add_gem_modifier").withStyle(ChatFormatting.GRAY));
-        output.set(DataComponents.LORE, lore);
+        ItemUtil.appendLore(output, Component.translatable("recipe.astralsorcery.result.add_gem_modifier").withStyle(ChatFormatting.GRAY));
         return output;
     }
 

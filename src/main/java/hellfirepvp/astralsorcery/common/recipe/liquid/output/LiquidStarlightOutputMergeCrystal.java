@@ -77,8 +77,8 @@ public class LiquidStarlightOutputMergeCrystal extends LiquidStarlightRecipeOutp
         ItemEntity crystal = input.getTriggerEntity();
         ItemEntity otherCrystal = input.getOtherEntities().getFirst();
 
-        CrystalAttributesComponent cmpCrystal = crystal.getItem().getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
-        CrystalAttributesComponent cmpOther = otherCrystal.getItem().getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent cmpCrystal = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(crystal.getItem(), CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent cmpOther = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(otherCrystal.getItem(), CrystalAttributesComponent.defaultEmpty());
 
         CrystalAttributesComponent mergeTo = cmpCrystal.getTotalTierCount() >= cmpOther.getTotalTierCount() ? cmpCrystal : cmpOther;
         CrystalAttributesComponent mergeFrom = mergeTo == cmpCrystal ? cmpOther : cmpCrystal;
@@ -105,7 +105,7 @@ public class LiquidStarlightOutputMergeCrystal extends LiquidStarlightRecipeOutp
                 CrystalPropertyEvent.Merge.Type.MERGE_CRYSTALS, List.of(copyFrom, copyTo), mergeTo);
         MinecraftForge.EVENT_BUS.post(combineCrystals);
 
-        resultStack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, combineCrystals.getResultComponent());
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.set(resultStack, combineCrystals.getResultComponent());
         CrystalToolItem.updateModifiers(resultStack);
         ItemUtil.dropItemNaturally(crystal.level(), crystal.getX(), crystal.getY(), crystal.getZ(), resultStack);
         recipe.consumeItemInputs(input);

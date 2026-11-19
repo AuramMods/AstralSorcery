@@ -92,7 +92,7 @@ public class WandPreviewRenderHelper {
             clearCache();
             return;
         }
-        int modeOrdinal = held.getOrDefault(DataComponentsAS.MODE, IntegerModeComponent.ZERO).mode();
+        int modeOrdinal = DataComponentsAS.MODE.getOrDefault(held, IntegerModeComponent.ZERO).mode();
 
         Level level = player.level();
         Vec3 cameraPos = event.getCamera().getPosition();

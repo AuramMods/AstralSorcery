@@ -90,9 +90,9 @@ public class LumenUtil {
     public static class Storage {
 
         public static void setStoredLumen(ItemStack stack, LumenStack lumen) {
-            StoredLumenComponent cmp = stack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+            StoredLumenComponent cmp = DataComponentsAS.STORED_LUMEN.getOrDefault(stack, StoredLumenComponent.EMPTY);
             cmp = cmp.updateLumenStack(lumen.getLumen(), lumen.getAmount(), lumen.getAmount());
-            stack.set(DataComponentsAS.STORED_LUMEN, cmp);
+            DataComponentsAS.STORED_LUMEN.set(stack, cmp);
         }
     }
 }

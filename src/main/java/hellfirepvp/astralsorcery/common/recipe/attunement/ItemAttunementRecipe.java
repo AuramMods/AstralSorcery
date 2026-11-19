@@ -111,7 +111,7 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
         if (entity.isAlive() && entity.getItem().is(TagsAS.Items.FUNCTIONAL_ATTUNEABLE_ITEM)) {
             ItemStack stack = entity.getItem();
 
-            ConstellationPaperComponent cmp = stack.getOrDefault(DataComponentsAS.ATTUNED_CONSTELLATION, AttunedConstellationComponent.EMPTY);
+            ConstellationPaperComponent cmp = DataComponentsAS.ATTUNED_CONSTELLATION.getOrDefault(stack, AttunedConstellationComponent.EMPTY);
             return cmp.getConstellation().isEmpty();
         }
         return false;
@@ -173,7 +173,7 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
                     }
 
                     AttunedConstellationComponent cmp = new AttunedConstellationComponent(cst);
-                    stack.set(DataComponentsAS.ATTUNED_CONSTELLATION, cmp);
+                    DataComponentsAS.ATTUNED_CONSTELLATION.set(stack, cmp);
                     itemEntity.setItem(stack);
 
                     if (itemEntity.getOwner() instanceof ServerPlayer sPlayer) {

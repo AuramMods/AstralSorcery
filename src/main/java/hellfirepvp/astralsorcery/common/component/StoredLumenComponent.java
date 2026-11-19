@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.common.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
+import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.ILumenHandler;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
@@ -19,7 +20,6 @@ import hellfirepvp.astralsorcery.common.lumen.LumenStack;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
 import hellfirepvp.astralsorcery.common.lumen.binding.data.LumenBindingTypeLoader;
 import hellfirepvp.astralsorcery.common.lumen.capability.LumenHandlerItemFactory;
-import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
@@ -29,7 +29,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -121,7 +120,9 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
 
     public StoredLumenComponent applyBinding(Lumen lumen, ResourceLocation bindingTypeId) {
         if (this.boundLumen.containsKey(lumen)) return this;
-        return new StoredLumenComponent(this.storedLumen, this.lumenDisplay, this.properties, Util.copyAndPut(this.boundLumen, lumen, bindingTypeId));
+        Map<Lumen, ResourceLocation> newBound = new HashMap<>(this.boundLumen);
+        newBound.put(lumen, bindingTypeId);
+        return new StoredLumenComponent(this.storedLumen, this.lumenDisplay, this.properties, Map.copyOf(newBound));
     }
 
     public StoredLumenComponent removeBinding(Lumen lumen) {
@@ -150,7 +151,7 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
 
     @Nullable
     public static ILumenHandler getAsHandlerAccess(ItemStack stack) {
-        StoredLumenComponent storedLumen = stack.get(DataComponentsAS.STORED_LUMEN);
+        StoredLumenComponent storedLumen = DataComponentsAS.STORED_LUMEN.get(stack);
         if (storedLumen == null) return null;
         return storedLumen.asHandlerAccess(stack);
     }
@@ -352,7 +353,7 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
             return new Properties(this.capacity, this.canDrain, false, this.accepted);
         }
 
-        public Properties allowAccept(RegistryObject<? extends Lumen> lumenHolder) {
+        public Properties allowAccept(LumenAS.DeferredLumen<?> lumenHolder) {
             return this.allowAccept(lumenHolder.getKey());
         }
 

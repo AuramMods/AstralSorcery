@@ -41,7 +41,7 @@ public record IsFlagSetIngredient(FlagsComponent.Flag flag, FlagState state) imp
 
     @Override
     public boolean test(ItemStack stack) {
-        FlagsComponent cmp = stack.getOrDefault(DataComponentsAS.FLAGS, FlagsComponent.EMPTY);
+        FlagsComponent cmp = DataComponentsAS.FLAGS.getOrDefault(stack, FlagsComponent.EMPTY);
         return switch (this.state) {
             case IS_SET -> cmp.isSet(this.flag);
             case IS_NOT_SET -> !cmp.isSet(this.flag);

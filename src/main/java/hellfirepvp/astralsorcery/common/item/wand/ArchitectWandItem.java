@@ -73,11 +73,11 @@ public class ArchitectWandItem extends ItemCustom {
 
     public ArchitectWandItem() {
         super(new Properties()
-                .component(DataComponentsAS.BLOCK_STATE_STORAGE, BlockStateStorageComponent.EMPTY)
-                .component(DataComponentsAS.MODE, IntegerModeComponent.ZERO)
-                .component(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY
-                        .updateProperties(properties -> properties.allowFill().allowAccept(LumenAS.AEVITAS)))
                 .stacksTo(1));
+        DataComponentsAS.BLOCK_STATE_STORAGE.setDefault(this, BlockStateStorageComponent.EMPTY);
+        DataComponentsAS.MODE.setDefault(this, IntegerModeComponent.ZERO);
+        DataComponentsAS.STORED_LUMEN.setDefault(this, StoredLumenComponent.EMPTY
+                        .updateProperties(properties -> properties.allowFill().allowAccept(LumenAS.AEVITAS)));
     }
 
     @Override
@@ -201,11 +201,11 @@ public class ArchitectWandItem extends ItemCustom {
     }
 
     public static PlaceMode getPlaceMode(ItemStack stack) {
-        return stack.getOrDefault(DataComponentsAS.MODE, IntegerModeComponent.ZERO).getMode(PlaceMode.class);
+        return DataComponentsAS.MODE.getOrDefault(stack, IntegerModeComponent.ZERO).getMode(PlaceMode.class);
     }
 
     public static void setPlaceMode(ItemStack stack, PlaceMode mode) {
-        stack.set(DataComponentsAS.MODE, new IntegerModeComponent(mode.ordinal()));
+        DataComponentsAS.MODE.set(stack, new IntegerModeComponent(mode.ordinal()));
     }
 
     public enum PlaceMode {

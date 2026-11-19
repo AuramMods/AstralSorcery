@@ -178,7 +178,7 @@ public class ItemsAS {
     public static RegisteredItemLike<BlockItem> BLOCK_ATTUNEMENT_ALTAR          = registerBlockItem(BlocksAS.ATTUNEMENT_ALTAR);
     public static RegisteredItemLike<BlockItem> BLOCK_TREE_BEACON               = registerBlockItem(BlocksAS.TREE_BEACON);
     public static RegisteredItemLike<BlockItem> BLOCK_CELESTIAL_GATEWAY         = registerBlockItem(BlocksAS.CELESTIAL_GATEWAY,
-            block -> new BlockItemCustom(block, new Item.Properties().component(DataComponentsAS.COLOR, ColorComponent.DEFAULT_YELLOW)));
+            ItemsAS::registerColorDefaults);
 
     public static RegisteredItemLike<BlockItem> BLOCK_LENS                      = registerBlockItem(BlocksAS.LENS, LensBlockItem::new);
     public static RegisteredItemLike<BlockItem> BLOCK_PRISM                     = registerBlockItem(BlocksAS.PRISM, PrismBlockItem::new);
@@ -188,11 +188,17 @@ public class ItemsAS {
             registerBlockItem(BlocksAS.STARLIGHT_FOCUS_CELESTIAL_CRYSTAL, StarlightFocusCrystalBlockItem::new);
     public static RegisteredItemLike<BlockItem> BLOCK_STELLAR_FILAMENT = registerBlockItem(BlocksAS.STELLAR_FILAMENT);
     public static RegisteredItemLike<BlockItem> BLOCK_CAVE_ILLUMINATOR = registerBlockItem(BlocksAS.CAVE_ILLUMINATOR,
-            block -> new BlockItemCustom(block, new Item.Properties().component(DataComponentsAS.COLOR, ColorComponent.DEFAULT_YELLOW)));
+            ItemsAS::registerColorDefaults);
 
     public static RegisteredItemLike<BlockItem> BLOCK_STRUCTURE_MARKER = registerBlockItem(BlocksAS.STRUCTURE_MARKER, BlockItem::new);
 
     //----------------------------- REGISTER ------------------------------//
+
+    private static BlockItem registerColorDefaults(Block block) {
+        BlockItem item = new BlockItemCustom(block, new Item.Properties());
+        DataComponentsAS.COLOR.setDefault(item, ColorComponent.DEFAULT_YELLOW);
+        return item;
+    }
 
     private static RegisteredItemLike<BlockItem> registerBlockItem(RegisteredItemLike<? extends Block> block) {
         return registerBlockItem(block, BlockItemCustom::new);

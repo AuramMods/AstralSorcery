@@ -46,17 +46,17 @@ public record IdentifierComponent(UUID id) {
     }
 
     public static void createIdentifierIfNotExists(ItemStack stack) {
-        if (!stack.has(DataComponentsAS.IDENTIFIER)) {
-            stack.set(DataComponentsAS.IDENTIFIER, IdentifierComponent.random());
+        if (!DataComponentsAS.IDENTIFIER.has(stack)) {
+            DataComponentsAS.IDENTIFIER.set(stack, IdentifierComponent.random());
         }
     }
 
     public static void createOrOverwriteIdentifier(ItemStack stack) {
-        stack.set(DataComponentsAS.IDENTIFIER, IdentifierComponent.random());
+        DataComponentsAS.IDENTIFIER.set(stack, IdentifierComponent.random());
     }
 
     public static UUID getIdentifier(ItemStack stack) {
-        return stack.getOrDefault(DataComponentsAS.IDENTIFIER, NONE).id();
+        return DataComponentsAS.IDENTIFIER.getOrDefault(stack, NONE).id();
     }
 
     @Override

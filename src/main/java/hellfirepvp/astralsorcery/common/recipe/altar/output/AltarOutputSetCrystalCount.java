@@ -56,8 +56,8 @@ public class AltarOutputSetCrystalCount extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-        if (output.has(DataComponentsAS.CRYSTAL_ATTRIBUTES)) {
-            CrystalAttributesComponent cmp = output.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        if (DataComponentsAS.CRYSTAL_ATTRIBUTES.has(output)) {
+            CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(output, CrystalAttributesComponent.defaultEmpty());
             int size = cmp.getAttributeTier(CrystalPropertiesAS.SIZE);
             int newCount = output.getCount() * (size * this.countPerSize);
             output.setCount(Mth.clamp(newCount, 1, output.getMaxStackSize()));

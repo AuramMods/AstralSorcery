@@ -44,7 +44,7 @@ public class AttunedCelestialCrystalItem extends CelestialCrystalItem {
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
         RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
             ItemStack stack = new ItemStack(this);
-            stack.set(DataComponentsAS.ATTUNED_CONSTELLATION, new AttunedConstellationComponent(cst));
+            DataComponentsAS.ATTUNED_CONSTELLATION.set(stack, new AttunedConstellationComponent(cst));
             tabItems.accept(stack);
         });
     }

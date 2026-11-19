@@ -62,7 +62,7 @@ public class IsLumenBindableIngredient implements ICustomIngredient {
         if (stack.getDamageValue() == stack.getMaxDamage()) return false;
         PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
         if (contents == null) return false;
-        boolean isPrismaticSet = stack.getOrDefault(DataComponentsAS.FLAGS, FlagsComponent.EMPTY).isSet(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN);
+        boolean isPrismaticSet = DataComponentsAS.FLAGS.getOrDefault(stack, FlagsComponent.EMPTY).isSet(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN);
         return contents.is(Potions.WATER) || (contents.potion().isEmpty() &&
                 ((isPrismaticSet && contents.customEffects().size() < 2) ||
                         (!isPrismaticSet && contents.customEffects().size() < 3)));

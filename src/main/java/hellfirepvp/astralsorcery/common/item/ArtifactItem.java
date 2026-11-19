@@ -60,7 +60,7 @@ public class ArtifactItem extends ItemCustom {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (level instanceof ServerLevel) {
-            if (!stack.has(DataComponentsAS.ARTIFACT)) {
+            if (!DataComponentsAS.ARTIFACT.has(stack)) {
                 stack.shrink(stack.getCount());
             }
         }
@@ -75,21 +75,21 @@ public class ArtifactItem extends ItemCustom {
 
     public static ItemStack create(ArtifactType type) {
         ItemStack stack = ItemsAS.ARTIFACT.toStack();
-        stack.set(DataComponentsAS.ARTIFACT, ArtifactComponent.initialize(type));
+        DataComponentsAS.ARTIFACT.set(stack, ArtifactComponent.initialize(type));
         return stack;
     }
 
     public static ItemStack createForDisplay(ArtifactType type) {
         ItemStack stack = ItemsAS.ARTIFACT.toStack();
-        stack.set(DataComponentsAS.ARTIFACT, ArtifactComponent.initializeBlank(type));
+        DataComponentsAS.ARTIFACT.set(stack, ArtifactComponent.initializeBlank(type));
         return stack;
     }
 
     public Optional<ItemStack> createShard(ItemStack stack) {
-        if (stack.has(DataComponentsAS.ARTIFACT)) {
-            ArtifactType type = stack.get(DataComponentsAS.ARTIFACT).artifactType();
+        if (DataComponentsAS.ARTIFACT.has(stack)) {
+            ArtifactType type = DataComponentsAS.ARTIFACT.get(stack).artifactType();
             ItemStack shard = ItemsAS.ARTIFACT_SHARD.toStack();
-            shard.set(DataComponentsAS.ARTIFACT_TYPE, new ArtifactTypeComponent(type));
+            DataComponentsAS.ARTIFACT_TYPE.set(shard, new ArtifactTypeComponent(type));
             return Optional.of(shard);
         }
         return Optional.empty();
@@ -97,8 +97,8 @@ public class ArtifactItem extends ItemCustom {
 
     @Override
     public Component getName(ItemStack stack) {
-        if (stack.has(DataComponentsAS.ARTIFACT)) {
-            ArtifactType type = stack.get(DataComponentsAS.ARTIFACT).artifactType();
+        if (DataComponentsAS.ARTIFACT.has(stack)) {
+            ArtifactType type = DataComponentsAS.ARTIFACT.get(stack).artifactType();
             return Component.translatable("item.astralsorcery.artifact.format", type.getName());
         }
         return super.getName(stack);

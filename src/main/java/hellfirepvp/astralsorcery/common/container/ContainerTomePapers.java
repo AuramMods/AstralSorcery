@@ -76,7 +76,7 @@ public class ContainerTomePapers extends ContainerItemInSlot implements DefaultQ
     public boolean canQuickTransferItemToSlot(ItemStack stack, Slot targetSlot, boolean onlyTransferToFilledSlots) {
         if (targetSlot instanceof ConstellationPaperSlot &&
                 stack.is(ItemsAS.CONSTELLATION_PAPER.get()) &&
-                stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY).getConstellation().isPresent()
+                DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(stack, ConstellationPaperComponent.EMPTY).getConstellation().isPresent()
         ) {
             return true;
         }

@@ -31,15 +31,15 @@ import java.util.function.Consumer;
 public class StarlightFocusCrystalBlockItem extends BlockItemCustom {
 
     public StarlightFocusCrystalBlockItem(StarlightFocusCrystalBlock block) {
-        super(block, new Properties().stacksTo(1)
-                .component(DataComponentsAS.ATTUNED_CONSTELLATION, AttunedConstellationComponent.EMPTY)
-                .component(DataComponentsAS.CRYSTAL_ATTRIBUTES, generateEmpty(block.getType())));
+        super(block, new Properties().stacksTo(1));
+        DataComponentsAS.ATTUNED_CONSTELLATION.setDefault(this, AttunedConstellationComponent.EMPTY);
+        DataComponentsAS.CRYSTAL_ATTRIBUTES.setDefault(this, generateEmpty(block.getType()));
     }
 
     private static CrystalAttributesComponent generateEmpty(StarlightFocusCrystalBlock.Type type) {
         return switch (type) {
-            case ROCK_CRYSTAL -> ItemsAS.ROCK_CRYSTAL.asItem().components().get(DataComponentsAS.CRYSTAL_ATTRIBUTES.get());
-            case CELESTIAL_CRYSTAL -> ItemsAS.CELESTIAL_CRYSTAL.asItem().components().get(DataComponentsAS.CRYSTAL_ATTRIBUTES.get());
+            case ROCK_CRYSTAL -> DataComponentsAS.CRYSTAL_ATTRIBUTES.get(ItemsAS.ROCK_CRYSTAL.toStack());
+            case CELESTIAL_CRYSTAL -> DataComponentsAS.CRYSTAL_ATTRIBUTES.get(ItemsAS.CELESTIAL_CRYSTAL.toStack());
         };
     }
 
@@ -47,8 +47,8 @@ public class StarlightFocusCrystalBlockItem extends BlockItemCustom {
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
         RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
             ItemStack stack = new ItemStack(this);
-            stack.set(DataComponentsAS.ATTUNED_CONSTELLATION, new AttunedConstellationComponent(cst));
-            stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty()
+            DataComponentsAS.ATTUNED_CONSTELLATION.set(stack, new AttunedConstellationComponent(cst));
+            DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, CrystalAttributesComponent.defaultEmpty()
                     .setAttributeTier(CrystalPropertiesAS.SIZE, CrystalPropertiesAS.SIZE.get().getMaxTier())
                     .setAttributeTier(CrystalPropertiesAS.CUT, CrystalPropertiesAS.CUT.get().getMaxTier()));
             tabItems.accept(stack);
@@ -63,9 +63,9 @@ public class StarlightFocusCrystalBlockItem extends BlockItemCustom {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!level.isClientSide()) {
-            CrystalAttributesComponent cmp = stack.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+            CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(stack, CrystalAttributesComponent.defaultEmpty());
             if (cmp.isEmpty()) {
-                stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalPropertyGenerator.generateRandomProperties(cmp));
+                DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, CrystalPropertyGenerator.generateRandomProperties(cmp));
             }
         }
     }

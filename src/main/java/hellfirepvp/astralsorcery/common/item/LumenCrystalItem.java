@@ -31,8 +31,8 @@ import java.util.function.Consumer;
 public class LumenCrystalItem extends ItemCustom implements ItemDynamicColor {
 
     public LumenCrystalItem() {
-        super(new Properties()
-                .component(DataComponentsAS.LUMEN, LumenComponent.EMPTY));
+        super(new Properties());
+        DataComponentsAS.LUMEN.setDefault(this, LumenComponent.EMPTY);
     }
 
     @Override
@@ -50,14 +50,14 @@ public class LumenCrystalItem extends ItemCustom implements ItemDynamicColor {
 
     public static ItemStack getCrystal(Holder<Lumen> lumen) {
         ItemStack stack = ItemsAS.LUMEN_CRYSTAL.toStack();
-        stack.set(DataComponentsAS.LUMEN, new LumenComponent(lumen));
+        DataComponentsAS.LUMEN.set(stack, new LumenComponent(lumen));
         return stack;
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        if (stack.has(DataComponentsAS.LUMEN)) {
-            Lumen lumen = stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen().value();
+        if (DataComponentsAS.LUMEN.has(stack)) {
+            Lumen lumen = DataComponentsAS.LUMEN.getOrDefault(stack, LumenComponent.EMPTY).lumen().value();
             if (lumen != LumenAS.NONE.get()) {
                 Component lumenName = lumen.getName();
                 return Component.translatable("item.astralsorcery.lumen_crystal.typed", lumenName);
@@ -68,8 +68,8 @@ public class LumenCrystalItem extends ItemCustom implements ItemDynamicColor {
 
     @Override
     public int getColor(ItemStack stack, long tick, int tintIndex) {
-        if (tintIndex == 0 && stack.has(DataComponentsAS.LUMEN)) {
-            Holder<Lumen> lumen = stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen();
+        if (tintIndex == 0 && DataComponentsAS.LUMEN.has(stack)) {
+            Holder<Lumen> lumen = DataComponentsAS.LUMEN.getOrDefault(stack, LumenComponent.EMPTY).lumen();
             int color = lumen.value().getColor(tick).getColor();
             if (lumen.is(LumenAS.PRISMATIC.getKey())) {
                 color = ColorUtil.blendColors(color, 0xFFFFFFFF, 0.33F);

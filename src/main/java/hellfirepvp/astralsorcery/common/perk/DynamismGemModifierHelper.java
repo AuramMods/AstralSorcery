@@ -78,7 +78,7 @@ public class DynamismGemModifierHelper {
             }
         }
 
-        gemStack.set(DataComponentsAS.DYNAMIC_MODIFIERS, new DynamicModifiersComponent(mods));
+        DataComponentsAS.DYNAMIC_MODIFIERS.set(gemStack, new DynamicModifiersComponent(mods));
         return true;
     }
 

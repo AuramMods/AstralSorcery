@@ -43,7 +43,7 @@ public class VeiledItemStackHelper {
     }
 
     public static ItemStack getDisplayedStack(ItemStack stack) {
-        VeiledItemStackComponent veil = stack.get(DataComponentsAS.VEILED);
+        VeiledItemStackComponent veil = DataComponentsAS.VEILED.get(stack);
         if (veil == null) {
             return stack;
         }
@@ -53,7 +53,7 @@ public class VeiledItemStackHelper {
     }
 
     public static Component markUnknownVeil(ItemStack stack, Component name) {
-        VeiledItemStackComponent veil = stack.get(DataComponentsAS.VEILED);
+        VeiledItemStackComponent veil = DataComponentsAS.VEILED.get(stack);
         if (veil != null && !veil.known()) {
             return Component.translatable("component.veiled.item_name", name);
         }
@@ -61,9 +61,9 @@ public class VeiledItemStackHelper {
     }
 
     public static boolean removeVeilIfExpired(ItemStack stack, Level level) {
-        VeiledItemStackComponent veil = stack.get(DataComponentsAS.VEILED);
+        VeiledItemStackComponent veil = DataComponentsAS.VEILED.get(stack);
         if (veil != null && veil.isExpired(level)) {
-            stack.remove(DataComponentsAS.VEILED);
+            DataComponentsAS.VEILED.remove(stack);
             return true;
         }
         return false;

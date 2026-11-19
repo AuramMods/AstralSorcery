@@ -34,8 +34,8 @@ public class AstrolabeItem extends SpyglassItem implements CreativeTabItem {
 
     public AstrolabeItem() {
         super(new Properties()
-                .stacksTo(1)
-                .component(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT));
+                .stacksTo(1));
+        DataComponentsAS.ASTROLABE_ANGLE.setDefault(this, AstrolabeAngleComponent.DEFAULT);
     }
 
     public static boolean isUsingAstrolabe(@Nullable Player player) {

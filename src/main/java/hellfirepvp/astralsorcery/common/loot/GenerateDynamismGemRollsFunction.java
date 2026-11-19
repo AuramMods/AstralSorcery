@@ -44,7 +44,7 @@ public class GenerateDynamismGemRollsFunction extends LootItemConditionalFunctio
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        if (stack.getOrDefault(DataComponentsAS.DYNAMIC_MODIFIERS, DynamicModifiersComponent.EMPTY).modifiers().isEmpty()) {
+        if (DataComponentsAS.DYNAMIC_MODIFIERS.getOrDefault(stack, DynamicModifiersComponent.EMPTY).modifiers().isEmpty()) {
             DynamismGemModifierHelper.rollGem(stack);
         }
         return stack;

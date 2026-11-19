@@ -58,7 +58,7 @@ public class RecipeChangeColor extends CustomRecipe {
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         return this.findRecipeComponents(input).map(tpl -> {
             ItemStack result = tpl.getA().copyWithCount(1);
-            result.set(DataComponentsAS.COLOR, new ColorComponent(ColorReference.Dye.of(tpl.getB())));
+            DataComponentsAS.COLOR.set(result, new ColorComponent(ColorReference.Dye.of(tpl.getB())));
             return result;
         }).orElse(ItemStack.EMPTY);
     }

@@ -143,12 +143,12 @@ public class RenderAstrolabeOverlay {
         float indicatorAngle = 45F;
         Player player = Minecraft.getInstance().player;
         if (player != null && player.isScoping() && player.getUseItem().is(ItemsAS.ASTROLABE.get())) {
-            AstrolabeAngleComponent cmp = player.getUseItem().getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
+            AstrolabeAngleComponent cmp = DataComponentsAS.ASTROLABE_ANGLE.getOrDefault(player.getUseItem(), AstrolabeAngleComponent.DEFAULT);
             indicatorAngle = cmp.angle();
         }
         if (isDrawing()) {
             ItemStack usingItem = getDrawingItem();
-            AstrolabeAngleComponent cmp = usingItem.getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
+            AstrolabeAngleComponent cmp = DataComponentsAS.ASTROLABE_ANGLE.getOrDefault(usingItem, AstrolabeAngleComponent.DEFAULT);
             indicatorAngle = cmp.angle();
         }
 
@@ -521,9 +521,9 @@ public class RenderAstrolabeOverlay {
         if (player == null) return;
 
         if (player.isScoping() && player.getUseItem().is(ItemsAS.ASTROLABE.get())) {
-            AstrolabeAngleComponent cmp = player.getUseItem().getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
+            AstrolabeAngleComponent cmp = DataComponentsAS.ASTROLABE_ANGLE.getOrDefault(player.getUseItem(), AstrolabeAngleComponent.DEFAULT);
             float adjustedAngle = cmp.angle() + (float) event.getScrollDeltaY();
-            player.getUseItem().set(DataComponentsAS.ASTROLABE_ANGLE, new AstrolabeAngleComponent(adjustedAngle, cmp.matchesAll()));
+            DataComponentsAS.ASTROLABE_ANGLE.set(player.getUseItem(), new AstrolabeAngleComponent(adjustedAngle, cmp.matchesAll()));
             NetworkRegistry.sendToServer(PktAdjustAstrolabeAngle.adjustAngle(adjustedAngle));
             event.setCanceled(true);
         }

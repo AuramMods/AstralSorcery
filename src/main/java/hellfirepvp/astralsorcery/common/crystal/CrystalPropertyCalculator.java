@@ -40,7 +40,7 @@ public class CrystalPropertyCalculator {
     private CrystalPropertyCalculator() {}
 
     private static <T> T withProperties(ItemStack stack, T _default, Function<CrystalAttributesComponent, T> run) {
-        CrystalAttributesComponent cmp = stack.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(stack, CrystalAttributesComponent.defaultEmpty());
         if (!cmp.isEmpty()) {
             return run.apply(cmp);
         }

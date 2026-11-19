@@ -45,11 +45,11 @@ public class GenerateCrystalPropertiesFunction extends LootItemConditionalFuncti
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        if (stack.has(DataComponentsAS.CRYSTAL_ATTRIBUTES)) {
-            CrystalAttributesComponent attributes = stack.get(DataComponentsAS.CRYSTAL_ATTRIBUTES);
+        if (DataComponentsAS.CRYSTAL_ATTRIBUTES.has(stack)) {
+            CrystalAttributesComponent attributes = DataComponentsAS.CRYSTAL_ATTRIBUTES.get(stack);
             if (attributes != null) {
                 attributes = CrystalPropertyGenerator.generateRandomProperties(attributes);
-                stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, attributes);
+                DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, attributes);
             }
         }
         CrystalToolItem.updateModifiers(stack);

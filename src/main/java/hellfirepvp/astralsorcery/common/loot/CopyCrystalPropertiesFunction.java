@@ -46,10 +46,10 @@ public class CopyCrystalPropertiesFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        if (stack.has(DataComponentsAS.CRYSTAL_ATTRIBUTES) && context.hasParam(LootContextParams.BLOCK_ENTITY)) {
+        if (DataComponentsAS.CRYSTAL_ATTRIBUTES.has(stack) && context.hasParam(LootContextParams.BLOCK_ENTITY)) {
             if (context.getParamOrNull(LootContextParams.BLOCK_ENTITY) instanceof TileEntitySynchronized<?> tile) {
                 if (tile.getTileData() instanceof TileDataCrystalAttributeContainer attributeContainer) {
-                    stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, attributeContainer.getCrystalAttributes());
+                    DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, attributeContainer.getCrystalAttributes());
                 }
             }
         }

@@ -35,7 +35,7 @@ public class ConstellationPaperSlot extends Slot {
     @Override
     public boolean mayPlace(ItemStack stack) {
         return stack.is(ItemsAS.CONSTELLATION_PAPER.get()) &&
-                stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY).getConstellation().isPresent();
+                DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(stack, ConstellationPaperComponent.EMPTY).getConstellation().isPresent();
     }
 
     private static class EndlessContainer implements Container {
@@ -47,7 +47,7 @@ public class ConstellationPaperSlot extends Slot {
                 BaseConstellation cst = cstSupplier.get();
                 if (cst == null) return ItemStack.EMPTY;
                 ItemStack paper = ItemsAS.CONSTELLATION_PAPER.toStack();
-                paper.set(DataComponentsAS.CONSTELLATION_PAPER, new ConstellationPaperComponent(cst));
+                DataComponentsAS.CONSTELLATION_PAPER.set(paper, new ConstellationPaperComponent(cst));
                 return paper;
             };
         }

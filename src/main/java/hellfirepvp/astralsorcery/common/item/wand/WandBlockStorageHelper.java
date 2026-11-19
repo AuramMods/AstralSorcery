@@ -36,7 +36,7 @@ public class WandBlockStorageHelper {
     private WandBlockStorageHelper() {}
 
     public static BlockStateStorageComponent getStorage(ItemStack stack) {
-        return stack.getOrDefault(DataComponentsAS.BLOCK_STATE_STORAGE, BlockStateStorageComponent.EMPTY);
+        return DataComponentsAS.BLOCK_STATE_STORAGE.getOrDefault(stack, BlockStateStorageComponent.EMPTY);
     }
 
     public static boolean tryStoreBlock(ItemStack stack, Level level, BlockPos pos, Player player) {
@@ -49,7 +49,7 @@ public class WandBlockStorageHelper {
         if (blockStack.isEmpty()) return true;
 
         BlockStateStorageComponent current = getStorage(stack);
-        stack.set(DataComponentsAS.BLOCK_STATE_STORAGE, current.withAddedState(state));
+        DataComponentsAS.BLOCK_STATE_STORAGE.set(stack, current.withAddedState(state));
         player.displayClientMessage(Component.translatable("message.astralsorcery.wand.stored",
                 state.getBlock().getName()), true);
         return true;
@@ -57,7 +57,7 @@ public class WandBlockStorageHelper {
 
     public static void clearStorage(ItemStack stack) {
         BlockStateStorageComponent current = getStorage(stack);
-        stack.set(DataComponentsAS.BLOCK_STATE_STORAGE, current.withClearedStates());
+        DataComponentsAS.BLOCK_STATE_STORAGE.set(stack, current.withClearedStates());
     }
 
     public static boolean consumeBlock(Player player, ItemStack match) {

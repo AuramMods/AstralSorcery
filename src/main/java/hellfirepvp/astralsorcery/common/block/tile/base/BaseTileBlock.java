@@ -89,8 +89,8 @@ public abstract class BaseTileBlock<T extends BlockEntity> extends BaseEntityBlo
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         MiscUtil.getTileAt(level, pos, TileEntitySynchronized.class, true).ifPresent(tile -> {
             if (tile.getTileData() instanceof TileDataCrystalAttributeContainer attributeContainer) {
-                if (stack.has(DataComponentsAS.CRYSTAL_ATTRIBUTES)) {
-                    stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, attributeContainer.getCrystalAttributes());
+                if (DataComponentsAS.CRYSTAL_ATTRIBUTES.has(stack)) {
+                    DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, attributeContainer.getCrystalAttributes());
                 }
             }
         });
@@ -106,10 +106,10 @@ public abstract class BaseTileBlock<T extends BlockEntity> extends BaseEntityBlo
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        if (stack.has(DataComponentsAS.CRYSTAL_ATTRIBUTES)) {
+        if (DataComponentsAS.CRYSTAL_ATTRIBUTES.has(stack)) {
             MiscUtil.getTileAt(level, pos, TileEntitySynchronized.class, true).ifPresent(tile -> {
                 if (tile.getTileData() instanceof TileDataCrystalAttributeContainer attributeContainer) {
-                    attributeContainer.setCrystalAttributes(stack.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, attributeContainer.getEmptyCrystalAttributes()));
+                    attributeContainer.setCrystalAttributes(DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(stack, attributeContainer.getEmptyCrystalAttributes()));
                     attributeContainer.markForUpdate();
                 }
             });

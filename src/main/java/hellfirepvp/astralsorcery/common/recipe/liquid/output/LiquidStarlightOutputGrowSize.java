@@ -68,7 +68,7 @@ public class LiquidStarlightOutputGrowSize extends LiquidStarlightRecipeOutputMo
     @Override
     public void createOutput(LiquidStarlightRecipe recipe, LiquidStarlightRecipeInput input) {
         ItemStack crystal = input.getTriggerEntity().getItem().copyWithCount(1);
-        CrystalAttributesComponent cmp = crystal.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(crystal, CrystalAttributesComponent.defaultEmpty());
 
         if (cmp.getTotalTierCount() >= cmp.getProperties().maxTierCount()) return;
 
@@ -88,7 +88,7 @@ public class LiquidStarlightOutputGrowSize extends LiquidStarlightRecipeOutputMo
                     CrystalPropertyEvent.Change.Type.GROW_SIZE, prev, cmp);
             MinecraftForge.EVENT_BUS.post(growSize);
 
-            crystal.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, growSize.getResultComponent());
+            DataComponentsAS.CRYSTAL_ATTRIBUTES.set(crystal, growSize.getResultComponent());
             CrystalToolItem.updateModifiers(crystal);
         }
 

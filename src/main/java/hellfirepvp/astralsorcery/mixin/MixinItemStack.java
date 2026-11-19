@@ -15,6 +15,8 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Mixin;
@@ -69,11 +71,19 @@ public class MixinItemStack implements ItemStackEquipmentReference {
         this.astralSorcery_1_21$equippedSlot = slot;
     }
 
-    @Inject(method = { "copy", "transmuteCopyIgnoreEmpty" }, at = @At("RETURN"))
+    @Inject(method = "copy", at = @At("RETURN"))
     public void copyPlayerReference(CallbackInfoReturnable<ItemStack> cir) {
         ItemStackEquipmentReference.setEquipmentReference(cir.getReturnValue(),
                 this.astralSorcery_1_21$playerReference,
                 this.astralSorcery_1_21$equippedSlot);
+    }
+
+    @Inject(method = "getRarity", at = @At("HEAD"), cancellable = true)
+    private void getAstralRarity(CallbackInfoReturnable<Rarity> cir) {
+        Rarity rarity = DataComponentsAS.RARITY.get(MiscUtil.cast(this));
+        if (rarity != null) {
+            cir.setReturnValue(rarity);
+        }
     }
 
     @Inject(method = "getHoverName", at = @At("HEAD"), cancellable = true, order = 800)

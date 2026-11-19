@@ -18,9 +18,9 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
+import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
@@ -30,7 +30,6 @@ import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
@@ -77,20 +76,18 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutputForDisplay(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries, long tick) {
-        ItemLore lore = output.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
-        lore = lore.withLineAdded(Component.translatable("ingredient.astralsorcery.lumen_engraving.description").withStyle(ChatFormatting.RESET).withStyle(ChatFormatting.GRAY));
+        ItemUtil.appendLore(output, Component.translatable("ingredient.astralsorcery.lumen_engraving.description").withStyle(ChatFormatting.RESET).withStyle(ChatFormatting.GRAY));
         for (WeightedEntry.Wrapper<CrystalProperty> property : this.getProperties()) {
-            lore = lore.withLineAdded(Component.translatable("ingredient.astralsorcery.lumen_engraving.description.element",
+            ItemUtil.appendLore(output, Component.translatable("ingredient.astralsorcery.lumen_engraving.description.element",
                             property.data().getName(1, tick))
                     .withStyle(ChatFormatting.GRAY));
         }
-        output.set(DataComponents.LORE, lore);
         return output;
     }
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-        CrystalAttributesComponent cmp = output.getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty());
+        CrystalAttributesComponent cmp = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(output, CrystalAttributesComponent.defaultEmpty());
         if (cmp.getTotalTierCount() >= cmp.getProperties().maxTierCount()) return output;
 
         RandomSource rand = RandomSource.create();
@@ -105,7 +102,7 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
                         CrystalPropertyEvent.Change.Type.ENGRAVE_PROPERTY, prev, cmp);
                 MinecraftForge.EVENT_BUS.post(engraved);
 
-                output.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, engraved.getResultComponent());
+                DataComponentsAS.CRYSTAL_ATTRIBUTES.set(output, engraved.getResultComponent());
                 CrystalToolItem.updateModifiers(output);
             }
         }

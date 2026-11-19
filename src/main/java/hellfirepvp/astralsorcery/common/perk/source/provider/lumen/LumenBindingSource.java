@@ -63,7 +63,7 @@ public class LumenBindingSource implements ModifierSource, AttributeModifierProv
         this.modifierSnapshot.clear();
 
         if (this.itemStack.isEmpty()) return;
-        StoredLumenComponent storedLumenCmp = this.itemStack.getOrDefault(DataComponentsAS.STORED_LUMEN, StoredLumenComponent.EMPTY);
+        StoredLumenComponent storedLumenCmp = DataComponentsAS.STORED_LUMEN.getOrDefault(this.itemStack, StoredLumenComponent.EMPTY);
         if (storedLumenCmp.isEmpty()) return;
 
         storedLumenCmp.getActiveBindings().forEach(lumen -> {

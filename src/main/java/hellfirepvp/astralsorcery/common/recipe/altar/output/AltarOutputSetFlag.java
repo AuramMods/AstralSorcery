@@ -55,9 +55,9 @@ public class AltarOutputSetFlag extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-        FlagsComponent flags = output.getOrDefault(DataComponentsAS.FLAGS, FlagsComponent.EMPTY);
+        FlagsComponent flags = DataComponentsAS.FLAGS.getOrDefault(output, FlagsComponent.EMPTY);
         flags = flags.setFlag(this.flag);
-        output.set(DataComponentsAS.FLAGS, flags);
+        DataComponentsAS.FLAGS.set(output, flags);
         return output;
     }
 

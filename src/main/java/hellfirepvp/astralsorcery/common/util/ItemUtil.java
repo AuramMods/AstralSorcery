@@ -16,6 +16,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -53,6 +56,13 @@ import java.util.stream.IntStream;
 public class ItemUtil {
 
     private static final RandomSource rand = RandomSource.create();
+
+    public static void appendLore(ItemStack stack, Component line) {
+        CompoundTag display = stack.getOrCreateTagElement("display");
+        ListTag lore = display.getList("Lore", Tag.TAG_STRING);
+        lore.add(StringTag.valueOf(Component.Serializer.toJson(line)));
+        display.put("Lore", lore);
+    }
 
     public static ItemStack createBlockStack(BlockState state) {
         return new ItemStack(state.getBlock());

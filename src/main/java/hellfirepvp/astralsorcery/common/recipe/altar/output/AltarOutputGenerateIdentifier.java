@@ -43,7 +43,7 @@ public class AltarOutputGenerateIdentifier extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutputForDisplay(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries, long tick) {
-        output.set(DataComponentsAS.IDENTIFIER, new IdentifierComponent(new UUID(0L, 1L)));
+        DataComponentsAS.IDENTIFIER.set(output, new IdentifierComponent(new UUID(0L, 1L)));
         return output;
     }
 

@@ -175,8 +175,8 @@ public class TileCelestialCrystalCluster extends TileEntityNetwork<ForwardingSta
 
         @Override
         public CrystalAttributesComponent getEmptyCrystalAttributes() {
-            return ItemsAS.CELESTIAL_CRYSTAL.asItem().components()
-                    .getOrDefault(DataComponentsAS.CRYSTAL_ATTRIBUTES.get(), CrystalAttributesComponent.defaultEmpty());
+            return DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(ItemsAS.CELESTIAL_CRYSTAL.toStack(),
+                    CrystalAttributesComponent.defaultEmpty());
         }
     }
 

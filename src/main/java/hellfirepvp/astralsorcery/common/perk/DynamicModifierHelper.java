@@ -42,9 +42,9 @@ public class DynamicModifierHelper {
     }
 
     public static void addModifier(ItemStack stack, List<DynamicAttributeModifier> modifiers) {
-        DynamicModifiersComponent component = stack.getOrDefault(DataComponentsAS.DYNAMIC_MODIFIERS, DynamicModifiersComponent.EMPTY);
+        DynamicModifiersComponent component = DataComponentsAS.DYNAMIC_MODIFIERS.getOrDefault(stack, DynamicModifiersComponent.EMPTY);
         component = component.add(modifiers);
-        stack.set(DataComponentsAS.DYNAMIC_MODIFIERS, component);
+        DataComponentsAS.DYNAMIC_MODIFIERS.set(stack, component);
         IdentifierComponent.createIdentifierIfNotExists(stack);
     }
 
@@ -57,7 +57,7 @@ public class DynamicModifierHelper {
         if (stack.getItem() instanceof EquipmentAttributeModifierProvider modifierProvider) {
             modifiers.addAll(modifierProvider.getModifiers(stack, player, side, ignoreRequirements));
         }
-        DynamicModifiersComponent component = stack.getOrDefault(DataComponentsAS.DYNAMIC_MODIFIERS, DynamicModifiersComponent.EMPTY);
+        DynamicModifiersComponent component = DataComponentsAS.DYNAMIC_MODIFIERS.getOrDefault(stack, DynamicModifiersComponent.EMPTY);
         modifiers.addAll(component.modifiers());
 
         return modifiers;

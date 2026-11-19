@@ -120,7 +120,7 @@ public class EnchantmentModifierHelper {
             CombinedEnchantmentModifiers modifiers = createEvent.getDynamicEnchantments().build();
 
             for (ItemStack modifierStack : findEnchantmentModifiers(player)) {
-                EnchantmentModifierComponent mod = modifierStack.getOrDefault(DataComponentsAS.ENCHANTMENT_MODIFIERS, EnchantmentModifierComponent.EMPTY);
+                EnchantmentModifierComponent mod = DataComponentsAS.ENCHANTMENT_MODIFIERS.getOrDefault(modifierStack, EnchantmentModifierComponent.EMPTY);
                 modifiers = modifiers.combine(mod.combined());
             }
 
@@ -175,7 +175,7 @@ public class EnchantmentModifierHelper {
         List<ItemStack> foundEnchantmentModifierItems = new ArrayList<>();
         Predicate<ItemStack> filter = stack -> {
             //TODO specific slot filters
-            return !stack.getOrDefault(DataComponentsAS.ENCHANTMENT_MODIFIERS, EnchantmentModifierComponent.EMPTY).isEmpty();
+            return !DataComponentsAS.ENCHANTMENT_MODIFIERS.getOrDefault(stack, EnchantmentModifierComponent.EMPTY).isEmpty();
         };
 
         for (EquipmentSlot slot : EquipmentSlot.values()) {

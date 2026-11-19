@@ -38,8 +38,8 @@ public class KnowledgeShareItem extends ItemCustom {
 
     public KnowledgeShareItem() {
         super(new Properties()
-                .component(DataComponentsAS.STORED_PLAYER_PROGRESS, StoredPlayerProgressComponent.EMPTY)
                 .stacksTo(1));
+        DataComponentsAS.STORED_PLAYER_PROGRESS.setDefault(this, StoredPlayerProgressComponent.EMPTY);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class KnowledgeShareItem extends ItemCustom {
         tabItems.accept(new ItemStack(this));
 
         ItemStack creativeStack = new ItemStack(this);
-        creativeStack.set(DataComponentsAS.STORED_PLAYER_PROGRESS, StoredPlayerProgressComponent.CREATIVE);
+        DataComponentsAS.STORED_PLAYER_PROGRESS.set(creativeStack, StoredPlayerProgressComponent.CREATIVE);
         tabItems.accept(creativeStack);
     }
 
@@ -72,7 +72,7 @@ public class KnowledgeShareItem extends ItemCustom {
     }
 
     protected void handleInteract(ServerPlayer sPlayer, ItemStack stack) {
-        StoredPlayerProgressComponent stored = stack.getOrDefault(DataComponentsAS.STORED_PLAYER_PROGRESS, StoredPlayerProgressComponent.EMPTY);
+        StoredPlayerProgressComponent stored = DataComponentsAS.STORED_PLAYER_PROGRESS.getOrDefault(stack, StoredPlayerProgressComponent.EMPTY);
         if ((stored.creative() || stored.progress().isPresent()) &&
                 (stored.owningPlayer().isEmpty() || !stored.owningPlayer().get().getId().equals(sPlayer.getUUID()))) {
             giveKnowledge(sPlayer, stored);
@@ -104,6 +104,6 @@ public class KnowledgeShareItem extends ItemCustom {
                 Optional.of(storedProgress),
                 Optional.of(sPlayer.getGameProfile()),
                 false);
-        stack.set(DataComponentsAS.STORED_PLAYER_PROGRESS, cmp);
+        DataComponentsAS.STORED_PLAYER_PROGRESS.set(stack, cmp);
     }
 }

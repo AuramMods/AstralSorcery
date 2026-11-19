@@ -13,12 +13,11 @@ import hellfirepvp.astralsorcery.common.component.ConstellationPaperComponent;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.core.component.DataComponentType;
+import hellfirepvp.astralsorcery.common.component.StackDataType;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -33,12 +32,12 @@ public interface TileDataConstellationContainer {
         return MiscUtil.cast(this);
     }
 
-    default Supplier<? extends DataComponentType<? extends ConstellationPaperComponent>> getComponent() {
+    default StackDataType<? extends ConstellationPaperComponent> getComponent() {
         return DataComponentsAS.ATTUNED_CONSTELLATION;
     }
 
     default void setAsComponent(ItemStack stack) {
-        stack.set(DataComponentsAS.ATTUNED_CONSTELLATION, new AttunedConstellationComponent(this.getConstellation().orElse(null)));
+        DataComponentsAS.ATTUNED_CONSTELLATION.set(stack, new AttunedConstellationComponent(this.getConstellation().orElse(null)));
     }
 
     default void markForUpdate() {
