@@ -8,13 +8,11 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.tile.TileAttunementAltar;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,7 +29,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class AttunementAltarBlock extends BaseTickTileBlock<TileAttunementAltar> {
 
-    public static MapCodec<AttunementAltarBlock> CODEC = simpleCodec(AttunementAltarBlock::new);
     private static final VoxelShape SHAPE = Block.box(-2, 0, -2, 18, 6, 18);
     private static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 6, 16);
 
@@ -40,27 +37,22 @@ public class AttunementAltarBlock extends BaseTickTileBlock<TileAttunementAltar>
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return COLLISION_SHAPE;
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
     protected BlockEntityTicker<TileAttunementAltar> createTicker() {
         return this.ticker();
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 }

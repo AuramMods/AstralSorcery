@@ -47,7 +47,7 @@ public class PropertiesAS {
                 .strength(3F)
                 .sound(SoundType.WOOD)
                 .requiresCorrectToolForDrops()
-                .isValidSpawn(Blocks::never)
+                .isValidSpawn((state, level, pos, type) -> false)
                 .ignitedByLava()
                 .noOcclusion();
 
@@ -62,42 +62,48 @@ public class PropertiesAS {
                 .strength(2F, 7F)
                 .sound(SoundType.WOOD);
 
-        public static final BlockBehaviour.Properties INFUSED_GLASS = BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+        public static final BlockBehaviour.Properties INFUSED_GLASS = glassProperties()
                 .strength(0.5F, 10F)
                 .sound(SoundType.GLASS);
 
-        public static final BlockBehaviour.Properties INFUSED_GLASS_LIT = BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+        public static final BlockBehaviour.Properties INFUSED_GLASS_LIT = glassProperties()
                 .strength(0.5F, 10F)
                 .sound(SoundType.GLASS)
                 .lightLevel(state -> 6);
 
-        public static final BlockBehaviour.Properties CRYSTAL_LIT = BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+        public static final BlockBehaviour.Properties CRYSTAL_LIT = glassProperties()
                 .strength(0.5F, 10F)
                 .sound(SoundsAS.CRYSTAL_SOUND_TYPE)
                 .lightLevel(state -> 8);
 
-        public static final BlockBehaviour.Properties UNBREAKABLE_GLASS_LIT = BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+        public static final BlockBehaviour.Properties UNBREAKABLE_GLASS_LIT = glassProperties()
                 .strength(-1.0F, 3600000.0F)
-                .isValidSpawn(Blocks::never)
                 .sound(SoundType.EMPTY)
                 .lightLevel(state -> 6)
                 .noOcclusion();
 
-        public static final BlockBehaviour.Properties UNBREAKABLE_TRANSLUCENT_BLOCK_LIT = BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+        public static final BlockBehaviour.Properties UNBREAKABLE_TRANSLUCENT_BLOCK_LIT = glassProperties()
                 .strength(-1.0F, 3600000.0F)
                 .noLootTable()
-                .isValidSpawn(Blocks::never)
                 .sound(SoundType.EMPTY)
                 .lightLevel(state -> 12)
                 .noOcclusion();
 
         public static final BlockBehaviour.Properties AIRY_LIT = BlockBehaviour.Properties.of()
                 .noLootTable()
-                .isValidSpawn(Blocks::never)
+                .isValidSpawn((state, level, pos, type) -> false)
                 .mapColor(MapColor.NONE)
                 .sound(SoundType.EMPTY)
                 .lightLevel(state -> 15)
                 .noCollission();
+
+        public static BlockBehaviour.Properties glassProperties() {
+            return BlockBehaviour.Properties.copy(Blocks.GLASS)
+                    .isValidSpawn((state, level, pos, type) -> false)
+                    .isRedstoneConductor((state, level, pos) -> false)
+                    .isSuffocating((state, level, pos) -> false)
+                    .isViewBlocking((state, level, pos) -> false);
+        }
 
         public static BlockBehaviour.Properties chaliceGoldMachinery() {
             return BlockBehaviour.Properties.of()

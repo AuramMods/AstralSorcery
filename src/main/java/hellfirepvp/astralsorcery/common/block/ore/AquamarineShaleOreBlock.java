@@ -8,19 +8,13 @@
 
 package hellfirepvp.astralsorcery.common.block.ore;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ColorRGBA;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.ColoredFallingBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -29,30 +23,24 @@ import org.jetbrains.annotations.Nullable;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class AquamarineShaleOreBlock extends ColoredFallingBlock {
-
-    public static final MapCodec<AquamarineShaleOreBlock> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            IntProvider.codec(0, 100).fieldOf("experience").forGetter(p_304879_ -> p_304879_.xpRange),
-            ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter(p_304722_ -> p_304722_.dustColor),
-            propertiesCodec())
-    .apply(inst, AquamarineShaleOreBlock::new));
+public class AquamarineShaleOreBlock extends FallingBlock {
 
     private final IntProvider xpRange;
-    private final ColorRGBA dustColor;
+    private final int dustColor;
 
-    public AquamarineShaleOreBlock(IntProvider xpRange, ColorRGBA dustColor, Properties properties) {
-        super(dustColor, properties);
+    public AquamarineShaleOreBlock(IntProvider xpRange, int dustColor, Properties properties) {
+        super(properties);
         this.xpRange = xpRange;
         this.dustColor = dustColor;
     }
 
     @Override
-    public MapCodec<ColoredFallingBlock> codec() {
-        return MiscUtil.cast(CODEC);
+    public int getDustColor(BlockState state, BlockGetter level, BlockPos pos) {
+        return this.dustColor;
     }
 
     @Override
-    public int getExpDrop(BlockState state, LevelAccessor level, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity breaker, ItemStack tool) {
-        return this.xpRange.sample(level.getRandom());
+    public int getExpDrop(BlockState state, LevelReader level, RandomSource random, BlockPos pos, int fortune, int silkTouch) {
+        return this.xpRange.sample(random);
     }
 }

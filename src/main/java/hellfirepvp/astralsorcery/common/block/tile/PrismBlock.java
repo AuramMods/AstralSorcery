@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.tile.TilePrism;
@@ -16,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -46,7 +44,6 @@ public class PrismBlock extends BaseTickTileBlock<TilePrism> {
     private static final VoxelShape EAST =  Shapes.box(2D / 16D, 3D / 16D, 3D / 16D, 1,       13D / 16D, 13D / 16D);
     private static final VoxelShape WEST =  Shapes.box(0,      3D / 16D, 3D / 16D, 14D / 16D, 13D / 16D, 13D / 16D);
 
-    public static MapCodec<PrismBlock> CODEC = simpleCodec(PrismBlock::new);
     public static EnumProperty<Direction> PLACED_AGAINST = EnumProperty.create("against", Direction.class);
 
     public PrismBlock(Properties properties) {
@@ -55,7 +52,7 @@ public class PrismBlock extends BaseTickTileBlock<TilePrism> {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(PLACED_AGAINST)) {
             case DOWN -> DOWN;
             case UP -> UP;
@@ -79,7 +76,7 @@ public class PrismBlock extends BaseTickTileBlock<TilePrism> {
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
         return false;
     }
 
@@ -89,12 +86,7 @@ public class PrismBlock extends BaseTickTileBlock<TilePrism> {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 }

@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.BlockDynamicColor;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.component.LumenComponent;
@@ -55,7 +54,6 @@ import javax.annotation.Nullable;
  */
 public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystalCluster> implements BlockDynamicColor {
 
-    public static MapCodec<LumenCrystalClusterBlock> CODEC = simpleCodec(LumenCrystalClusterBlock::new);
     public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 4);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape GROWTH_STAGE_0    = Block.box(5, 0, 5, 11, 8.5,  11);
@@ -76,12 +74,12 @@ public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystal
     }
 
     @Override
-    protected float getMaxHorizontalOffset() {
+    public float getMaxHorizontalOffset() {
         return 0.05F;
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         VoxelShape shape = switch (state.getValue(STAGE)) {
             case 0 -> GROWTH_STAGE_0;
             case 1 -> GROWTH_STAGE_1;
@@ -125,7 +123,7 @@ public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystal
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         LumenCrystalClusterBlockItem.setStage(stack, state.getValue(STAGE));
         MiscUtil.getTileAt(level, pos, TileLumenCrystalCluster.class, true).ifPresent(cluster -> {
@@ -137,7 +135,7 @@ public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystal
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (!this.canSurvive(state, level, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
@@ -145,7 +143,7 @@ public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystal
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return canSupportRigidBlock(level, pos.below());
     }
 
@@ -161,23 +159,18 @@ public class LumenCrystalClusterBlock extends BaseTickTileBlock<TileLumenCrystal
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;
     }
 
     @Override
     protected BlockEntityTicker<TileLumenCrystalCluster> createTicker() {
         return this.clientTicker();
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

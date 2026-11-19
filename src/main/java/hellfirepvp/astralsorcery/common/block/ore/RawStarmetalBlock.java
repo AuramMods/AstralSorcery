@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.ore;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -20,14 +19,7 @@ import net.minecraft.world.level.block.Block;
  */
 public class RawStarmetalBlock extends Block {
 
-    public static final MapCodec<RawStarmetalBlock> CODEC = simpleCodec(RawStarmetalBlock::new);
-
     public RawStarmetalBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends Block> codec() {
-        return CODEC;
     }
 }

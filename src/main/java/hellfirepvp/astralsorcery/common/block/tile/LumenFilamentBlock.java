@@ -8,14 +8,12 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.tile.TileLumenFilament;
 import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -33,7 +31,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class LumenFilamentBlock extends BaseTickTileBlock<TileLumenFilament> {
 
-    public static MapCodec<LumenFilamentBlock> CODEC = simpleCodec(LumenFilamentBlock::new);
     private static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 4, 14);
 
     public LumenFilamentBlock(Properties properties) {
@@ -45,12 +42,12 @@ public class LumenFilamentBlock extends BaseTickTileBlock<TileLumenFilament> {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
         return false;
     }
 
@@ -60,12 +57,7 @@ public class LumenFilamentBlock extends BaseTickTileBlock<TileLumenFilament> {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 }

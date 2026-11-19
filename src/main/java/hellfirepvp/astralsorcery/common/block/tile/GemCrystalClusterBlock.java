@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.item.block.GemCrystalClusterBlockItem;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -52,7 +50,6 @@ import java.util.Locale;
  */
 public class GemCrystalClusterBlock extends BaseTickTileBlock<TileGemCrystalCluster> {
 
-    public static MapCodec<GemCrystalClusterBlock> CODEC = simpleCodec(GemCrystalClusterBlock::new);
     public static final EnumProperty<GrowthStageType> STAGE = EnumProperty.create("stage", GrowthStageType.class);
     private static final VoxelShape STAGE_0       = Block.box(4, 0, 4, 12,  6, 12);
     private static final VoxelShape STAGE_1       = Block.box(4, 0, 4, 12,  8, 12);
@@ -71,12 +68,12 @@ public class GemCrystalClusterBlock extends BaseTickTileBlock<TileGemCrystalClus
     }
 
     @Override
-    protected float getMaxHorizontalOffset() {
+    public float getMaxHorizontalOffset() {
         return 0.1F;
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         VoxelShape shape = switch (state.getValue(STAGE)) {
             case STAGE_0 -> STAGE_0;
             case STAGE_1 -> STAGE_1;
@@ -99,14 +96,14 @@ public class GemCrystalClusterBlock extends BaseTickTileBlock<TileGemCrystalClus
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         GemCrystalClusterBlockItem.setStage(stack, state.getValue(STAGE));
         return stack;
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (!this.canSurvive(state, level, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
@@ -114,28 +111,23 @@ public class GemCrystalClusterBlock extends BaseTickTileBlock<TileGemCrystalClus
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return canSupportRigidBlock(level, pos.below());
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
     protected BlockEntityTicker<TileGemCrystalCluster> createTicker() {
         return this.ticker();
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public enum GrowthStageType implements StringRepresentable {

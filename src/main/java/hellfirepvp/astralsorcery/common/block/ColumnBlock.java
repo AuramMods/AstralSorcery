@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -26,7 +25,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -44,8 +43,6 @@ import java.util.function.Supplier;
  */
 public class ColumnBlock extends Block implements SimpleWaterloggedBlock {
 
-    public static final MapCodec<ColumnBlock> CODEC = simpleCodec(ColumnBlock::new);
-
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<ColumnType> COLUMN_TYPE = EnumProperty.create("columntype", ColumnType.class);
 
@@ -61,11 +58,6 @@ public class ColumnBlock extends Block implements SimpleWaterloggedBlock {
 
     public static Supplier<ColumnBlock> make(Properties prop) {
         return () -> new ColumnBlock(prop);
-    }
-
-    @Override
-    protected MapCodec<ColumnBlock> codec() {
-        return CODEC;
     }
 
     protected VoxelShape createColumnShape() {
@@ -138,8 +130,8 @@ public class ColumnBlock extends Block implements SimpleWaterloggedBlock {
 
     @Nullable
     @Override
-    public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
-        return PathType.BLOCKED;
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        return BlockPathTypes.BLOCKED;
     }
 
     public enum ColumnType implements StringRepresentable {

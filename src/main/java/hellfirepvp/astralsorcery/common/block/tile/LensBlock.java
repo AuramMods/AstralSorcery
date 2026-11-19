@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.tile.TileLens;
@@ -17,7 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -47,7 +45,6 @@ public class LensBlock extends BaseTickTileBlock<TileLens> {
     private static final VoxelShape EAST =  Shapes.box(1.5D / 16D, 2.5D / 16D, 2.5D / 16D, 1,           13.5D / 16D, 13.5D / 16D);
     private static final VoxelShape WEST =  Shapes.box(0,          2.5D / 16D, 2.5D / 16D, 14.5D / 16D, 13.5D / 16D, 13.5D / 16D);
 
-    public static MapCodec<LensBlock> CODEC = simpleCodec(LensBlock::new);
     public static EnumProperty<Direction> PLACED_AGAINST = EnumProperty.create("against", Direction.class);
 
     public LensBlock(Properties properties) {
@@ -56,7 +53,7 @@ public class LensBlock extends BaseTickTileBlock<TileLens> {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(PLACED_AGAINST)) {
             case DOWN -> DOWN;
             case UP -> UP;
@@ -80,7 +77,7 @@ public class LensBlock extends BaseTickTileBlock<TileLens> {
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
         return false;
     }
 
@@ -90,12 +87,7 @@ public class LensBlock extends BaseTickTileBlock<TileLens> {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 }

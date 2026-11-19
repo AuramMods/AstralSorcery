@@ -8,8 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.tile.TileStarlightFocusCrystal;
@@ -17,7 +15,6 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -33,11 +30,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Date: 07.09.2026 / 10:00
  */
 public class StarlightFocusCrystalBlock extends BaseTickTileBlock<TileStarlightFocusCrystal> {
-
-    public static final MapCodec<StarlightFocusCrystalBlock> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            propertiesCodec(),
-            CodecUtil.enumCodec(Type.class).fieldOf("crystal_type").forGetter(StarlightFocusCrystalBlock::getType)
-    ).apply(inst, StarlightFocusCrystalBlock::new));
 
     private static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 16, 12);
 
@@ -57,7 +49,7 @@ public class StarlightFocusCrystalBlock extends BaseTickTileBlock<TileStarlightF
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -67,12 +59,7 @@ public class StarlightFocusCrystalBlock extends BaseTickTileBlock<TileStarlightF
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 

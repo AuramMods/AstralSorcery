@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.item.block.CelestialCrystalClusterBlockItem;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
@@ -46,7 +45,6 @@ import javax.annotation.Nullable;
  */
 public class CelestialCrystalClusterBlock extends BaseTickTileBlock<TileCelestialCrystalCluster> {
 
-    public static MapCodec<CelestialCrystalClusterBlock> CODEC = simpleCodec(CelestialCrystalClusterBlock::new);
     private static final VoxelShape GROWTH_STAGE_0 = Block.box(4, 0, 5, 12, 8, 11);
     private static final VoxelShape GROWTH_STAGE_1 = Block.box(4, 0, 5, 12, 10, 11);
     private static final VoxelShape GROWTH_STAGE_2 = Block.box(2, 0, 4, 12, 12, 14);
@@ -65,12 +63,12 @@ public class CelestialCrystalClusterBlock extends BaseTickTileBlock<TileCelestia
     }
 
     @Override
-    protected float getMaxHorizontalOffset() {
+    public float getMaxHorizontalOffset() {
         return 0.1F;
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         VoxelShape shape = switch (state.getValue(STAGE)) {
             case 0 -> GROWTH_STAGE_0;
             case 1 -> GROWTH_STAGE_1;
@@ -94,14 +92,14 @@ public class CelestialCrystalClusterBlock extends BaseTickTileBlock<TileCelestia
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         CelestialCrystalClusterBlockItem.setStage(stack, state.getValue(STAGE));
         return stack;
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (!this.canSurvive(state, level, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
@@ -114,27 +112,22 @@ public class CelestialCrystalClusterBlock extends BaseTickTileBlock<TileCelestia
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return canSupportRigidBlock(level, pos.below());
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
     protected BlockEntityTicker<TileCelestialCrystalCluster> createTicker() {
         return this.ticker();
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 }

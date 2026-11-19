@@ -17,10 +17,8 @@ import hellfirepvp.astralsorcery.common.block.ore.RockCrystalOreBlock;
 import hellfirepvp.astralsorcery.common.block.ore.StarmetalOreBlock;
 import hellfirepvp.astralsorcery.common.block.tile.*;
 import hellfirepvp.astralsorcery.common.tile.TileAltar;
-import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -78,26 +76,26 @@ public class BlocksAS {
     //----------------------------- RESOURCE BLOCKS ------------------------------//
 
     public static final RegisteredItemLike<AquamarineShaleOreBlock> AQUAMARINE_SHALE = register("aquamarine_shale", () ->
-            new AquamarineShaleOreBlock(UniformInt.of(2, 5), new ColorRGBA(0xDBD3A0), BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).requiresCorrectToolForDrops()));
+            new AquamarineShaleOreBlock(UniformInt.of(2, 5), 0xDBD3A0, BlockBehaviour.Properties.copy(Blocks.SAND).requiresCorrectToolForDrops()));
     public static final RegisteredItemLike<RockCrystalOreBlock> ROCK_CRYSTAL_ORE = register("rock_crystal_ore", () ->
-            new RockCrystalOreBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)));
+            new RockCrystalOreBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)));
     public static final RegisteredItemLike<StarmetalOreBlock> STARMETAL_ORE = register("starmetal_ore", () ->
-            new StarmetalOreBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_ORE).mapColor(MapColor.COLOR_BLUE)));
+            new StarmetalOreBlock(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).mapColor(MapColor.COLOR_BLUE)));
     public static final RegisteredItemLike<RawStarmetalBlock> RAW_STARMETAL_BLOCK = register("raw_starmetal_block", () ->
-            new RawStarmetalBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_BLUE)));
+            new RawStarmetalBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_BLUE)));
 
     public static final RegisteredItemLike<FlowerBlock> GLIMMER_AMARANTH = register("glimmer_amaranth", () ->
-            new FlowerBlock(MobEffects.LUCK, 20, BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).lightLevel(state -> 6)));
+            new FlowerBlock(MobEffects.LUCK, 20, BlockBehaviour.Properties.copy(Blocks.POPPY).lightLevel(state -> 6)));
     public static final RegisteredItemLike<FlowerBlock> HYACINTH = register("hyacinth", () ->
-            new FlowerBlock(MobEffects.HEAL, 1, BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY)));
+            new FlowerBlock(MobEffects.HEAL, 1, BlockBehaviour.Properties.copy(Blocks.POPPY)));
     public static final RegisteredItemLike<FlowerBlock> IRIS = register("iris", () ->
-            new FlowerBlock(MobEffects.LEVITATION, 14, BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY)));
+            new FlowerBlock(MobEffects.LEVITATION, 14, BlockBehaviour.Properties.copy(Blocks.POPPY)));
     public static final RegisteredItemLike<FlowerBlock> ORCHID = register("orchid", () ->
-            new FlowerBlock(MobEffects.DAMAGE_RESISTANCE, 2, BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY)));
+            new FlowerBlock(MobEffects.DAMAGE_RESISTANCE, 2, BlockBehaviour.Properties.copy(Blocks.POPPY)));
     public static final RegisteredItemLike<FlowerBlock> PROTEA = register("protea", () ->
-            new FlowerBlock(MobEffects.DIG_SPEED, 5, BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY)));
+            new FlowerBlock(MobEffects.DIG_SPEED, 5, BlockBehaviour.Properties.copy(Blocks.POPPY)));
     public static final RegisteredItemLike<FlowerBlock> THISTLE = register("thistle", () ->
-            new FlowerBlock(MobEffects.DAMAGE_BOOST, 12, BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY)));
+            new FlowerBlock(MobEffects.DAMAGE_BOOST, 12, BlockBehaviour.Properties.copy(Blocks.POPPY)));
 
     public static final RegisteredItemLike<FlowerPotBlock> POTTED_GLIMMER_AMARANTH = register("potted_glimmer_amaranth", () ->
             new PlantableFlowerPotBlock(GLIMMER_AMARANTH, BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(PushReaction.DESTROY).lightLevel(state -> 6)));
@@ -126,7 +124,7 @@ public class BlocksAS {
     public static final RegisteredItemLike<FocusRelayBlock> FOCUS_RELAY =
             register("focus_relay", () -> new FocusRelayBlock(INFUSED_GLASS_LIT));
     public static final RegisteredItemLike<CelestialCrystalClusterBlock> CELESTIAL_CRYSTAL_CLUSTER =
-            register("celestial_crystal_cluster", () -> new CelestialCrystalClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+            register("celestial_crystal_cluster", () -> new CelestialCrystalClusterBlock(glassProperties()
                     .strength(0.5F, 10F)
                     .lightLevel(state -> 6)
                     .offsetType(BlockBehaviour.OffsetType.XZ)
@@ -134,7 +132,7 @@ public class BlocksAS {
                     .forceSolidOn()
                     .dynamicShape()));
     public static final RegisteredItemLike<GemCrystalClusterBlock> GEM_CRYSTAL_CLUSTER =
-            register("gem_crystal_cluster", () -> new GemCrystalClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+            register("gem_crystal_cluster", () -> new GemCrystalClusterBlock(glassProperties()
                     .strength(0.5F, 10F)
                     .lightLevel(state -> 5)
                     .offsetType(BlockBehaviour.OffsetType.XZ)
@@ -142,7 +140,7 @@ public class BlocksAS {
                     .forceSolidOn()
                     .dynamicShape()));
     public static final RegisteredItemLike<LumenCrystalClusterBlock> LUMEN_CRYSTAL_CLUSTER =
-            register("lumen_crystal_cluster", () -> new LumenCrystalClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+            register("lumen_crystal_cluster", () -> new LumenCrystalClusterBlock(glassProperties()
                     .strength(0.5F, 10F)
                     .lightLevel(state -> 4)
                     .offsetType(BlockBehaviour.OffsetType.XZ)
@@ -188,7 +186,7 @@ public class BlocksAS {
     public static final RegisteredItemLike<StellarFilamentBlock> STELLAR_FILAMENT =
             register("stellar_filament", () -> new StellarFilamentBlock(CRYSTAL_LIT));
     public static final RegisteredItemLike<CaveIlluminatorBlock> CAVE_ILLUMINATOR =
-            register("cave_illuminator", () -> new CaveIlluminatorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+            register("cave_illuminator", () -> new CaveIlluminatorBlock(glassProperties()
                     .strength(1F, 5F)
                     .sound(SoundType.GLASS)
                     .lightLevel(state -> 10)));
@@ -200,8 +198,8 @@ public class BlocksAS {
                     .strength(-1.0F, 3600000.8F)
                     .noLootTable()
                     .noOcclusion()
-                    .isValidSpawn(Blocks::never)
-                    .noTerrainParticles()
+                    .isValidSpawn((state, level, pos, type) -> false)
+                    .noParticlesOnBreak()
                     .pushReaction(PushReaction.BLOCK)));
 
     //----------------------------- REGISTER ------------------------------//
@@ -211,7 +209,7 @@ public class BlocksAS {
     }
 
     private static Supplier<StairBlock> makeStairs(RegisteredItemLike<? extends Block> baseBlock, BlockBehaviour.Properties properties) {
-        return () -> new StairBlock(baseBlock.get().defaultBlockState(), properties);
+        return () -> new StairBlock(() -> baseBlock.get().defaultBlockState(), properties);
     }
 
     private static RegisteredItemLike<Block> registerSimple(String name, BlockBehaviour.Properties props) {

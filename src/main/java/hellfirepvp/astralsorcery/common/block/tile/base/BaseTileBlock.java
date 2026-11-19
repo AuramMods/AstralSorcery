@@ -20,8 +20,8 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -85,7 +85,7 @@ public abstract class BaseTileBlock<T extends BlockEntity> extends BaseEntityBlo
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         MiscUtil.getTileAt(level, pos, TileEntitySynchronized.class, true).ifPresent(tile -> {
             if (tile.getTileData() instanceof TileDataCrystalAttributeContainer attributeContainer) {
@@ -116,12 +116,10 @@ public abstract class BaseTileBlock<T extends BlockEntity> extends BaseEntityBlo
         }
         MiscUtil.getTileAt(level, pos, TileEntitySynchronized.class, true).ifPresent(tile -> {
             if (tile.getTileData() instanceof TileDataConstellationContainer constellationContainer) {
-                if (stack.has(constellationContainer.getComponent())) {
-                    ConstellationPaperComponent cmp = stack.get(constellationContainer.getComponent());
-                    if (cmp != null) {
-                        constellationContainer.setConstellation(cmp.getConstellation().orElse(null));
-                        constellationContainer.markForUpdate();
-                    }
+                ConstellationPaperComponent cmp = constellationContainer.getComponent().get(stack);
+                if (cmp != null) {
+                    constellationContainer.setConstellation(cmp.getConstellation().orElse(null));
+                    constellationContainer.markForUpdate();
                 }
             }
         });

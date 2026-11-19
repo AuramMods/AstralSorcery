@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.block.ore;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.DropExperienceBlock;
 
@@ -21,14 +20,7 @@ import net.minecraft.world.level.block.DropExperienceBlock;
  */
 public class RockCrystalOreBlock extends DropExperienceBlock {
 
-    public static final MapCodec<RockCrystalOreBlock> CODEC = simpleCodec(RockCrystalOreBlock::new);
-
     public RockCrystalOreBlock(Properties properties) {
-        super(UniformInt.of(9, 15), properties);
-    }
-
-    @Override
-    public MapCodec<RockCrystalOreBlock> codec() {
-        return CODEC;
+        super(properties, UniformInt.of(9, 15));
     }
 }
