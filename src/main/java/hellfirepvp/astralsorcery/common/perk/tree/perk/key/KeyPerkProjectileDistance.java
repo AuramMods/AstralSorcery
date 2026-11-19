@@ -23,6 +23,7 @@ import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirement;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
+import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -30,7 +31,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -60,14 +60,14 @@ public class KeyPerkProjectileDistance extends KeyPerk {
     @Override
     protected void attachEventListeners(SidedEventBus sidedEventBus) {
         super.attachEventListeners(sidedEventBus);
-        sidedEventBus.addListener(LivingIncomingDamageEvent.class, SidedEventBus.entityEvent(), this::onDamage);
+        sidedEventBus.addListener(IncomingDamageEvent.class, SidedEventBus.entityEvent(), this::onDamage);
     }
 
-    private void onDamage(LivingIncomingDamageEvent event) {
+    private void onDamage(IncomingDamageEvent event) {
         if (!event.getSource().is(DamageTypeTags.IS_PROJECTILE)) return;
         Entity source = event.getSource().getEntity();
         if (!(source instanceof ServerPlayer sPlayer)) return;
-        if (event.getSource().isDirect()) return;
+        if (!event.getSource().isIndirect()) return;
         LogicalSide side = this.getSide(sPlayer);
         if (!side.isServer()) return;
         PlayerProgress progress = ResearchManager.getProgress(sPlayer, side);

@@ -11,6 +11,7 @@
         "MixinItemCooldowns",
         "MixinItemStack",
         "MixinLevelChunk",
+        "MixinLivingEntity",
         "MixinPlayer",
         "MixinProjectile",
         "MixinServerGamePacketListenerImpl",

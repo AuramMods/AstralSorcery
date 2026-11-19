@@ -14,11 +14,11 @@ import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
+import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -39,7 +39,7 @@ public class AttributeTypeProjectileDamage extends PerkAttributeType {
         eventBus.addListener(this::onProjectileHurt);
     }
 
-    private void onProjectileHurt(LivingIncomingDamageEvent event) {
+    private void onProjectileHurt(IncomingDamageEvent event) {
         if (event.getSource().is(DamageTypeTags.IS_PROJECTILE) && event.getSource().getEntity() instanceof Player player) {
             LogicalSide side = SidedHelper.getSide(player);
             if (!this.hasTypeApplied(player, side)) return;

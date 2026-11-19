@@ -29,12 +29,12 @@ import hellfirepvp.astralsorcery.common.research.ResearchHelper;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.DiminishingMultiplier;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
+import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 import java.util.Collection;
@@ -80,10 +80,10 @@ public class RootPerkDiscidia extends RootPerk<AbstractPerk.Data> {
     @Override
     protected void attachEventListeners(SidedEventBus sidedEventBus) {
         super.attachEventListeners(sidedEventBus);
-        sidedEventBus.addListener(LivingIncomingDamageEvent.class, SidedEventBus.entityEvent(), this::onAttack);
+        sidedEventBus.addListener(IncomingDamageEvent.class, SidedEventBus.entityEvent(), this::onAttack);
     }
 
-    private void onAttack(LivingIncomingDamageEvent event) {
+    private void onAttack(IncomingDamageEvent event) {
         ServerPlayer sPlayer = null;
         if (event.getSource().getDirectEntity() instanceof ServerPlayer) {
             sPlayer = (ServerPlayer) event.getSource().getDirectEntity();

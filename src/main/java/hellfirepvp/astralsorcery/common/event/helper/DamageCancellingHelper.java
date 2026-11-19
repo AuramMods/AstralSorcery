@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.event.helper;
 
+import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageType;
@@ -16,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.*;
 
@@ -70,9 +70,9 @@ public class DamageCancellingHelper {
         }
     }
 
-    private static void onDamage(LivingIncomingDamageEvent event) {
+    private static void onDamage(IncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer sPlayer)) return;
-        ResourceKey<DamageType> type = event.getSource().typeHolder().getKey();
+        ResourceKey<DamageType> type = event.getSource().typeHolder().unwrapKey().orElse(null);
         Set<ResourceKey<DamageType>> sources = invulnerableTypes.getOrDefault(sPlayer.getUUID(), Collections.emptySet());
         if (sources.remove(type)) {
             if (sources.isEmpty()) {

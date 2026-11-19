@@ -29,12 +29,12 @@ import hellfirepvp.astralsorcery.common.research.ResearchHelper;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.DiminishingMultiplier;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
+import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -78,10 +78,10 @@ public class RootPerkArmara extends RootPerk<AbstractPerk.Data> {
     @Override
     protected void attachEventListeners(SidedEventBus sidedEventBus) {
         super.attachEventListeners(sidedEventBus);
-        sidedEventBus.addListener(LivingIncomingDamageEvent.class, SidedEventBus.entityEvent(), this::onHurt);
+        sidedEventBus.addListener(IncomingDamageEvent.class, SidedEventBus.entityEvent(), this::onHurt);
     }
 
-    private void onHurt(LivingIncomingDamageEvent event) {
+    private void onHurt(IncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer sPlayer)) return;
 
         LogicalSide side = this.getSide(sPlayer);

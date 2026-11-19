@@ -14,11 +14,10 @@ import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
+import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.common.damagesource.DamageContainer;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.Random;
 
@@ -43,7 +42,7 @@ public class AttributeTypePierceArmor extends PerkAttributeType {
         eventBus.addListener(this::onLivingDamage);
     }
 
-    private void onLivingDamage(LivingIncomingDamageEvent event) {
+    private void onLivingDamage(IncomingDamageEvent event) {
         if (event.getSource().getEntity() instanceof ServerPlayer sPlayer) {
             LogicalSide side = SidedHelper.getSide(sPlayer);
             if (!this.hasTypeApplied(sPlayer, side)) return;
@@ -55,7 +54,7 @@ public class AttributeTypePierceArmor extends PerkAttributeType {
                     .modifyValue(sPlayer, progress, this, 0);
             pierceChance = AttributeEvent.postProcessModded(sPlayer, this, pierceChance);
             if (pierceChance >= this.rand.nextFloat()) {
-                event.addReductionModifier(DamageContainer.Reduction.ARMOR, (container, dmg) -> 0F);
+                event.bypassArmorReduction();
             }
         }
     }

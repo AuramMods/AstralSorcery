@@ -15,11 +15,11 @@ import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
+import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -40,7 +40,7 @@ public class AttributeTypeElementalResistance extends PerkAttributeType {
         eventBus.addListener(this::onDamage);
     }
 
-    private void onDamage(LivingIncomingDamageEvent event) {
+    private void onDamage(IncomingDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         LogicalSide side = SidedHelper.getSide(player);
         if (!this.hasTypeApplied(player, side)) return;
