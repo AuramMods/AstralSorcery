@@ -244,16 +244,16 @@ public class CommonProxy {
         NetworkRegistry.registerPackets();
         FluidsAS.addLiquidInteractions();
         PatreonDataManager.loadPatreonEffects();
-        ItemsAS.ITEM_REGISTER.getEntries().forEach(holder -> {
+        event.enqueueWork(() -> ItemsAS.ITEM_REGISTER.getEntries().forEach(holder -> {
             holder.ifPresent(item -> {
                 if (item instanceof DispenseItemBehavior behavior) {
                     DispenserBlock.registerBehavior(item, behavior);
                 }
                 if (item instanceof CauldronInteractableItem interactableItem) {
-                    interactableItem.getInteractionMap().map().put(item, interactableItem.getInteraction());
+                    interactableItem.getInteractionMap().put(item, interactableItem.getInteraction());
                 }
             });
-        });
+        }));
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {

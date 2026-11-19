@@ -24,10 +24,6 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 
 /**
  * This class is part of the Astral Sorcery Mod

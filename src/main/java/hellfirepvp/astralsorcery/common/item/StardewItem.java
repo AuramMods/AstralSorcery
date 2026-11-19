@@ -23,25 +23,22 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -56,8 +53,7 @@ public class StardewItem extends PotionItem implements ItemDynamicColor, Creativ
     public StardewItem() {
         super(new Properties()
                 .setNoRepair()
-                .durability(4)
-                .component(DataComponents.UNBREAKABLE, new Unbreakable(false)));
+                .durability(4));
     }
 
     @Override
@@ -68,38 +64,38 @@ public class StardewItem extends PotionItem implements ItemDynamicColor, Creativ
     }
 
     public static ItemStack create(List<MobEffectInstance> effects) {
-        ItemStack stack = ItemsAS.STARDEW.toStack();
-        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(Optional.empty(), Optional.empty(), effects));
-        return stack;
+        ItemStack stack = PotionUtils.setPotion(ItemsAS.STARDEW.toStack(), Potions.EMPTY);
+        return PotionUtils.setCustomEffects(stack, effects);
     }
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
-        Player player = entity instanceof Player ? (Player) entity : null;
+        Player player = entity instanceof Player drinker ? drinker : null;
         if (player instanceof ServerPlayer sPlayer) {
             CriteriaTriggers.CONSUME_ITEM.trigger(sPlayer, stack);
         }
 
         if (!level.isClientSide()) {
-            PotionContents contents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-            contents.forEachEffect(effect -> {
-                if (effect.getEffect().value().isInstantenous()) {
-                    effect.getEffect().value().applyInstantenousEffect(player, player, entity, effect.getAmplifier(), 1);
+            for (MobEffectInstance effect : PotionUtils.getMobEffects(stack)) {
+                if (effect.getEffect().isInstantenous()) {
+                    effect.getEffect().applyInstantenousEffect(player, player, entity, effect.getAmplifier(), 1);
                 } else {
-                    entity.addEffect(effect);
+                    entity.addEffect(new MobEffectInstance(effect));
                 }
-            });
+            }
         }
 
         if (player != null) {
             player.awardStat(Stats.ITEM_USED.get(this));
         }
-        if (!entity.hasInfiniteMaterials()) {
+        if (player == null || !player.getAbilities().instabuild) {
             stack.setDamageValue(Math.min(stack.getDamageValue() + 1, stack.getMaxDamage()));
         }
 
         if (stack.getDamageValue() >= stack.getMaxDamage()) {
-            stack.remove(DataComponents.POTION_CONTENTS);
+            stack.removeTagKey(PotionUtils.TAG_POTION);
+            stack.removeTagKey(PotionUtils.TAG_CUSTOM_POTION_EFFECTS);
+            stack.removeTagKey(PotionUtils.TAG_CUSTOM_POTION_COLOR);
             DataComponentsAS.RARITY.set(stack, ItemsAS.STARDEW.asItem().getDefaultInstance().getRarity());
         }
 
@@ -145,12 +141,12 @@ public class StardewItem extends PotionItem implements ItemDynamicColor, Creativ
     }
 
     public static boolean isWater(ItemStack stack) {
-        return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).is(Potions.WATER);
+        return PotionUtils.getPotion(stack) == Potions.WATER;
     }
 
     public static boolean isEmpty(ItemStack stack) {
         return stack.getDamageValue() >= stack.getMaxDamage() ||
-                !stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).hasEffects();
+                PotionUtils.getMobEffects(stack).isEmpty();
     }
 
     @Override
@@ -158,20 +154,19 @@ public class StardewItem extends PotionItem implements ItemDynamicColor, Creativ
         if (tintIndex != 0) {
             return 0xFFFFFFFF;
         }
-        int color = PotionContents.getColor(stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).getAllEffects());
+        int color = PotionUtils.getColor(PotionUtils.getMobEffects(stack));
         return color | 0xFF000000;
     }
 
     @Override
-    public CauldronInteraction.InteractionMap getInteractionMap() {
+    public Map<Item, CauldronInteraction> getInteractionMap() {
         return CauldronInteraction.WATER;
     }
 
     @Override
     public CauldronInteraction getInteraction() {
         return (state, level, pos, player, hand, stack) -> {
-            if (isWater(stack)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            if (!isEmpty(stack)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            if (isWater(stack) || !isEmpty(stack)) return InteractionResult.PASS;
             if (!level.isClientSide()) {
                 player.setItemInHand(hand, this.getDefaultInstance());
                 player.awardStat(Stats.USE_CAULDRON);
@@ -179,7 +174,7 @@ public class StardewItem extends PotionItem implements ItemDynamicColor, Creativ
                 level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(level.isClientSide());
         };
     }
 }

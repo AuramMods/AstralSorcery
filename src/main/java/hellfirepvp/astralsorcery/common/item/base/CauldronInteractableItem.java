@@ -9,6 +9,9 @@
 package hellfirepvp.astralsorcery.common.item.base;
 
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.world.item.Item;
+
+import java.util.Map;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -19,7 +22,7 @@ import net.minecraft.core.cauldron.CauldronInteraction;
  */
 public interface CauldronInteractableItem {
 
-    CauldronInteraction.InteractionMap getInteractionMap();
+    Map<Item, CauldronInteraction> getInteractionMap();
 
     CauldronInteraction getInteraction();
 
