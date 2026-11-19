@@ -11,9 +11,6 @@ package hellfirepvp.astralsorcery.common.registry;
 import hellfirepvp.astralsorcery.common.lib.*;
 import hellfirepvp.astralsorcery.common.lib.types.*;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.NewRegistryEvent;
-
-import static hellfirepvp.astralsorcery.common.lib.RegistriesAS.*;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -25,7 +22,7 @@ import static hellfirepvp.astralsorcery.common.lib.RegistriesAS.*;
 public class RegistryBootstrap {
 
     public static void registerDeferredRegisterEvents(IEventBus modLifecycleBus) {
-        modLifecycleBus.addListener(RegistryBootstrap::buildRegistries);
+        modLifecycleBus.addListener(RegistriesAS::createRegistries);
 
         // ------------------ VANILLA ------------------ //
         BlocksAS.BLOCK_REGISTER.register(modLifecycleBus);
@@ -85,36 +82,5 @@ public class RegistryBootstrap {
 
         // ------------------ OBSERVER ----------------- //
         ObserversAS.OBSERVER_REGISTER.register(modLifecycleBus);
-    }
-
-    private static void buildRegistries(NewRegistryEvent event) {
-        event.register(REGISTRY_CONSTELLATIONS);
-        event.register(REGISTRY_LUMEN);
-        event.register(REGISTRY_CRYSTAL_PROPERTIES);
-        event.register(REGISTRY_TRANSMISSION_NODES);
-        event.register(REGISTRY_ALTAR_EFFECTS);
-        event.register(REGISTRY_PERK_TYPES);
-        event.register(REGISTRY_PERK_DATA_TYPES);
-        event.register(REGISTRY_PERK_ATTRIBUTE_TYPE_READERS);
-        event.register(REGISTRY_PERK_ATTRIBUTE_TYPES);
-        event.register(REGISTRY_PERK_CONVERTERS);
-        event.register(REGISTRY_PERK_CUSTOM_MODIFIERS);
-        event.register(REGISTRY_PERK_MODIFIER_SOURCES);
-        event.register(REGISTRY_PERK_ATTRIBUTE_LIMITS);
-
-        event.register(REGISTRY_TOME_PAGE_TYPES);
-        event.register(REGISTRY_SYNC_DATA_TYPES);
-        event.register(REGISTRY_FOCAL_NODE_TYPES);
-        event.register(REGISTRY_RESEARCH_NODE_CONDITION_TYPES);
-        event.register(REGISTRY_ALTAR_OUTPUT_MODIFIER_TYPES);
-        event.register(REGISTRY_LIQUID_STARLIGHT_OUTPUT_MODIFIER_TYPES);
-        event.register(REGISTRY_LIQUID_INTERACTION_RESULT_TYPES);
-        event.register(REGISTRY_PERK_REQUIREMENT_TYPES);
-        event.register(REGISTRY_ARTIFACT_TYPES);
-        event.register(REGISTRY_ARTIFACT_CONDITION_TYPES);
-        event.register(REGISTRY_ARTIFACT_EFFECT_TYPES);
-        event.register(REGISTRY_LUMEN_BINDING_USAGE_TYPES);
-        event.register(REGISTRY_LUMEN_BINDING_EFFECT_TYPES);
-        event.register(REGISTRY_STRUCTURE_MARKER_REPLACEMENT_TYPES);
     }
 }

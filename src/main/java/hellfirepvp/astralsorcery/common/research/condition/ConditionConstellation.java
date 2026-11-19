@@ -33,7 +33,7 @@ import java.util.List;
 public class ConditionConstellation implements ResearchNodeCondition {
 
     public static final MapCodec<ConditionConstellation> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().listOf().fieldOf("any_constellations").forGetter(condition -> condition.anyConstellations)
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).listOf().fieldOf("any_constellations").forGetter(condition -> condition.anyConstellations)
     ).apply(inst, ConditionConstellation::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ConditionConstellation> STREAM_CODEC = StreamCodec.composite(

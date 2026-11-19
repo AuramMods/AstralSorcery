@@ -23,7 +23,7 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class TilePrism extends TileEntityNetwork<SimpleTransmissionNode, TilePri
     }
 
     @Override
-    public DeferredHolder<TransmissionNodeProvider<?>, SimpleTransmissionNodeProvider> getNodeProvider() {
+    public RegistryObject<SimpleTransmissionNodeProvider> getNodeProvider() {
         return StarlightNetworkNodesAS.SIMPLE_NODE;
     }
 

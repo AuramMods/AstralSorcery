@@ -51,7 +51,7 @@ public class FlareLightColorizationProcessor extends StructureProcessor {
                                                         StructureTemplate.StructureBlockInfo currentBlockInfo,
                                                         StructurePlaceSettings settings,
                                                         @Nullable StructureTemplate template) {
-        if (currentBlockInfo.state().is(BlocksAS.FLARE_LIGHT)) {
+        if (currentBlockInfo.state().is(BlocksAS.FLARE_LIGHT.get())) {
             BlockState randomColor = BlocksAS.FLARE_LIGHT.get().defaultBlockState().setValue(FlareLightBlock.COLOR,
                     MiscUtil.getRandomEntry(settings.getRandom(currentBlockInfo.pos()), DyeColor.values()).orElse(DyeColor.WHITE));
             return new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos(), randomColor, currentBlockInfo.nbt());

@@ -122,7 +122,7 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
         private static final int DURATION_CRYSTAL_ATTUNEMENT = 500;
         public static final MapCodec<Active> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Codec.INT.fieldOf("tick").forGetter(Active::getTick),
-                RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().fieldOf("constellation").forGetter(Active::getConstellation),
+                RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).fieldOf("constellation").forGetter(Active::getConstellation),
                 Codec.INT.fieldOf("item_id").forGetter(Active::getItemId)
         ).apply(inst, Active::new));
 

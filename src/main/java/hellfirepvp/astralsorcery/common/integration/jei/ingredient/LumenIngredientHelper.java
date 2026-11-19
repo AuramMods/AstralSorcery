@@ -45,7 +45,7 @@ public class LumenIngredientHelper implements IIngredientHelper<LumenStack> {
 
     public LumenIngredientHelper(ISubtypeManager subtypeManager) {
         this.subtypeManager = subtypeManager;
-        this.registry = RegistriesAS.REGISTRY_LUMEN;
+        this.registry = RegistriesAS.REGISTRY_LUMEN.get();
     }
 
     @Override

@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.datagen.assets;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.datagen.MultiLayerModelBuilder;
 import hellfirepvp.astralsorcery.client.datagen.RotatableMultiLayerModelBuilder;
@@ -30,8 +31,7 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import static hellfirepvp.astralsorcery.common.util.NameUtil.*;
 
@@ -161,7 +161,7 @@ public class AstralBlockStateProvider extends BlockStateProvider {
         this.simpleBlockState(BlocksAS.STRUCTURE_MARKER);
     }
 
-    private void pillarModel(DeferredBlock<? extends PillarBlock> b) {
+    private void pillarModel(RegisteredItemLike<? extends PillarBlock> b) {
         ResourceLocation key = b.getId();
         this.getVariantBuilder(b.get())
                 .partialState().with(PillarBlock.PILLAR_TYPE, PillarBlock.PillarType.MIDDLE)
@@ -172,7 +172,7 @@ public class AstralBlockStateProvider extends BlockStateProvider {
                 .addModels(new ConfiguredModel(model(suffixPath(key, "_bottom"))));
     }
 
-    private void columnModel(DeferredBlock<? extends ColumnBlock> b) {
+    private void columnModel(RegisteredItemLike<? extends ColumnBlock> b) {
         ResourceLocation key = b.getId();
         this.getVariantBuilder(b.get())
                 .partialState().with(ColumnBlock.COLUMN_TYPE, ColumnBlock.ColumnType.MIDDLE)
@@ -183,17 +183,17 @@ public class AstralBlockStateProvider extends BlockStateProvider {
                 .addModels(new ConfiguredModel(model(suffixPath(key, "_bottom"))));
     }
 
-    private void simpleSlabs(DeferredBlock<? extends SlabBlock> b, ModelFile doubleSlabModel) {
+    private void simpleSlabs(RegisteredItemLike<? extends SlabBlock> b, ModelFile doubleSlabModel) {
         ResourceLocation key = b.getId();
         this.slabBlock(b.get(), model(key), model(suffixPath(key, "_top")), doubleSlabModel);
     }
 
-    private void simpleStairs(DeferredBlock<? extends StairBlock> b) {
+    private void simpleStairs(RegisteredItemLike<? extends StairBlock> b) {
         ResourceLocation key = b.getId();
         this.stairsBlock(b.get(), model(key), model(suffixPath(key, "_inner")), model(suffixPath(key, "_outer")));
     }
 
-    private void simpleBlockState(DeferredBlock<?> b) {
+    private void simpleBlockState(RegisteredItemLike<? extends Block> b) {
         this.simpleBlockState(b.get(), model(b));
     }
 
@@ -201,28 +201,28 @@ public class AstralBlockStateProvider extends BlockStateProvider {
         getVariantBuilder(b).partialState().addModels(new ConfiguredModel(targetModel));
     }
 
-    private void multiLayer(DeferredBlock<?> b, RenderType... layers) {
+    private void multiLayer(RegisteredItemLike<? extends Block> b, RenderType... layers) {
         MultiLayerModelBuilder builder = MultiLayerModelBuilder.makeState(this, b);
         for (RenderType layer : layers) {
             builder.addLayer(layer);
         }
     }
 
-    private void stateMultiLayer(DeferredBlock<?> b, Property<?> blockProperty, RenderType... layers) {
+    private void stateMultiLayer(RegisteredItemLike<? extends Block> b, Property<?> blockProperty, RenderType... layers) {
         StateMultiLayerModelBuilder<?> stateBuilder = StateMultiLayerModelBuilder.makeState(this, b, blockProperty);
         for (RenderType layer : layers) {
             stateBuilder.addLayer(layer);
         }
     }
 
-    private void horizontalStateMultiLayer(DeferredBlock<?> b, DirectionProperty dirProperty, Property<?> blockProperty, RenderType... layers) {
+    private void horizontalStateMultiLayer(RegisteredItemLike<? extends Block> b, DirectionProperty dirProperty, Property<?> blockProperty, RenderType... layers) {
         RotatableMultiLayerModelBuilder<?> stateBuilder = RotatableMultiLayerModelBuilder.makeState(this, b, dirProperty, blockProperty);
         for (RenderType layer : layers) {
             stateBuilder.addLayer(layer);
         }
     }
 
-    private void emptyModel(DeferredBlock<?> b) {
+    private void emptyModel(RegisteredItemLike<? extends Block> b) {
         this.getVariantBuilder(b.get()).partialState().addModels(new ConfiguredModel(modelNothing()));
     }
 
@@ -230,7 +230,7 @@ public class AstralBlockStateProvider extends BlockStateProvider {
         return model(AstralSorcery.key("_custom/nothing"));
     }
 
-    public static ModelFile model(DeferredHolder<?, ?> entry) {
+    public static ModelFile model(RegistryObject<?> entry) {
         return model(entry.getId());
     }
 
@@ -238,7 +238,7 @@ public class AstralBlockStateProvider extends BlockStateProvider {
         return new ModelFile.UncheckedModelFile(prefixPath(name, "block/"));
     }
 
-    public static ModelFile multilayerModel(DeferredHolder<?, ?> entry, RenderType type) {
+    public static ModelFile multilayerModel(RegistryObject<?> entry, RenderType type) {
         return multilayerModel(entry.getId(), type);
     }
 

@@ -48,7 +48,7 @@ public class IsStableArtifactIngredient implements ICustomIngredient {
     public Stream<ItemStack> getItems() {
         Component display = Component.translatable("ingredient.astralsorcery.stable_artifact.description")
                 .withStyle(ChatFormatting.GOLD);
-        return RegistriesAS.REGISTRY_ARTIFACT_TYPES.stream()
+        return RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
                 .map(ArtifactItem::create)
                 .peek(artifact -> {
                     ArtifactComponent cmp = artifact.get(DataComponentsAS.ARTIFACT);

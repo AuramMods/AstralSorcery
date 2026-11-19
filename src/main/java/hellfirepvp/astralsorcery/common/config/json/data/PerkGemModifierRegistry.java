@@ -15,6 +15,8 @@ import hellfirepvp.astralsorcery.common.lib.PerksAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -46,23 +48,28 @@ public class PerkGemModifierRegistry extends JsonDataRegistry<PerkGemModifierReg
     @Override
     public List<Entry> getDefaultValues() {
         return List.of(
-                new Entry(PerksAS.AttributeTypes.MAX_HEALTH, 2),
-                new Entry(PerksAS.AttributeTypes.MOVEMENT_SPEED, 8),
-                new Entry(PerksAS.AttributeTypes.ARMOR, 8),
-                new Entry(PerksAS.AttributeTypes.BLOCK_REACH, 4),
-                new Entry(PerksAS.AttributeTypes.ATTACK_SPEED, 2),
-                new Entry(PerksAS.AttributeTypes.ATTACK_DAMAGE, 8),
-                new Entry(PerksAS.AttributeTypes.SCALE, 2),
+                entry(PerksAS.AttributeTypes.MAX_HEALTH, 2),
+                entry(PerksAS.AttributeTypes.MOVEMENT_SPEED, 8),
+                entry(PerksAS.AttributeTypes.ARMOR, 8),
+                entry(PerksAS.AttributeTypes.BLOCK_REACH, 4),
+                entry(PerksAS.AttributeTypes.ATTACK_SPEED, 2),
+                entry(PerksAS.AttributeTypes.ATTACK_DAMAGE, 8),
+                entry(PerksAS.AttributeTypes.SCALE, 2),
 
-                new Entry(PerksAS.AttributeTypes.PROJECTILE_DAMAGE, 8),
-                new Entry(PerksAS.AttributeTypes.BLOCK_BREAK_SPEED, 2),
-                new Entry(PerksAS.AttributeTypes.CRITICAL_HIT_CHANCE, 4),
-                new Entry(PerksAS.AttributeTypes.CRITICAL_HIT_DAMAGE, 4),
-                new Entry(PerksAS.AttributeTypes.ELEMENTAL_RESISTANCE, 2),
-                new Entry(PerksAS.AttributeTypes.BLOCK_CHANCE, 2),
-                new Entry(PerksAS.AttributeTypes.LIFE_RECOVERY, 2),
-                new Entry(PerksAS.AttributeTypes.PERK_EXPERIENCE, 1)
+                entry(PerksAS.AttributeTypes.PROJECTILE_DAMAGE, 8),
+                entry(PerksAS.AttributeTypes.BLOCK_BREAK_SPEED, 2),
+                entry(PerksAS.AttributeTypes.CRITICAL_HIT_CHANCE, 4),
+                entry(PerksAS.AttributeTypes.CRITICAL_HIT_DAMAGE, 4),
+                entry(PerksAS.AttributeTypes.ELEMENTAL_RESISTANCE, 2),
+                entry(PerksAS.AttributeTypes.BLOCK_CHANCE, 2),
+                entry(PerksAS.AttributeTypes.LIFE_RECOVERY, 2),
+                entry(PerksAS.AttributeTypes.PERK_EXPERIENCE, 1)
         );
+    }
+
+    private static Entry entry(RegistryObject<? extends PerkAttributeType> attribute, int weight) {
+        ResourceKey<PerkAttributeType> key = ResourceKey.create(RegistriesAS.KEY_PERK_ATTRIBUTE_TYPES, attribute.getId());
+        return new Entry(RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().getHolderOrThrow(key), weight);
     }
 
     public record Entry(Holder<PerkAttributeType> type, int weight) {

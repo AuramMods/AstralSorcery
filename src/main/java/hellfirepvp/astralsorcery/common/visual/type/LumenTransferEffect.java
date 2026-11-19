@@ -143,7 +143,7 @@ public class LumenTransferEffect implements VisualEffectTypes.Effect {
                     if (rand.nextInt(4) == 0) {
                         EffectHelper.of(EffectTemplatesAS.LUMEN_PARTICLE)
                                 .spawn(VectorUtil.withRandomOffset(pos.copy(), rand, 0.3F))
-                                .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.getKey(this.lumen))
+                                .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.get().getKey(this.lumen))
                                 .alpha(FXAlphaFunction.FADE_OUT)
                                 .setAlpha(0.7F)
                                 .color(FXColorFunction.constant(this.lumen.getColor(level, effectPos)))

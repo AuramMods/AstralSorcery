@@ -48,7 +48,7 @@ public class LumenBindingCollectDropsEffect extends LumenBindingEffect {
     private static void onBlockDrops(BlockDropsEvent event) {
         if (event.getBreaker() instanceof ServerPlayer sPlayer) {
             forEachEffect(sPlayer, LumenBindingCollectDropsEffect.class, (stack, effect) -> {
-                int slotId = ItemUtil.findItemsInInventory(sPlayer, s -> s.is(ItemsAS.AKASHIC_SINGULARITY)).keySet()
+                int slotId = ItemUtil.findItemsInInventory(sPlayer, s -> s.is(ItemsAS.AKASHIC_SINGULARITY.get())).keySet()
                         .stream().findFirst().orElse(-1);
                 ItemStack singularity;
                 if (slotId == -1) {

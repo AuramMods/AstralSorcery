@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.common.lib.types;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactType;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -26,14 +26,14 @@ public class ArtifactTypesAS {
     public static final DeferredRegister<ArtifactType> ARTIFACT_TYPES_REGISTER =
             DeferredRegister.create(RegistriesAS.KEY_ARTIFACT_TYPES, AstralSorcery.MODID);
 
-    public static final DeferredHolder<ArtifactType, ArtifactType> SIDEREAL = simpleType("sidereal");
-    public static final DeferredHolder<ArtifactType, ArtifactType> LUMINOUS = simpleType("luminous");
-    public static final DeferredHolder<ArtifactType, ArtifactType> CHRONAL = simpleType("chronal");
-    public static final DeferredHolder<ArtifactType, ArtifactType> ASTRIFORM = simpleType("astriform");
-    public static final DeferredHolder<ArtifactType, ArtifactType> AXIOMATIC = simpleType("axiomatic");
-    public static final DeferredHolder<ArtifactType, ArtifactType> SPECTRAL = simpleType("spectral");
+    public static final RegistryObject<ArtifactType> SIDEREAL = simpleType("sidereal");
+    public static final RegistryObject<ArtifactType> LUMINOUS = simpleType("luminous");
+    public static final RegistryObject<ArtifactType> CHRONAL = simpleType("chronal");
+    public static final RegistryObject<ArtifactType> ASTRIFORM = simpleType("astriform");
+    public static final RegistryObject<ArtifactType> AXIOMATIC = simpleType("axiomatic");
+    public static final RegistryObject<ArtifactType> SPECTRAL = simpleType("spectral");
 
-    private static DeferredHolder<ArtifactType, ArtifactType> simpleType(String name) {
+    private static RegistryObject<ArtifactType> simpleType(String name) {
         return ARTIFACT_TYPES_REGISTER.register(name, ArtifactType::new);
     }
 }

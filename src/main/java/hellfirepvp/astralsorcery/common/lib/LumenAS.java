@@ -15,8 +15,10 @@ import hellfirepvp.astralsorcery.common.lumen.LumenLike;
 import hellfirepvp.astralsorcery.common.lumen.LumenPrismatic;
 import hellfirepvp.astralsorcery.common.lumen.LumenStack;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -62,13 +64,30 @@ public class LumenAS {
     }
 
     private static <T extends Lumen> DeferredLumen<T> register(String name, Supplier<T> lumen) {
-        return new DeferredLumen<>(LUMEN_REGISTER.register(name, lumen).getKey());
+        return new DeferredLumen<>(LUMEN_REGISTER.register(name, lumen));
     }
 
-    public static class DeferredLumen<T extends Lumen> extends DeferredHolder<Lumen, T> implements LumenLike {
+    public record DeferredLumen<T extends Lumen>(RegistryObject<T> entry) implements LumenLike, Supplier<T> {
 
-        protected DeferredLumen(ResourceKey<Lumen> key) {
-            super(key);
+        @Override
+        public T get() {
+            return this.entry.get();
+        }
+
+        public ResourceLocation getId() {
+            return this.entry.getId();
+        }
+
+        public ResourceKey<Lumen> getKey() {
+            return ResourceKey.create(RegistriesAS.KEY_LUMEN, this.getId());
+        }
+
+        public Holder<Lumen> holder() {
+            return RegistriesAS.REGISTRY_LUMEN.get().getHolderOrThrow(this.getKey());
+        }
+
+        public boolean is(ResourceKey<Lumen> key) {
+            return this.getKey().equals(key);
         }
 
         @Override

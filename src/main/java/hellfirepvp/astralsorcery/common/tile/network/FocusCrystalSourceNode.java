@@ -45,7 +45,7 @@ public class FocusCrystalSourceNode implements TransmissionSourceNode, SimpleLin
             BlockPos.CODEC.fieldOf("pos").forGetter(FocusCrystalSourceNode::getNodePos),
             LinkContainer.CODEC.fieldOf("linkData").forGetter(node -> node.linkContainer),
             Codec.INT.fieldOf("validLayers").forGetter(FocusCrystalSourceNode::getValidLayers),
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("constellation").forGetter(FocusCrystalSourceNode::getConstellation),
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("constellation").forGetter(FocusCrystalSourceNode::getConstellation),
             CrystalAttributesComponent.CODEC.fieldOf("crystalProperties").forGetter(FocusCrystalSourceNode::getCrystalProperties)
     ).apply(inst, FocusCrystalSourceNode::new));
 

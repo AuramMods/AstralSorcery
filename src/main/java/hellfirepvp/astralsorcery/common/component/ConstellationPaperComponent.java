@@ -42,7 +42,7 @@ public class ConstellationPaperComponent implements DynamicTooltipComponent {
     public static final ConstellationPaperComponent EMPTY = new ConstellationPaperComponent(null);
 
     public static final Codec<ConstellationPaperComponent> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("constellation")
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("constellation")
                     .forGetter(ConstellationPaperComponent::getConstellation)
     ).apply(inst, cst -> cst.map(ConstellationPaperComponent::new).orElse(EMPTY)));
 

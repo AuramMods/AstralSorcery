@@ -48,7 +48,7 @@ import java.util.function.Supplier;
 public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
 
     public static final MapCodec<AltarOutputEngraveLumen> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            WeightedEntry.Wrapper.codec(RegistriesAS.REGISTRY_CRYSTAL_PROPERTIES.byNameCodec()).listOf()
+            WeightedEntry.Wrapper.codec(RegistriesAS.codec(RegistriesAS.KEY_CRYSTAL_PROPERTIES)).listOf()
                     .fieldOf("properties").forGetter(AltarOutputEngraveLumen::getProperties)
     ).apply(inst, AltarOutputEngraveLumen::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, AltarOutputEngraveLumen> STREAM_CODEC = StreamCodec.composite(

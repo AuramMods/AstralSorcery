@@ -52,7 +52,7 @@ public class ArtifactItem extends ItemCustom {
 
     @Override
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
-        RegistriesAS.REGISTRY_ARTIFACT_TYPES.forEach(type -> {
+        RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().forEach(type -> {
             tabItems.accept(create(type));
         });
     }
@@ -70,7 +70,7 @@ public class ArtifactItem extends ItemCustom {
     }
 
     public static Optional<ItemStack> defaultStack() {
-        return RegistriesAS.REGISTRY_ARTIFACT_TYPES.stream().findFirst().map(ArtifactItem::create);
+        return RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream().findFirst().map(ArtifactItem::create);
     }
 
     public static ItemStack create(ArtifactType type) {

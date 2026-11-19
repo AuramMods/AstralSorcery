@@ -44,7 +44,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.BiomeModifiers;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Optional;
@@ -159,6 +159,6 @@ public class AstralWorldGenProvider {
     }
 
     private static ResourceKey<BiomeModifier> biomeModifier(String name) {
-        return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, AstralSorcery.key(name));
+        return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, AstralSorcery.key(name));
     }
 }

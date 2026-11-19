@@ -94,7 +94,7 @@ public abstract class ItemEntityChiselAttackable extends ItemEntityHighlighted {
     }
 
     protected boolean isValidAttackableStack(ItemStack stack) {
-        return stack.is(ItemsAS.CHISEL);
+        return stack.is(ItemsAS.CHISEL.get());
     }
 
     @Override

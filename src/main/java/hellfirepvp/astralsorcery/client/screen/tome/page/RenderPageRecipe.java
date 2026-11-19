@@ -543,7 +543,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
         if (rand.nextInt(14) == 0) {
             Vector3 rPos = Vector3.random(rand).setZ(0).multiply(20F).add(offsetX, offsetY, 0);
             container.createParticle(EffectTemplatesAS.SCREEN_LUMEN_PARTICLE, rPos.getX(), rPos.getY())
-                    .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.getKey(lumen))
+                    .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.get().getKey(lumen))
                     .alpha(FXAlphaFunction.PYRAMID)
                     .color(FXColorFunction.constant(lumen.getColor(tick)))
                     .setMaxAge(40 + rand.nextInt(20));

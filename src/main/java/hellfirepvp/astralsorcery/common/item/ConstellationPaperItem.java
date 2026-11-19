@@ -68,7 +68,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
         tabItems.accept(new ItemStack(this));
 
-        RegistriesAS.REGISTRY_CONSTELLATIONS.forEach(cst -> {
+        RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
             ItemStack stack = new ItemStack(this);
             stack.set(DataComponentsAS.CONSTELLATION_PAPER, new ConstellationPaperComponent(cst));
             tabItems.accept(stack);
@@ -96,7 +96,7 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
                 ConstellationPaperComponent cmp = stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY);
                 if (cmp.getConstellation().isEmpty()) {
                     List<BaseConstellation> constellations = new ArrayList<>();
-                    RegistriesAS.REGISTRY_CONSTELLATIONS.forEach(cst -> {
+                    RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
                         if (!progress.hasSeenConstellation(cst) && cst.canDiscover(sPlayer, progress)) {
                             constellations.add(cst);
                         }

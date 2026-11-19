@@ -18,7 +18,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -64,7 +64,7 @@ public abstract class LumenBindingDataProvider implements DataProvider {
         return new LumenBindingTypeBuilder(this, id);
     }
 
-    protected LumenBindingTypeBuilder newBindingType(DeferredHolder<?, ?> reference) {
+    protected LumenBindingTypeBuilder newBindingType(RegistryObject<?> reference) {
         return this.newBindingType(reference.getKey().location());
     }
 

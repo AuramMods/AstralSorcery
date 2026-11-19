@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.common.perk.tree;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.util.TriFunction;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 

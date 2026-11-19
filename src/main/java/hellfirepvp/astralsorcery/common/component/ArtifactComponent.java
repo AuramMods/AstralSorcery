@@ -48,7 +48,7 @@ public record ArtifactComponent(ArtifactType artifactType,
                                 List<ChancedArtifactEffect> failureEffects) implements DynamicTooltipComponent {
 
     public static final Codec<ArtifactComponent> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            RegistriesAS.REGISTRY_ARTIFACT_TYPES.byNameCodec().fieldOf("type").forGetter(ArtifactComponent::artifactType),
+            RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_TYPES).fieldOf("type").forGetter(ArtifactComponent::artifactType),
             CodecUtil.enumCodec(ArtifactStability.class).fieldOf("stability").forGetter(ArtifactComponent::stability),
             ArtifactStats.CODEC.fieldOf("stats").forGetter(ArtifactComponent::stats),
             Codec.LONG.fieldOf("seed").forGetter(ArtifactComponent::seed),

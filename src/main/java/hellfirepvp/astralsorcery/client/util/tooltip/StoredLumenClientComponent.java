@@ -193,7 +193,7 @@ public class StoredLumenClientComponent implements ClientTooltipComponent {
                 int pX = 2 + rand.nextInt(64 + 2);
                 int pY = stepY + 6 + rand.nextInt(5);
                 container.createParticle(EffectTemplatesAS.SCREEN_LUMEN_PARTICLE, pX, pY)
-                        .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.getKey(lumen))
+                        .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.get().getKey(lumen))
                         .renderOffset(container.createRenderOffset())
                         .color(FXColorFunction.constant(lumen.getColor(tick)))
                         .setGravity(Vector3.y(-0.006 - rand.nextFloat() * 0.002))

@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.tile.network.provider.FocusCrystalSource
 import hellfirepvp.astralsorcery.common.tile.network.provider.ForwardingStarlightReceiverNodeProvider;
 import hellfirepvp.astralsorcery.common.tile.network.provider.SimpleSingleTransmissionNodeProvider;
 import hellfirepvp.astralsorcery.common.tile.network.provider.SimpleTransmissionNodeProvider;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -29,13 +29,13 @@ public class StarlightNetworkNodesAS {
     public static final DeferredRegister<TransmissionNodeProvider<?>> NODE_REGISTER =
             DeferredRegister.create(RegistriesAS.KEY_TRANSMISSION_NODES, AstralSorcery.MODID);
 
-    public static final DeferredHolder<TransmissionNodeProvider<?>, SimpleTransmissionNodeProvider> SIMPLE_NODE =
+    public static final RegistryObject<SimpleTransmissionNodeProvider> SIMPLE_NODE =
             NODE_REGISTER.register("simple", SimpleTransmissionNodeProvider::new);
-    public static final DeferredHolder<TransmissionNodeProvider<?>, SimpleSingleTransmissionNodeProvider> SIMPLE_SINGLE_NODE =
+    public static final RegistryObject<SimpleSingleTransmissionNodeProvider> SIMPLE_SINGLE_NODE =
             NODE_REGISTER.register("simple_single", SimpleSingleTransmissionNodeProvider::new);
-    public static final DeferredHolder<TransmissionNodeProvider<?>, ForwardingStarlightReceiverNodeProvider> FORWARDING_RECEIVER_NODE =
+    public static final RegistryObject<ForwardingStarlightReceiverNodeProvider> FORWARDING_RECEIVER_NODE =
             NODE_REGISTER.register("forwarding_receiver", ForwardingStarlightReceiverNodeProvider::new);
 
-    public static final DeferredHolder<TransmissionNodeProvider<?>, FocusCrystalSourceNodeProvider> FOCUS_CRYSTAL_SOURCE_NODE =
+    public static final RegistryObject<FocusCrystalSourceNodeProvider> FOCUS_CRYSTAL_SOURCE_NODE =
             NODE_REGISTER.register("source_focus_crystal", FocusCrystalSourceNodeProvider::new);
 }

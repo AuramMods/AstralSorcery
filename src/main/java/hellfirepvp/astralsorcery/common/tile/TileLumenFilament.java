@@ -96,7 +96,7 @@ public class TileLumenFilament extends TileEntityTick<TileLumenFilament.Data> im
 
             EffectHelper.of(EffectTemplatesAS.LUMEN_PARTICLE)
                     .spawn(pos)
-                    .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.getKey(transmittedLumen))
+                    .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.get().getKey(transmittedLumen))
                     .setAlpha(0.3F)
                     .color(FXColorFunction.constant(transmittedLumen.getColor(level, pos)))
                     .setGravity(Vector3.y(0.00007F));
@@ -120,7 +120,7 @@ public class TileLumenFilament extends TileEntityTick<TileLumenFilament.Data> im
 
         protected static <T extends TileLumenFilament.Data> Products.P5<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, Lumen, Long> lumenFilamentFields(RecordCodecBuilder.Instance<T> instance) {
             return TileEntityTick.Data.tickFields(instance).and(instance.group(
-                    CodecUtil.lenientDefaulted(RegistriesAS.REGISTRY_LUMEN.byNameCodec(), "recentlyTransmittedLumen", LumenAS.NONE, Data::getRecentlyTransmittedLumen),
+                    CodecUtil.lenientDefaulted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), "recentlyTransmittedLumen", LumenAS.NONE, Data::getRecentlyTransmittedLumen),
                     CodecUtil.defaulted(Codec.LONG, "transmittedLumenGameTime", () -> 0L, Data::getTransmittedLumenGameTime)
             ));
         }

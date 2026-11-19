@@ -54,7 +54,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Map;
 import java.util.Optional;
@@ -223,7 +223,7 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
     }
 
     @Override
-    public DeferredHolder<TransmissionNodeProvider<?>, ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
+    public RegistryObject<ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
         return StarlightNetworkNodesAS.FORWARDING_RECEIVER_NODE;
     }
 

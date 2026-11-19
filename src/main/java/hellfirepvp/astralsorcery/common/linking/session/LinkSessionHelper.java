@@ -58,8 +58,8 @@ public class LinkSessionHelper {
         if (event.getEntity() instanceof ServerPlayer sPlayer) {
             ActiveLinkSession session = ACTIVE_SESSIONS.get(sPlayer.getUUID());
             if (session != null &&
-                    !sPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemsAS.LINKING_TOOL) &&
-                    !sPlayer.getItemInHand(InteractionHand.OFF_HAND).is(ItemsAS.LINKING_TOOL)) {
+                    !sPlayer.getItemInHand(InteractionHand.MAIN_HAND).is(ItemsAS.LINKING_TOOL.get()) &&
+                    !sPlayer.getItemInHand(InteractionHand.OFF_HAND).is(ItemsAS.LINKING_TOOL.get())) {
                 stopSession(sPlayer);
             }
         }

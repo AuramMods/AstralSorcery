@@ -17,7 +17,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -34,15 +34,15 @@ public class MobEffectsAS {
     public static final DeferredRegister<MobEffect> MOB_EFFECT_REGISTER =
             DeferredRegister.create(Registries.MOB_EFFECT, AstralSorcery.MODID);
 
-    public static final DeferredHolder<MobEffect, MobEffect> RAMPAGE =
+    public static final RegistryObject<MobEffect> RAMPAGE =
             register("rampage", () -> new BasicMobEffect(MobEffectCategory.BENEFICIAL, 0xBB4400)
                     .addAttributeModifier(Attributes.ATTACK_DAMAGE, Mods.MINECRAFT.key("effect.rampage.damage"), 0.2F, AttributeModifier.Operation.ADD_VALUE)
                     .addAttributeModifier(Attributes.ATTACK_SPEED, Mods.MINECRAFT.key("effect.rampage.speed"), 0.03F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, Mods.MINECRAFT.key("effect.rampage.movement"), 0.03F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-    public static final DeferredHolder<MobEffect, MobEffect> PHOENIX_BLESSING =
+    public static final RegistryObject<MobEffect> PHOENIX_BLESSING =
             register("phoenix_blessing", () -> new RevivalMobEffect(MobEffectCategory.BENEFICIAL, 0xFF9944));
 
-    private static <T extends MobEffect> DeferredHolder<MobEffect, T> register(String name, Supplier<T> effectFn) {
+    private static <T extends MobEffect> RegistryObject<T> register(String name, Supplier<T> effectFn) {
         return MOB_EFFECT_REGISTER.register(name, effectFn);
     }
 }

@@ -64,7 +64,7 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
 
         if (!(level instanceof ServerLevel sLevel) ||
                 !(context.getPlayer() instanceof ServerPlayer sPlayer) ||
-                !(stack.is(ItemsAS.ILLUMINATION_WAND))) {
+                !(stack.is(ItemsAS.ILLUMINATION_WAND.get()))) {
             return InteractionResult.SUCCESS;
         }
 
@@ -102,7 +102,7 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
     private InteractionResult tryPlaceTranslucentBlock(ServerLevel sLevel, BlockPos pos, ServerPlayer sPlayer, Direction facing, ItemStack stack) {
         BlockState state = sLevel.getBlockState(pos);
 
-        if (state.is(BlocksAS.TRANSLUCENT_BLOCK)) {
+        if (state.is(BlocksAS.TRANSLUCENT_BLOCK.get())) {
             MiscUtil.getTileAt(sLevel, pos, TileTranslucentBlock.class, true).ifPresent(tile -> {
                 if (!tile.getTileData().hasOwner() || tile.getTileData().getOwnerId().equals(sPlayer.getUUID())) {
                     if (sLevel.setBlockAndUpdate(pos, tile.getTileData().getStoredState())) {

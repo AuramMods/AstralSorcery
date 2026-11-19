@@ -33,13 +33,13 @@ public record LumenComponent(Holder<Lumen> lumen) {
     public static final LumenComponent EMPTY = new LumenComponent(LumenAS.NONE);
 
     public static final Codec<LumenComponent> CODEC =
-            RegistriesAS.REGISTRY_LUMEN.holderByNameCodec().xmap(LumenComponent::new, LumenComponent::lumen);
+            RegistriesAS.holderCodec(RegistriesAS.KEY_LUMEN).xmap(LumenComponent::new, LumenComponent::lumen);
     public static final StreamCodec<RegistryFriendlyByteBuf, LumenComponent> STREAM_CODEC =
             ByteBufCodecs.holderRegistry(RegistriesAS.KEY_LUMEN).map(LumenComponent::new, LumenComponent::lumen);
 
     public static Optional<LumenComponent> of(Lumen lumen) {
-        return RegistriesAS.REGISTRY_LUMEN.getResourceKey(lumen)
-                .flatMap(RegistriesAS.REGISTRY_LUMEN::getHolder)
+        return RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(lumen)
+                .flatMap(RegistriesAS.REGISTRY_LUMEN.get()::getHolder)
                 .map(LumenComponent::new);
     }
 

@@ -128,7 +128,7 @@ public class PlayerAttunementRecipe extends AttunementRecipe<PlayerAttunementRec
         private static final int DURATION_PLAYER_ATTUNEMENT = 800; //Duration of the player's camera flight
         public static final MapCodec<Active> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Codec.INT.fieldOf("tick").forGetter(AttunementRecipe.Active::getTick),
-                RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().fieldOf("constellation").forGetter(AttunementRecipe.Active::getConstellation),
+                RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).fieldOf("constellation").forGetter(AttunementRecipe.Active::getConstellation),
                 CodecUtil.uuidCodec().fieldOf("player_uuid").forGetter(Active::getPlayerUUID)
         ).apply(inst, Active::new));
 

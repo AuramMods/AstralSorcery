@@ -99,7 +99,7 @@ public class OreFinderEffect implements VisualEffectTypes.Effect {
     }
 
     private ColorWrapper lookupColorPotential(BlockState state) {
-        if (state.is(BlocksAS.AQUAMARINE_SHALE)) return ColorsAS.DYE_LIGHT_BLUE;
+        if (state.is(BlocksAS.AQUAMARINE_SHALE.get())) return ColorsAS.DYE_LIGHT_BLUE;
         if (state.is(Tags.Blocks.ORES_IRON)) return ColorsAS.DYE_BROWN;
         if (state.is(Tags.Blocks.ORES_GOLD)) return ColorsAS.DYE_YELLOW;
         if (state.is(Tags.Blocks.ORES_COPPER)) return ColorsAS.DYE_ORANGE;

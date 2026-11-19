@@ -27,7 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public record TomePageRecipe(ResourceKey<RecipeType<?>> type, ResourceLocation r
         return NOT_FOUND_PAGE;
     }
 
-    public static TomePageRecipe of(DeferredHolder<RecipeType<?>, ? extends RecipeType<?>> type, ResourceLocation recipeId) {
+    public static TomePageRecipe of(RegistryObject<? extends RecipeType<?>> type, ResourceLocation recipeId) {
         return of(type.getKey(), recipeId);
     }
 

@@ -58,7 +58,7 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
             BlockPredicate.CODEC.listOf().fieldOf("input_predicates").forGetter(FocalTransmutationRecipe::getInputPredicates),
             Ingredient.CODEC.fieldOf("input_display_stacks").forGetter(FocalTransmutationRecipe::getInputDisplay),
             WeightedEntry.Wrapper.codec(BlockState.CODEC).listOf().fieldOf("output_states").forGetter(FocalTransmutationRecipe::getOutputStates),
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("required_constellation").forGetter(FocalTransmutationRecipe::getRequiredConstellation),
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("required_constellation").forGetter(FocalTransmutationRecipe::getRequiredConstellation),
             Codec.BOOL.fieldOf("requires_focused_starlight").forGetter(FocalTransmutationRecipe::requiresFocusedStarlight)
     ).apply(inst, FocalTransmutationRecipe::new));
 

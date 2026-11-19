@@ -252,7 +252,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .addInput('S', ItemsAS.STARDUST)
                 .save(recipeOutput);
 
-        CompoundIngredient matchAnyArtifactShard = new CompoundIngredient(RegistriesAS.REGISTRY_ARTIFACT_TYPES.stream()
+        CompoundIngredient matchAnyArtifactShard = new CompoundIngredient(RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
                 .map(ArtifactTypeComponent::new)
                 .map(typeCmp -> DataComponentIngredient.of(false, DataComponentsAS.ARTIFACT_TYPE, typeCmp, ItemsAS.ARTIFACT_SHARD))
                 .toList());

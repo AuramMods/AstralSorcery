@@ -460,7 +460,7 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
         protected static <T extends TileAttunementAltar.Data> Products.P5<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, Optional<AttunementRecipe.Active<?, ?>>, Optional<BaseConstellation>> attunementFields(RecordCodecBuilder.Instance<T> inst) {
             return tickFields(inst).and(inst.group(
                     AttunementRecipe.ACTIVE_CODEC.optionalFieldOf("activeRecipe").forGetter(Data::getActiveRecipe),
-                    RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("activeConstellation").forGetter(Data::getActiveConstellation)
+                    RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("activeConstellation").forGetter(Data::getActiveConstellation)
             ));
         }
 
@@ -509,7 +509,7 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
                 ConstellationHandler cstHandler = ctx.getConstellationHandler();
 
                 BaseConstellation matchedConstellation = null;
-                for (BaseConstellation cst : RegistriesAS.REGISTRY_CONSTELLATIONS) {
+                for (BaseConstellation cst : RegistriesAS.REGISTRY_CONSTELLATIONS.get()) {
                     boolean isValid = true;
                     Set<BlockPos> cstPositions = this.getConstellationPositions(cst);
                     for (BlockPos cstPos : cstPositions) {

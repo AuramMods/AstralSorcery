@@ -32,7 +32,7 @@ public class AttributeTypePerkEffect extends PerkAttributeType {
     public void onApply(Player player, LogicalSide side, ModifierSource source) {
         super.onApply(player, side, source);
 
-        RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.stream()
+        RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().stream()
                 .filter(t -> t instanceof VanillaPerkAttributeType)
                 .forEach(t -> ((VanillaPerkAttributeType) t).refreshAttribute(player, side));
     }
@@ -41,7 +41,7 @@ public class AttributeTypePerkEffect extends PerkAttributeType {
     public void onRemove(Player player, LogicalSide side, boolean removedCompletely, ModifierSource source) {
         super.onRemove(player, side, removedCompletely, source);
 
-        RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.stream()
+        RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().stream()
                 .filter(t -> t instanceof VanillaPerkAttributeType)
                 .forEach(t -> ((VanillaPerkAttributeType) t).refreshAttribute(player, side));
     }

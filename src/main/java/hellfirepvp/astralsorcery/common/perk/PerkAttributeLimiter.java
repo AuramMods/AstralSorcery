@@ -33,7 +33,7 @@ public class PerkAttributeLimiter {
     }
 
     public static Optional<Limit> getLimit(PerkAttributeType type) {
-        return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_LIMITS.stream()
+        return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_LIMITS.get().stream()
                 .filter(limit -> limit.getType().equals(type))
                 .findFirst();
     }

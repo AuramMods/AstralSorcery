@@ -175,12 +175,12 @@ public class LumenNetworkHelper {
                             //No update if the node has a shorter distance already
                             if (existingHopDistance > newDistance) {
                                 //AstralSorcery.LOG.warn("- Add relay {} | type: {} | newDistance: {} (was {})",
-                                //        currentNode.getPos(), RegistriesAS.REGISTRY_LUMEN.getKey(providedType), newDistance, existingHopDistance);
+                                //        currentNode.getPos(), RegistriesAS.REGISTRY_LUMEN.get().getKey(providedType), newDistance, existingHopDistance);
                                 currentNode.updateRelayType(providedType, providerPos, newDistance);
                                 data.markDirty(currentNode.getPos());
                             } else if (existingHopDistance == -1) {
                                 //AstralSorcery.LOG.warn("- Add relay {} | type: {} | newDistance: {}",
-                                //        currentNode.getPos(), RegistriesAS.REGISTRY_LUMEN.getKey(providedType), newDistance);
+                                //        currentNode.getPos(), RegistriesAS.REGISTRY_LUMEN.get().getKey(providedType), newDistance);
                                 currentNode.addRelayedLumenType(providedType, providerPos, newDistance);
                                 data.markDirty(currentNode.getPos());
                             }
@@ -209,7 +209,7 @@ public class LumenNetworkHelper {
             data.getLumenNode(current.pos()).ifPresent(currentNode -> {
                 providedTypes.forEach(lumen -> {
                     //AstralSorcery.LOG.warn("Add relay {} | type: {} | distance: {}",
-                    //        current.pos(), RegistriesAS.REGISTRY_LUMEN.getKey(lumen), current.distance);
+                    //        current.pos(), RegistriesAS.REGISTRY_LUMEN.get().getKey(lumen), current.distance);
                     currentNode.addRelayedLumenType(lumen, node.getPos(), current.distance);
                 });
                 data.markDirty(current.pos());

@@ -8,7 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.util.data;
 
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
@@ -21,23 +21,23 @@ import java.util.function.Supplier;
  */
 public class ResolvedDeferredHolder<R, T extends R> implements Supplier<T> {
 
-    private final DeferredHolder<R, T> holder;
+    private final RegistryObject<T> holder;
     private final T value;
 
-    private ResolvedDeferredHolder(DeferredHolder<R, T> holder, T value) {
+    private ResolvedDeferredHolder(RegistryObject<T> holder, T value) {
         this.holder = holder;
         this.value = value;
     }
 
-    public static <R, T extends R> ResolvedDeferredHolder<R, T> of(DeferredHolder<R, T> holder, T value) {
+    public static <R, T extends R> ResolvedDeferredHolder<R, T> of(RegistryObject<T> holder, T value) {
         return new ResolvedDeferredHolder<>(holder, value);
     }
 
-    public static <R, T extends R> ResolvedDeferredHolder<R, T> of(DeferredHolder<R, T> holder, Supplier<T> value) {
+    public static <R, T extends R> ResolvedDeferredHolder<R, T> of(RegistryObject<T> holder, Supplier<T> value) {
         return of(holder, value.get());
     }
 
-    public DeferredHolder<R, T> getHolder() {
+    public RegistryObject<T> getHolder() {
         return this.holder;
     }
 

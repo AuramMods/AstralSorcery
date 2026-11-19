@@ -37,7 +37,7 @@ public class DebugPerkTreeProvider extends PerkDataProvider {
     @Override
     public void registerPerks(HolderLookup.Provider registries, Consumer<BuiltPerk> registrar) {
         int count = 1;
-        for (PerkAttributeType type : RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES) {
+        for (PerkAttributeType type : RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get()) {
             count += 2;
 
             if (!type.isMultiplicative()) {

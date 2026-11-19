@@ -46,7 +46,7 @@ public abstract class RootPerk<D extends AbstractPerk.Data> extends AttributeMod
 
     protected static <T extends RootPerk<?>> Products.P9<RecordCodecBuilder.Mu<T>, ResourceLocation, String, Float, Float, PerkCategory, Set<PerkRequirement>, Set<PerkAttributeConverter>, Set<PerkAttributeModifier>, BaseConstellation> perkRootFields(RecordCodecBuilder.Instance<T> instance) {
         return CodecProducts.and(perkModifierFields(instance),
-                RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().fieldOf("constellation").forGetter(RootPerk::getConstellation)
+                RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).fieldOf("constellation").forGetter(RootPerk::getConstellation)
         );
     }
 

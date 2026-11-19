@@ -72,7 +72,7 @@ public class AltarBlock extends BaseTickTileBlock<TileAltar> {
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (hand == InteractionHand.MAIN_HAND && player instanceof ServerPlayer sPlayer) {
             return MiscUtil.getTileAt(level, pos, TileAltar.class, true).map(altar -> {
-                if (stack.is(ItemsAS.WAND)) {
+                if (stack.is(ItemsAS.WAND.get())) {
                     if (altar.getTileData().getActiveRecipe().isPresent()) return ItemInteractionResult.CONSUME;
                     if (!altar.getTileData().hasStructure()) return ItemInteractionResult.CONSUME;
                     return altar.findMatchingRecipe(level, sPlayer.getUUID()).map(recipe -> {

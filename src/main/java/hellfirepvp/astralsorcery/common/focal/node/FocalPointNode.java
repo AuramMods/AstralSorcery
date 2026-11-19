@@ -43,7 +43,7 @@ import java.util.Optional;
  */
 public abstract class FocalPointNode {
 
-    public static final Codec<FocalPointNode> CODEC = RegistriesAS.REGISTRY_FOCAL_NODE_TYPES.byNameCodec()
+    public static final Codec<FocalPointNode> CODEC = RegistriesAS.codec(RegistriesAS.KEY_FOCAL_NODE_TYPES)
             .dispatch(FocalPointNode::getType, FocalPointNode.Type::codec);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FocalPointNode> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_FOCAL_NODE_TYPES)
@@ -68,7 +68,7 @@ public abstract class FocalPointNode {
     protected static <T extends FocalPointNode> Products.P4<RecordCodecBuilder.Mu<T>, ColumnPos, BaseConstellation, Long, Optional<BlockPos>> commonFields(RecordCodecBuilder.Instance<T> inst) {
         return inst.group(
                 ColumnPos.CODEC.fieldOf("pos").forGetter(FocalPointNode::getPos),
-                RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().fieldOf("constellation").forGetter(FocalPointNode::getConstellation),
+                RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).fieldOf("constellation").forGetter(FocalPointNode::getConstellation),
                 CodecUtil.defaulted(Codec.LONG, "ticks_existed", () -> 0L, FocalPointNode::getTicksExisted),
                 BlockPos.CODEC.optionalFieldOf("focal_position").forGetter(FocalPointNode::getFocalPosition));
     }

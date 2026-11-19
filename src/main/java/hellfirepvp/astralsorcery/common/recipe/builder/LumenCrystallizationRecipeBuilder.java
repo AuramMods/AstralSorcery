@@ -93,7 +93,7 @@ public class LumenCrystallizationRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(RecipeOutput recipeOutput) {
-        ResourceLocation id = RegistriesAS.REGISTRY_LUMEN.getKey(this.lumen);
+        ResourceLocation id = RegistriesAS.REGISTRY_LUMEN.get().getKey(this.lumen);
         this.save(recipeOutput, id.withSuffix(this.recipeIdSuffix));
     }
 

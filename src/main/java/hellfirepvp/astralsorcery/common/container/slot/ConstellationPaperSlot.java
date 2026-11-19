@@ -34,7 +34,7 @@ public class ConstellationPaperSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return stack.is(ItemsAS.CONSTELLATION_PAPER) &&
+        return stack.is(ItemsAS.CONSTELLATION_PAPER.get()) &&
                 stack.getOrDefault(DataComponentsAS.CONSTELLATION_PAPER, ConstellationPaperComponent.EMPTY).getConstellation().isPresent();
     }
 

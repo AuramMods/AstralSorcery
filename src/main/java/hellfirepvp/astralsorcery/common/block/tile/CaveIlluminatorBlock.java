@@ -92,7 +92,7 @@ public class CaveIlluminatorBlock extends BaseTickTileBlock<TileCaveIlluminator>
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!stack.is(ItemsAS.ILLUMINATION_WAND)) {
+        if (!stack.is(ItemsAS.ILLUMINATION_WAND.get())) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 

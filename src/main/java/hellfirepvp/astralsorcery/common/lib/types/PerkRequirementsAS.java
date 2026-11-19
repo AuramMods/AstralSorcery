@@ -13,7 +13,7 @@ import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirement;
 import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirementConstellation;
 import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirementProgress;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -28,8 +28,8 @@ public class PerkRequirementsAS {
     public static final DeferredRegister<PerkRequirement.Type<?>> PERK_REQUIREMENT_REGISTER =
             DeferredRegister.create(RegistriesAS.KEY_PERK_REQUIREMENT_TYPES, AstralSorcery.MODID);
 
-    public static final DeferredHolder<PerkRequirement.Type<?>, PerkRequirement.Type<PerkRequirementConstellation>> CONSTELLATION =
+    public static final RegistryObject<PerkRequirement.Type<PerkRequirementConstellation>> CONSTELLATION =
             PERK_REQUIREMENT_REGISTER.register("constellation", () -> PerkRequirementConstellation.TYPE);
-    public static final DeferredHolder<PerkRequirement.Type<?>, PerkRequirement.Type<PerkRequirementProgress>> PROGRESS =
+    public static final RegistryObject<PerkRequirement.Type<PerkRequirementProgress>> PROGRESS =
             PERK_REQUIREMENT_REGISTER.register("progress", () -> PerkRequirementProgress.TYPE);
 }

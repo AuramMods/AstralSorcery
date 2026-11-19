@@ -81,7 +81,7 @@ public class CommandDebug {
         //ResearchManager.getProgress(player, LogicalSide.SERVER);
         //ResearchHelper.removeAttunedConstellation(player);
         //ResearchHelper.attuneConstellation(player, ConstellationsAS.AEVITAS.get());
-        //for (BaseConstellation cst : RegistriesAS.REGISTRY_CONSTELLATIONS) {
+        //for (BaseConstellation cst : RegistriesAS.REGISTRY_CONSTELLATIONS.get()) {
         //    ResearchHelper.discoverConstellation(player, cst);
         //}
         /*BlockPos pos = player.blockPosition();

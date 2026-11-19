@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 public record TomePageConstellation(BaseConstellation constellation) implements TomePage {
 
     public static final MapCodec<TomePageConstellation> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().fieldOf("structureObserver").forGetter(TomePageConstellation::constellation)
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).fieldOf("structureObserver").forGetter(TomePageConstellation::constellation)
     ).apply(inst, TomePageConstellation::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, TomePageConstellation> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS),

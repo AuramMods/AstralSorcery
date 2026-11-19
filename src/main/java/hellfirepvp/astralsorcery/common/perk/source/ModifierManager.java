@@ -48,7 +48,7 @@ public class ModifierManager {
 
     private void onPlayerTick(PlayerTickEvent.Post event) {
         if (event.getEntity() instanceof ServerPlayer sPlayer) {
-            for (ModifierSourceProvider<?> sourceProvider : RegistriesAS.REGISTRY_PERK_MODIFIER_SOURCES) {
+            for (ModifierSourceProvider<?> sourceProvider : RegistriesAS.REGISTRY_PERK_MODIFIER_SOURCES.get()) {
                 sourceProvider.update(sPlayer);
             }
         }
@@ -93,7 +93,7 @@ public class ModifierManager {
 
     private void onDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getEntity() instanceof ServerPlayer sPlayer) {
-            for (ModifierSourceProvider<?> sourceProvider : RegistriesAS.REGISTRY_PERK_MODIFIER_SOURCES) {
+            for (ModifierSourceProvider<?> sourceProvider : RegistriesAS.REGISTRY_PERK_MODIFIER_SOURCES.get()) {
                 sourceProvider.removeModifiers(sPlayer);
             }
         }

@@ -112,7 +112,7 @@ public class ConstellationHandler {
 
         MoonPhase ph = MoonPhase.fromWorld(world);
         this.activeConstellations.addAll(this.indexedActiveMap.computeIfAbsent(ph, p -> new ArrayList<>()));
-        RegistriesAS.REGISTRY_CONSTELLATIONS.forEach(cst -> {
+        RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
             cst.getPropertyOpt(ShowUpConditionProperty.KEY).ifPresent(prop -> {
                 if (!prop.canIndexPhaseDistribution() && prop.doesShowUp(world, currentDay, ctx.getEffectSeed())) {
                     this.activeConstellations.add(cst);
@@ -125,7 +125,7 @@ public class ConstellationHandler {
         this.focalPointAngleMap.clear();
 
         RandomSource rand = ctx.getRandom();
-        List<BaseConstellation> constellations = Lists.newArrayList(RegistriesAS.REGISTRY_CONSTELLATIONS.stream()
+        List<BaseConstellation> constellations = Lists.newArrayList(RegistriesAS.REGISTRY_CONSTELLATIONS.get().stream()
                 .filter(cst -> cst.is(TagsAS.Constellations.MAY_BE_FOCAL_POINT))
                 .toList());
         MiscUtil.shuffle(constellations, rand);
@@ -167,7 +167,7 @@ public class ConstellationHandler {
         boolean[] occupiedSlots = new boolean[MoonPhase.values().length];
         Arrays.fill(occupiedSlots, false);
 
-        List<BaseConstellation> constellations = Lists.newArrayList(RegistriesAS.REGISTRY_CONSTELLATIONS);
+        List<BaseConstellation> constellations = Lists.newArrayList(RegistriesAS.REGISTRY_CONSTELLATIONS.get());
         MiscUtil.shuffle(constellations, rand);
         constellations.forEach(cst -> addConstellationCycle(cst, rand, occupiedSlots));
 

@@ -36,7 +36,7 @@ public abstract class AltarEffect implements Comparable<AltarEffect> {
     public void copyEffectData(CompoundTag from, CompoundTag to) {}
 
     public final ResourceLocation getKey() {
-        return RegistriesAS.REGISTRY_ALTAR_EFFECTS.getResourceKey(this)
+        return RegistriesAS.REGISTRY_ALTAR_EFFECTS.get().getResourceKey(this)
                 .map(ResourceKey::location)
                 .orElse(new ResourceLocation("minecraft", "unregistered_sadface"));
     }

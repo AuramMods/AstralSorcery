@@ -53,16 +53,16 @@ public class AltarRecipe extends CustomRecipe<AltarRecipe, AltarCraftingInput> {
             TileAltar.AltarType.CODEC.fieldOf("required_type").forGetter(AltarRecipe::getRequiredType),
             AltarRecipeGrid.CODEC.fieldOf("grid").forGetter(AltarRecipe::getGrid),
             Codec.list(ItemStack.CODEC).fieldOf("outputs").forGetter(AltarRecipe::getOutputs),
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("focus_constellation").forGetter(AltarRecipe::getFocusConstellation),
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("focus_constellation").forGetter(AltarRecipe::getFocusConstellation),
             Codec.FLOAT.fieldOf("base_focus_shatter_chance").forGetter(AltarRecipe::getBaseFocusShatterChance),
             Codec.INT.fieldOf("duration").forGetter(AltarRecipe::getDuration),
             Codec.BOOL.fieldOf("only_night").forGetter(AltarRecipe::isOnlyNight),
             Codec.BOOL.fieldOf("may_chain").forGetter(AltarRecipe::mayChain),
-            SetCodec.of(RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec()).fieldOf("required_starlight").forGetter(AltarRecipe::getRequiredStarlight),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS)).fieldOf("required_starlight").forGetter(AltarRecipe::getRequiredStarlight),
             Codec.list(LumenStack.CODEC).fieldOf("required_lumen").forGetter(AltarRecipe::getRequiredLumen),
             Codec.list(FluidStack.CODEC).fieldOf("required_fluid").forGetter(AltarRecipe::getRequiredFluid),
             Codec.list(SizedIngredient.NESTED_CODEC).fieldOf("required_additional_inputs").forGetter(AltarRecipe::getRequiredAdditionalInputs),
-            SetCodec.of(RegistriesAS.REGISTRY_ALTAR_EFFECTS.byNameCodec()).fieldOf("effects").forGetter(AltarRecipe::getEffects),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_ALTAR_EFFECTS)).fieldOf("effects").forGetter(AltarRecipe::getEffects),
             Codec.list(AltarRecipeOutputModifier.CODEC).fieldOf("output_modifiers").forGetter(AltarRecipe::getOutputModifiers)
     ).apply(inst, AltarRecipe::new));
 

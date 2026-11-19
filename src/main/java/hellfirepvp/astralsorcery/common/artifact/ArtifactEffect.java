@@ -18,7 +18,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Function;
 
@@ -31,7 +31,7 @@ import java.util.function.Function;
  */
 public abstract class ArtifactEffect {
 
-    public static final Codec<ArtifactEffect> CODEC = RegistriesAS.REGISTRY_ARTIFACT_EFFECT_TYPES.byNameCodec()
+    public static final Codec<ArtifactEffect> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_EFFECT_TYPES)
             .dispatch(ArtifactEffect::unwrapType, ArtifactEffect.Type::codec);
     public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_EFFECT_TYPES)
             .dispatch(ArtifactEffect::unwrapType, ArtifactEffect.Type::streamCodec);
@@ -56,7 +56,7 @@ public abstract class ArtifactEffect {
 
     public record Type<T extends ArtifactEffect>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
 
-    public record DeferredType<T extends ArtifactEffect>(DeferredHolder<ArtifactEffect.Type<?>, ArtifactEffect.Type<T>> holder) {}
+    public record DeferredType<T extends ArtifactEffect>(RegistryObject<ArtifactEffect.Type<T>> holder) {}
 
     @FunctionalInterface
     public interface Provider extends Function<ResourceLocation, ArtifactEffect> {}

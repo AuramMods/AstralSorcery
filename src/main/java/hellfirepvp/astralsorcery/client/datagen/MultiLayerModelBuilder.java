@@ -8,11 +8,12 @@
 
 package hellfirepvp.astralsorcery.client.datagen;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.datagen.assets.AstralBlockStateProvider;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.*;
-import net.neoforged.neoforge.registries.DeferredBlock;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -24,23 +25,23 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 public class MultiLayerModelBuilder {
 
     private final MultiPartBlockStateBuilder builder;
-    private final DeferredBlock<?> block;
+    private final RegisteredItemLike<? extends Block> block;
 
-    protected MultiLayerModelBuilder(BlockStateProvider provider, DeferredBlock<?> block) {
+    protected MultiLayerModelBuilder(BlockStateProvider provider, RegisteredItemLike<? extends Block> block) {
         this.block = block;
         this.builder = provider.getMultipartBuilder(this.block.get());
     }
 
-    public static MultiLayerModelBuilder makeState(BlockStateProvider provider, DeferredBlock<?> block) {
+    public static MultiLayerModelBuilder makeState(BlockStateProvider provider, RegisteredItemLike<? extends Block> block) {
         return new MultiLayerModelBuilder(provider, block);
     }
 
-    public static ResourceLocation getMultiLayerModelId(DeferredBlock<?> block) {
+    public static ResourceLocation getMultiLayerModelId(RegisteredItemLike<? extends Block> block) {
         ResourceLocation id = block.getId();
         return id.withPrefix("block/").withSuffix("/" + id.getPath());
     }
 
-    public static ItemModelBuilder makeCombinedItemModel(ItemModelProvider provider, DeferredBlock<?> block) {
+    public static ItemModelBuilder makeCombinedItemModel(ItemModelProvider provider, RegisteredItemLike<? extends Block> block) {
         return provider.withExistingParent(block.getId().toString(), getMultiLayerModelId(block).withSuffix("_combined"));
     }
 

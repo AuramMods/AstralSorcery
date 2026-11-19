@@ -52,7 +52,7 @@ public class FlareLightExtinguishProcessor extends StructureProcessor {
                                                         StructureTemplate.StructureBlockInfo currentBlockInfo,
                                                         StructurePlaceSettings settings,
                                                         @Nullable StructureTemplate template) {
-        if (currentBlockInfo.state().is(BlocksAS.FLARE_LIGHT)) {
+        if (currentBlockInfo.state().is(BlocksAS.FLARE_LIGHT.get())) {
             boolean shouldExtinguish = false;
             BlockState resultState = Blocks.AIR.defaultBlockState();
             for (Direction dir : Direction.values()) {

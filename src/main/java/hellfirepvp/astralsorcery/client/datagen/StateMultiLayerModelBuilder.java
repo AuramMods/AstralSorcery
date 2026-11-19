@@ -8,13 +8,14 @@
 
 package hellfirepvp.astralsorcery.client.datagen;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.datagen.assets.AstralBlockStateProvider;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
-import net.neoforged.neoforge.registries.DeferredBlock;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -25,17 +26,17 @@ import net.neoforged.neoforge.registries.DeferredBlock;
  */
 public class StateMultiLayerModelBuilder<T extends Comparable<T>> {
 
-    private final DeferredBlock<?> block;
+    private final RegisteredItemLike<? extends Block> block;
     private final Property<T> blockProperty;
     private final MultiPartBlockStateBuilder builder;
 
-    protected StateMultiLayerModelBuilder(BlockStateProvider provider, DeferredBlock<?> block, Property<T> blockProperty) {
+    protected StateMultiLayerModelBuilder(BlockStateProvider provider, RegisteredItemLike<? extends Block> block, Property<T> blockProperty) {
         this.block = block;
         this.blockProperty = blockProperty;
         this.builder = provider.getMultipartBuilder(this.block.get());
     }
 
-    public static <T extends Comparable<T>> StateMultiLayerModelBuilder<T> makeState(BlockStateProvider provider, DeferredBlock<?> block, Property<T> blockProperty) {
+    public static <T extends Comparable<T>> StateMultiLayerModelBuilder<T> makeState(BlockStateProvider provider, RegisteredItemLike<? extends Block> block, Property<T> blockProperty) {
         return new StateMultiLayerModelBuilder<>(provider, block, blockProperty);
     }
 

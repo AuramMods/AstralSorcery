@@ -8,13 +8,13 @@
 
 package hellfirepvp.astralsorcery.common.structure;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.common.block.PillarBlock;
 import hellfirepvp.observerlib.api.block.MatchableState;
 import hellfirepvp.observerlib.api.block.SimpleMatchableBlock;
 import hellfirepvp.observerlib.api.util.BlockArray;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.DeferredBlock;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public interface PillarStructure {
 
-    default <T extends PillarBlock> void addPillar(DeferredBlock<T> block, int x, int y, int z, int height) {
+    default <T extends PillarBlock> void addPillar(RegisteredItemLike<T> block, int x, int y, int z, int height) {
         BlockArray blockArray = (BlockArray) this;
 
         if (height == 1) {
@@ -41,7 +41,7 @@ public interface PillarStructure {
         }
     }
 
-    default <T extends PillarBlock> MatchableState getPillarState(DeferredBlock<T> block, PillarBlock.PillarType type) {
+    default <T extends PillarBlock> MatchableState getPillarState(RegisteredItemLike<T> block, PillarBlock.PillarType type) {
         return getPillarState(block.get(), type);
     }
 

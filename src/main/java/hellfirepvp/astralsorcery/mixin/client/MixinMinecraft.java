@@ -42,7 +42,7 @@ public class MixinMinecraft {
     public void onStartUsingStellarFilament(CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-        if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT) || player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT)) {
+        if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get()) || player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get())) {
             if (this.hitResult instanceof BlockHitResult bhr && this.hitResult.getType() == HitResult.Type.MISS) {
                 if (FocalPointEffectHelper.isInFocalPointArea(bhr.getBlockPos())) {
                     astralSorcery_1_21$tempHitResult = this.hitResult;

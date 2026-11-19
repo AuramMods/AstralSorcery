@@ -19,7 +19,7 @@ import hellfirepvp.observerlib.api.util.StructureBlockArray;
 import hellfirepvp.observerlib.common.change.ObserverProviderStructure;
 import hellfirepvp.observerlib.common.registry.RegistryProviders;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class ObserversAS {
             register("focus_crystal_filaments", FocusCrystalFilamentProvider::new);
 
     private static ObserverRegistryObject registerCompoundStructure(String name, Supplier<StructureBlockArray>... structuresSupplier) {
-        DeferredHolder<ObserverProvider<?>, ObserverProvider<?>> providerObj =
+        RegistryObject<ObserverProvider<?>> providerObj =
                 OBSERVER_REGISTER.register(name, () -> {
                     List<MatchableStructure> structures = Arrays.stream(structuresSupplier)
                             .map(Supplier::get)
@@ -75,7 +75,7 @@ public class ObserversAS {
     }
 
     private static <T extends ObserverProvider<?>> ObserverRegistryObject register(String name, Supplier<T> provider) {
-        DeferredHolder<ObserverProvider<?>, ObserverProvider<?>> providerObj = OBSERVER_REGISTER.register(name, provider);
+        RegistryObject<ObserverProvider<?>> providerObj = OBSERVER_REGISTER.register(name, provider);
         return new ObserverRegistryObject(providerObj);
     }
 

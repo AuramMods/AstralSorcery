@@ -43,7 +43,7 @@ public class ConstellationDiscoveryTrigger extends SimpleCriterionTrigger<Conste
 
         public static final Codec<Instance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
-                RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("constellation").forGetter(Instance::constellation)
+                RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("constellation").forGetter(Instance::constellation)
         ).apply(inst, Instance::new));
 
         public static Criterion<Instance> discoverAny() {

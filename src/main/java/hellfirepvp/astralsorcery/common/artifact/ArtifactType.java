@@ -27,7 +27,7 @@ public class ArtifactType {
     private final Supplier<String> unlocalizedName;
 
     public ArtifactType() {
-        this.unlocalizedName = NameUtil.cacheName("artifact", RegistriesAS.REGISTRY_ARTIFACT_TYPES, this);
+        this.unlocalizedName = NameUtil.cacheName("artifact", RegistriesAS.REGISTRY_ARTIFACT_TYPES.get(), this);
     }
 
     public MutableComponent getName() {

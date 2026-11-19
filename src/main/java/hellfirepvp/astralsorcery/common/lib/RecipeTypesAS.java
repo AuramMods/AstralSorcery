@@ -24,7 +24,7 @@ import hellfirepvp.astralsorcery.common.recipe.lumen.LumenCrystallizationRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Function;
@@ -47,9 +47,9 @@ import java.util.function.Function;
 public class RecipeTypesAS {
 
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPE_REGISTER =
-            DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, AstralSorcery.MODID);
+            DeferredRegister.create(Registries.RECIPE_TYPE, AstralSorcery.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTER =
-            DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, AstralSorcery.MODID);
+            DeferredRegister.create(Registries.RECIPE_SERIALIZER, AstralSorcery.MODID);
 
     public static final ResolvingRecipeTypeRegistryObject<AltarRecipe> ALTAR_CRAFTING_TYPE = resolvableType("altar_crafting",
             recipe -> Iterables.getFirst(recipe.getOutputs(), ItemStack.EMPTY).copy());
@@ -71,27 +71,27 @@ public class RecipeTypesAS {
             recipe -> recipe.getResult().getDisplayOutput());
 
 
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<AltarRecipe>> ALTAR_CRAFTING_SERIALIZER =
+    public static RegistryObject<CodecSerializer<AltarRecipe>> ALTAR_CRAFTING_SERIALIZER =
             codecSerializer("altar_crafting", AltarRecipe.CODEC, AltarRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<FocalCombineRecipe>> FOCAL_COMBINE_SERIALIZER =
+    public static RegistryObject<CodecSerializer<FocalCombineRecipe>> FOCAL_COMBINE_SERIALIZER =
             codecSerializer("focal_combine", FocalCombineRecipe.CODEC, FocalCombineRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<FocalTransmutationRecipe>> FOCAL_TRANSMUTATION_SERIALIZER =
+    public static RegistryObject<CodecSerializer<FocalTransmutationRecipe>> FOCAL_TRANSMUTATION_SERIALIZER =
             codecSerializer("focal_transmutation", FocalTransmutationRecipe.CODEC, FocalTransmutationRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<LumenGenerationRecipe>> LUMEN_GENERATION_SERIALIZER =
+    public static RegistryObject<CodecSerializer<LumenGenerationRecipe>> LUMEN_GENERATION_SERIALIZER =
             codecSerializer("lumen_generation", LumenGenerationRecipe.CODEC, LumenGenerationRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<LumenCrystallizationRecipe>> LUMEN_CRYSTALLIZATION_SERIALIZER =
+    public static RegistryObject<CodecSerializer<LumenCrystallizationRecipe>> LUMEN_CRYSTALLIZATION_SERIALIZER =
             codecSerializer("lumen_crystallization", LumenCrystallizationRecipe.CODEC, LumenCrystallizationRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<LightwellRecipe>> LIGHTWELL_SERIALIZER =
+    public static RegistryObject<CodecSerializer<LightwellRecipe>> LIGHTWELL_SERIALIZER =
             codecSerializer("lightwell", LightwellRecipe.CODEC, LightwellRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<InfusionRecipe>> INFUSION_SERIALIZER =
+    public static RegistryObject<CodecSerializer<InfusionRecipe>> INFUSION_SERIALIZER =
             codecSerializer("infusion", InfusionRecipe.CODEC, InfusionRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<LiquidStarlightRecipe>> LIQUID_STARLIGHT_SERIALIZER =
+    public static RegistryObject<CodecSerializer<LiquidStarlightRecipe>> LIQUID_STARLIGHT_SERIALIZER =
             codecSerializer("liquid_starlight", LiquidStarlightRecipe.CODEC, LiquidStarlightRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, CodecSerializer<LiquidInteractionRecipe>> LIQUID_INTERACTION_SERIALIZER =
+    public static RegistryObject<CodecSerializer<LiquidInteractionRecipe>> LIQUID_INTERACTION_SERIALIZER =
             codecSerializer("liquid_interaction", LiquidInteractionRecipe.CODEC, LiquidInteractionRecipe.STREAM_CODEC);
-    public static DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<RecipeChangeColor.IlluminationWandChangeColor>> ILLUMINATION_WAND_CHANGE_COLOR_SERIALIZER =
+    public static RegistryObject<SimpleCraftingRecipeSerializer<RecipeChangeColor.IlluminationWandChangeColor>> ILLUMINATION_WAND_CHANGE_COLOR_SERIALIZER =
             simpleSerializer("illumination_wand_change_color", RecipeChangeColor.IlluminationWandChangeColor::new);
-    public static DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<RecipeChangeColor.CelestialGatewayChangeColor>> CELESTIAL_GATEWAY_CHANGE_COLOR_SERIALIZER =
+    public static RegistryObject<SimpleCraftingRecipeSerializer<RecipeChangeColor.CelestialGatewayChangeColor>> CELESTIAL_GATEWAY_CHANGE_COLOR_SERIALIZER =
             simpleSerializer("celestial_gateway_change_color", RecipeChangeColor.CelestialGatewayChangeColor::new);
 
     private static <T extends Recipe<?>> ResolvingRecipeTypeRegistryObject<T> resolvableType(String name, Function<T, ItemStack> outputMatchProvider) {
@@ -99,12 +99,12 @@ public class RecipeTypesAS {
         return new ResolvingRecipeTypeRegistryObject<>(RECIPE_TYPE_REGISTER.register(name, () -> type), outputMatchProvider);
     }
 
-    private static <T extends CraftingRecipe> DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<T>> simpleSerializer(String name,
+    private static <T extends CraftingRecipe> RegistryObject<SimpleCraftingRecipeSerializer<T>> simpleSerializer(String name,
                                                                                                                                       SimpleCraftingRecipeSerializer.Factory<T> factory) {
         return RECIPE_SERIALIZER_REGISTER.register(name, () -> new SimpleCraftingRecipeSerializer<>(factory));
     }
 
-    private static <T extends Recipe<?>> DeferredHolder<RecipeSerializer<?>, CodecSerializer<T>> codecSerializer(String name,
+    private static <T extends Recipe<?>> RegistryObject<CodecSerializer<T>> codecSerializer(String name,
                                                                                                                  MapCodec<T> codec,
                                                                                                                  StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
         return RECIPE_SERIALIZER_REGISTER.register(name, () -> new CodecSerializer<>(codec, streamCodec));

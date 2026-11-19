@@ -23,7 +23,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -39,7 +39,7 @@ public class AstralRegistriesDataProvider {
             .add(Registries.ENCHANTMENT, AstralRegistriesDataProvider::generateEnchantments)
             .add(Registries.CONFIGURED_FEATURE, AstralWorldGenProvider::generateConfiguredFeatures)
             .add(Registries.PLACED_FEATURE, AstralWorldGenProvider::generatePlacedFeatures)
-            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, AstralWorldGenProvider::generateBiomeModifiers)
+            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, AstralWorldGenProvider::generateBiomeModifiers)
             .add(Registries.STRUCTURE, AstralStructureProvider::generateStructures)
             .add(Registries.STRUCTURE_SET, AstralStructureProvider::generateStructureSets)
             .add(Registries.TEMPLATE_POOL, AstralStructureProvider::generateStructurePools)

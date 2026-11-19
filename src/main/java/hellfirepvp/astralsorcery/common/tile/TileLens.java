@@ -26,7 +26,7 @@ import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,7 +57,7 @@ public class TileLens extends TileEntityNetwork<SimpleSingleTransmissionNode, Ti
     }
 
     @Override
-    public DeferredHolder<TransmissionNodeProvider<?>, SimpleSingleTransmissionNodeProvider> getNodeProvider() {
+    public RegistryObject<SimpleSingleTransmissionNodeProvider> getNodeProvider() {
         return StarlightNetworkNodesAS.SIMPLE_SINGLE_NODE;
     }
 

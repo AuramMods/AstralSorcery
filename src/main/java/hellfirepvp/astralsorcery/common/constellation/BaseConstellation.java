@@ -62,11 +62,10 @@ public class BaseConstellation implements Comparable<BaseConstellation> {
 
     public BaseConstellation(ColorWrapper constellationColor) {
         this.constellationColor = constellationColor;
-        this.unlocalizedName = NameUtil.cacheName("constellation", RegistriesAS.REGISTRY_CONSTELLATIONS, this);
+        this.unlocalizedName = NameUtil.cacheName("constellation", RegistriesAS.REGISTRY_CONSTELLATIONS.get(), this);
         this.holderReference = new CacheSupplier<>(() -> {
-            ResourceLocation cstKey = RegistriesAS.REGISTRY_CONSTELLATIONS.getKey(this);
-            if (cstKey == null) return null;
-            return RegistriesAS.REGISTRY_CONSTELLATIONS.getHolder(cstKey).orElse(null);
+            var cstKey = RegistriesAS.REGISTRY_CONSTELLATIONS.get().getResourceKey(this);
+            return cstKey.flatMap(RegistriesAS.REGISTRY_CONSTELLATIONS.get()::getHolder).orElse(null);
         });
     }
 

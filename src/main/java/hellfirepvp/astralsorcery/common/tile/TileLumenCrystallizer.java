@@ -139,7 +139,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
         if (above.isAir()) {
             canCraft = true;
         }
-        if (above.is(BlocksAS.LUMEN_CRYSTAL_CLUSTER)) {
+        if (above.is(BlocksAS.LUMEN_CRYSTAL_CLUSTER.get())) {
             if (cluster != null && above.getValue(LumenCrystalClusterBlock.STAGE) < 4) {
                 canCraft = cluster.getTileData().getLumen().equals(this.activeRecipe.getLumenToCrystallize());
             }
@@ -272,7 +272,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
 
             EffectHelper.of(EffectTemplatesAS.LUMEN_PARTICLE)
                     .spawn(pos)
-                    .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.getKey(transmittedLumen))
+                    .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.get().getKey(transmittedLumen))
                     .setAlpha(0.3F)
                     .color(FXColorFunction.constant(transmittedLumen.getColor(level, pos)))
                     .setGravity(Vector3.y(0.00007F));
@@ -293,7 +293,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
                     CodecUtil.defaulted(FluidContainerList.CODEC, "fluidContents", FluidContainerList::create, Data::getFluidContents),
                     CodecUtil.defaulted(InventoryStackList.CODEC, "inventoryContents", InventoryStackList::create, Data::getInventoryContents),
                     CodecUtil.defaulted(LumenStackList.CODEC, "lumenContents", LumenStackList::create, Data::getLumenContents),
-                    CodecUtil.lenientDefaulted(RegistriesAS.REGISTRY_LUMEN.byNameCodec(), "recentlyTransmittedLumen", LumenAS.NONE, Data::getRecentlyTransmittedLumen),
+                    CodecUtil.lenientDefaulted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), "recentlyTransmittedLumen", LumenAS.NONE, Data::getRecentlyTransmittedLumen),
                     CodecUtil.defaulted(Codec.LONG, "transmittedLumenGameTime", () -> 0L, Data::getTransmittedLumenGameTime)
             ));
         }

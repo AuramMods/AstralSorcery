@@ -46,7 +46,7 @@ public class ArtifactShardItem extends ItemCustom {
 
     @Override
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
-        RegistriesAS.REGISTRY_ARTIFACT_TYPES.forEach(type -> {
+        RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().forEach(type -> {
             tabItems.accept(createShard(type));
         });
     }

@@ -38,7 +38,8 @@ public class PerkAttributeModifier extends MutableIdentity {
             CodecUtil.enumCodec(ModifierType.class).fieldOf("mode").forGetter(PerkAttributeModifier::getMode),
             Codec.FLOAT.fieldOf("value").forGetter(PerkAttributeModifier::getRawValue)
     ).apply(inst, PerkAttributeModifier::new));
-    public static final Codec<PerkAttributeModifier> CODEC = CodecUtil.registryOr(RegistriesAS.REGISTRY_PERK_CUSTOM_MODIFIERS, SERIALIZE_CODEC);
+    public static final Codec<PerkAttributeModifier> CODEC = ExtraCodecs.lazyInitializedCodec(
+            () -> CodecUtil.registryOr(RegistriesAS.REGISTRY_PERK_CUSTOM_MODIFIERS.get(), SERIALIZE_CODEC));
 
     private static long counter = 0;
 

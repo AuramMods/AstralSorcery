@@ -37,7 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -73,14 +73,14 @@ public class TileCelestialCrystalCluster extends TileEntityNetwork<ForwardingSta
     }
 
     @Override
-    public DeferredHolder<TransmissionNodeProvider<?>, ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
+    public RegistryObject<ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
         return StarlightNetworkNodesAS.FORWARDING_RECEIVER_NODE;
     }
 
     private void tryGrow(Level level, float chanceMultiplier) {
         float chance = 20 * 60 * 15;
 
-        if (level.getBlockState(this.getBlockPos().below()).is(BlocksAS.STARMETAL_ORE)) {
+        if (level.getBlockState(this.getBlockPos().below()).is(BlocksAS.STARMETAL_ORE.get())) {
             chance /= 2;
 
             if (rand.nextInt(20 * 60 * 20) == 0) {
@@ -109,7 +109,7 @@ public class TileCelestialCrystalCluster extends TileEntityNetwork<ForwardingSta
     public void clientTick(Level level) {
         super.clientTick(level);
 
-        if (level.getBlockState(this.getBlockPos().below()).is(BlocksAS.STARMETAL_ORE)) {
+        if (level.getBlockState(this.getBlockPos().below()).is(BlocksAS.STARMETAL_ORE.get())) {
             if (rand.nextInt(6) == 0) {
                 Vector3 pos = Vector3.positiveRandom(rand).setY(0).add(this.getBlockPos());
                 EffectHelper.of(EffectTemplatesAS.GENERIC_PARTICLE)

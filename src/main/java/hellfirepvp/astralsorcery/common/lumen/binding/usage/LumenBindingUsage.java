@@ -31,7 +31,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.stream.Streams;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import java.util.function.BiConsumer;
  */
 public abstract class LumenBindingUsage {
 
-    public static final Codec<LumenBindingUsage> CODEC = RegistriesAS.REGISTRY_LUMEN_BINDING_USAGE_TYPES.byNameCodec()
+    public static final Codec<LumenBindingUsage> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LUMEN_BINDING_USAGE_TYPES)
             .dispatch(LumenBindingUsage::unwrapType, LumenBindingUsage.Type::codec);
     public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingUsage> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN_BINDING_USAGE_TYPES)
             .dispatch(LumenBindingUsage::unwrapType, LumenBindingUsage.Type::streamCodec);
@@ -146,5 +146,5 @@ public abstract class LumenBindingUsage {
 
     public record Type<T extends LumenBindingUsage>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
 
-    public record DeferredType<T extends LumenBindingUsage>(DeferredHolder<Type<?>, Type<T>> holder) {}
+    public record DeferredType<T extends LumenBindingUsage>(RegistryObject<Type<T>> holder) {}
 }

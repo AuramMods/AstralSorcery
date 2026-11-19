@@ -56,7 +56,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -196,8 +196,8 @@ public class TileStarlightFocusCrystal extends TileEntityNetwork<FocusCrystalSou
                     public float getAlpha(EntityVisualFX fx, float alphaIn, float pTicks) {
                         Player player = Minecraft.getInstance().player;
                         if (player == null) return alphaIn;
-                        if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT) ||
-                                player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT)) {
+                        if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get()) ||
+                                player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get())) {
                             return alphaIn * 0.2F;
                         }
                         return alphaIn;
@@ -294,7 +294,7 @@ public class TileStarlightFocusCrystal extends TileEntityNetwork<FocusCrystalSou
     }
 
     @Override
-    public DeferredHolder<TransmissionNodeProvider<?>, FocusCrystalSourceNodeProvider> getNodeProvider() {
+    public RegistryObject<FocusCrystalSourceNodeProvider> getNodeProvider() {
         return StarlightNetworkNodesAS.FOCUS_CRYSTAL_SOURCE_NODE;
     }
 
@@ -324,7 +324,7 @@ public class TileStarlightFocusCrystal extends TileEntityNetwork<FocusCrystalSou
 
         protected static <T extends Data> Products.P8<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, Boolean, Optional<BaseConstellation>, CrystalAttributesComponent, Set<Integer>, Boolean> focusCrystalFields(RecordCodecBuilder.Instance<T> instance) {
             return netFields(instance).and(instance.group(
-                    RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("constellation").forGetter(Data::getConstellation),
+                    RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("constellation").forGetter(Data::getConstellation),
                     CodecUtil.defaulted(CrystalAttributesComponent.CODEC, "crystalAttributes", CrystalAttributesComponent::defaultEmpty, Data::getCrystalAttributes),
                     CodecUtil.defaulted(SetCodec.of(Codec.INT), "validLayers", Collections::emptySet, Data::getValidLayers),
                     CodecUtil.defaulted(Codec.BOOL, "isOnFocalNode", () -> false, Data::isOnFocalNode)

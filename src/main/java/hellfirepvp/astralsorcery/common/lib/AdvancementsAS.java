@@ -18,7 +18,7 @@ import hellfirepvp.astralsorcery.common.advancement.PerkLevelTrigger;
 import hellfirepvp.astralsorcery.common.advancement.PlayerAttunementTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -33,24 +33,24 @@ public class AdvancementsAS {
     public static final DeferredRegister<CriterionTrigger<?>> TRIGGER_REGISTER =
             DeferredRegister.create(Registries.TRIGGER_TYPE, AstralSorcery.MODID);
 
-    public static final DeferredHolder<CriterionTrigger<?>, PerkLevelTrigger> PERK_LEVEL =
+    public static final RegistryObject<PerkLevelTrigger> PERK_LEVEL =
             TRIGGER_REGISTER.register("perk_level", PerkLevelTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, PlayerAttunementTrigger> PLAYER_ATTUNEMENT =
+    public static final RegistryObject<PlayerAttunementTrigger> PLAYER_ATTUNEMENT =
             TRIGGER_REGISTER.register("player_attunement", PlayerAttunementTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, ItemAttunementTrigger> ITEM_ATTUNEMENT =
+    public static final RegistryObject<ItemAttunementTrigger> ITEM_ATTUNEMENT =
             TRIGGER_REGISTER.register("item_attunement", ItemAttunementTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, ConstellationDiscoveryTrigger> CONSTELLATION_DISCOVERY =
+    public static final RegistryObject<ConstellationDiscoveryTrigger> CONSTELLATION_DISCOVERY =
             TRIGGER_REGISTER.register("constellation_discovery", ConstellationDiscoveryTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, LumenDiscoveryTrigger> LUMEN_DISCOVERY =
+    public static final RegistryObject<LumenDiscoveryTrigger> LUMEN_DISCOVERY =
             TRIGGER_REGISTER.register("lumen_discovery", LumenDiscoveryTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, FocalPointDiscoveryTrigger> FOCAL_POINT_DISCOVERY =
+    public static final RegistryObject<FocalPointDiscoveryTrigger> FOCAL_POINT_DISCOVERY =
             TRIGGER_REGISTER.register("focal_point_discovery", FocalPointDiscoveryTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, GemSocketTrigger> GEM_SOCKET =
+    public static final RegistryObject<GemSocketTrigger> GEM_SOCKET =
             TRIGGER_REGISTER.register("gem_socket", GemSocketTrigger::new);
 }

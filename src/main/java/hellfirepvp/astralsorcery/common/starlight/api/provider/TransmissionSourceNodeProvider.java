@@ -23,6 +23,6 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
  */
 public interface TransmissionSourceNodeProvider<T extends TransmissionSourceNode> extends TransmissionNodeProvider<T> {
 
-    Codec<TransmissionSourceNodeProvider<?>> SOURCE_NODE_CODEC = MiscUtil.cast(RegistriesAS.REGISTRY_TRANSMISSION_NODES.byNameCodec());
+    Codec<TransmissionSourceNodeProvider<?>> SOURCE_NODE_CODEC = MiscUtil.cast(RegistriesAS.codec(RegistriesAS.KEY_TRANSMISSION_NODES));
 
 }

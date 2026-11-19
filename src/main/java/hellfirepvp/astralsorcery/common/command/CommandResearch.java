@@ -207,7 +207,7 @@ public class CommandResearch {
     @Nullable
     private static BaseConstellation getConstellation(CommandContext<CommandSourceStack> ctx) {
         ResourceKey<BaseConstellation> cstKey = CommandUtils.getResourceKey(ctx, "constellation", RegistriesAS.KEY_CONSTELLATIONS).orElseThrow();
-        BaseConstellation cst = RegistriesAS.REGISTRY_CONSTELLATIONS.get(cstKey);
+        BaseConstellation cst = RegistriesAS.REGISTRY_CONSTELLATIONS.get().get(cstKey);
         if (cst == null) {
             ctx.getSource().sendFailure(Component.literal("Unknown constellation " + cstKey.location())
                     .withStyle(ChatFormatting.RED));

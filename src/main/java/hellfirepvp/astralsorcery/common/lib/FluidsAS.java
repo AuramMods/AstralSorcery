@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.lib;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.block.fluid.LiquidStarlightBlock;
 import hellfirepvp.astralsorcery.common.item.base.CreativeTabBucketItem;
@@ -15,7 +16,7 @@ import hellfirepvp.astralsorcery.common.util.TriFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -41,11 +42,9 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.minecraftforge.fluids.FluidInteractionRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +54,9 @@ import java.util.function.Supplier;
 public class FluidsAS {
 
     public static final DeferredRegister<Fluid> FLUID_REGISTER =
-            DeferredRegister.create(BuiltInRegistries.FLUID, AstralSorcery.MODID);
+            DeferredRegister.create(Registries.FLUID, AstralSorcery.MODID);
     public static final DeferredRegister<FluidType> FLUID_TYPE_REGISTER =
-            DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, AstralSorcery.MODID);
+            DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, AstralSorcery.MODID);
 
     public static FluidLiquidStarlight LIQUID_STARLIGHT = new FluidLiquidStarlight("liquid_starlight");
 
@@ -65,11 +64,11 @@ public class FluidsAS {
 
         private final ResourceLocation stillTexture;
         private final ResourceLocation flowingTexture;
-        private final DeferredHolder<FluidType, FluidType> fluidType;
-        private DeferredHolder<Fluid, BaseFlowingFluid> source;
-        private DeferredHolder<Fluid, BaseFlowingFluid> flowing;
-        private DeferredBlock<LiquidBlock> fluidBlock;
-        private DeferredItem<BucketItem> bucket;
+        private final RegistryObject<FluidType> fluidType;
+        private RegistryObject<BaseFlowingFluid> source;
+        private RegistryObject<BaseFlowingFluid> flowing;
+        private RegisteredItemLike<LiquidBlock> fluidBlock;
+        private RegisteredItemLike<BucketItem> bucket;
 
         public FluidLiquidStarlight(String fluidName) {
             this.stillTexture = AstralSorcery.key("block/" + fluidName + "_still");
@@ -112,11 +111,11 @@ public class FluidsAS {
             bucket = ItemsAS.ITEM_REGISTER.register(fluidName + "_bucket", () -> new CreativeTabBucketItem(source.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
         }
 
-        public DeferredBlock<LiquidBlock> getFluidBlock() {
+        public RegisteredItemLike<LiquidBlock> getFluidBlock() {
             return this.fluidBlock;
         }
 
-        public DeferredItem<BucketItem> getBucket() {
+        public RegisteredItemLike<BucketItem> getBucket() {
             return this.bucket;
         }
 
@@ -124,11 +123,11 @@ public class FluidsAS {
             return this.fluidType.get();
         }
 
-        public DeferredHolder<Fluid, BaseFlowingFluid> getSource() {
+        public RegistryObject<BaseFlowingFluid> getSource() {
             return this.source;
         }
 
-        public DeferredHolder<Fluid, BaseFlowingFluid> getFlowing() {
+        public RegistryObject<BaseFlowingFluid> getFlowing() {
             return this.flowing;
         }
 
@@ -147,7 +146,7 @@ public class FluidsAS {
         private static BaseFlowingFluid.Properties createProperties(Supplier<FluidType> type,
                                                                     Supplier<? extends Fluid> still,
                                                                     Supplier<? extends Fluid> flowing,
-                                                                    DeferredItem<? extends Item> bucket,
+                                                                    RegisteredItemLike<? extends Item> bucket,
                                                                     Supplier<? extends LiquidBlock> block) {
             return new BaseFlowingFluid.Properties(type, still, flowing)
                     .tickRate(1)

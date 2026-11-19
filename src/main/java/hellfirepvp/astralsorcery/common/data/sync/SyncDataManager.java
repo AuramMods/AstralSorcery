@@ -16,7 +16,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraftforge.network.PacketDistributor;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +45,7 @@ public class SyncDataManager {
         return INSTANCE;
     }
 
-    public <D extends SyncData<SA, SD, C>, SA extends ClientSyncData<C>, SD extends ClientSyncDiffData<C>, C extends ClientData> D getData(DeferredHolder<SyncData.Type<?, ?, ?, ?>, SyncData.Type<D, SA, SD, C>> type) {
+    public <D extends SyncData<SA, SD, C>, SA extends ClientSyncData<C>, SD extends ClientSyncDiffData<C>, C extends ClientData> D getData(RegistryObject<SyncData.Type<D, SA, SD, C>> type) {
         return this.getData(type.get());
     }
 
@@ -53,7 +53,7 @@ public class SyncDataManager {
         return MiscUtil.cast(this.dataMap.computeIfAbsent(type, t -> t.dataProvider().get()));
     }
 
-    public <D extends SyncData<SA, SD, C>, SA extends ClientSyncData<C>, SD extends ClientSyncDiffData<C>, C extends ClientData> C getClientData(DeferredHolder<SyncData.Type<?, ?, ?, ?>, SyncData.Type<D, SA, SD, C>> type) {
+    public <D extends SyncData<SA, SD, C>, SA extends ClientSyncData<C>, SD extends ClientSyncDiffData<C>, C extends ClientData> C getClientData(RegistryObject<SyncData.Type<D, SA, SD, C>> type) {
         return this.getClientData(type.get());
     }
 

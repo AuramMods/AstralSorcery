@@ -54,7 +54,7 @@ public class PktAdjustAstrolabeAngle extends PlayPacketHandler.ToServer<PktAdjus
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer && AstrolabeItem.isUsingAstrolabe(sPlayer)) {
                 ItemStack useStack = sPlayer.getItemInHand(sPlayer.getUsedItemHand());
-                if (useStack.is(ItemsAS.ASTROLABE)) {
+                if (useStack.is(ItemsAS.ASTROLABE.get())) {
                     AstrolabeAngleComponent existing = useStack.getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
                     useStack.set(DataComponentsAS.ASTROLABE_ANGLE, new AstrolabeAngleComponent(payload.newAngle(), existing.matchesAll()));
                 }

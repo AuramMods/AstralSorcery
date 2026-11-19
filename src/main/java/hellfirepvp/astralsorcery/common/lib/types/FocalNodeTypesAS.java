@@ -12,7 +12,7 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.focal.node.BasicFocalPointNode;
 import hellfirepvp.astralsorcery.common.focal.node.FocalPointNode;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -27,7 +27,7 @@ public class FocalNodeTypesAS {
     public static final DeferredRegister<FocalPointNode.Type<?>> FOCAL_NODE_REGISTER =
             DeferredRegister.create(RegistriesAS.KEY_FOCAL_NODE_TYPES, AstralSorcery.MODID);
 
-    public static final DeferredHolder<FocalPointNode.Type<?>, FocalPointNode.Type<BasicFocalPointNode>> BASIC =
+    public static final RegistryObject<FocalPointNode.Type<BasicFocalPointNode>> BASIC =
             FOCAL_NODE_REGISTER.register("basic", () -> new FocalPointNode.Type<>(BasicFocalPointNode.CODEC, BasicFocalPointNode.STREAM_CODEC));
 
 }

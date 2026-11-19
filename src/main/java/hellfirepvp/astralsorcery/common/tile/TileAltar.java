@@ -74,7 +74,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -375,7 +375,7 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
     }
 
     @Override
-    public DeferredHolder<TransmissionNodeProvider<?>, ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
+    public RegistryObject<ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
         return StarlightNetworkNodesAS.FORWARDING_RECEIVER_NODE;
     }
 

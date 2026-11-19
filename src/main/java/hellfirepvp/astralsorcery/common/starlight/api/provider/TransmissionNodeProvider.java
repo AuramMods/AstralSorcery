@@ -24,7 +24,7 @@ import net.minecraft.core.BlockPos;
  */
 public interface TransmissionNodeProvider<T extends TransmissionNode> {
 
-    Codec<TransmissionNodeProvider<?>> NODE_CODEC = RegistriesAS.REGISTRY_TRANSMISSION_NODES.byNameCodec();
+    Codec<TransmissionNodeProvider<?>> NODE_CODEC = RegistriesAS.codec(RegistriesAS.KEY_TRANSMISSION_NODES);
 
     T provideNewNode(BlockPos pos);
 

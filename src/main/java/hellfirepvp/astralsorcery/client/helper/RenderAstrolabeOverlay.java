@@ -142,7 +142,7 @@ public class RenderAstrolabeOverlay {
 
         float indicatorAngle = 45F;
         Player player = Minecraft.getInstance().player;
-        if (player != null && player.isScoping() && player.getUseItem().is(ItemsAS.ASTROLABE)) {
+        if (player != null && player.isScoping() && player.getUseItem().is(ItemsAS.ASTROLABE.get())) {
             AstrolabeAngleComponent cmp = player.getUseItem().getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
             indicatorAngle = cmp.angle();
         }
@@ -379,7 +379,7 @@ public class RenderAstrolabeOverlay {
         //SkyConstellationRenderer.constellationMappings.forEach(mapping -> {
         //    mapping.getPlayerViewRenderedStars().values().forEach(point -> {
         //        if (point.distance(viewPoint) <= 1F) {
-        //            player.sendSystemMessage(Component.literal("Looking at " + RegistriesAS.REGISTRY_CONSTELLATIONS.getKey(mapping.getConstellation())));
+        //            player.sendSystemMessage(Component.literal("Looking at " + RegistriesAS.REGISTRY_CONSTELLATIONS.get().getKey(mapping.getConstellation())));
         //        }
         //    });
         //});
@@ -449,7 +449,7 @@ public class RenderAstrolabeOverlay {
         FloatPoint drawnPos = drawnMapping.getPlayerViewRenderedStars().get(star);
         if (drawnPos == null) {
             AstralSorcery.LOG.error("Constellation drawing did not draw all stars!");
-            AstralSorcery.LOG.error("{} missing star: {}", RegistriesAS.REGISTRY_CONSTELLATIONS.getKey(drawnMapping.getConstellation()), star);
+            AstralSorcery.LOG.error("{} missing star: {}", RegistriesAS.REGISTRY_CONSTELLATIONS.get().getKey(drawnMapping.getConstellation()), star);
             throw new IllegalStateException();
         }
         return drawnPos;
@@ -520,7 +520,7 @@ public class RenderAstrolabeOverlay {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        if (player.isScoping() && player.getUseItem().is(ItemsAS.ASTROLABE)) {
+        if (player.isScoping() && player.getUseItem().is(ItemsAS.ASTROLABE.get())) {
             AstrolabeAngleComponent cmp = player.getUseItem().getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
             float adjustedAngle = cmp.angle() + (float) event.getScrollDeltaY();
             player.getUseItem().set(DataComponentsAS.ASTROLABE_ANGLE, new AstrolabeAngleComponent(adjustedAngle, cmp.matchesAll()));

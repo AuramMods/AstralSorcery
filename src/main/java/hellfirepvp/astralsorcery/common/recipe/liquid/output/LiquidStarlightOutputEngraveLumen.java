@@ -63,7 +63,7 @@ import java.util.function.Supplier;
 public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutputModifier {
 
     public static final MapCodec<LiquidStarlightOutputEngraveLumen> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            WeightedEntry.Wrapper.codec(RegistriesAS.REGISTRY_CRYSTAL_PROPERTIES.byNameCodec()).listOf()
+            WeightedEntry.Wrapper.codec(RegistriesAS.codec(RegistriesAS.KEY_CRYSTAL_PROPERTIES)).listOf()
                     .fieldOf("properties").forGetter(LiquidStarlightOutputEngraveLumen::getProperties)
     ).apply(inst, LiquidStarlightOutputEngraveLumen::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, LiquidStarlightOutputEngraveLumen> STREAM_CODEC = StreamCodec.composite(

@@ -45,7 +45,7 @@ public class AstrolabeItem extends SpyglassItem implements CreativeTabItem {
                 return true;
             }
         }
-        return player.isUsingItem() && player.getUseItem().is(ItemsAS.ASTROLABE);
+        return player.isUsingItem() && player.getUseItem().is(ItemsAS.ASTROLABE.get());
     }
 
     @OnlyIn(Dist.CLIENT)

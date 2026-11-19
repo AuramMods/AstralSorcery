@@ -224,12 +224,12 @@ public class ResearchHelper {
     }
 
     public static boolean maximizeAll(ServerPlayer player) {
-        discoverConstellations(player, RegistriesAS.REGISTRY_CONSTELLATIONS.stream().toList());
-        memorizeFocalPoints(player, RegistriesAS.REGISTRY_CONSTELLATIONS.stream().toList());
+        discoverConstellations(player, RegistriesAS.REGISTRY_CONSTELLATIONS.get().stream().toList());
+        memorizeFocalPoints(player, RegistriesAS.REGISTRY_CONSTELLATIONS.get().stream().toList());
         setResearchProgress(player, ResearchTier.values()[ResearchTier.values().length - 1]);
         setAttunedFlag(player, true);
         Arrays.stream(ResearchFlag.values()).forEach(flag -> setKnowledgeFlag(player, flag));
-        discoverLumen(player, RegistriesAS.REGISTRY_LUMEN.stream().toList());
+        discoverLumen(player, RegistriesAS.REGISTRY_LUMEN.get().stream().toList());
         return true;
     }
 

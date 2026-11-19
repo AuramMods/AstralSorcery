@@ -29,7 +29,7 @@ public class PerkNullifierItem extends ItemCustom {
     }
 
     public static int getPerkNullifierCount(Player player) {
-        return ItemUtil.findItemsInInventory(player, stack -> stack.is(ItemsAS.PERK_NULLIFIER)).values()
+        return ItemUtil.findItemsInInventory(player, stack -> stack.is(ItemsAS.PERK_NULLIFIER.get())).values()
                 .stream()
                 .mapToInt(ItemStack::getCount)
                 .sum();
@@ -39,7 +39,7 @@ public class PerkNullifierItem extends ItemCustom {
         Inventory playerInv = player.getInventory();
         for (int slot = 0; slot < playerInv.getContainerSize(); slot++) {
             ItemStack stack = playerInv.getItem(slot);
-            if (stack.is(ItemsAS.PERK_NULLIFIER)) {
+            if (stack.is(ItemsAS.PERK_NULLIFIER.get())) {
                 if (!simulate) {
                     stack.shrink(1);
                     playerInv.setItem(slot, stack);

@@ -38,7 +38,7 @@ public class LumenCrystallizationRecipe extends CustomRecipe<LumenCrystallizatio
 
     public static final MapCodec<LumenCrystallizationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Ingredient.CODEC.fieldOf("input").forGetter(LumenCrystallizationRecipe::getInput),
-            RegistriesAS.REGISTRY_LUMEN.byNameCodec().fieldOf("lumen_to_crystallize").forGetter(LumenCrystallizationRecipe::getLumenToCrystallize),
+            RegistriesAS.codec(RegistriesAS.KEY_LUMEN).fieldOf("lumen_to_crystallize").forGetter(LumenCrystallizationRecipe::getLumenToCrystallize),
             Codec.FLOAT.fieldOf("catalyst_shatter_multiplier").forGetter(LumenCrystallizationRecipe::getCatalystShatterMultiplier),
             Codec.intRange(1, 1900).fieldOf("lumen_consumed_per_operation").forGetter(LumenCrystallizationRecipe::getLumenConsumedPerOperation)
     ).apply(inst, LumenCrystallizationRecipe::new));
@@ -46,7 +46,7 @@ public class LumenCrystallizationRecipe extends CustomRecipe<LumenCrystallizatio
     public static final StreamCodec<RegistryFriendlyByteBuf, LumenCrystallizationRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC,
             LumenCrystallizationRecipe::getInput,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(RegistriesAS.REGISTRY_LUMEN.byNameCodec()),
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)),
             LumenCrystallizationRecipe::getLumenToCrystallize,
             ByteBufCodecs.FLOAT,
             LumenCrystallizationRecipe::getCatalystShatterMultiplier,

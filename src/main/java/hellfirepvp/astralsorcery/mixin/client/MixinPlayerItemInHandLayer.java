@@ -36,7 +36,7 @@ public abstract class MixinPlayerItemInHandLayer {
 
     @Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
     public void alsoRenderAstrolabeHandLayer(LivingEntity entity, ItemStack stack, ItemDisplayContext displayContext, HumanoidArm arm, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
-        if (stack.is(ItemsAS.ASTROLABE) && entity.getUseItem() == stack && entity.swingTime == 0) {
+        if (stack.is(ItemsAS.ASTROLABE.get()) && entity.getUseItem() == stack && entity.swingTime == 0) {
             this.renderArmWithSpyglass(entity, stack, arm, poseStack, buffer, packedLight);
             ci.cancel();
         }

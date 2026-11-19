@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class PerkRequirementConstellation extends PerkRequirement {
 
     public static final MapCodec<PerkRequirementConstellation> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().fieldOf("constellation").forGetter(PerkRequirementConstellation::getConstellation)
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).fieldOf("constellation").forGetter(PerkRequirementConstellation::getConstellation)
     ).apply(inst, PerkRequirementConstellation::new));
     public static final Type<PerkRequirementConstellation> TYPE = new Type<>(PerkRequirementConstellation.CODEC);
 

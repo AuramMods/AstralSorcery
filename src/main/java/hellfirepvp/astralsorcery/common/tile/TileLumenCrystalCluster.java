@@ -77,7 +77,7 @@ public class TileLumenCrystalCluster extends TileEntityTick<TileLumenCrystalClus
 
         protected static <T extends Data> Products.P4<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, Lumen> crystalClusterFields(RecordCodecBuilder.Instance<T> instance) {
             return tickFields(instance).and(
-                    CodecUtil.defaulted(RegistriesAS.REGISTRY_LUMEN.byNameCodec(), "lumen", LumenAS.NONE, Data::getLumen)
+                    CodecUtil.defaulted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), "lumen", LumenAS.NONE, Data::getLumen)
             );
         }
 

@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.datagen.assets;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.datagen.MultiLayerModelBuilder;
 import hellfirepvp.astralsorcery.client.init.InitItemProperties;
@@ -16,6 +17,7 @@ import hellfirepvp.astralsorcery.common.item.block.GemCrystalClusterBlockItem;
 import hellfirepvp.astralsorcery.common.item.block.LumenCrystalClusterBlockItem;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,9 +32,7 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.function.Function;
@@ -179,10 +179,10 @@ public class AstralItemModelProvider extends ItemModelProvider {
                 AstralSorcery.key("constellation_paper_overlay"));
         ItemModelBuilder artifact = this.basicItem(ARTIFACT);
         ItemModelBuilder artifactShard = this.basicItem(ARTIFACT_SHARD);
-        int typeCount = RegistriesAS.REGISTRY_ARTIFACT_TYPES.size();
-        RegistriesAS.REGISTRY_ARTIFACT_TYPES.forEach(type -> {
-            String typePart = RegistriesAS.REGISTRY_ARTIFACT_TYPES.getKey(type).getPath();
-            float part = RegistriesAS.REGISTRY_ARTIFACT_TYPES.getId(type) / (float) typeCount;
+        int typeCount = RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().size();
+        RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().forEach(type -> {
+            String typePart = RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().getKey(type).getPath();
+            float part = RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().getId(type) / (float) typeCount;
 
             ResourceLocation artifactPart = NameUtil.suffixPath(ARTIFACT.getId(), "/" + typePart);
             ResourceLocation artifactPrefix = NameUtil.prefixPath(artifactPart, "item/");
@@ -284,15 +284,15 @@ public class AstralItemModelProvider extends ItemModelProvider {
         return this.handheldItem(item.asItem());
     }
 
-    private ItemModelBuilder multiLayerAllModel(DeferredBlock<?> block) {
+    private ItemModelBuilder multiLayerAllModel(RegisteredItemLike<? extends Block> block) {
         return MultiLayerModelBuilder.makeCombinedItemModel(this, block);
     }
 
-    private ItemModelBuilder simpleBlockModel(DeferredBlock<?> block) {
+    private ItemModelBuilder simpleBlockModel(RegisteredItemLike<? extends Block> block) {
         return this.simpleBlockItem(block.getId());
     }
 
-    private void simpleBucket(DeferredItem<? extends Item> item, DeferredHolder<Fluid, ? extends Fluid> fluidSource) {
+    private void simpleBucket(RegisteredItemLike<? extends Item> item, RegistryObject<? extends Fluid> fluidSource) {
         withExistingParent(item.getId().getPath(),
                 new ResourceLocation("neoforge", "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
@@ -323,7 +323,7 @@ public class AstralItemModelProvider extends ItemModelProvider {
         return builder;
     }
 
-    public static ModelFile model(DeferredHolder<?, ?> entry) {
+    public static ModelFile model(RegistryObject<?> entry) {
         return model(entry.getId());
     }
 

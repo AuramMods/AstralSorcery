@@ -26,7 +26,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.stream.Streams;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ import java.util.function.BiFunction;
  */
 public abstract class LumenBindingEffect {
 
-    public static final Codec<LumenBindingEffect> CODEC = RegistriesAS.REGISTRY_LUMEN_BINDING_EFFECT_TYPES.byNameCodec()
+    public static final Codec<LumenBindingEffect> CODEC = RegistriesAS.codec(RegistriesAS.KEY_LUMEN_BINDING_EFFECT_TYPES)
             .dispatch(LumenBindingEffect::unwrapType, LumenBindingEffect.Type::codec);
     public static final StreamCodec<RegistryFriendlyByteBuf, LumenBindingEffect> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_LUMEN_BINDING_EFFECT_TYPES)
             .dispatch(LumenBindingEffect::unwrapType, LumenBindingEffect.Type::streamCodec);
@@ -126,5 +126,5 @@ public abstract class LumenBindingEffect {
     public record Type<T extends LumenBindingEffect>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
 
     public record DeferredType<T extends LumenBindingEffect>(
-            DeferredHolder<LumenBindingEffect.Type<?>, LumenBindingEffect.Type<T>> holder) {}
+            RegistryObject<LumenBindingEffect.Type<T>> holder) {}
 }

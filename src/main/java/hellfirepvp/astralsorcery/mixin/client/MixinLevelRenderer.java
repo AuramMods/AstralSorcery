@@ -83,7 +83,7 @@ public abstract class MixinLevelRenderer {
         if (result instanceof BlockHitResult bhr && bhr.getType() == HitResult.Type.MISS && this.level != null) {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
-            if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT) || player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT)) {
+            if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get()) || player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get())) {
                 if (FocalPointEffectHelper.isInFocalPointArea(bhr.getBlockPos())) {
                     BlockHitResult blockHit = new BlockHitResult(bhr.getLocation(), bhr.getDirection(), bhr.getBlockPos(), bhr.isInside());
                     MultiBufferSource.BufferSource buffers = this.renderBuffers.bufferSource();

@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 public final class LumenStack {
 
     public static final Codec<LumenStack> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            RegistriesAS.REGISTRY_LUMEN.byNameCodec().optionalFieldOf("lumen").forGetter(LumenStack::getLumenOpt),
+            RegistriesAS.codec(RegistriesAS.KEY_LUMEN).optionalFieldOf("lumen").forGetter(LumenStack::getLumenOpt),
             Codec.INT.fieldOf("amount").forGetter(LumenStack::getAmount)
     ).apply(inst, LumenStack::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, LumenStack> STREAM_CODEC = StreamCodec.composite(

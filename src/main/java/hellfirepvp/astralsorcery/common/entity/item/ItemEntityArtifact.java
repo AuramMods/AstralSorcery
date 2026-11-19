@@ -363,7 +363,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
 
     @Override
     public void onAttack(ServerPlayer sPlayer, ItemStack chisel) {
-        if (chisel.is(ItemsAS.CHISEL)) {
+        if (chisel.is(ItemsAS.CHISEL.get())) {
             if (random.nextFloat() < 0.4F) {
                 if (this.getItem().getItem() instanceof ArtifactItem artifact) {
                     artifact.createShard(this.getItem()).ifPresent(shard -> {

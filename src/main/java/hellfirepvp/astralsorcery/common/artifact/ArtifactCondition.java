@@ -20,7 +20,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.function.Function;
@@ -34,7 +34,7 @@ import java.util.function.Function;
  */
 public abstract class ArtifactCondition {
 
-    public static final Codec<ArtifactCondition> CODEC = RegistriesAS.REGISTRY_ARTIFACT_CONDITION_TYPES.byNameCodec()
+    public static final Codec<ArtifactCondition> CODEC = RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_CONDITION_TYPES)
             .dispatch(ArtifactCondition::unwrapType, ArtifactCondition.Type::codec);
     public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactCondition> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_CONDITION_TYPES)
             .dispatch(ArtifactCondition::unwrapType, ArtifactCondition.Type::streamCodec);
@@ -63,7 +63,7 @@ public abstract class ArtifactCondition {
 
     public record Type<T extends ArtifactCondition>(MapCodec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {}
 
-    public record DeferredType<T extends ArtifactCondition>(DeferredHolder<ArtifactCondition.Type<?>, ArtifactCondition.Type<T>> holder) {}
+    public record DeferredType<T extends ArtifactCondition>(RegistryObject<ArtifactCondition.Type<T>> holder) {}
 
     @FunctionalInterface
     public interface Provider extends Function<ResourceLocation, ArtifactCondition> {}

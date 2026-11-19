@@ -64,7 +64,7 @@ public class WandItem extends ItemCustom implements InterceptInteractItem.Block 
                 for (BlockPos orePos : data.collectPositions(chunkPos, 8)) {
                     ChunkUtil.executeWithChunk(sLevel, orePos, () -> {
                         BlockState state = sLevel.getBlockState(orePos);
-                        if (!state.is(BlocksAS.ROCK_CRYSTAL_ORE)) {
+                        if (!state.is(BlocksAS.ROCK_CRYSTAL_ORE.get())) {
                             data.removeOre(orePos);
                             return;
                         }

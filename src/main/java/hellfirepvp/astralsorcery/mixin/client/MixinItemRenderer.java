@@ -62,7 +62,7 @@ public abstract class MixinItemRenderer {
 
     @Inject(method = "getModel", at = @At(value = "HEAD"), cancellable = true)
     public void getCustomSextantModel(ItemStack stack, Level level, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
-        if (stack.is(ItemsAS.ASTROLABE)) {
+        if (stack.is(ItemsAS.ASTROLABE.get())) {
             BakedModel model = this.getItemModelShaper().getModelManager().getModel(CustomModelsAS.ASTROLABE_IN_HAND);
 
             ClientLevel clientlevel = level instanceof ClientLevel ? (ClientLevel) level : null;
@@ -76,7 +76,7 @@ public abstract class MixinItemRenderer {
         boolean override = displayContext == ItemDisplayContext.GUI ||
                 displayContext == ItemDisplayContext.GROUND ||
                 displayContext == ItemDisplayContext.FIXED;
-        if (override && itemStack.is(ItemsAS.ASTROLABE)) {
+        if (override && itemStack.is(ItemsAS.ASTROLABE.get())) {
             FlagExecutor.run(FlagExecutor.Flag.RENDER_ASTROLABE_ITEM, () -> {
                 BakedModel sextantModel = this.getItemModelShaper().getModelManager().getModel(astralSorcery_1_21$ASTROLABE_MODEL);
                 this.render(itemStack, displayContext, leftHand, poseStack, bufferSource, combinedLight, combinedOverlay, sextantModel);

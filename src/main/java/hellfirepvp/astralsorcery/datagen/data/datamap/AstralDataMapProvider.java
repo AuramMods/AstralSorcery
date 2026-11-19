@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.DataMapProvider;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import net.neoforged.neoforge.registries.datamaps.builtin.FurnaceFuel;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 
@@ -46,7 +46,7 @@ public class AstralDataMapProvider extends DataMapProvider {
                 .add(item(BlocksAS.INFUSED_WOOD_STAIRS), new FurnaceFuel(300), false);
     }
 
-    private static ResourceKey<Item> item(DeferredHolder<Block, ? extends Block> block) {
+    private static ResourceKey<Item> item(RegisteredItemLike<? extends Block> block) {
         return ResourceKey.create(Registries.ITEM, block.getKey().location());
     }
 }

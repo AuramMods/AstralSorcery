@@ -57,7 +57,7 @@ public class FocalPointEffectHelper {
     public static HitResult overrideStellarFilamentInteract(HitResult defaultResult) {
         Player player = Minecraft.getInstance().player;
         if (player == null) return defaultResult;
-        if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT) || player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT)) {
+        if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get()) || player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get())) {
             Entity tracingEntity = Minecraft.getInstance().getCameraEntity();
             if (tracingEntity != null) {
                 ClipContext ctx = RayTraceUtil.getEntityViewContext(tracingEntity, player.blockInteractionRange());

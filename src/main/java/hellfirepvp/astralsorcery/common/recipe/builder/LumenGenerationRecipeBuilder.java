@@ -111,7 +111,7 @@ public class LumenGenerationRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(RecipeOutput recipeOutput) {
-        ResourceLocation id = RegistriesAS.REGISTRY_LUMEN.getKey(this.producedLumen);
+        ResourceLocation id = RegistriesAS.REGISTRY_LUMEN.get().getKey(this.producedLumen);
         this.save(recipeOutput, id.withSuffix(this.recipeIdSuffix));
     }
 

@@ -29,7 +29,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -51,7 +51,7 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
             StoredLumen.CODEC.listOf().fieldOf("storedLumen").forGetter(StoredLumenComponent::storedLumen),
             StoredLumenDisplay.CODEC.listOf().fieldOf("lumenDisplay").forGetter(StoredLumenComponent::lumenDisplay),
             Properties.CODEC.fieldOf("properties").forGetter(StoredLumenComponent::properties),
-            Codec.unboundedMap(RegistriesAS.REGISTRY_LUMEN.byNameCodec(), ResourceLocation.CODEC).fieldOf("lumenBindings").forGetter(StoredLumenComponent::boundLumen)
+            Codec.unboundedMap(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), ResourceLocation.CODEC).fieldOf("lumenBindings").forGetter(StoredLumenComponent::boundLumen)
     ).apply(inst, StoredLumenComponent::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, StoredLumenComponent> STREAM_CODEC = StreamCodec.composite(
@@ -217,7 +217,7 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
                     display.addAll(b.getDisplayText());
                     display.addAll(b.getEffect().getDisplayText(side, stack));
                 });
-        RegistriesAS.REGISTRY_LUMEN.getResourceKey(lumen).ifPresent(lumenKey -> {
+        RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(lumen).ifPresent(lumenKey -> {
             this.lumenDisplay.stream()
                     .filter(s -> s.lumen().equals(lumenKey))
                     .forEach(s -> display.add(s.message()));
@@ -243,7 +243,7 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
     public record StoredLumen(Lumen lumen, int amount, int maxAmount) {
 
         public static final Codec<StoredLumen> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                RegistriesAS.REGISTRY_LUMEN.byNameCodec().fieldOf("lumen").forGetter(StoredLumen::lumen),
+                RegistriesAS.codec(RegistriesAS.KEY_LUMEN).fieldOf("lumen").forGetter(StoredLumen::lumen),
                 Codec.INT.fieldOf("amount").forGetter(StoredLumen::amount),
                 Codec.INT.fieldOf("maxAmount").forGetter(StoredLumen::maxAmount)
         ).apply(inst, StoredLumen::new));
@@ -352,7 +352,7 @@ public record StoredLumenComponent(List<StoredLumen> storedLumen, List<StoredLum
             return new Properties(this.capacity, this.canDrain, false, this.accepted);
         }
 
-        public Properties allowAccept(DeferredHolder<Lumen, ? extends Lumen> lumenHolder) {
+        public Properties allowAccept(RegistryObject<? extends Lumen> lumenHolder) {
             return this.allowAccept(lumenHolder.getKey());
         }
 

@@ -8,9 +8,10 @@
 
 package hellfirepvp.astralsorcery.common.block;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.neoforged.neoforge.registries.DeferredBlock;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -21,7 +22,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
  */
 public class PlantableFlowerPotBlock extends FlowerPotBlock {
 
-    public PlantableFlowerPotBlock(DeferredBlock<?> flower, Properties properties) {
+    public PlantableFlowerPotBlock(RegisteredItemLike<? extends Block> flower, Properties properties) {
         super(null, flower, properties);
         if (Blocks.FLOWER_POT instanceof FlowerPotBlock flowerPotBlock) {
             flowerPotBlock.addPlant(flower.getId(), () -> this);

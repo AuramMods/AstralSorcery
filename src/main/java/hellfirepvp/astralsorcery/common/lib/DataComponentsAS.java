@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.common.lib;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.*;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -26,109 +26,109 @@ import net.minecraftforge.registries.DeferredRegister;
 public class DataComponentsAS {
 
     public static final DeferredRegister<DataComponentType<?>> COMPONENT_TYPE_REGISTER =
-            DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, AstralSorcery.MODID);
+            DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, AstralSorcery.MODID);
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<CrystalAttributesComponent>> CRYSTAL_ATTRIBUTES =
+    public static RegistryObject<DataComponentType<CrystalAttributesComponent>> CRYSTAL_ATTRIBUTES =
             COMPONENT_TYPE_REGISTER.register("crystal_attributes", () -> DataComponentType.<CrystalAttributesComponent>builder()
                     .persistent(CrystalAttributesComponent.CODEC)
                     .networkSynchronized(CrystalAttributesComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<AstrolabeAngleComponent>> ASTROLABE_ANGLE =
+    public static RegistryObject<DataComponentType<AstrolabeAngleComponent>> ASTROLABE_ANGLE =
             COMPONENT_TYPE_REGISTER.register("astrolabe_angle", () -> DataComponentType.<AstrolabeAngleComponent>builder()
                     .persistent(AstrolabeAngleComponent.CODEC)
                     .networkSynchronized(AstrolabeAngleComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<ArtifactComponent>> ARTIFACT =
+    public static RegistryObject<DataComponentType<ArtifactComponent>> ARTIFACT =
             COMPONENT_TYPE_REGISTER.register("artifact", () -> DataComponentType.<ArtifactComponent>builder()
                     .persistent(ArtifactComponent.CODEC)
                     .build());
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<ArtifactTypeComponent>> ARTIFACT_TYPE =
+    public static RegistryObject<DataComponentType<ArtifactTypeComponent>> ARTIFACT_TYPE =
             COMPONENT_TYPE_REGISTER.register("artifact_type", () -> DataComponentType.<ArtifactTypeComponent>builder()
                     .persistent(ArtifactTypeComponent.CODEC)
                     .networkSynchronized(ArtifactTypeComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<ConstellationPaperComponent>> CONSTELLATION_PAPER =
+    public static RegistryObject<DataComponentType<ConstellationPaperComponent>> CONSTELLATION_PAPER =
             COMPONENT_TYPE_REGISTER.register("constellation_paper", () -> DataComponentType.<ConstellationPaperComponent>builder()
                     .persistent(ConstellationPaperComponent.CODEC)
                     .networkSynchronized(ConstellationPaperComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<AttunedConstellationComponent>> ATTUNED_CONSTELLATION =
+    public static RegistryObject<DataComponentType<AttunedConstellationComponent>> ATTUNED_CONSTELLATION =
             COMPONENT_TYPE_REGISTER.register("attuned_constellation", () -> DataComponentType.<AttunedConstellationComponent>builder()
                     .persistent(AttunedConstellationComponent.CODEC)
                     .networkSynchronized(AttunedConstellationComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<LumenComponent>> LUMEN =
+    public static RegistryObject<DataComponentType<LumenComponent>> LUMEN =
             COMPONENT_TYPE_REGISTER.register("lumen", () -> DataComponentType.<LumenComponent>builder()
                     .persistent(LumenComponent.CODEC)
                     .networkSynchronized(LumenComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<StoredLumenComponent>> STORED_LUMEN =
+    public static RegistryObject<DataComponentType<StoredLumenComponent>> STORED_LUMEN =
             COMPONENT_TYPE_REGISTER.register("stored_lumen", () -> DataComponentType.<StoredLumenComponent>builder()
                     .persistent(StoredLumenComponent.CODEC)
                     .networkSynchronized(StoredLumenComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<IdentifierComponent>> IDENTIFIER =
+    public static RegistryObject<DataComponentType<IdentifierComponent>> IDENTIFIER =
             COMPONENT_TYPE_REGISTER.register("identifier", () -> DataComponentType.<IdentifierComponent>builder()
                     .persistent(IdentifierComponent.CODEC)
                     .networkSynchronized(IdentifierComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<ColorComponent>> COLOR =
+    public static RegistryObject<DataComponentType<ColorComponent>> COLOR =
             COMPONENT_TYPE_REGISTER.register("color", () -> DataComponentType.<ColorComponent>builder()
                     .persistent(ColorComponent.CODEC)
                     .networkSynchronized(ColorComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<DynamicModifiersComponent>> DYNAMIC_MODIFIERS =
+    public static RegistryObject<DataComponentType<DynamicModifiersComponent>> DYNAMIC_MODIFIERS =
             COMPONENT_TYPE_REGISTER.register("dynamic_modifiers", () -> DataComponentType.<DynamicModifiersComponent>builder()
                     .persistent(DynamicModifiersComponent.CODEC)
                     .networkSynchronized(DynamicModifiersComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<EnchantmentModifierComponent>> ENCHANTMENT_MODIFIERS =
+    public static RegistryObject<DataComponentType<EnchantmentModifierComponent>> ENCHANTMENT_MODIFIERS =
             COMPONENT_TYPE_REGISTER.register("enchantment_modifiers", () -> DataComponentType.<EnchantmentModifierComponent>builder()
                     .persistent(EnchantmentModifierComponent.CODEC)
                     .networkSynchronized(EnchantmentModifierComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<BlockStateStorageComponent>> BLOCK_STATE_STORAGE =
+    public static RegistryObject<DataComponentType<BlockStateStorageComponent>> BLOCK_STATE_STORAGE =
             COMPONENT_TYPE_REGISTER.register("block_state_storage", () -> DataComponentType.<BlockStateStorageComponent>builder()
                     .persistent(BlockStateStorageComponent.CODEC)
                     .networkSynchronized(BlockStateStorageComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<StoredItemsComponent>> STORED_ITEMS =
+    public static RegistryObject<DataComponentType<StoredItemsComponent>> STORED_ITEMS =
             COMPONENT_TYPE_REGISTER.register("stored_items", () -> DataComponentType.<StoredItemsComponent>builder()
                     .persistent(StoredItemsComponent.CODEC)
                     .networkSynchronized(StoredItemsComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<IntegerModeComponent>> MODE =
+    public static RegistryObject<DataComponentType<IntegerModeComponent>> MODE =
             COMPONENT_TYPE_REGISTER.register("mode", () -> DataComponentType.<IntegerModeComponent>builder()
                     .persistent(IntegerModeComponent.CODEC)
                     .networkSynchronized(IntegerModeComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<FlagsComponent>> FLAGS =
+    public static RegistryObject<DataComponentType<FlagsComponent>> FLAGS =
             COMPONENT_TYPE_REGISTER.register("flags", () -> DataComponentType.<FlagsComponent>builder()
                     .persistent(FlagsComponent.CODEC)
                     .networkSynchronized(FlagsComponent.STREAM_CODEC)
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<StoredPlayerProgressComponent>> STORED_PLAYER_PROGRESS =
+    public static RegistryObject<DataComponentType<StoredPlayerProgressComponent>> STORED_PLAYER_PROGRESS =
             COMPONENT_TYPE_REGISTER.register("stored_player_progress", () -> DataComponentType.<StoredPlayerProgressComponent>builder()
                     .persistent(StoredPlayerProgressComponent.CODEC)
                     .networkSynchronized(ByteBufCodecs.fromCodecWithRegistriesTrusted(StoredPlayerProgressComponent.CODEC))
                     .build());
 
-    public static DeferredHolder<DataComponentType<?>, DataComponentType<VeiledItemStackComponent>> VEILED =
+    public static RegistryObject<DataComponentType<VeiledItemStackComponent>> VEILED =
             COMPONENT_TYPE_REGISTER.register("veiled_item_stack", () -> DataComponentType.<VeiledItemStackComponent>builder()
                     .persistent(VeiledItemStackComponent.CODEC)
                     .networkSynchronized(VeiledItemStackComponent.STREAM_CODEC)

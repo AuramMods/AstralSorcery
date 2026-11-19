@@ -32,24 +32,24 @@ import java.util.*;
 public class PlayerProgress {
 
     public static final Codec<PlayerProgress> SAVE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            SetCodec.of(RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec()).fieldOf("seen").forGetter(PlayerProgress::getSeenConstellations),
-            SetCodec.of(RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec()).fieldOf("known").forGetter(PlayerProgress::getKnownConstellations),
-            SetCodec.of(RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec()).fieldOf("seen_focal_points").forGetter(PlayerProgress::getSeenFocalPoints),
-            SetCodec.of(RegistriesAS.REGISTRY_LUMEN.byNameCodec()).fieldOf("discovered_lumen").forGetter(PlayerProgress::getDiscoveredLumen),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS)).fieldOf("seen").forGetter(PlayerProgress::getSeenConstellations),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS)).fieldOf("known").forGetter(PlayerProgress::getKnownConstellations),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS)).fieldOf("seen_focal_points").forGetter(PlayerProgress::getSeenFocalPoints),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)).fieldOf("discovered_lumen").forGetter(PlayerProgress::getDiscoveredLumen),
             CodecUtil.defaulted(SetCodec.of(CodecUtil.enumCodec(ResearchFlag.class)), "known_flags", HashSet::new, PlayerProgress::getKnownFlags),
             ResearchTier.CODEC.fieldOf("tier").forGetter(PlayerProgress::getTierReached),
             PlayerPerkData.PERKTREE_HASH_CODEC.fieldOf("perk_data").forGetter(PlayerProgress::getPerkData),
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("attuned").forGetter(PlayerProgress::getAttunedConstellation),
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("attuned").forGetter(PlayerProgress::getAttunedConstellation),
             Codec.BOOL.fieldOf("learned_to_navigate_tome").forGetter(PlayerProgress::hasLearnedToNavigateTome),
             Codec.BOOL.fieldOf("was_attuned").forGetter(PlayerProgress::wasOnceAttuned),
             Codec.BOOL.fieldOf("received_tome").forGetter(PlayerProgress::hasReceivedTome)
     ).apply(inst, PlayerProgress::new));
 
     public static final Codec<PlayerProgress> SHARE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            SetCodec.of(RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec()).fieldOf("seen").forGetter(PlayerProgress::getSeenConstellations),
-            SetCodec.of(RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec()).fieldOf("known").forGetter(PlayerProgress::getKnownConstellations),
-            SetCodec.of(RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec()).fieldOf("seen_focal_points").forGetter(PlayerProgress::getSeenFocalPoints),
-            SetCodec.of(RegistriesAS.REGISTRY_LUMEN.byNameCodec()).fieldOf("discovered_lumen").forGetter(PlayerProgress::getDiscoveredLumen),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS)).fieldOf("seen").forGetter(PlayerProgress::getSeenConstellations),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS)).fieldOf("known").forGetter(PlayerProgress::getKnownConstellations),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS)).fieldOf("seen_focal_points").forGetter(PlayerProgress::getSeenFocalPoints),
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)).fieldOf("discovered_lumen").forGetter(PlayerProgress::getDiscoveredLumen),
             CodecUtil.defaulted(SetCodec.of(CodecUtil.enumCodec(ResearchFlag.class)), "known_flags", HashSet::new, PlayerProgress::getKnownFlags),
             ResearchTier.CODEC.fieldOf("tier").forGetter(PlayerProgress::getTierReached),
             Codec.BOOL.fieldOf("was_attuned").forGetter(PlayerProgress::wasOnceAttuned)
@@ -95,7 +95,7 @@ public class PlayerProgress {
     }
 
     protected void ensureElementaryLumen() {
-        RegistriesAS.REGISTRY_LUMEN.forEach(lumen -> {
+        RegistriesAS.REGISTRY_LUMEN.get().forEach(lumen -> {
             if (lumen.isElementary()) {
                 this.discoverLumen(lumen);
             }

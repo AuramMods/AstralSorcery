@@ -100,7 +100,7 @@ public class FocalPointManager {
                     FocalPointData focalPointData = DataAS.DOMAIN_AS.getData(sPlayer.serverLevel(), DataAS.KEY_FOCAL_POINT_DATA);
                     PlayerProgress progress = ResearchManager.getProgress(sPlayer, LogicalSide.SERVER);
                     float angle = held.getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT).angle();
-                    RegistriesAS.REGISTRY_CONSTELLATIONS.getTag(TagsAS.Constellations.MAY_BE_FOCAL_POINT).ifPresent(set -> {
+                    RegistriesAS.REGISTRY_CONSTELLATIONS.get().getTag(TagsAS.Constellations.MAY_BE_FOCAL_POINT).ifPresent(set -> {
                         set.forEach(cstHolder -> {
                             BaseConstellation cst = cstHolder.value();
                             if (!progress.hasSeenFocalPoint(cst) && Math.abs(angle - ctx.getConstellationHandler().getAngle(cst)) < 6F) {

@@ -298,7 +298,7 @@ public class AstralResearchNodeProvider extends ResearchNodeDataProvider {
                 .build(registrar);
 
         List<ItemStack> artifactItems = new ArrayList<>();
-        RegistriesAS.REGISTRY_ARTIFACT_TYPES.forEach(type -> {
+        RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().forEach(type -> {
             artifactItems.add(ArtifactItem.createForDisplay(type));
         });
         ResearchNode artifacts = ResearchNodeBuilder.create(AstralSorcery.key("artifacts"), ResearchTier.ILLUMINATION, -7, 1)
@@ -647,7 +647,7 @@ public class AstralResearchNodeProvider extends ResearchNodeDataProvider {
                 .build(registrar);
 
         List<ItemStack> artifacts = new ArrayList<>();
-        RegistriesAS.REGISTRY_ARTIFACT_TYPES.forEach(type -> {
+        RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().forEach(type -> {
             artifacts.add(ArtifactItem.createForDisplay(type));
         });
         ResearchNode artifactEnhancements = ResearchNodeBuilder.create(AstralSorcery.key("artifact_enhancements"), ResearchTier.RADIANCE, 1, 1)

@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.common.lib.types;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.effect.*;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -26,13 +26,13 @@ public class AltarEffectsAS {
     public static final DeferredRegister<AltarEffect> ALTAR_EFFECT_REGISTER =
             DeferredRegister.create(RegistriesAS.KEY_ALTAR_EFFECTS, AstralSorcery.MODID);
 
-    public static final DeferredHolder<AltarEffect, DefaultAltarEffectCentralBeam> DEFAULT_CENTRAL_BEAM =
+    public static final RegistryObject<DefaultAltarEffectCentralBeam> DEFAULT_CENTRAL_BEAM =
             ALTAR_EFFECT_REGISTER.register("default_central_beam", DefaultAltarEffectCentralBeam::new);
-    public static final DeferredHolder<AltarEffect, DefaultAltarEffectAltarSparkle> DEFAULT_ALTAR_SPARKLE =
+    public static final RegistryObject<DefaultAltarEffectAltarSparkle> DEFAULT_ALTAR_SPARKLE =
             ALTAR_EFFECT_REGISTER.register("default_altar_sparkle", DefaultAltarEffectAltarSparkle::new);
-    public static final DeferredHolder<AltarEffect, DefaultAltarEffectRelayInput> DEFAULT_RELAY_INPUT =
+    public static final RegistryObject<DefaultAltarEffectRelayInput> DEFAULT_RELAY_INPUT =
             ALTAR_EFFECT_REGISTER.register("default_relay_input", DefaultAltarEffectRelayInput::new);
-    public static final DeferredHolder<AltarEffect, DefaultAltarEffectLumenInput> DEFAULT_LUMEN_INPUT =
+    public static final RegistryObject<DefaultAltarEffectLumenInput> DEFAULT_LUMEN_INPUT =
             ALTAR_EFFECT_REGISTER.register("default_lumen_input", DefaultAltarEffectLumenInput::new);
 
 }

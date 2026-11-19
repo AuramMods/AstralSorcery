@@ -25,7 +25,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Function;
@@ -57,71 +57,71 @@ public class PerksAS {
 
         private static void init() {}
 
-        public static final DeferredHolder<PerkAttributeType, AttributeTypePerkEffect> PERK_EFFECT =
+        public static final RegistryObject<AttributeTypePerkEffect> PERK_EFFECT =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("perk_effect", AttributeTypePerkEffect::new);
-        public static final DeferredHolder<PerkAttributeType, PerkAttributeType> PERK_EXPERIENCE =
+        public static final RegistryObject<PerkAttributeType> PERK_EXPERIENCE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("perk_experience", () -> PerkAttributeType.create(true));
 
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeArmor> ARMOR =
+        public static final RegistryObject<AttributeTypeArmor> ARMOR =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("armor", AttributeTypeArmor::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeArmorToughness> ARMOR_TOUGHNESS =
+        public static final RegistryObject<AttributeTypeArmorToughness> ARMOR_TOUGHNESS =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("armor_toughness", AttributeTypeArmorToughness::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeAttackDamage> ATTACK_DAMAGE =
+        public static final RegistryObject<AttributeTypeAttackDamage> ATTACK_DAMAGE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("attack_damage", AttributeTypeAttackDamage::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeAttackReach> ATTACK_REACH =
+        public static final RegistryObject<AttributeTypeAttackReach> ATTACK_REACH =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("attack_reach", AttributeTypeAttackReach::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeAttackSpeed> ATTACK_SPEED =
+        public static final RegistryObject<AttributeTypeAttackSpeed> ATTACK_SPEED =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("attack_speed", AttributeTypeAttackSpeed::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeBlockBreakSpeed> BLOCK_BREAK_SPEED =
+        public static final RegistryObject<AttributeTypeBlockBreakSpeed> BLOCK_BREAK_SPEED =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("block_break_speed", AttributeTypeBlockBreakSpeed::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeBlockReach> BLOCK_REACH =
+        public static final RegistryObject<AttributeTypeBlockReach> BLOCK_REACH =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("block_reach", AttributeTypeBlockReach::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeFallDamage> FALL_DAMAGE =
+        public static final RegistryObject<AttributeTypeFallDamage> FALL_DAMAGE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("fall_damage", AttributeTypeFallDamage::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeLuck> LUCK =
+        public static final RegistryObject<AttributeTypeLuck> LUCK =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("luck", AttributeTypeLuck::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeMaxHealth> MAX_HEALTH =
+        public static final RegistryObject<AttributeTypeMaxHealth> MAX_HEALTH =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("max_health", AttributeTypeMaxHealth::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeMovementSpeed> MOVEMENT_SPEED =
+        public static final RegistryObject<AttributeTypeMovementSpeed> MOVEMENT_SPEED =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("movement_speed", AttributeTypeMovementSpeed::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeSafeFallDistance> SAFE_FALL_DISTANCE =
+        public static final RegistryObject<AttributeTypeSafeFallDistance> SAFE_FALL_DISTANCE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("safe_fall_distance", AttributeTypeSafeFallDistance::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeScale> SCALE =
+        public static final RegistryObject<AttributeTypeScale> SCALE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("scale", AttributeTypeScale::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeStepHeight> STEP_HEIGHT =
+        public static final RegistryObject<AttributeTypeStepHeight> STEP_HEIGHT =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("step_height", AttributeTypeStepHeight::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeSwimSpeed> SWIM_SPEED =
+        public static final RegistryObject<AttributeTypeSwimSpeed> SWIM_SPEED =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("swim_speed", AttributeTypeSwimSpeed::new);
 
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeBlockChance> BLOCK_CHANCE =
+        public static final RegistryObject<AttributeTypeBlockChance> BLOCK_CHANCE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("block_chance", AttributeTypeBlockChance::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeCooldownReduction> COOLDOWN_REDUCTION =
+        public static final RegistryObject<AttributeTypeCooldownReduction> COOLDOWN_REDUCTION =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("cooldown_reduction", AttributeTypeCooldownReduction::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeCriticalHitChance> CRITICAL_HIT_CHANCE =
+        public static final RegistryObject<AttributeTypeCriticalHitChance> CRITICAL_HIT_CHANCE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("critical_hit_chance", AttributeTypeCriticalHitChance::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeCriticalHitDamage> CRITICAL_HIT_DAMAGE =
+        public static final RegistryObject<AttributeTypeCriticalHitDamage> CRITICAL_HIT_DAMAGE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("critical_hit_damage", AttributeTypeCriticalHitDamage::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeDamageReduction> DAMAGE_REDUCTION =
+        public static final RegistryObject<AttributeTypeDamageReduction> DAMAGE_REDUCTION =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("damage_reduction", AttributeTypeDamageReduction::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeDamageReflect> DAMAGE_REFLECT =
+        public static final RegistryObject<AttributeTypeDamageReflect> DAMAGE_REFLECT =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("damage_reflect", AttributeTypeDamageReflect::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeDynamicEnchantmentEffect> ENCHANTMENT_EFFECT =
+        public static final RegistryObject<AttributeTypeDynamicEnchantmentEffect> ENCHANTMENT_EFFECT =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("dynamic_enchantment_effect", AttributeTypeDynamicEnchantmentEffect::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeElementalResistance> ELEMENTAL_RESISTANCE =
+        public static final RegistryObject<AttributeTypeElementalResistance> ELEMENTAL_RESISTANCE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("elemental_resistance", AttributeTypeElementalResistance::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeAttackLifeLeech> LIFE_LEECH =
+        public static final RegistryObject<AttributeTypeAttackLifeLeech> LIFE_LEECH =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("life_leech", AttributeTypeAttackLifeLeech::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeLifeRecovery> LIFE_RECOVERY =
+        public static final RegistryObject<AttributeTypeLifeRecovery> LIFE_RECOVERY =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("life_recovery", AttributeTypeLifeRecovery::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeMiningSize> MINING_SIZE =
+        public static final RegistryObject<AttributeTypeMiningSize> MINING_SIZE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("mining_size", AttributeTypeMiningSize::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypePierceArmor> PIERCE_ARMOR =
+        public static final RegistryObject<AttributeTypePierceArmor> PIERCE_ARMOR =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("pierce_armor", AttributeTypePierceArmor::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypePotionDuration> POTION_DURATION =
+        public static final RegistryObject<AttributeTypePotionDuration> POTION_DURATION =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("potion_duration", AttributeTypePotionDuration::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeProjectileDamage> PROJECTILE_DAMAGE =
+        public static final RegistryObject<AttributeTypeProjectileDamage> PROJECTILE_DAMAGE =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("projectile_damage", AttributeTypeProjectileDamage::new);
-        public static final DeferredHolder<PerkAttributeType, AttributeTypeProjectileSpeed> PROJECTILE_SPEED =
+        public static final RegistryObject<AttributeTypeProjectileSpeed> PROJECTILE_SPEED =
                 PERK_ATTRIBUTE_TYPE_REGISTER.register("projectile_speed", AttributeTypeProjectileSpeed::new);
 
     }
@@ -130,81 +130,81 @@ public class PerksAS {
 
         private static void init() {}
 
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> PERK_EFFECT =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> PERK_EFFECT =
                 type("perk_effect", AttributeTypes.PERK_EFFECT, ReaderPercentageAttribute::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> PERK_EXPERIENCE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> PERK_EXPERIENCE =
                 type("perk_experience", AttributeTypes.PERK_EXPERIENCE, ReaderPercentageAttribute::new);
 
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> ARMOR =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> ARMOR =
                 vanillaType("armor", AttributeTypes.ARMOR, Attributes.ARMOR);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> ARMOR_TOUGHNESS =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> ARMOR_TOUGHNESS =
                 vanillaType("armor_toughness", AttributeTypes.ARMOR_TOUGHNESS, Attributes.ARMOR_TOUGHNESS);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> ATTACK_DAMAGE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> ATTACK_DAMAGE =
                 vanillaDecimalType("attack_damage", AttributeTypes.ATTACK_DAMAGE, Attributes.ATTACK_DAMAGE);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> ATTACK_REACH =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> ATTACK_REACH =
                 vanillaDecimalType("attack_reach", AttributeTypes.ATTACK_REACH, Attributes.ENTITY_INTERACTION_RANGE);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> ATTACK_SPEED =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> ATTACK_SPEED =
                 vanillaDecimalType("attack_speed", AttributeTypes.ATTACK_SPEED, Attributes.ATTACK_SPEED);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> BLOCK_BREAK_SPEED =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> BLOCK_BREAK_SPEED =
                 vanillaType("block_break_speed", AttributeTypes.BLOCK_BREAK_SPEED, Attributes.BLOCK_BREAK_SPEED);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> BLOCK_REACH =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> BLOCK_REACH =
                 vanillaDecimalType("block_reach", AttributeTypes.BLOCK_REACH, Attributes.BLOCK_INTERACTION_RANGE);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> FALL_DAMAGE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> FALL_DAMAGE =
                 vanillaDecimalType("fall_damage", AttributeTypes.FALL_DAMAGE, Attributes.FALL_DAMAGE_MULTIPLIER);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> LUCK =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> LUCK =
                 vanillaDecimalType("luck", AttributeTypes.LUCK, Attributes.LUCK);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> MAX_HEALTH =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> MAX_HEALTH =
                 vanillaType("max_health", AttributeTypes.MAX_HEALTH, Attributes.MAX_HEALTH);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> MOVEMENT_SPEED =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> MOVEMENT_SPEED =
                 vanillaDecimalType("movement_speed", AttributeTypes.MOVEMENT_SPEED, Attributes.MOVEMENT_SPEED);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> SAFE_FALL_DISTANCE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> SAFE_FALL_DISTANCE =
                 vanillaType("safe_fall_distance", AttributeTypes.SAFE_FALL_DISTANCE, Attributes.SAFE_FALL_DISTANCE);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> SCALE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> SCALE =
                 vanillaDecimalType("scale", AttributeTypes.SCALE, Attributes.SCALE);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> STEP_HEIGHT =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> STEP_HEIGHT =
                 vanillaType("step_height", AttributeTypes.STEP_HEIGHT, Attributes.STEP_HEIGHT);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> SWIM_SPEED =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> SWIM_SPEED =
                 vanillaDecimalType("swim_speed", AttributeTypes.SWIM_SPEED, NeoForgeMod.SWIM_SPEED);
 
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> BLOCK_CHANCE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> BLOCK_CHANCE =
                 type("block_chance", AttributeTypes.BLOCK_CHANCE, ReaderAddedPercentage::withPercent);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> COOLDOWN_REDUCTION =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> COOLDOWN_REDUCTION =
                 type("cooldown_reduction", AttributeTypes.COOLDOWN_REDUCTION, ReaderAddedSecondsPercentage::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> CRITICAL_HIT_CHANCE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> CRITICAL_HIT_CHANCE =
                 type("critical_hit_chance", AttributeTypes.CRITICAL_HIT_CHANCE, ReaderAddedPercentage::withPercent);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> CRITICAL_HIT_DAMAGE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> CRITICAL_HIT_DAMAGE =
                 type("critical_hit_damage", AttributeTypes.CRITICAL_HIT_DAMAGE, ReaderPercentageAttribute::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> DAMAGE_REDUCTION =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> DAMAGE_REDUCTION =
                 type("damage_reduction", AttributeTypes.DAMAGE_REDUCTION, type -> new ReaderPercentageAttribute(type).negate());
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> DAMAGE_REFLECT =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> DAMAGE_REFLECT =
                 type("damage_reflect", AttributeTypes.DAMAGE_REFLECT, ReaderAddedPercentage::withPercent);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> ENCHANTMENT_EFFECT =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> ENCHANTMENT_EFFECT =
                 type("dynamic_enchantment_effect", AttributeTypes.ENCHANTMENT_EFFECT, ReaderPercentageAttribute::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> ELEMENTAL_RESISTANCE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> ELEMENTAL_RESISTANCE =
                 type("elemental_resistance", AttributeTypes.ELEMENTAL_RESISTANCE, ReaderPercentageAttribute::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> LIFE_LEECH =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> LIFE_LEECH =
                 type("life_leech", AttributeTypes.LIFE_LEECH, ReaderAttackLifeLeech::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> LIFE_RECOVERY =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> LIFE_RECOVERY =
                 type("life_recovery", AttributeTypes.LIFE_RECOVERY, ReaderPercentageAttribute::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> MINING_SIZE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> MINING_SIZE =
                 type("mining_size", AttributeTypes.MINING_SIZE, ReaderFlatAttribute.withDefault(1));
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> PIERCE_ARMOR =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> PIERCE_ARMOR =
                 type("pierce_armor", AttributeTypes.PIERCE_ARMOR, ReaderAddedPercentage::withPercent);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> POTION_DURATION =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> POTION_DURATION =
                 type("potion_duration", AttributeTypes.POTION_DURATION, ReaderPercentageAttribute::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> PROJECTILE_DAMAGE =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> PROJECTILE_DAMAGE =
                 type("projectile_damage", AttributeTypes.PROJECTILE_DAMAGE, ReaderPercentageAttribute::new);
-        public static final DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> PROJECTILE_SPEED =
+        public static final RegistryObject<PerkAttributeTypeReader.Type> PROJECTILE_SPEED =
                 type("projectile_speed", AttributeTypes.PROJECTILE_SPEED, ReaderPercentageAttribute::new);
 
 
-        private static DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> type(String name,
+        private static RegistryObject<PerkAttributeTypeReader.Type> type(String name,
                                                                                                        Supplier<? extends PerkAttributeType> type,
                                                                                                        Function<Supplier<? extends PerkAttributeType>, ? extends PerkAttributeTypeReader> reader) {
             return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name, () -> new PerkAttributeTypeReader.Type(type, reader.apply(type)));
         }
 
-        private static DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> vanillaType(String name,
+        private static RegistryObject<PerkAttributeTypeReader.Type> vanillaType(String name,
                                                                                                               Supplier<? extends PerkAttributeType> type,
                                                                                                               Holder<Attribute> attribute) {
             return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name, () -> {
@@ -212,7 +212,7 @@ public class PerksAS {
             });
         }
 
-        private static DeferredHolder<PerkAttributeTypeReader.Type, PerkAttributeTypeReader.Type> vanillaDecimalType(String name,
+        private static RegistryObject<PerkAttributeTypeReader.Type> vanillaDecimalType(String name,
                                                                                                                      Supplier<? extends PerkAttributeType> type,
                                                                                                                      Holder<Attribute> attribute) {
             return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name, () -> {
@@ -241,11 +241,11 @@ public class PerksAS {
 
         private static void init() {}
 
-        public static final DeferredHolder<ModifierSourceProvider<?>, PerkSourceProvider> PERKS =
+        public static final RegistryObject<PerkSourceProvider> PERKS =
                 MODIFIER_SOURCES.register("perks", PerkSourceProvider::new);
-        public static final DeferredHolder<ModifierSourceProvider<?>, EquipmentSourceProvider> EQUIPMENT =
+        public static final RegistryObject<EquipmentSourceProvider> EQUIPMENT =
                 MODIFIER_SOURCES.register("equipment", EquipmentSourceProvider::new);
-        public static final DeferredHolder<ModifierSourceProvider<?>, LumenBindingSourceProvider> LUMEN_BINDING =
+        public static final RegistryObject<LumenBindingSourceProvider> LUMEN_BINDING =
                 MODIFIER_SOURCES.register("lumen_binding", LumenBindingSourceProvider::new);
 
     }

@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  */
 public interface TomePage {
 
-    public static final Codec<TomePage> CODEC = RegistriesAS.REGISTRY_TOME_PAGE_TYPES.byNameCodec()
+    public static final Codec<TomePage> CODEC = RegistriesAS.codec(RegistriesAS.KEY_TOME_PAGE_TYPES)
             .dispatch(TomePage::getType, TomePage.TomePageType::codec);
     public static final StreamCodec<RegistryFriendlyByteBuf, TomePage> STREAM_CODEC = ByteBufCodecs.registry(RegistriesAS.KEY_TOME_PAGE_TYPES)
             .dispatch(TomePage::getType, TomePage.TomePageType::streamCodec);

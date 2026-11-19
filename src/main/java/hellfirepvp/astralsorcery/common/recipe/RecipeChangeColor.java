@@ -8,12 +8,14 @@
 
 package hellfirepvp.astralsorcery.common.recipe;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.common.component.ColorComponent;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.util.ColorReference;
+import net.minecraft.world.item.Item;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.DyeColor;
@@ -23,8 +25,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Optional;
 
@@ -37,12 +38,12 @@ import java.util.Optional;
  */
 public class RecipeChangeColor extends CustomRecipe {
 
-    private final DeferredHolder<RecipeSerializer<?>, ? extends RecipeSerializer<?>> serializer;
-    private final DeferredItem<?> targetItem;
+    private final RegistryObject<? extends RecipeSerializer<?>> serializer;
+    private final RegisteredItemLike<? extends Item> targetItem;
 
     public RecipeChangeColor(CraftingBookCategory category,
-                             DeferredHolder<RecipeSerializer<?>, ? extends RecipeSerializer<?>> serializer,
-                             DeferredItem<?> targetItem) {
+                             RegistryObject<? extends RecipeSerializer<?>> serializer,
+                             RegisteredItemLike<? extends Item> targetItem) {
         super(category);
         this.serializer = serializer;
         this.targetItem = targetItem;
@@ -72,7 +73,7 @@ public class RecipeChangeColor extends CustomRecipe {
             if (stack.isEmpty()) continue;
             foundItems++;
 
-            if (stack.is(this.targetItem)) {
+            if (stack.is(this.targetItem.get())) {
                 foundItem = stack;
             } else {
                 DyeColor color = DyeColor.getColor(stack);

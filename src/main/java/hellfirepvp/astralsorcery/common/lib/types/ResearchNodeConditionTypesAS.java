@@ -13,7 +13,7 @@ import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.research.condition.ConditionConstellation;
 import hellfirepvp.astralsorcery.common.research.condition.ConditionResearchFlag;
 import hellfirepvp.astralsorcery.common.research.condition.ResearchNodeCondition;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -28,10 +28,10 @@ public class ResearchNodeConditionTypesAS {
     public static final DeferredRegister<ResearchNodeCondition.Type<?>> RESEARCH_NODE_CONDITION_REGISTER =
             DeferredRegister.create(RegistriesAS.KEY_RESEARCH_NODE_CONDITION_TYPES, AstralSorcery.MODID);
 
-    public static final DeferredHolder<ResearchNodeCondition.Type<?>, ResearchNodeCondition.Type<ConditionConstellation>> CONSTELLATION_DISCOVERED =
+    public static final RegistryObject<ResearchNodeCondition.Type<ConditionConstellation>> CONSTELLATION_DISCOVERED =
             RESEARCH_NODE_CONDITION_REGISTER.register("constellation_discovered",
                     () -> new ResearchNodeCondition.Type<>(ConditionConstellation.CODEC, ConditionConstellation.STREAM_CODEC));
-    public static final DeferredHolder<ResearchNodeCondition.Type<?>, ResearchNodeCondition.Type<?>> RESEARCH_FLAG_SET =
+    public static final RegistryObject<ResearchNodeCondition.Type<?>> RESEARCH_FLAG_SET =
             RESEARCH_NODE_CONDITION_REGISTER.register("research_flag_set",
                     () -> new ResearchNodeCondition.Type<>(ConditionResearchFlag.CODEC, ConditionResearchFlag.STREAM_CODEC));
 }

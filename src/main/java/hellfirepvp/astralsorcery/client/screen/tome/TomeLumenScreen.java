@@ -252,7 +252,7 @@ public class TomeLumenScreen extends TomeScreen implements TomeStarParallaxLayer
             /*if (rand.nextInt(14) == 0 && false) {
                 Vector3 rPos = Vector3.random(rand).setZ(0).multiply(20F);
                 ct.createParticle(EffectTemplatesAS.SCREEN_LUMEN_PARTICLE, rPos.getX(), rPos.getY())
-                        .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.getKey(lumen))
+                        .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.get().getKey(lumen))
                         .alpha(FXAlphaFunction.PYRAMID.andThen(hoverAlpha))
                         .color(FXColorFunction.constant(lumen.getColor(tick)))
                         .renderOffset(renderOffset)

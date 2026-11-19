@@ -45,7 +45,7 @@ public class StarlightFocusCrystalBlockItem extends BlockItemCustom {
 
     @Override
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
-        RegistriesAS.REGISTRY_CONSTELLATIONS.forEach(cst -> {
+        RegistriesAS.REGISTRY_CONSTELLATIONS.get().forEach(cst -> {
             ItemStack stack = new ItemStack(this);
             stack.set(DataComponentsAS.ATTUNED_CONSTELLATION, new AttunedConstellationComponent(cst));
             stack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, CrystalAttributesComponent.defaultEmpty()

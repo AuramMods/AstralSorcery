@@ -57,7 +57,7 @@ public class IsLumenBindableIngredient implements ICustomIngredient {
     }
 
     public boolean isPotionLumenBindable(ItemStack stack) {
-        if (!stack.is(ItemsAS.STARDEW)) return false;
+        if (!stack.is(ItemsAS.STARDEW.get())) return false;
         if (!stack.has(DataComponents.POTION_CONTENTS)) return false;
         if (stack.getDamageValue() == stack.getMaxDamage()) return false;
         PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);

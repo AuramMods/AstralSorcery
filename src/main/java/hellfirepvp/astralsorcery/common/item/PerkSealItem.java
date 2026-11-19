@@ -29,7 +29,7 @@ public class PerkSealItem extends ItemCustom {
     }
 
     public static int getPerkSealCount(Player player) {
-        return ItemUtil.findItemsInInventory(player, stack -> stack.is(ItemsAS.PERK_SEAL)).values()
+        return ItemUtil.findItemsInInventory(player, stack -> stack.is(ItemsAS.PERK_SEAL.get())).values()
                 .stream()
                 .mapToInt(ItemStack::getCount)
                 .sum();
@@ -39,7 +39,7 @@ public class PerkSealItem extends ItemCustom {
         Inventory playerInv = player.getInventory();
         for (int slot = 0; slot < playerInv.getContainerSize(); slot++) {
             ItemStack stack = playerInv.getItem(slot);
-            if (stack.is(ItemsAS.PERK_SEAL)) {
+            if (stack.is(ItemsAS.PERK_SEAL.get())) {
                 if (!simulate) {
                     stack.shrink(1);
                     playerInv.setItem(slot, stack);

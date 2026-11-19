@@ -38,7 +38,7 @@ import java.util.List;
  */
 public abstract class PerkAttributeConverter extends MutableIdentity {
 
-    public static final Codec<PerkAttributeConverter> CODEC = RegistriesAS.REGISTRY_PERK_CONVERTERS.byNameCodec();
+    public static final Codec<PerkAttributeConverter> CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_CONVERTERS);
 
     protected PerkAttributeConverter(String identifier) {
         super(identifier);

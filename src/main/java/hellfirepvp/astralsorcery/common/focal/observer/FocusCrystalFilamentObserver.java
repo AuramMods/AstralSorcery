@@ -73,7 +73,7 @@ public class FocusCrystalFilamentObserver extends ChangeObserver<FocusCrystalFil
     @Override
     public boolean notifyChange(Level world, BlockPos center, BlockChangeSet changeSet) {
         for (BlockStateChangeSet.StateChange change : changeSet.getChanges()) {
-            if (change.getNewState().is(BlocksAS.STELLAR_FILAMENT)) {
+            if (change.getNewState().is(BlocksAS.STELLAR_FILAMENT.get())) {
                 this.positions.add(change.getAbsolutePosition());
             } else {
                 this.positions.remove(change.getAbsolutePosition());

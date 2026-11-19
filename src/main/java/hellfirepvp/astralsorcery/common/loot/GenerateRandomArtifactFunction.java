@@ -44,7 +44,7 @@ public class GenerateRandomArtifactFunction extends LootItemConditionalFunction 
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        RegistriesAS.REGISTRY_ARTIFACT_TYPES.getRandom(context.getRandom()).ifPresent(type -> {
+        RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().getRandom(context.getRandom()).ifPresent(type -> {
             stack.set(DataComponentsAS.ARTIFACT, ArtifactComponent.initialize(type.value()));
         });
         return stack;

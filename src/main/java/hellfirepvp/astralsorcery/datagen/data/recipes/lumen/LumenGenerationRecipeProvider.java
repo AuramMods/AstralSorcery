@@ -133,7 +133,7 @@ public class LumenGenerationRecipeProvider extends RecipeProvider {
                 .addLumenCombinationInput(LumenAS.DISCIDIA.asLumen(), 16)
                 .save(recipeOutput);
 
-        CompoundIngredient matchAnyArtifactShard = new CompoundIngredient(RegistriesAS.REGISTRY_ARTIFACT_TYPES.stream()
+        CompoundIngredient matchAnyArtifactShard = new CompoundIngredient(RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().stream()
                 .map(ArtifactTypeComponent::new)
                 .map(typeCmp -> DataComponentIngredient.of(false, DataComponentsAS.ARTIFACT_TYPE, typeCmp, ItemsAS.ARTIFACT_SHARD))
                 .toList());

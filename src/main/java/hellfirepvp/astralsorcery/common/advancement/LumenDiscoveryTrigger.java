@@ -45,7 +45,7 @@ public class LumenDiscoveryTrigger extends SimpleCriterionTrigger<LumenDiscovery
 
         public static final Codec<Instance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
-                RegistriesAS.REGISTRY_LUMEN.byNameCodec().optionalFieldOf("lumen").forGetter(Instance::lumen),
+                RegistriesAS.codec(RegistriesAS.KEY_LUMEN).optionalFieldOf("lumen").forGetter(Instance::lumen),
                 Codec.BOOL.optionalFieldOf("elementary").forGetter(Instance::elementary)
         ).apply(inst, Instance::new));
 

@@ -46,24 +46,24 @@ public class PlayerProgressFullAccess extends PlayerProgress {
 
     @Override
     public Set<BaseConstellation> getSeenConstellations() {
-        return RegistriesAS.REGISTRY_CONSTELLATIONS.stream().collect(Collectors.toSet());
+        return RegistriesAS.REGISTRY_CONSTELLATIONS.get().stream().collect(Collectors.toSet());
     }
 
     @Override
     public Set<BaseConstellation> getKnownConstellations() {
-        return RegistriesAS.REGISTRY_CONSTELLATIONS.stream().collect(Collectors.toSet());
+        return RegistriesAS.REGISTRY_CONSTELLATIONS.get().stream().collect(Collectors.toSet());
     }
 
     @Override
     public Set<BaseConstellation> getSeenFocalPoints() {
-        return RegistriesAS.REGISTRY_CONSTELLATIONS.stream()
+        return RegistriesAS.REGISTRY_CONSTELLATIONS.get().stream()
                 .filter(cst -> cst.is(TagsAS.Constellations.MAY_BE_FOCAL_POINT))
                 .collect(Collectors.toSet());
     }
 
     @Override
     public Set<Lumen> getDiscoveredLumen() {
-        return RegistriesAS.REGISTRY_LUMEN.stream().collect(Collectors.toSet());
+        return RegistriesAS.REGISTRY_LUMEN.get().stream().collect(Collectors.toSet());
     }
 
     @Override

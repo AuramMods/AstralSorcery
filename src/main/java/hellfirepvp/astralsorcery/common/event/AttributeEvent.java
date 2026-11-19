@@ -124,7 +124,7 @@ public class AttributeEvent {
     }
 
     public static double postProcessModded(Player player, ResourceLocation key, double value) {
-        PerkAttributeType pType = RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get(key);
+        PerkAttributeType pType = RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().get(key);
         if (pType == null) return value;
         return postProcessModded(player, pType, value);
     }

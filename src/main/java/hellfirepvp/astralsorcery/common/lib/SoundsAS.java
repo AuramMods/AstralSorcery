@@ -10,11 +10,11 @@ package hellfirepvp.astralsorcery.common.lib;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.sound.CategorizedSoundEvent;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.neoforged.neoforge.common.util.DeferredSoundType;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -27,7 +27,7 @@ import net.minecraftforge.registries.DeferredRegister;
 public class SoundsAS {
 
     public static final DeferredRegister<SoundEvent> SOUND_REGISTER =
-            DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, AstralSorcery.MODID);
+            DeferredRegister.create(Registries.SOUND_EVENT, AstralSorcery.MODID);
 
     public static final CategorizedSoundEvent ALTAR_CRAFT_START = register("altar_craft_start", SoundSource.BLOCKS);
     public static final CategorizedSoundEvent ALTAR_CRAFT_FINISH = register("altar_craft_finish", SoundSource.BLOCKS);
@@ -73,7 +73,7 @@ public class SoundsAS {
             CRYSTAL_BREAK.sound(), CRYSTAL_STEP.sound(), CRYSTAL_PLACE.sound(), CRYSTAL_HIT.sound(), CRYSTAL_HIT.sound());
 
     private static CategorizedSoundEvent register(String name, SoundSource category) {
-        DeferredHolder<SoundEvent, SoundEvent> sound = SOUND_REGISTER.register(name,
+        RegistryObject<SoundEvent> sound = SOUND_REGISTER.register(name,
                 () -> SoundEvent.createVariableRangeEvent(AstralSorcery.key(name)));
         return new CategorizedSoundEvent(sound, category);
     }

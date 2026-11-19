@@ -8,11 +8,12 @@
 
 package hellfirepvp.astralsorcery.common.util.data;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -24,7 +25,7 @@ import java.util.function.Supplier;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public record ResolvingRecipeTypeRegistryObject<T extends Recipe<?>>(DeferredHolder<RecipeType<?>, RecipeType<T>> holder, Function<T, ItemStack> outputMatchProvider) implements Supplier<RecipeType<T>> {
+public record ResolvingRecipeTypeRegistryObject<T extends Recipe<?>>(RegistryObject<RecipeType<T>> holder, Function<T, ItemStack> outputMatchProvider) implements Supplier<RecipeType<T>> {
 
     @Override
     public RecipeType<T> get() {
@@ -32,6 +33,6 @@ public record ResolvingRecipeTypeRegistryObject<T extends Recipe<?>>(DeferredHol
     }
 
     public ResourceKey<RecipeType<?>> getKey() {
-        return this.holder().getKey();
+        return ResourceKey.create(Registries.RECIPE_TYPE, this.holder().getId());
     }
 }

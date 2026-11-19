@@ -342,7 +342,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                 pos = VectorUtil.withRandomOffset(pos, rand, 0.4F);
                 EffectHelper.of(EffectTemplatesAS.LUMEN_PARTICLE)
                         .spawn(pos)
-                        .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.getKey(lumenStack.getLumen()))
+                        .setSprite(TexturesAS.ATLAS_LUMEN, RegistriesAS.REGISTRY_LUMEN.get().getKey(lumenStack.getLumen()))
                         .setAlpha(0.75F)
                         .color(FXColorFunction.constant(lumen.getColor(level, pos)))
                         .setGravity(Vector3.y(0.0001F));
@@ -406,7 +406,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                             CodecUtil.defaulted(FluidContainerList.CODEC, "fluidContents", FluidContainerList::create, Data::getFluidContents),
                             CodecUtil.defaulted(InventoryStackList.CODEC, "inventoryContents", InventoryStackList::create, Data::getInventoryContents),
                             Codec.BOOL.optionalFieldOf("allowExtendedLumenTransfer", false).forGetter(Data::doesAllowExtendedLumenTransfer),
-                            CodecUtil.lenientDefaulted(RegistriesAS.REGISTRY_LUMEN.byNameCodec(), "assignedLumen", LumenAS.NONE, Data::getAssignedLumen)
+                            CodecUtil.lenientDefaulted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), "assignedLumen", LumenAS.NONE, Data::getAssignedLumen)
                     )
             );
         }

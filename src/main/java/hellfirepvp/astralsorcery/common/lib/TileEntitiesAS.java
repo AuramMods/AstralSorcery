@@ -8,17 +8,17 @@
 
 package hellfirepvp.astralsorcery.common.lib;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import com.mojang.datafixers.types.Type;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.tile.*;
 import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
 import net.minecraft.Util;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.neoforge.registries.DeferredBlock;
 import net.minecraftforge.registries.DeferredRegister;
 
 /**
@@ -31,7 +31,7 @@ import net.minecraftforge.registries.DeferredRegister;
 public class TileEntitiesAS {
 
     public static final DeferredRegister<BlockEntityType<?>> TILE_REGISTER =
-            DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, AstralSorcery.MODID);
+            DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, AstralSorcery.MODID);
 
     public static final TileRegistryObject<TileAltar> ALTAR =
             register("altar", TileAltar::new,
@@ -106,13 +106,13 @@ public class TileEntitiesAS {
 
     private static <T extends BlockEntity> TileRegistryObject<T> register(String name,
                                                                           BlockEntityType.BlockEntitySupplier<T> tileCtor,
-                                                                          DeferredBlock<?>... validBlocks) {
+                                                                          RegisteredItemLike<? extends Block>... validBlocks) {
         String fullKey = AstralSorcery.MODID + "_" + name;
         Type<?> dataFixerType = Util.fetchChoiceType(References.BLOCK_ENTITY, fullKey);
         return new TileRegistryObject<>(TILE_REGISTER.register(name, () -> {
             Block[] blocks = new Block[validBlocks.length];
             for (int i = 0; i < validBlocks.length; i++) {
-                blocks[i] = validBlocks[i].value();
+                blocks[i] = validBlocks[i].get();
             }
             return BlockEntityType.Builder.of(tileCtor, blocks).build(dataFixerType);
         }));

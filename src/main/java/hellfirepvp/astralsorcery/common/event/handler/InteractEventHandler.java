@@ -65,7 +65,7 @@ public class InteractEventHandler {
             }
         }
         MiscUtil.getTileAt(event.getLevel(), event.getPos(), LecternBlockEntity.class, false).ifPresent(tile -> {
-            if (tile.getBook().is(ItemsAS.TOME)) {
+            if (tile.getBook().is(ItemsAS.TOME.get())) {
                 event.setCanceled(true);
                 event.setCancellationResult(InteractionResult.SUCCESS);
 
@@ -113,7 +113,7 @@ public class InteractEventHandler {
     private static void onOpenLectern(PlayerInteractEvent.RightClickBlock event) {
         MiscUtil.getTileAt(event.getLevel(), event.getPos(), LecternBlockEntity.class, false).ifPresent(lectern -> {
             ItemStack contained = lectern.getBook();
-            if (contained.is(ItemsAS.TOME)) {
+            if (contained.is(ItemsAS.TOME.get())) {
                 event.setCanceled(true);
                 event.setCancellationResult(InteractionResult.SUCCESS);
                 if (event.getLevel().isClientSide()) {

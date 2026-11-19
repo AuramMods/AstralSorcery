@@ -45,7 +45,7 @@ public class CrystalProperty implements Comparable<CrystalProperty> {
 
     public CrystalProperty(ColorWrapper color, int maxTier) {
         this.sortingId = counter++;
-        this.unlocalizedName = NameUtil.cacheName("crystal.property", RegistriesAS.REGISTRY_CRYSTAL_PROPERTIES, this);
+        this.unlocalizedName = NameUtil.cacheName("crystal.property", RegistriesAS.REGISTRY_CRYSTAL_PROPERTIES.get(), this);
         this.color = color;
         this.maxTier = maxTier;
     }

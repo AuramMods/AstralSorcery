@@ -96,7 +96,7 @@ public class ASJeiPlugin implements IModPlugin {
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
         registration.register(LumenIngredientType.INSTANCE,
-                RegistriesAS.REGISTRY_LUMEN.stream()
+                RegistriesAS.REGISTRY_LUMEN.get().stream()
                         .filter(lumen -> lumen != LumenAS.NONE.get())
                         .map(lumen -> LumenStack.of(lumen, LumenStack.FLASK_VALUE))
                         .toList(),

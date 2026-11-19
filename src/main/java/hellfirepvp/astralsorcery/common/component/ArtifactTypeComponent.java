@@ -27,7 +27,7 @@ import java.util.Objects;
 public record ArtifactTypeComponent(ArtifactType type) {
 
     public static final Codec<ArtifactTypeComponent> CODEC =
-            RegistriesAS.REGISTRY_ARTIFACT_TYPES.byNameCodec().xmap(ArtifactTypeComponent::new, ArtifactTypeComponent::type);
+            RegistriesAS.codec(RegistriesAS.KEY_ARTIFACT_TYPES).xmap(ArtifactTypeComponent::new, ArtifactTypeComponent::type);
     public static final StreamCodec<RegistryFriendlyByteBuf, ArtifactTypeComponent> STREAM_CODEC =
             ByteBufCodecs.registry(RegistriesAS.KEY_ARTIFACT_TYPES).map(ArtifactTypeComponent::new, ArtifactTypeComponent::type);
 

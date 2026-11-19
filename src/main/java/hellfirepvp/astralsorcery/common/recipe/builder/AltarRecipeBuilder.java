@@ -39,7 +39,7 @@ import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.minecraftforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -103,11 +103,11 @@ public class AltarRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public AltarRecipeBuilder setRecipeId(DeferredHolder<?, ?> identifiable) {
+    public AltarRecipeBuilder setRecipeId(RegistryObject<?> identifiable) {
         return this.setRecipeId(identifiable.getKey().location());
     }
 
-    public AltarRecipeBuilder setRecipeId(DeferredHolder<?, ?> identifiable, String suffix) {
+    public AltarRecipeBuilder setRecipeId(RegistryObject<?> identifiable, String suffix) {
         return this.setRecipeId(NameUtil.suffixPath(identifiable.getKey().location(), suffix));
     }
 

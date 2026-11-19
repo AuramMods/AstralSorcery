@@ -49,7 +49,7 @@ public class FocalCombineRecipe extends CustomRecipe<FocalCombineRecipe, FocalCo
             ColorWrapper.CODEC.fieldOf("color").forGetter(FocalCombineRecipe::getColor),
             Ingredient.CODEC.listOf().fieldOf("inputs").forGetter(FocalCombineRecipe::getInputs),
             ItemStack.CODEC.listOf().fieldOf("outputs").forGetter(FocalCombineRecipe::getOutputs),
-            RegistriesAS.REGISTRY_CONSTELLATIONS.byNameCodec().optionalFieldOf("required_constellation").forGetter(FocalCombineRecipe::getRequiredConstellation)
+            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("required_constellation").forGetter(FocalCombineRecipe::getRequiredConstellation)
     ).apply(instance, FocalCombineRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FocalCombineRecipe> STREAM_CODEC = StreamCodec.composite(

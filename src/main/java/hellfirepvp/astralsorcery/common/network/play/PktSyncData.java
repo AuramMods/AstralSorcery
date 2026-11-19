@@ -51,7 +51,7 @@ public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request>
     }
 
     public static Request syncAll(SyncDataManager dataManager) {
-        return Request.all(RegistriesAS.REGISTRY_SYNC_DATA_TYPES.stream()
+        return Request.all(RegistriesAS.REGISTRY_SYNC_DATA_TYPES.get().stream()
                 .map(type -> dataManager.getData(type).syncAllData())
                 .collect(Collectors.toUnmodifiableList()));
     }

@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.datagen.data.loot;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.common.block.tile.CelestialCrystalClusterBlock;
 import hellfirepvp.astralsorcery.common.block.tile.GemCrystalClusterBlock;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
@@ -35,8 +36,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.Set;
@@ -259,14 +259,14 @@ public class AstralBlockLootTableProvider extends BlockLootSubProvider {
                                 .include(DataComponentsAS.COLOR.get())));
     }
 
-    private void dropSelf(DeferredBlock<? extends Block> deferredBlock) {
+    private void dropSelf(RegisteredItemLike<? extends Block> deferredBlock) {
         this.dropSelf(deferredBlock.get());
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
         return BlocksAS.BLOCK_REGISTER.getEntries().stream()
-                .map(DeferredHolder::get)
+                .map(RegistryObject::get)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

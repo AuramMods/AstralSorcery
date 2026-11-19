@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.datagen.assets;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
 import hellfirepvp.astralsorcery.datagen.assets.model.ColumnModelBuilder;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredBlock;
 
 import static hellfirepvp.astralsorcery.common.lib.BlocksAS.*;
 
@@ -118,7 +118,7 @@ public class AstralBlockModelProvider extends BlockModelProvider {
         ColumnModelBuilder.makeColumnTopModel(this, name + "_top", pillarTop, pillarInner, pillarUpDown);
     }
 
-    private void createPlant(DeferredBlock<?> plantBlock, DeferredBlock<?> pottedPlantBlock) {
+    private void createPlant(RegisteredItemLike<? extends Block> plantBlock, RegisteredItemLike<? extends Block> pottedPlantBlock) {
         this.cross(modelName(plantBlock), blockTextureName(plantBlock)).renderType("cutout");
         this.withExistingParent(modelName(pottedPlantBlock), BLOCK_FOLDER + "/flower_pot_cross")
                 .texture("plant", blockTextureName(plantBlock))
@@ -140,15 +140,15 @@ public class AstralBlockModelProvider extends BlockModelProvider {
         this.getBuilder(name).toJson();
     }
 
-    private static String modelName(DeferredBlock<?> block) {
+    private static String modelName(RegisteredItemLike<? extends Block> block) {
         return block.getId().getPath();
     }
 
-    private static ResourceLocation blockTextureName(DeferredBlock<?> block) {
+    private static ResourceLocation blockTextureName(RegisteredItemLike<? extends Block> block) {
         return textureName(block, "block/");
     }
 
-    private static ResourceLocation textureName(DeferredBlock<?> block, String prefix) {
+    private static ResourceLocation textureName(RegisteredItemLike<? extends Block> block, String prefix) {
         return NameUtil.prefixPath(block.getId(), prefix);
     }
 }

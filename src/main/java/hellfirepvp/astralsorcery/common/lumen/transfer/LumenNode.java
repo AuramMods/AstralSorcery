@@ -45,8 +45,8 @@ public class LumenNode {
             Vec3.CODEC.fieldOf("los_pos").forGetter(LumenNode::getLineOfSightPos),
             CodecUtil.enumCodec(ConnectionType.class).fieldOf("connection_type").forGetter(LumenNode::getConnectionType),
             SetCodec.of(BlockPos.CODEC).fieldOf("linked_positions").forGetter(LumenNode::getLinkedPositions),
-            SetCodec.of(RegistriesAS.REGISTRY_LUMEN.byNameCodec()).fieldOf("provided_lumen_types").forGetter(LumenNode::getMutableProvidedLumenTypes),
-            Codec.unboundedMap(RegistriesAS.REGISTRY_LUMEN.byNameCodec(), SetCodec.of(RelayDistance.CODEC))
+            SetCodec.of(RegistriesAS.codec(RegistriesAS.KEY_LUMEN)).fieldOf("provided_lumen_types").forGetter(LumenNode::getMutableProvidedLumenTypes),
+            Codec.unboundedMap(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), SetCodec.of(RelayDistance.CODEC))
                     .fieldOf("relayed_lumen_types").forGetter(LumenNode::getRelayedLumenTypes)
     ).apply(inst, LumenNode::new));
 

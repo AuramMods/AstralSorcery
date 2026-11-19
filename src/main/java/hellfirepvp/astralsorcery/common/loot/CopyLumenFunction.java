@@ -18,7 +18,6 @@ import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.tile.base.TileDataLumenContainer;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntitySynchronized;
-import hellfirepvp.observerlib.common.util.RegistryHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -54,7 +53,8 @@ public class CopyLumenFunction extends LootItemConditionalFunction {
         if (context.hasParam(LootContextParams.BLOCK_ENTITY)) {
             if (context.getParamOrNull(LootContextParams.BLOCK_ENTITY) instanceof TileEntitySynchronized<?> tile) {
                 if (tile.getTileData() instanceof TileDataLumenContainer lumenContainer) {
-                    Holder<Lumen> lumenRef = RegistryHelper.of(RegistriesAS.REGISTRY_LUMEN).getOrNull(lumenContainer.getLumen());
+                    Holder<Lumen> lumenRef = RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(lumenContainer.getLumen())
+                            .flatMap(RegistriesAS.REGISTRY_LUMEN.get()::getHolder).orElse(null);
                     if (lumenRef != null && !lumenRef.is(LumenAS.NONE.getKey())) {
                         stack.set(DataComponentsAS.LUMEN, new LumenComponent(lumenRef));
                     }

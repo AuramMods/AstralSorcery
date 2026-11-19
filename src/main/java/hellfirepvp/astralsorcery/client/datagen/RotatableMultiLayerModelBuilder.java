@@ -8,7 +8,9 @@
 
 package hellfirepvp.astralsorcery.client.datagen;
 
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.datagen.assets.AstralBlockStateProvider;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +18,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
-import net.neoforged.neoforge.registries.DeferredBlock;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -27,19 +28,19 @@ import net.neoforged.neoforge.registries.DeferredBlock;
  */
 public class RotatableMultiLayerModelBuilder<T extends Comparable<T>> {
 
-    private final DeferredBlock<?> block;
+    private final RegisteredItemLike<? extends Block> block;
     private final Property<T> blockProperty;
     private final DirectionProperty horizontalRotationProperty;
     private final MultiPartBlockStateBuilder builder;
 
-    protected RotatableMultiLayerModelBuilder(BlockStateProvider provider, DeferredBlock<?> block, DirectionProperty horizontalRotationProperty, Property<T> blockProperty) {
+    protected RotatableMultiLayerModelBuilder(BlockStateProvider provider, RegisteredItemLike<? extends Block> block, DirectionProperty horizontalRotationProperty, Property<T> blockProperty) {
         this.block = block;
         this.blockProperty = blockProperty;
         this.horizontalRotationProperty = horizontalRotationProperty;
         this.builder = provider.getMultipartBuilder(this.block.get());
     }
 
-    public static <T extends Comparable<T>> RotatableMultiLayerModelBuilder<T> makeState(BlockStateProvider provider, DeferredBlock<?> block, DirectionProperty horizontalRotationProperty, Property<T> blockProperty) {
+    public static <T extends Comparable<T>> RotatableMultiLayerModelBuilder<T> makeState(BlockStateProvider provider, RegisteredItemLike<? extends Block> block, DirectionProperty horizontalRotationProperty, Property<T> blockProperty) {
         return new RotatableMultiLayerModelBuilder<>(provider, block, horizontalRotationProperty, blockProperty);
     }
 

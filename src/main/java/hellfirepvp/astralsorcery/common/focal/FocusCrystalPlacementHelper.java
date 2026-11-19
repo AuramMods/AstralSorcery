@@ -42,7 +42,7 @@ public class FocusCrystalPlacementHelper {
     public static List<BlockPos> collectFocusCrystalFilaments(LevelAccessor level, BlockPos center, AABB scanBox) {
         List<BlockPos> positions = new ArrayList<>();
         BlockPos.betweenClosedStream(scanBox).forEach(pos -> {
-            if (level.getBlockState(pos).is(BlocksAS.STELLAR_FILAMENT)) {
+            if (level.getBlockState(pos).is(BlocksAS.STELLAR_FILAMENT.get())) {
                 positions.add(pos.immutable());
             }
         });

@@ -55,12 +55,12 @@ public class InitItemProperties {
         ItemProperties.register(ItemsAS.ARTIFACT.asItem(), AstralSorcery.key("artifact_type"), (stack, level, entity, seed) -> {
             if (!stack.has(DataComponentsAS.ARTIFACT)) return 0F;
             ArtifactType artifactType = stack.get(DataComponentsAS.ARTIFACT).artifactType();
-            return RegistriesAS.REGISTRY_ARTIFACT_TYPES.getId(artifactType) / (float) RegistriesAS.REGISTRY_ARTIFACT_TYPES.size();
+            return RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().getId(artifactType) / (float) RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().size();
         });
         ItemProperties.register(ItemsAS.ARTIFACT_SHARD.asItem(), AstralSorcery.key("artifact_type"), (stack, level, entity, seed) -> {
             if (!stack.has(DataComponentsAS.ARTIFACT_TYPE)) return 0F;
             ArtifactType artifactType = stack.get(DataComponentsAS.ARTIFACT_TYPE).type();
-            return RegistriesAS.REGISTRY_ARTIFACT_TYPES.getId(artifactType) / (float) RegistriesAS.REGISTRY_ARTIFACT_TYPES.size();
+            return RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().getId(artifactType) / (float) RegistriesAS.REGISTRY_ARTIFACT_TYPES.get().size();
         });
         ItemProperties.register(ItemsAS.LUMEN_CRYSTAL.asItem(), AstralSorcery.key("prismatic"), (stack, level, entity, seed) -> {
             return stack.getOrDefault(DataComponentsAS.LUMEN, LumenComponent.EMPTY).lumen().is(LumenAS.PRISMATIC.getKey()) ? 1F : 0F;

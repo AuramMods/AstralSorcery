@@ -54,7 +54,7 @@ public class InfuserBlock extends BaseTickTileBlock<TileInfuser> {
         return MiscUtil.getTileAt(level, pos, TileInfuser.class, true).map(infuser -> {
             ItemStack held = player.getItemInHand(hand);
 
-            if (hand == InteractionHand.MAIN_HAND && stack.is(ItemsAS.WAND) &&
+            if (hand == InteractionHand.MAIN_HAND && stack.is(ItemsAS.WAND.get()) &&
                     infuser.getTileData().getActiveRecipe().isEmpty()) {
                 return infuser.findMatchingRecipe(level).map(recipe -> {
                     infuser.startCrafting(level, recipe);

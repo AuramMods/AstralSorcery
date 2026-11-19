@@ -38,7 +38,7 @@ import java.util.List;
 public record TomePageLumenDescription(Lumen lumen, List<LumenBindingType.SlotType> slots) implements TomePage {
 
     public static final MapCodec<TomePageLumenDescription> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            RegistriesAS.REGISTRY_LUMEN.byNameCodec().fieldOf("lumen").forGetter(TomePageLumenDescription::lumen),
+            RegistriesAS.codec(RegistriesAS.KEY_LUMEN).fieldOf("lumen").forGetter(TomePageLumenDescription::lumen),
             StringRepresentable.fromEnum(LumenBindingType.SlotType::values).listOf().fieldOf("slots").forGetter(TomePageLumenDescription::slots)
     ).apply(inst, TomePageLumenDescription::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, TomePageLumenDescription> STREAM_CODEC = StreamCodec.composite(

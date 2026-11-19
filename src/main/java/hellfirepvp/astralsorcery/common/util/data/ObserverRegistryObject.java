@@ -20,7 +20,7 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.Optional;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public record ObserverRegistryObject(DeferredHolder<ObserverProvider<?>, ? extends ObserverProvider<?>> observer) {
+public record ObserverRegistryObject(RegistryObject<? extends ObserverProvider<?>> observer) {
 
     public boolean isProviderFor(ChangeSubscriber<?> subscriber) {
         return this.isProviderFor(subscriber.getObserver());

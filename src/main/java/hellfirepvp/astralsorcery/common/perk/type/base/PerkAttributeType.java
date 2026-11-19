@@ -38,7 +38,7 @@ import java.util.function.Supplier;
  */
 public class PerkAttributeType {
 
-    public static final Codec<PerkAttributeType> CODEC = RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.byNameCodec();
+    public static final Codec<PerkAttributeType> CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_ATTRIBUTE_TYPES);
 
     //Used by subclasses to track application of this perkAttributeType on a player-uuid
     private final Map<LogicalSide, Set<UUID>> applicationCache = Maps.newHashMap();
@@ -63,7 +63,7 @@ public class PerkAttributeType {
     }
 
     public static Optional<PerkAttributeType> fromVanillaType(Holder<Attribute> attribute) {
-        return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.stream()
+        return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().stream()
                 .filter(type -> type instanceof VanillaPerkAttributeType)
                 .map(type -> (VanillaPerkAttributeType) type)
                 .filter(type -> type.getAttribute().is(attribute))
@@ -72,7 +72,7 @@ public class PerkAttributeType {
     }
 
     public Optional<PerkAttributeTypeReader> getReader() {
-        return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPE_READERS.stream()
+        return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPE_READERS.get().stream()
                 .filter(type -> type.perkAttributeType().get().is(this))
                 .findFirst()
                 .map(PerkAttributeTypeReader.Type::reader);
@@ -93,7 +93,7 @@ public class PerkAttributeType {
     @Nonnull
     protected String getOrCreateNameId() {
         if (this.nameId == null) {
-            this.nameId = Util.makeDescriptionId("perk.attribute", RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.getKey(this));
+            this.nameId = Util.makeDescriptionId("perk.attribute", RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().getKey(this));
         }
         return this.nameId;
     }
@@ -138,7 +138,7 @@ public class PerkAttributeType {
     }
 
     public static void clearCache(LogicalSide side) {
-        for (PerkAttributeType type : RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES) {
+        for (PerkAttributeType type : RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get()) {
             type.clear(side);
         }
     }

@@ -46,7 +46,7 @@ public class CommandFocalPoint {
 
     private static int createFocalPoint(CommandContext<CommandSourceStack> ctx) {
         ResourceKey<BaseConstellation> cstKey = ctx.getArgument("constellation", ResourceKey.class);
-        BaseConstellation cst = RegistriesAS.REGISTRY_CONSTELLATIONS.get(cstKey);
+        BaseConstellation cst = RegistriesAS.REGISTRY_CONSTELLATIONS.get().get(cstKey);
         if (cst == null) {
             ctx.getSource().sendFailure(Component.literal("Unknown constellation" + cstKey.location()).withStyle(ChatFormatting.RED));
             return 0;

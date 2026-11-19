@@ -77,13 +77,13 @@ public class Lumen implements LumenLike {
     }
 
     public Optional<ResourceKey<Lumen>> getRegistryKey() {
-        return RegistriesAS.REGISTRY_LUMEN.getResourceKey(this);
+        return RegistriesAS.REGISTRY_LUMEN.get().getResourceKey(this);
     }
 
     public Optional<? extends Holder<Lumen>> getHolder() {
-        ResourceLocation lumenKey = RegistriesAS.REGISTRY_LUMEN.getKey(this);
+        ResourceLocation lumenKey = RegistriesAS.REGISTRY_LUMEN.get().getKey(this);
         if (lumenKey == null) return Optional.empty();
-        return RegistriesAS.REGISTRY_LUMEN.getHolder(lumenKey);
+        return RegistriesAS.REGISTRY_LUMEN.get().getHolder(lumenKey);
     }
 
     public boolean maySee(Level level, PlayerProgress progress) {
@@ -105,7 +105,7 @@ public class Lumen implements LumenLike {
     @Nonnull
     protected String getOrCreateNameId() {
         if (this.nameId == null) {
-            this.nameId = Util.makeDescriptionId("lumen", RegistriesAS.REGISTRY_LUMEN.getKey(this));
+            this.nameId = Util.makeDescriptionId("lumen", RegistriesAS.REGISTRY_LUMEN.get().getKey(this));
         }
         return this.nameId;
     }

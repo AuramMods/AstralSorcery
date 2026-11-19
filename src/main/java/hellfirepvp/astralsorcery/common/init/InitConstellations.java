@@ -22,7 +22,7 @@ import hellfirepvp.astralsorcery.common.constellation.star.StarLocation;
 import hellfirepvp.astralsorcery.common.focal.FocusCrystalPlacementHelper;
 import hellfirepvp.astralsorcery.common.focal.FocusCrystalVisualSortHelper;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import static hellfirepvp.astralsorcery.common.lib.constants.ColorsAS.*;
@@ -37,7 +37,7 @@ import static hellfirepvp.astralsorcery.common.lib.constants.ColorsAS.*;
 public class InitConstellations {
 
     // ARA/Ara
-    public static DeferredHolder<BaseConstellation, BaseConstellation> aevitas(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> aevitas(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_AEVITAS)
                 .withProperty(FocusCrystalProperty.KEY, FocusCrystalProperty.of(FocusCrystalPlacementHelper::hasOppositeButNoAxisSymmetry))
                 .withProperty(FocusCrystalSortProperty.KEY, FocusCrystalSortProperty.of(FocusCrystalVisualSortHelper::sortIntoContinuousPolygon))
@@ -69,7 +69,7 @@ public class InitConstellations {
     }
 
     // CEP/Cepheus
-    public static DeferredHolder<BaseConstellation, BaseConstellation> armara(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> armara(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_ARMARA)
                 .withProperty(FocusCrystalProperty.KEY, FocusCrystalProperty.of(FocusCrystalPlacementHelper::hasOneAxisSymmetryButNotOther))
                 .withProperty(FocusCrystalSortProperty.KEY, FocusCrystalSortProperty.of(FocusCrystalVisualSortHelper::sortIntoContinuousPolygon))
@@ -98,7 +98,7 @@ public class InitConstellations {
     }
 
     // DOR/Dorado
-    public static DeferredHolder<BaseConstellation, BaseConstellation> discidia(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> discidia(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_DISCIDIA)
                 .withProperty(FocusCrystalProperty.KEY, FocusCrystalProperty.of(FocusCrystalPlacementHelper::noneHaveRightAngles))
                 .withProperty(FocusCrystalSortProperty.KEY, FocusCrystalSortProperty.of(FocusCrystalVisualSortHelper::sortIntoContinuousPolygon))
@@ -125,7 +125,7 @@ public class InitConstellations {
     }
 
     // TAU/Taurus
-    public static DeferredHolder<BaseConstellation, BaseConstellation> evorsio(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> evorsio(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_EVORSIO)
                 .withProperty(FocusCrystalProperty.KEY, FocusCrystalProperty.of(FocusCrystalPlacementHelper::noDotNoAxisSymmetry))
                 .withProperty(FocusCrystalSortProperty.KEY, FocusCrystalSortProperty.of(FocusCrystalVisualSortHelper::sortIntoContinuousPolygon))
@@ -152,7 +152,7 @@ public class InitConstellations {
     }
 
     // PHE/Phoenix
-    public static DeferredHolder<BaseConstellation, BaseConstellation> vicio(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> vicio(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_VICIO)
                 .withProperty(FocusCrystalProperty.KEY, FocusCrystalProperty.of(FocusCrystalPlacementHelper::allHaveUniqueDistances))
                 .withProperty(FocusCrystalSortProperty.KEY, FocusCrystalSortProperty.of(FocusCrystalVisualSortHelper::sortByClosestFirst))
@@ -179,7 +179,7 @@ public class InitConstellations {
     }
 
     // CRB/Corona Borealis
-    public static DeferredHolder<BaseConstellation, BaseConstellation> lucerna(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> lucerna(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_LUCERNA)
                 .tier(BaseConstellation.Tier.MINOR)
                 .sorted();
@@ -201,7 +201,7 @@ public class InitConstellations {
     }
 
     // LAC/Lacerta
-    public static DeferredHolder<BaseConstellation, BaseConstellation> mineralis(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> mineralis(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_MINERALIS)
                 .tier(BaseConstellation.Tier.MINOR)
                 .sorted();
@@ -227,7 +227,7 @@ public class InitConstellations {
     }
 
     // HOR/Horologium
-    public static DeferredHolder<BaseConstellation, BaseConstellation> horologium(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> horologium(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_HOROLOGIUM)
                 .withProperty(ShowUpConditionProperty.KEY, ShowUpConditionProperty.create(new ShowUpConditionProperty.DynamicShowUpCondition() {
                     @Override
@@ -263,7 +263,7 @@ public class InitConstellations {
     }
 
     // OCT/Octans
-    public static DeferredHolder<BaseConstellation, BaseConstellation> octans(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> octans(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_OCTANS)
                 .tier(BaseConstellation.Tier.MINOR)
                 .sorted();
@@ -281,7 +281,7 @@ public class InitConstellations {
     }
 
     // BOO/Bootes
-    public static DeferredHolder<BaseConstellation, BaseConstellation> bootes(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> bootes(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_BOOTES)
                 .tier(BaseConstellation.Tier.MINOR)
                 .sorted();
@@ -305,7 +305,7 @@ public class InitConstellations {
 
     // Fornax itself is boring gameplay-wise. so have another one instead.
     // CRT/Crater
-    public static DeferredHolder<BaseConstellation, BaseConstellation> fornax(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> fornax(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_FORNAX)
                 .tier(BaseConstellation.Tier.MINOR)
                 .sorted();
@@ -332,7 +332,7 @@ public class InitConstellations {
     }
 
     // LEP/Lepus
-    public static DeferredHolder<BaseConstellation, BaseConstellation> pelotrio(DeferredRegister<BaseConstellation> register) {
+    public static RegistryObject<BaseConstellation> pelotrio(DeferredRegister<BaseConstellation> register) {
         var builder = BaseConstellation.builder(CONSTELLATION_PELOTRIO)
                 .withProperty(ShowUpConditionProperty.KEY, ShowUpConditionProperty.forFixedMoonPhases(0.35F, MoonPhase.NEW, MoonPhase.FULL))
                 .tier(BaseConstellation.Tier.MINOR)

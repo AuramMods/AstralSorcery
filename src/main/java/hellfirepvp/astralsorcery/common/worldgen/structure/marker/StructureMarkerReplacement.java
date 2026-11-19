@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  */
 public abstract class StructureMarkerReplacement {
 
-    public static final Codec<StructureMarkerReplacement> CODEC = RegistriesAS.REGISTRY_STRUCTURE_MARKER_REPLACEMENT_TYPES.byNameCodec()
+    public static final Codec<StructureMarkerReplacement> CODEC = RegistriesAS.codec(RegistriesAS.KEY_STRUCTURE_MARKER_REPLACEMENT_TYPES)
             .dispatch(StructureMarkerReplacement::getType, StructureMarkerReplacement.Type::codec);
 
     public abstract Type<?> getType();

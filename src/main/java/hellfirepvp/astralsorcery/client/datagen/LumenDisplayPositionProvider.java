@@ -89,7 +89,7 @@ public abstract class LumenDisplayPositionProvider implements DataProvider {
 
         public static final Codec<PositionFile> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 Codec.BOOL.fieldOf("replace").forGetter(PositionFile::replace),
-                Codec.unboundedMap(RegistriesAS.REGISTRY_LUMEN.byNameCodec(), LumenDisplayPosition.CODEC).fieldOf("positions").forGetter(PositionFile::positions)
+                Codec.unboundedMap(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), LumenDisplayPosition.CODEC).fieldOf("positions").forGetter(PositionFile::positions)
         ).apply(inst, PositionFile::new));
 
     }

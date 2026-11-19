@@ -52,7 +52,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -285,7 +285,7 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
     }
 
     @Override
-    public DeferredHolder<TransmissionNodeProvider<?>, ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
+    public RegistryObject<ForwardingStarlightReceiverNodeProvider> getNodeProvider() {
         return StarlightNetworkNodesAS.FORWARDING_RECEIVER_NODE;
     }
 
