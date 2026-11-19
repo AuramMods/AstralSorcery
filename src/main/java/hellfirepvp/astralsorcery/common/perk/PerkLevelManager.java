@@ -12,7 +12,7 @@ import hellfirepvp.astralsorcery.common.config.server.PerkConfig;
 import hellfirepvp.astralsorcery.common.util.data.SidedReference;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

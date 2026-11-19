@@ -16,10 +16,10 @@ import hellfirepvp.astralsorcery.common.util.tooltip.ArtifactDecoratedTooltip;
 import net.minecraft.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 
 import java.util.HashSet;
 import java.util.Set;

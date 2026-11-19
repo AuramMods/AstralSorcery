@@ -18,8 +18,8 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.LogicalSide;
 import net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent;
 
 import java.util.Random;

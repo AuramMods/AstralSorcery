@@ -30,8 +30,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.*;
 
@@ -124,14 +124,14 @@ public abstract class RootPerk<D extends AbstractPerk.Data> extends AttributeMod
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue expMultiplier;
+        public ForgeConfigSpec.DoubleValue expMultiplier;
 
         public Config(String section) {
             super(section);
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.expMultiplier = cfgBuilder
                     .comment("Experience multiplier for any exp gained from this root perk.")
                     .translation(translationKey("expMultiplier"))

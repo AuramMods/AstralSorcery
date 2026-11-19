@@ -18,7 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -49,7 +49,7 @@ public class ActiveLiquidStarlightRecipe {
             RandomSource rand = RandomSource.create(pos.asLong() + itemEntity.getId() + itemEntity.getId() << 16);
             if (getCraftingTick(itemEntity) == 0) {
                 RecipeEvent.LiquidStarlight.Start start = new RecipeEvent.LiquidStarlight.Start(recipeHolder);
-                NeoForge.EVENT_BUS.post(start);
+                MinecraftForge.EVENT_BUS.post(start);
                 if (start.isCanceled()) return;
             }
 
@@ -70,7 +70,7 @@ public class ActiveLiquidStarlightRecipe {
             if (recipe.matches(input, level) && recipe.consumeInputs(input, level.registryAccess())) {
                 setCraftingTick(triggerEntity, 0);
                 recipe.createOutput(input, level.registryAccess());
-                NeoForge.EVENT_BUS.post(new RecipeEvent.LiquidStarlight.End(recipeHolder));
+                MinecraftForge.EVENT_BUS.post(new RecipeEvent.LiquidStarlight.End(recipeHolder));
             }
         }
     }

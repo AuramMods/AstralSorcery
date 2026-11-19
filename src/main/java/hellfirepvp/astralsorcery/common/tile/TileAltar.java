@@ -70,9 +70,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -155,7 +155,7 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
             if (activeRecipe.isFinished(level) && activeRecipe.consumeItemInputs(this.getTileData(), level, this.getBlockPos(), true)) {
                 recipe.createOutput(this.createInput(level, activeRecipe.getPlayerUUID()), level.registryAccess());
                 activeRecipe.consumeItemInputs(this.getTileData(), level, this.getBlockPos(), false);
-                NeoForge.EVENT_BUS.post(new RecipeEvent.Altar.End(recipe, activeRecipe));
+                MinecraftForge.EVENT_BUS.post(new RecipeEvent.Altar.End(recipe, activeRecipe));
 
                 if (recipe.getBaseFocusShatterChance() > 0F &&
                         recipe.getFocusConstellation().isPresent() &&
@@ -184,7 +184,7 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
 
         ActiveAltarRecipe activeRecipe = ActiveAltarRecipe.of(recipe, playerUUID, Direction.NORTH);
         RecipeEvent.Altar.Start start = new RecipeEvent.Altar.Start(recipe, activeRecipe);
-        NeoForge.EVENT_BUS.post(start);
+        MinecraftForge.EVENT_BUS.post(start);
         if (start.isCanceled()) return;
 
         this.getTileData().setActiveRecipe(activeRecipe);

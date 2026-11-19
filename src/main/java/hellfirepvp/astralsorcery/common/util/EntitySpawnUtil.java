@@ -20,9 +20,9 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public class EntitySpawnUtil {
         e.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, sLevel.random.nextFloat() * 360F, 0F);
         if (e instanceof Mob mob) {
             MobSpawnEvent.PositionCheck check = new MobSpawnEvent.PositionCheck(mob, sLevel, spawnReason, null);
-            NeoForge.EVENT_BUS.post(check);
+            MinecraftForge.EVENT_BUS.post(check);
             if (check.getResult() == MobSpawnEvent.PositionCheck.Result.FAIL) {
                 return false;
             }

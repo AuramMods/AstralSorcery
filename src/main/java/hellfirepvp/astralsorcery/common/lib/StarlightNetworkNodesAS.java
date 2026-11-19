@@ -15,7 +15,7 @@ import hellfirepvp.astralsorcery.common.tile.network.provider.ForwardingStarligh
 import hellfirepvp.astralsorcery.common.tile.network.provider.SimpleSingleTransmissionNodeProvider;
 import hellfirepvp.astralsorcery.common.tile.network.provider.SimpleTransmissionNodeProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * This class is part of the Astral Sorcery Mod

@@ -29,8 +29,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -83,14 +83,14 @@ public class KeyPerkMendArmor extends KeyPerk implements TickablePerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.IntValue chanceToRepair;
+        public ForgeConfigSpec.IntValue chanceToRepair;
 
         private Config() {
             super("key_mend_armor");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.chanceToRepair = cfgBuilder
                     .comment("The chance (1 in x) to repair an armor piece per tick. This is modified by the perk effect increase modifiers.")
                     .translation(translationKey("chanceToRepair"))

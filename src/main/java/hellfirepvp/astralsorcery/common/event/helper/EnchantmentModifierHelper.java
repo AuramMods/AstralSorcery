@@ -29,16 +29,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.LogicalSidedProvider;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ import java.util.function.Predicate;
  */
 public class EnchantmentModifierHelper {
 
-    private static final ResourceLocation AIR_ID = ResourceLocation.withDefaultNamespace("air");
+    private static final ResourceLocation AIR_ID = new ResourceLocation("minecraft", "air");
 
     public static void attachListeners(IEventBus bus) {
         bus.addListener(EnchantmentModifierHelper::onPlayerTick);
@@ -116,7 +116,7 @@ public class EnchantmentModifierHelper {
     private static CombinedEnchantmentModifiers getModifiersToApply(ItemStack tool) {
         return getPlayer(tool).map(player -> {
             DynamicEnchantmentEvent.Add createEvent = new DynamicEnchantmentEvent.Add(player);
-            NeoForge.EVENT_BUS.post(createEvent);
+            MinecraftForge.EVENT_BUS.post(createEvent);
             CombinedEnchantmentModifiers modifiers = createEvent.getDynamicEnchantments().build();
 
             for (ItemStack modifierStack : findEnchantmentModifiers(player)) {
@@ -125,7 +125,7 @@ public class EnchantmentModifierHelper {
             }
 
             DynamicEnchantmentEvent.Modify modifyEvent = new DynamicEnchantmentEvent.Modify(player, modifiers);
-            NeoForge.EVENT_BUS.post(modifyEvent);
+            MinecraftForge.EVENT_BUS.post(modifyEvent);
             return modifyEvent.getDynamicEnchantments().build();
         }).orElse(CombinedEnchantmentModifiers.of());
     }

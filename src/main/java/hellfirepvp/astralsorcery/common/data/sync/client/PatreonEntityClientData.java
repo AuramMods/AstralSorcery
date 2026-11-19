@@ -12,7 +12,7 @@ import hellfirepvp.astralsorcery.common.data.sync.ClientData;
 import hellfirepvp.astralsorcery.common.patreon.PatreonEffect;
 import hellfirepvp.astralsorcery.common.patreon.PatreonEffectHelper;
 import hellfirepvp.astralsorcery.common.patreon.entity.PatreonPartialEntity;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.*;
 

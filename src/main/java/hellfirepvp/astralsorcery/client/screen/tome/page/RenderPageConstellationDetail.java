@@ -64,7 +64,7 @@ public class RenderPageConstellationDetail extends RenderPage {
         ResourceLocation id = this.constellation.getHolder()
                 .map(IHolderExtension::getKey)
                 .map(ResourceKey::location)
-                .orElse(ResourceLocation.withDefaultNamespace("unknown"));
+                .orElse(new ResourceLocation("minecraft", "unknown"));
         String subtitleKey = String.format("tome.research.constellation.%s.%s.subtitle", id.getNamespace(), id.getPath());
         String descriptionKey = String.format("tome.research.constellation.%s.%s.description", id.getNamespace(), id.getPath());
         MutableComponent subtitle = !discovered ? Component.literal("? ? ?") : Component.translatable(subtitleKey);

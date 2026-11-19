@@ -29,8 +29,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.Collection;
@@ -102,14 +102,14 @@ public class KeyPerkDamageArmor extends KeyPerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue damageConversionPerArmor;
+        public ForgeConfigSpec.DoubleValue damageConversionPerArmor;
 
         private Config() {
             super("key_damage_armor");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.damageConversionPerArmor = cfgBuilder
                     .comment("Percentage of damage dealt that gets instead converted to durability damage towards armors.")
                     .translation(translationKey("damageConversionPerArmor"))

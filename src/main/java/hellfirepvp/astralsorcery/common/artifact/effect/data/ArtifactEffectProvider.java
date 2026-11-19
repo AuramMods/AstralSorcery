@@ -59,7 +59,7 @@ public abstract class ArtifactEffectProvider implements DataProvider {
     public abstract void registerEffects();
 
     protected ArtifactEffectBuilder newCondition(String id) {
-        return this.newCondition(ResourceLocation.fromNamespaceAndPath(this.modId, id));
+        return this.newCondition(new ResourceLocation(this.modId, id));
     }
 
     protected ArtifactEffectBuilder newCondition(ResourceLocation id) {

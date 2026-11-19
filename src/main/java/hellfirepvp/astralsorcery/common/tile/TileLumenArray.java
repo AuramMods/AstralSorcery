@@ -65,10 +65,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -226,7 +226,7 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
                                 LumenStack produced = LumenStack.of(this.activeRecipe.getProducedLumen(), fillableAttempts * this.activeRecipe.getProducedLumenAmount());
                                 this.getTileData().getLumenHandler().fill(produced, ILumenHandler.Action.EXECUTE);
 
-                                NeoForge.EVENT_BUS.post(new RecipeEvent.LumenGeneration(this.activeRecipe, this, produced.copy()));
+                                MinecraftForge.EVENT_BUS.post(new RecipeEvent.LumenGeneration(this.activeRecipe, this, produced.copy()));
 
                                 this.getTileData().getOwner(level).ifPresent(sPlayer -> {
                                     List<Lumen> newlyDiscovered = ResearchHelper.discoverLumen(sPlayer, RecipeUtil.findAnyLumenMakingUp(level, produced.getLumen()));

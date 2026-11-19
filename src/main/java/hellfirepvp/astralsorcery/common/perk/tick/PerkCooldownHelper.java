@@ -16,8 +16,8 @@ import hellfirepvp.astralsorcery.common.util.tick.TimeoutListContainer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.UUID;
 import java.util.function.Consumer;

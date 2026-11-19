@@ -25,11 +25,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -273,7 +273,7 @@ public class AstralItemModelProvider extends ItemModelProvider {
         ResourceLocation itemKey = BuiltInRegistries.ITEM.getKey(item.asItem());
         return getBuilder(itemKey.toString())
                 .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", ResourceLocation.fromNamespaceAndPath(itemKey.getNamespace(), "block/" + itemKey.getPath()));
+                .texture("layer0", new ResourceLocation(itemKey.getNamespace(), "block/" + itemKey.getPath()));
     }
 
     private ItemModelBuilder basicItem(ItemLike item) {
@@ -294,7 +294,7 @@ public class AstralItemModelProvider extends ItemModelProvider {
 
     private void simpleBucket(DeferredItem<? extends Item> item, DeferredHolder<Fluid, ? extends Fluid> fluidSource) {
         withExistingParent(item.getId().getPath(),
-                ResourceLocation.fromNamespaceAndPath("neoforge", "item/bucket"))
+                new ResourceLocation("neoforge", "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(fluidSource.get());
     }

@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.research.condition.ConditionConstellatio
 import hellfirepvp.astralsorcery.common.research.condition.ConditionResearchFlag;
 import hellfirepvp.astralsorcery.common.research.condition.ResearchNodeCondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * This class is part of the Astral Sorcery Mod

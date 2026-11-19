@@ -13,9 +13,9 @@ import hellfirepvp.astralsorcery.common.recipe.altar.ActiveAltarRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ResolvedDeferredHolder;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 /**

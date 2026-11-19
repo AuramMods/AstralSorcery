@@ -21,9 +21,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -51,7 +51,7 @@ public class PerkAttributeType {
         this.isOnlyMultiplicative = isOnlyMultiplicative;
 
         this.init();
-        this.attachListeners(NeoForge.EVENT_BUS);
+        this.attachListeners(MinecraftForge.EVENT_BUS);
     }
 
     public boolean isMultiplicative() {

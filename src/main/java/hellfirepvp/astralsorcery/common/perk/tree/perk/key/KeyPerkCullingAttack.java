@@ -27,9 +27,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.Collection;
@@ -88,14 +88,14 @@ public class KeyPerkCullingAttack extends KeyPerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue cullHealthPercentage;
+        public ForgeConfigSpec.DoubleValue cullHealthPercentage;
 
         private Config() {
             super("key_cull_attack");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.cullHealthPercentage = cfgBuilder
                     .comment("The health percentage at how low the target's relative health needs to be for it to be killed by the culling attack.")
                     .translation(translationKey("cullHealthPercentage"))

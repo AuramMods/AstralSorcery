@@ -15,7 +15,7 @@ import hellfirepvp.astralsorcery.client.render.entity.RenderItemEntityHighlighte
 import hellfirepvp.astralsorcery.client.tile.*;
 import hellfirepvp.astralsorcery.common.lib.EntitiesAS;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

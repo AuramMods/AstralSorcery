@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.common.util.tank;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * This class is part of the Astral Sorcery Mod

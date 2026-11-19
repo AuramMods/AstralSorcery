@@ -10,15 +10,13 @@ package hellfirepvp.astralsorcery;
 
 import hellfirepvp.astralsorcery.client.ClientProxy;
 import hellfirepvp.astralsorcery.common.CommonProxy;
-import hellfirepvp.astralsorcery.common.Mods;
-import hellfirepvp.observerlib.common.util.DistUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.data.loading.DatagenModLoader;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.data.loading.DatagenModLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,17 +36,17 @@ public class AstralSorcery {
     public static final Logger LOG = LogManager.getLogger(NAME);
 
     private static AstralSorcery instance;
-    private static ModContainer modContainer;
+    private final FMLJavaModLoadingContext loadingContext;
     private final CommonProxy proxy;
 
-    public AstralSorcery(IEventBus lifecycleEventBus) {
+    public AstralSorcery(FMLJavaModLoadingContext loadingContext) {
         instance = this;
-        modContainer = ModList.get().getModContainerById(MODID).get();
+        this.loadingContext = loadingContext;
 
-        this.proxy = DistUtil.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+        this.proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
         this.proxy.init();
-        this.proxy.initLifecycle(lifecycleEventBus);
-        this.proxy.initListeners(NeoForge.EVENT_BUS);
+        this.proxy.initLifecycle(loadingContext.getModEventBus());
+        this.proxy.initListeners(MinecraftForge.EVENT_BUS);
     }
 
     public static AstralSorcery getInstance() {
@@ -56,7 +54,11 @@ public class AstralSorcery {
     }
 
     public static ModContainer getModContainer() {
-        return modContainer;
+        return instance.loadingContext.getContainer();
+    }
+
+    public FMLJavaModLoadingContext getLoadingContext() {
+        return this.loadingContext;
     }
 
     public CommonProxy getProxy() {
@@ -64,7 +66,7 @@ public class AstralSorcery {
     }
 
     public static ResourceLocation key(String path) {
-        return ResourceLocation.fromNamespaceAndPath(AstralSorcery.MODID, path);
+        return new ResourceLocation(AstralSorcery.MODID, path);
     }
 
     public static boolean isDoingDataGeneration() {

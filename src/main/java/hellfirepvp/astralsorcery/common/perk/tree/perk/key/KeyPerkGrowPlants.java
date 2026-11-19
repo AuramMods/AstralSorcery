@@ -31,8 +31,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -99,15 +99,15 @@ public class KeyPerkGrowPlants extends KeyPerk implements TickablePerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue chance;
-        public ModConfigSpec.IntValue radius;
+        public ForgeConfigSpec.DoubleValue chance;
+        public ForgeConfigSpec.IntValue radius;
 
         public Config() {
             super("key_grow_plants");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.chance = cfgBuilder
                     .comment("Chance per tick to try to run growth tick on a nearby plant. Can surpass 100% with perk effect for potentially multiple ticks.")
                     .translation(translationKey("chance"))

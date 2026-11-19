@@ -58,8 +58,8 @@ public class AstralSkyRenderer {
 
     private static final AstralSkyRenderer instance = new AstralSkyRenderer();
     private static final RandomSource rand = RandomSource.create();
-    private static final ResourceLocation REF_TEX_MOON_PHASES = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
-    private static final ResourceLocation REF_TEX_SUN =         ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
+    private static final ResourceLocation REF_TEX_MOON_PHASES = new ResourceLocation("minecraft", "textures/environment/moon_phases.png");
+    private static final ResourceLocation REF_TEX_SUN =         new ResourceLocation("minecraft", "textures/environment/sun.png");
 
     private final BatchedVertexBuffer skyBuffer = new BatchedVertexBuffer();
     private final BatchedVertexBuffer horizonBuffer = new BatchedVertexBuffer();

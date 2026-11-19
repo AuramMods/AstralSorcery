@@ -21,7 +21,7 @@ import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.Collection;
 import java.util.Collections;

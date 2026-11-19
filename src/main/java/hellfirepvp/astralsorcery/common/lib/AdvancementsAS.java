@@ -19,7 +19,7 @@ import hellfirepvp.astralsorcery.common.advancement.PlayerAttunementTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * This class is part of the Astral Sorcery Mod

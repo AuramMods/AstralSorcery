@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.common.focal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.TriPredicate;
+import net.minecraftforge.common.util.TriPredicate;
 
 import java.util.Set;
 

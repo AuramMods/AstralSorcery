@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirement;
 import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirementConstellation;
 import hellfirepvp.astralsorcery.common.perk.tree.requirement.PerkRequirementProgress;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * This class is part of the Astral Sorcery Mod

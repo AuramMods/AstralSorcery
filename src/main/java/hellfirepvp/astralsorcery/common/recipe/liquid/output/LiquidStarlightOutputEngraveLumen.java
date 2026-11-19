@@ -42,9 +42,9 @@ import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
 
                 CrystalPropertyEvent.Change engraved = new CrystalPropertyEvent.Change(crystal,
                         CrystalPropertyEvent.Change.Type.ENGRAVE_PROPERTY, prev, cmp);
-                NeoForge.EVENT_BUS.post(engraved);
+                MinecraftForge.EVENT_BUS.post(engraved);
 
                 crystal.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, engraved.getResultComponent());
                 CrystalToolItem.updateModifiers(crystal);

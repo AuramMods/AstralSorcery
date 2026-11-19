@@ -14,7 +14,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.TriPredicate;
+import net.minecraftforge.common.util.TriPredicate;
 
 import java.util.*;
 import java.util.function.Predicate;

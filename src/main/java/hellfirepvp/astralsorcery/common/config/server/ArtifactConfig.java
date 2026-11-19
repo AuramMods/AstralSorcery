@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.common.config.server;
 import hellfirepvp.astralsorcery.common.config.ConfigEntry;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import net.minecraft.util.RandomSource;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -24,26 +24,26 @@ public class ArtifactConfig extends ConfigEntry {
 
     public static final ArtifactConfig CONFIG = new ArtifactConfig();
 
-    public ModConfigSpec.IntValue triggerDelay;
-    public ModConfigSpec.IntValue triggerChance;
-    public ModConfigSpec.IntValue pulseDelay;
-    public ModConfigSpec.IntValue spawnedMobLimit;
+    public ForgeConfigSpec.IntValue triggerDelay;
+    public ForgeConfigSpec.IntValue triggerChance;
+    public ForgeConfigSpec.IntValue pulseDelay;
+    public ForgeConfigSpec.IntValue spawnedMobLimit;
 
-    public ModConfigSpec.IntValue artifactConditionCountMin;
-    public ModConfigSpec.IntValue artifactConditionCountMax;
+    public ForgeConfigSpec.IntValue artifactConditionCountMin;
+    public ForgeConfigSpec.IntValue artifactConditionCountMax;
 
-    public ModConfigSpec.DoubleValue negativeEffectGainChance;
-    public ModConfigSpec.DoubleValue positiveEffectChanceMin;
-    public ModConfigSpec.DoubleValue positiveEffectChanceMax;
-    public ModConfigSpec.DoubleValue negativeEffectChanceMin;
-    public ModConfigSpec.DoubleValue negativeEffectChanceMax;
+    public ForgeConfigSpec.DoubleValue negativeEffectGainChance;
+    public ForgeConfigSpec.DoubleValue positiveEffectChanceMin;
+    public ForgeConfigSpec.DoubleValue positiveEffectChanceMax;
+    public ForgeConfigSpec.DoubleValue negativeEffectChanceMin;
+    public ForgeConfigSpec.DoubleValue negativeEffectChanceMax;
 
     private ArtifactConfig() {
         super("artifact");
     }
 
     @Override
-    public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+    public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
         this.triggerDelay = cfgBuilder
                 .comment("Sets the minimum delay between potential artifact triggers.")
                 .translation(translationKey("triggerDelay"))

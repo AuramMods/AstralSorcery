@@ -28,11 +28,11 @@ import java.util.function.Supplier;
 public class NameUtil {
 
     public static ResourceLocation prefixPath(ResourceLocation key, String prefix) {
-        return ResourceLocation.fromNamespaceAndPath(key.getNamespace(), prefix + key.getPath());
+        return new ResourceLocation(key.getNamespace(), prefix + key.getPath());
     }
 
     public static ResourceLocation suffixPath(ResourceLocation key, String suffix) {
-        return ResourceLocation.fromNamespaceAndPath(key.getNamespace(), key.getPath() + suffix);
+        return new ResourceLocation(key.getNamespace(), key.getPath() + suffix);
     }
 
     public static <T> Supplier<String> cacheName(String type, Registry<T> registry, T value) {

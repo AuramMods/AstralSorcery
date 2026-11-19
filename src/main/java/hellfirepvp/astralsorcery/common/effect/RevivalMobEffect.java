@@ -17,8 +17,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

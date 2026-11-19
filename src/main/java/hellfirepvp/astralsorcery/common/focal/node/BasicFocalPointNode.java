@@ -63,9 +63,9 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.common.util.TriState;
 
 import java.util.*;
@@ -277,7 +277,7 @@ public class BasicFocalPointNode extends FocalPointNode {
             int range = BiasedSuppliers.getLowest(2, () -> rand.nextInt(3) + 1).get();
             ActiveFocalCombineRecipe.tryFindAtOpenSky(sLevel, this.getConstellation(), this.getPos(), range).ifPresent(recipe -> {
                 RecipeEvent.FocalCombine.Start start = new RecipeEvent.FocalCombine.Start(recipe);
-                NeoForge.EVENT_BUS.post(start);
+                MinecraftForge.EVENT_BUS.post(start);
                 if (start.isCanceled()) return;
 
                 this.activeCombineRecipe = recipe;
@@ -294,7 +294,7 @@ public class BasicFocalPointNode extends FocalPointNode {
                 FocalPointCombineSparkle.at(new Vector3(usedInput.getCenter()), this.activeCombineRecipe.getRecipe().getColor()).sendToNearby(sLevel);
                 if (this.activeCombineRecipe.isFinished()) {
                     this.activeCombineRecipe.finish(usedInput, sLevel);
-                    NeoForge.EVENT_BUS.post(new RecipeEvent.FocalCombine.End(this.activeCombineRecipe));
+                    MinecraftForge.EVENT_BUS.post(new RecipeEvent.FocalCombine.End(this.activeCombineRecipe));
                     this.activeCombineRecipe = null;
                 }
             });

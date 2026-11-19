@@ -26,8 +26,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
 import java.util.UUID;
 

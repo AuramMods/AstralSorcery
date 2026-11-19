@@ -31,8 +31,8 @@ import hellfirepvp.astralsorcery.common.util.DiminishingMultiplier;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.event.level.BlockEvent;
 
 import java.util.Collection;
 import java.util.Collections;

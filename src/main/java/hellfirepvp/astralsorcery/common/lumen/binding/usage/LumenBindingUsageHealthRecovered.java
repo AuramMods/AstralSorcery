@@ -14,8 +14,8 @@ import hellfirepvp.astralsorcery.common.lib.types.LumenBindingUsageTypesAS;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.entity.living.LivingHealEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.common.config.server;
 
 import hellfirepvp.astralsorcery.common.config.ConfigEntry;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -22,15 +22,15 @@ public class GeneralConfig extends ConfigEntry {
 
     public static final GeneralConfig CONFIG = new GeneralConfig();
 
-    public ModConfigSpec.IntValue dayLength;
-    public ModConfigSpec.BooleanValue giveTomeOnJoin;
+    public ForgeConfigSpec.IntValue dayLength;
+    public ForgeConfigSpec.BooleanValue giveTomeOnJoin;
 
     private GeneralConfig() {
         super("general");
     }
 
     @Override
-    public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+    public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
         dayLength = cfgBuilder
                 .comment("Defines the length of a day (both daytime & nighttime obviously) for the mod's internal logic. NOTE: This does NOT CHANGE HOW LONG A DAY IN MC IS! It is only to provide potential compatibility for mods that do provide such functionality.")
                 .translation(translationKey("dayLength"))

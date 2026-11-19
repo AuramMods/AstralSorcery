@@ -11,9 +11,9 @@ package hellfirepvp.astralsorcery.datagen.assets.model;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
-import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelProvider;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
+import net.minecraftforge.client.model.generators.BlockModelProvider;
+import net.minecraftforge.client.model.generators.ModelProvider;
 
 /**
  * This class is part of the Astral Sorcery Mod

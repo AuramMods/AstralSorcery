@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.client.config;
 
 import hellfirepvp.astralsorcery.common.config.ConfigEntry;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
@@ -25,17 +25,17 @@ public class RenderingConfig extends ConfigEntry {
 
     public static final RenderingConfig CONFIG = new RenderingConfig();
 
-    public ModConfigSpec.BooleanValue patreonEffects;
-    public ModConfigSpec.BooleanValue animateAdditionalInputs;
-    public ModConfigSpec.ConfigValue<List<? extends String>> skyRenderDimensions;
-    public ModConfigSpec.ConfigValue<List<? extends String>> constellationOverlaySkyDimensions;
+    public ForgeConfigSpec.BooleanValue patreonEffects;
+    public ForgeConfigSpec.BooleanValue animateAdditionalInputs;
+    public ForgeConfigSpec.ConfigValue<List<? extends String>> skyRenderDimensions;
+    public ForgeConfigSpec.ConfigValue<List<? extends String>> constellationOverlaySkyDimensions;
 
     private RenderingConfig() {
         super("rendering");
     }
 
     @Override
-    public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+    public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
         this.patreonEffects = cfgBuilder
                 .comment("Enable/Disable patreon effects")
                 .translation(translationKey("patreonEffects"))

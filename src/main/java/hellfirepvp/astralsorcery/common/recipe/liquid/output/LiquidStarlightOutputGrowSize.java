@@ -31,9 +31,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -86,7 +86,7 @@ public class LiquidStarlightOutputGrowSize extends LiquidStarlightRecipeOutputMo
 
             CrystalPropertyEvent.Change growSize = new CrystalPropertyEvent.Change(crystal,
                     CrystalPropertyEvent.Change.Type.GROW_SIZE, prev, cmp);
-            NeoForge.EVENT_BUS.post(growSize);
+            MinecraftForge.EVENT_BUS.post(growSize);
 
             crystal.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, growSize.getResultComponent());
             CrystalToolItem.updateModifiers(crystal);

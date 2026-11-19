@@ -33,9 +33,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -84,7 +84,7 @@ public class LiquidStarlightOutputFormCrystalCluster extends LiquidStarlightReci
 
                 CrystalPropertyEvent.Change formCluster = new CrystalPropertyEvent.Change(input.getTriggerEntity().getItem(),
                         CrystalPropertyEvent.Change.Type.FORM_CRYSTAL_CLUSTER, prev, cmp);
-                NeoForge.EVENT_BUS.post(formCluster);
+                MinecraftForge.EVENT_BUS.post(formCluster);
 
                 tile.getTileData().setCrystalAttributes(formCluster.getResultComponent());
                 tile.markForUpdate();

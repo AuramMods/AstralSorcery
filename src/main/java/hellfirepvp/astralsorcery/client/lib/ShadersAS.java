@@ -13,7 +13,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.neoforged.neoforge.client.event.RegisterShadersEvent;
+import net.minecraftforge.client.event.RegisterShadersEvent;
 
 import java.io.IOException;
 import java.util.Objects;

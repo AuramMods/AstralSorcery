@@ -15,8 +15,8 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.LootTableLoadEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.LootTableLoadEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

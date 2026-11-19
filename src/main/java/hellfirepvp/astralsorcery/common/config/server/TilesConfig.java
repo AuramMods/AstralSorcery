@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.common.config.server;
 
 import hellfirepvp.astralsorcery.common.config.ConfigEntry;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -27,5 +27,5 @@ public class TilesConfig extends ConfigEntry {
     }
 
     @Override
-    public void createEntries(ModConfigSpec.Builder cfgBuilder) {}
+    public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {}
 }

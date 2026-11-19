@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.common.recipe.liquid.interaction;
 
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipeInput;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * This class is part of the Astral Sorcery Mod

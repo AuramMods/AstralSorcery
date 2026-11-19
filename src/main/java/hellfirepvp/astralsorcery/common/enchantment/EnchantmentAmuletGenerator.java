@@ -15,7 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,11 +33,11 @@ public class EnchantmentAmuletGenerator {
     public static final Config CONFIG = new Config();
     private static final RandomSource rand = RandomSource.create();
 
-    private static ModConfigSpec.DoubleValue chance2nd;
-    private static ModConfigSpec.DoubleValue chance3rd;
-    private static ModConfigSpec.DoubleValue chance2Level;
-    private static ModConfigSpec.DoubleValue chanceToAll;
-    private static ModConfigSpec.DoubleValue chanceToNonExisting;
+    private static ForgeConfigSpec.DoubleValue chance2nd;
+    private static ForgeConfigSpec.DoubleValue chance3rd;
+    private static ForgeConfigSpec.DoubleValue chance2Level;
+    private static ForgeConfigSpec.DoubleValue chanceToAll;
+    private static ForgeConfigSpec.DoubleValue chanceToNonExisting;
 
     public static EnchantmentModifierComponent generateModifiers(HolderLookup.Provider registries) {
         List<EnchantmentModifier> modifiers = new ArrayList<>();
@@ -137,7 +137,7 @@ public class EnchantmentAmuletGenerator {
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             chance2nd = cfgBuilder
                     .comment("Defines the chance to roll a 2nd-enchantment-manipulating roll on the amulet. Value defines a percent chance from 0% to 100%. Setting this to 0 also prevents a 3rd roll")
                     .translation(translationKey("chance2nd"))

@@ -10,10 +10,9 @@ package hellfirepvp.astralsorcery.common.config;
 
 import com.google.common.base.Splitter;
 import hellfirepvp.astralsorcery.AstralSorcery;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,13 +63,13 @@ public abstract class BaseConfiguration {
             throw new IllegalStateException("Trying to build the same configuration twice!");
         }
 
-        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         this.createEntries(builder);
         this.make(builder.build());
         this.built = true;
     }
 
-    protected void createEntries(ModConfigSpec.Builder builder) {
+    protected void createEntries(ForgeConfigSpec.Builder builder) {
         this.configEntries.forEach(entry -> {
             List<String> splitPath = DOT_SPLITTER.splitToList(entry.getPath());
             builder.push(splitPath);
@@ -79,12 +78,11 @@ public abstract class BaseConfiguration {
         });
     }
 
-    private void make(ModConfigSpec spec) {
+    private void make(ForgeConfigSpec spec) {
         String fileName = this.configType == ModConfig.Type.SERVER ?
                 String.format("%s.toml", this.fileName) :
                 String.format("%s-%s.toml", this.fileName, this.configType.extension());
-        ModContainer ct = AstralSorcery.getModContainer();
-        ct.registerConfig(this.configType, spec, fileName);
+        AstralSorcery.getInstance().getLoadingContext().registerConfig(this.configType, spec, fileName);
 
         REGISTERED_CONFIGS.put(this.configType, this);
     }

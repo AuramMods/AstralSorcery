@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.registry;
 
 import hellfirepvp.astralsorcery.common.lib.*;
 import hellfirepvp.astralsorcery.common.lib.types.*;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.NewRegistryEvent;
 
 import static hellfirepvp.astralsorcery.common.lib.RegistriesAS.*;
 

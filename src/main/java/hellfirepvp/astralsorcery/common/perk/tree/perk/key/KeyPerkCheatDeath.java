@@ -32,9 +32,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -94,14 +94,14 @@ public class KeyPerkCheatDeath extends KeyPerk implements CooldownPerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.IntValue cooldownTicks;
+        public ForgeConfigSpec.IntValue cooldownTicks;
 
         private Config() {
             super("key_cheat_death");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.cooldownTicks = cfgBuilder
                     .comment("Cooldown in ticks after cheat death from this perk procs.")
                     .translation(translationKey("cooldownTicks"))

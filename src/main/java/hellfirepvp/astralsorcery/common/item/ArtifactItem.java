@@ -24,7 +24,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class ArtifactItem extends ItemCustom {
 
     public ArtifactItem() {
         super(new Properties()
-                .rarity(EnumExtensions.RARITY_RELIC.getValue())
+                .rarity(EnumExtensions.RARITY_RELIC)
                 .stacksTo(1));
     }
 

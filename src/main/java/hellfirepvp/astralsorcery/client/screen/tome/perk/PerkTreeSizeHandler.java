@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.perk.tree.PerkTreePoint;
 import hellfirepvp.astralsorcery.common.util.data.FloatPoint;
 import hellfirepvp.astralsorcery.common.util.data.FloatRectangle;
 import hellfirepvp.astralsorcery.common.util.data.IntRectangle;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

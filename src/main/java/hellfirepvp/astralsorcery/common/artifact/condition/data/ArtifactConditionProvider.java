@@ -55,7 +55,7 @@ public abstract class ArtifactConditionProvider implements DataProvider {
     public abstract void registerConditions();
 
     protected ArtifactConditionBuilder newCondition(String id) {
-        return this.newCondition(ResourceLocation.fromNamespaceAndPath(this.modId, id));
+        return this.newCondition(new ResourceLocation(this.modId, id));
     }
 
     protected ArtifactConditionBuilder newCondition(ResourceLocation id) {

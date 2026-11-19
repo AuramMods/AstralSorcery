@@ -22,8 +22,8 @@ import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import org.jline.utils.Log;
 
 import java.util.Collection;

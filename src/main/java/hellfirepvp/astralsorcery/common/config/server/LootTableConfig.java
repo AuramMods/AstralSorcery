@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -31,16 +31,16 @@ public class LootTableConfig extends ConfigEntry {
 
     public static final LootTableConfig CONFIG = new LootTableConfig();
 
-    public ModConfigSpec.ConfigValue<List<? extends String>> constellationPaperLootTables;
+    public ForgeConfigSpec.ConfigValue<List<? extends String>> constellationPaperLootTables;
 
-    public ModConfigSpec.ConfigValue<List<? extends String>> artifactShardLootTables;
+    public ForgeConfigSpec.ConfigValue<List<? extends String>> artifactShardLootTables;
 
     private LootTableConfig() {
         super("loot");
     }
 
     @Override
-    public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+    public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
         this.constellationPaperLootTables = cfgBuilder
                 .comment("Loot tables that get constellation paper added to them on load")
                 .translation(translationKey("constellationPaperLootTables"))

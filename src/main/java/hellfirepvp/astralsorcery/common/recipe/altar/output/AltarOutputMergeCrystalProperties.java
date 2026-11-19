@@ -18,7 +18,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class AltarOutputMergeCrystalProperties extends AltarRecipeOutputModifier
         }
         CrystalPropertyEvent.Merge merge = new CrystalPropertyEvent.Merge(output,
                 CrystalPropertyEvent.Merge.Type.ALTAR_RECIPE_MERGE, inputs, cmp);
-        NeoForge.EVENT_BUS.post(merge);
+        MinecraftForge.EVENT_BUS.post(merge);
 
         output.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, merge.getResultComponent());
         CrystalToolItem.updateModifiers(output);

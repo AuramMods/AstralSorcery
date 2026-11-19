@@ -106,7 +106,7 @@ public class TagsAS {
     }
 
     private static TagKey<Block> blockTagCommon(String name) {
-        return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
+        return BlockTags.create(new ResourceLocation("c", name));
     }
 
     private static TagKey<Block> blockTag(String name) {
@@ -114,7 +114,7 @@ public class TagsAS {
     }
 
     private static TagKey<Item> itemTagCommon(String name) {
-        return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
+        return ItemTags.create(new ResourceLocation("c", name));
     }
 
     private static TagKey<Item> itemTag(String name) {

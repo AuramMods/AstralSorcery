@@ -38,7 +38,7 @@ import hellfirepvp.astralsorcery.common.focal.node.FocalPointNode;
 import hellfirepvp.astralsorcery.common.worldgen.structure.marker.StructureMarkerReplacement;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.RegistryBuilder;
+import net.minecraftforge.registries.RegistryBuilder;
 
 /**
  * This class is part of the Astral Sorcery Mod

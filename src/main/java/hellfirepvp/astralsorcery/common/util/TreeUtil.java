@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.AzaleaBlock;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.BlockSnapshot;
 
 import java.util.List;
 import java.util.Optional;

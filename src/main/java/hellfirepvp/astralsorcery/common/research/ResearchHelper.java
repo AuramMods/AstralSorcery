@@ -28,9 +28,9 @@ import hellfirepvp.astralsorcery.common.research.perk.PerkRemovalResult;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,7 @@ public class ResearchHelper {
     public static boolean memorizeConstellation(ServerPlayer player, BaseConstellation constellation) {
         return withProgress(player, progress -> {
             if (progress.memorizeConstellation(constellation)) {
-                NeoForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, constellation));
+                MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, constellation));
                 return true;
             }
             return false;
@@ -62,9 +62,9 @@ public class ResearchHelper {
             boolean memorized = progress.hasSeenConstellation(constellation);
             if (progress.discoverConstellation(constellation)) {
                 if (!memorized) {
-                    NeoForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, constellation));
+                    MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, constellation));
                 }
-                NeoForge.EVENT_BUS.post(new ResearchEvent.DiscoverConstellation(player, progress, constellation));
+                MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoverConstellation(player, progress, constellation));
                 AdvancementsAS.CONSTELLATION_DISCOVERY.get().trigger(player, constellation);
                 return true;
             }
@@ -79,9 +79,9 @@ public class ResearchHelper {
                 boolean memorized = progress.hasSeenConstellation(c);
                 if (progress.discoverConstellation(c)) {
                     if (!memorized) {
-                        NeoForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, c));
+                        MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, c));
                     }
-                    NeoForge.EVENT_BUS.post(new ResearchEvent.DiscoverConstellation(player, progress, c));
+                    MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoverConstellation(player, progress, c));
                     AdvancementsAS.CONSTELLATION_DISCOVERY.get().trigger(player, c);
                     discoveredAny = true;
                 }
@@ -93,7 +93,7 @@ public class ResearchHelper {
     public static boolean memorizeFocalPoint(ServerPlayer player, BaseConstellation constellation) {
         return withProgress(player, progress -> {
             if (constellation.is(TagsAS.Constellations.MAY_BE_FOCAL_POINT) && progress.memorizeFocalPoint(constellation)) {
-                NeoForge.EVENT_BUS.post(new ResearchEvent.MemorizedFocalPoint(player, progress, constellation));
+                MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizedFocalPoint(player, progress, constellation));
                 AdvancementsAS.FOCAL_POINT_DISCOVERY.get().trigger(player, constellation);
                 return true;
             }
@@ -106,7 +106,7 @@ public class ResearchHelper {
             boolean memorizedAny = false;
             for (BaseConstellation c : constellations) {
                 if (c.is(TagsAS.Constellations.MAY_BE_FOCAL_POINT) && progress.memorizeFocalPoint(c)) {
-                    NeoForge.EVENT_BUS.post(new ResearchEvent.MemorizedFocalPoint(player, progress, c));
+                    MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizedFocalPoint(player, progress, c));
                     AdvancementsAS.FOCAL_POINT_DISCOVERY.get().trigger(player, c);
                     memorizedAny = true;
                 }
@@ -120,7 +120,7 @@ public class ResearchHelper {
         withProgress(player, progress -> {
             if (progress.discoverLumen(lumen)) {
                 discovered.add(lumen);
-                NeoForge.EVENT_BUS.post(new ResearchEvent.DiscoveredLumen(player, progress, lumen));
+                MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoveredLumen(player, progress, lumen));
                 AdvancementsAS.LUMEN_DISCOVERY.get().trigger(player, lumen);
                 return true;
             }
@@ -134,7 +134,7 @@ public class ResearchHelper {
         withProgress(player, progress -> {
             for (Lumen l : lumen) {
                 if (progress.discoverLumen(l)) {
-                    NeoForge.EVENT_BUS.post(new ResearchEvent.DiscoveredLumen(player, progress, l));
+                    MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoveredLumen(player, progress, l));
                     AdvancementsAS.LUMEN_DISCOVERY.get().trigger(player, l);
                     discovered.add(l);
                 }
@@ -148,7 +148,7 @@ public class ResearchHelper {
         return withProgress(player, progress -> {
             ResearchTier previous = progress.getTierReached();
             progress.setProgression(progression);
-            NeoForge.EVENT_BUS.post(new ResearchEvent.ResearchTierSet(player, progress, previous, progression));
+            MinecraftForge.EVENT_BUS.post(new ResearchEvent.ResearchTierSet(player, progress, previous, progression));
             return true;
         });
     }
@@ -184,7 +184,7 @@ public class ResearchHelper {
             PlayerPerkData perkData = progress.getPerkData();
             perkData.setExp(0);
             progress.setAttunedConstellation(constellation);
-            NeoForge.EVENT_BUS.post(new ResearchEvent.AttunedConstellationSet(player, progress, prev));
+            MinecraftForge.EVENT_BUS.post(new ResearchEvent.AttunedConstellationSet(player, progress, prev));
             AdvancementsAS.PLAYER_ATTUNEMENT.get().trigger(player, constellation);
 
             AttunePlayerProperty.getRootPerk(constellation, LogicalSide.SERVER).ifPresent(root -> {
@@ -201,7 +201,7 @@ public class ResearchHelper {
             BaseConstellation prev = progress.getAttunedConstellation().orElse(null);
             progress.getPerkData().setExp(0);
             progress.setAttunedConstellation(null);
-            NeoForge.EVENT_BUS.post(new ResearchEvent.AttunedConstellationSet(player, progress, prev));
+            MinecraftForge.EVENT_BUS.post(new ResearchEvent.AttunedConstellationSet(player, progress, prev));
             return true;
         });
     }
@@ -216,7 +216,7 @@ public class ResearchHelper {
     public static boolean setKnowledgeFlag(ServerPlayer player, ResearchFlag flag) {
         return withProgress(player, progress -> {
             if (progress.setKnownFlag(flag)) {
-                NeoForge.EVENT_BUS.post(new ResearchEvent.ResearchFlagSet(player, progress, flag));
+                MinecraftForge.EVENT_BUS.post(new ResearchEvent.ResearchFlagSet(player, progress, flag));
                 return true;
             }
             return false;

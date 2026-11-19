@@ -48,10 +48,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -126,7 +126,7 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
             if (recipe.canStartCrafting(this)) {
                 AttunementRecipe.Active<?, ?> active = recipe.createActiveRecipe(this);
                 RecipeEvent.Attunement.Start start = new RecipeEvent.Attunement.Start(recipe, active);
-                NeoForge.EVENT_BUS.post(start);
+                MinecraftForge.EVENT_BUS.post(start);
                 if (start.isCanceled()) return;
 
                 this.getTileData().setActiveRecipe(active);
@@ -140,7 +140,7 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
         this.getTileData().getActiveRecipe().ifPresent(active -> {
             active.finishRecipe(this);
             active.stopCrafting(this);
-            NeoForge.EVENT_BUS.post(new RecipeEvent.Attunement.End(active.getRecipe(), active));
+            MinecraftForge.EVENT_BUS.post(new RecipeEvent.Attunement.End(active.getRecipe(), active));
 
             this.getTileData().setActiveRecipe(null);
             this.getTileData().markForUpdate();

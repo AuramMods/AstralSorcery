@@ -31,9 +31,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import org.checkerframework.checker.units.qual.N;
 
 import java.util.List;
@@ -103,7 +103,7 @@ public class LiquidStarlightOutputMergeCrystal extends LiquidStarlightRecipeOutp
 
         CrystalPropertyEvent.Merge combineCrystals = new CrystalPropertyEvent.Merge(resultStack,
                 CrystalPropertyEvent.Merge.Type.MERGE_CRYSTALS, List.of(copyFrom, copyTo), mergeTo);
-        NeoForge.EVENT_BUS.post(combineCrystals);
+        MinecraftForge.EVENT_BUS.post(combineCrystals);
 
         resultStack.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, combineCrystals.getResultComponent());
         CrystalToolItem.updateModifiers(resultStack);

@@ -32,9 +32,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -104,14 +104,14 @@ public class KeyPerkDisarm extends KeyPerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue disarmChance;
+        public ForgeConfigSpec.DoubleValue disarmChance;
 
         private Config() {
             super("key_disarm");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.disarmChance = cfgBuilder
                     .comment("Defines the chance per hit to make the target drop a piece of armor.")
                     .translation(translationKey("disarmChance"))

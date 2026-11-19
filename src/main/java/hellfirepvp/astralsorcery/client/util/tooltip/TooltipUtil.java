@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.client.util.tooltip;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 
 import java.util.Stack;
 

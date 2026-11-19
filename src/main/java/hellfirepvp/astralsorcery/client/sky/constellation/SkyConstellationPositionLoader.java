@@ -64,7 +64,7 @@ public class SkyConstellationPositionLoader implements ResourceManagerReloadList
         for (String namespace : resourceManager.getNamespaces()) {
             try {
                 Resource positionFile = resourceManager
-                        .getResource(ResourceLocation.fromNamespaceAndPath(namespace, "constellation_positions.json"))
+                        .getResource(new ResourceLocation(namespace, "constellation_positions.json"))
                         .orElse(null);
                 if (positionFile != null) {
                     try (InputStream stream = positionFile.open()) {

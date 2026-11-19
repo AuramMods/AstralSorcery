@@ -29,9 +29,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -92,14 +92,14 @@ public class KeyPerkDamageEffects extends KeyPerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue effectApplicationChance;
+        public ForgeConfigSpec.DoubleValue effectApplicationChance;
 
         public Config() {
             super("key_damage_effects");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.effectApplicationChance = cfgBuilder
                     .comment("Chance to apply a negative effect to the target on hit.")
                     .translation(translationKey("effectApplicationChance"))

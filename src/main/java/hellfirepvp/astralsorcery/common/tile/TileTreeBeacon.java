@@ -49,9 +49,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
@@ -396,18 +396,18 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
         private static final int    defaultBreakChance     = 800;
         private static final int    defaultLogWeight       = 2;
 
-        public ModConfigSpec.DoubleValue range;
-        public ModConfigSpec.IntValue    productionPivot;
-        public ModConfigSpec.IntValue    harvestChance;
-        public ModConfigSpec.IntValue    breakChance;
-        public ModConfigSpec.IntValue    logWeight;
+        public ForgeConfigSpec.DoubleValue range;
+        public ForgeConfigSpec.IntValue    productionPivot;
+        public ForgeConfigSpec.IntValue    harvestChance;
+        public ForgeConfigSpec.IntValue    breakChance;
+        public ForgeConfigSpec.IntValue    logWeight;
 
         private Config() {
             super("tree_beacon");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.range = cfgBuilder
                     .comment("Radius of the tree beacon")
                     .translation(translationKey("range"))

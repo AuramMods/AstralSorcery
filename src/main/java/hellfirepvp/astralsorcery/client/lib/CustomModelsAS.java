@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.client.lib;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.neoforged.neoforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.ModelEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

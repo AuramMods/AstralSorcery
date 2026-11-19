@@ -44,11 +44,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforgespi.language.IModInfo;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -101,7 +101,7 @@ public abstract class AbstractPerk<T extends AbstractPerk.Data> implements Modif
         this.y = y;
         this.category = category;
 
-        this.busWrapper = CachedEventBus.of(NeoForge.EVENT_BUS);
+        this.busWrapper = CachedEventBus.of(MinecraftForge.EVENT_BUS);
     }
 
     public <P extends AbstractPerk<?>> P setNameKey(String nameKey) {

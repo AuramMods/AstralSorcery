@@ -28,8 +28,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.Collection;
@@ -92,15 +92,15 @@ public class KeyPerkProjectileDistance extends KeyPerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue distanceCap;
-        public ModConfigSpec.DoubleValue additionalDamageMultiplier;
+        public ForgeConfigSpec.DoubleValue distanceCap;
+        public ForgeConfigSpec.DoubleValue additionalDamageMultiplier;
 
         public Config() {
             super("key_projectile_distance");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.distanceCap = cfgBuilder
                     .comment("Distance at and after which the full 'additionalDamageMultiplier' is applied.")
                     .translation(translationKey("distanceCap"))

@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.BonemealEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -57,7 +57,7 @@ public abstract class LumenBindingDataProvider implements DataProvider {
     }
 
     protected LumenBindingTypeBuilder newBindingType(String id) {
-        return this.newBindingType(ResourceLocation.fromNamespaceAndPath(this.modId, id));
+        return this.newBindingType(new ResourceLocation(this.modId, id));
     }
 
     protected LumenBindingTypeBuilder newBindingType(ResourceLocation id) {
@@ -88,7 +88,7 @@ public abstract class LumenBindingDataProvider implements DataProvider {
                         provider,
                         LumenBindingTypeMapping.CODEC,
                         LumenBindingTypeMapping.of(this.lumenMapping),
-                        this.pathProvider.json(ResourceLocation.fromNamespaceAndPath(this.modId, "_lumen_mapping"))));
+                        this.pathProvider.json(new ResourceLocation(this.modId, "_lumen_mapping"))));
             }
 
             this.registeredBindingTypes.forEach(bindingType -> {

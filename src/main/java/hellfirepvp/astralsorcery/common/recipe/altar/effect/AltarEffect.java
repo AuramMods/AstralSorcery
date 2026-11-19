@@ -16,8 +16,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -38,7 +38,7 @@ public abstract class AltarEffect implements Comparable<AltarEffect> {
     public final ResourceLocation getKey() {
         return RegistriesAS.REGISTRY_ALTAR_EFFECTS.getResourceKey(this)
                 .map(ResourceKey::location)
-                .orElse(ResourceLocation.withDefaultNamespace("unregistered_sadface"));
+                .orElse(new ResourceLocation("minecraft", "unregistered_sadface"));
     }
 
     @Override

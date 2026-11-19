@@ -22,8 +22,8 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.ItemAttributeModifierEvent;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

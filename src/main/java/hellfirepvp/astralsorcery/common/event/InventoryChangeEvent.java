@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.common.event;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

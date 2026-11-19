@@ -32,8 +32,8 @@ import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.CombatTracker;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.Collection;
@@ -121,14 +121,14 @@ public class RootPerkArmara extends RootPerk<AbstractPerk.Data> {
 
     public static class Config extends RootPerk.Config {
 
-        public ModConfigSpec.IntValue extendedCombatDuration;
+        public ForgeConfigSpec.IntValue extendedCombatDuration;
 
         public Config(String section) {
             super(section);
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             super.createEntries(cfgBuilder);
 
             this.extendedCombatDuration = cfgBuilder

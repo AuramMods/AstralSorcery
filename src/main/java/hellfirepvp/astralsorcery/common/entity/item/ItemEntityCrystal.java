@@ -28,7 +28,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.event.EventHooks;
 
 import java.util.List;
@@ -126,7 +126,7 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
 
         CrystalPropertyEvent.Split splitEvent = new CrystalPropertyEvent.Split(crystalStack,
                 CrystalPropertyEvent.Split.Type.CHISEL_SPLIT_CRYSTAL, originalComponent, List.of(thisAttributes, newAttributes));
-        NeoForge.EVENT_BUS.post(splitEvent);
+        MinecraftForge.EVENT_BUS.post(splitEvent);
         List<CrystalAttributesComponent> results = splitEvent.getResultComponents();
 
         if (results.isEmpty()) {

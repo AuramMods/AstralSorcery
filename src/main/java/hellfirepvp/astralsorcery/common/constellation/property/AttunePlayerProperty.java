@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.common.constellation.property;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.perk.data.PerkTree;
 import hellfirepvp.astralsorcery.common.perk.tree.perk.RootPerk;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.Optional;
 import java.util.function.Function;

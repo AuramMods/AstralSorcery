@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.common.patreon;
 
 import hellfirepvp.astralsorcery.common.patreon.entity.PatreonPartialEntity;
 import net.minecraft.util.RandomSource;
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 
 import javax.annotation.Nullable;
 import java.util.Objects;

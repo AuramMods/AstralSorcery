@@ -31,7 +31,7 @@ import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,7 +103,7 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
 
                 CrystalPropertyEvent.Change engraved = new CrystalPropertyEvent.Change(output.copy(),
                         CrystalPropertyEvent.Change.Type.ENGRAVE_PROPERTY, prev, cmp);
-                NeoForge.EVENT_BUS.post(engraved);
+                MinecraftForge.EVENT_BUS.post(engraved);
 
                 output.set(DataComponentsAS.CRYSTAL_ATTRIBUTES, engraved.getResultComponent());
                 CrystalToolItem.updateModifiers(output);

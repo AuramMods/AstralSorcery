@@ -15,7 +15,7 @@ import hellfirepvp.astralsorcery.common.perk.tree.PerkDataType;
 import hellfirepvp.astralsorcery.common.perk.tree.perk.key.KeyPerkTreeConnector;
 import hellfirepvp.astralsorcery.common.perk.tree.perk.socket.GemSocketPerk;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * This class is part of the Astral Sorcery Mod

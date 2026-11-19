@@ -53,11 +53,11 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -140,7 +140,7 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
             if (activeRecipe.isFinished(level) && activeRecipe.consumeInputs(this, level)) {
                 data.getInventory().setStackInSlot(0, ItemStack.EMPTY);
                 ItemUtil.dropItem(level, this.getBlockPos().above(), recipe.getOutput());
-                NeoForge.EVENT_BUS.post(new RecipeEvent.Infusion.End(recipe, activeRecipe));
+                MinecraftForge.EVENT_BUS.post(new RecipeEvent.Infusion.End(recipe, activeRecipe));
 
                 data.knownRecipes.add(activeRecipe.getRecipeId());
 
@@ -171,7 +171,7 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
 
         ActiveInfusionRecipe infusionRecipe = ActiveInfusionRecipe.of(recipe);
         RecipeEvent.Infusion.Start start = new RecipeEvent.Infusion.Start(recipe, infusionRecipe);
-        NeoForge.EVENT_BUS.post(start);
+        MinecraftForge.EVENT_BUS.post(start);
         if (start.isCanceled()) return;
 
         this.getTileData().setActiveRecipe(infusionRecipe);

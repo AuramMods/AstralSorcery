@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.common.event;
 
 import net.minecraft.world.entity.projectile.Projectile;
-import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

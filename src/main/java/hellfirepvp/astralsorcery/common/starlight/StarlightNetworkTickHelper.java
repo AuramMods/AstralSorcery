@@ -12,8 +12,8 @@ import hellfirepvp.astralsorcery.common.starlight.api.ITransmissionTickable;
 import hellfirepvp.astralsorcery.common.starlight.api.TransmissionNode;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.*;

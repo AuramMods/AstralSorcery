@@ -12,7 +12,7 @@ import hellfirepvp.astralsorcery.client.config.RenderingConfig;
 import hellfirepvp.astralsorcery.common.util.data.MapStream;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import javax.annotation.Nullable;
 import java.util.*;

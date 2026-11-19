@@ -23,7 +23,7 @@ import hellfirepvp.astralsorcery.common.focal.FocusCrystalPlacementHelper;
 import hellfirepvp.astralsorcery.common.focal.FocusCrystalVisualSortHelper;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 
 import static hellfirepvp.astralsorcery.common.lib.constants.ColorsAS.*;
 

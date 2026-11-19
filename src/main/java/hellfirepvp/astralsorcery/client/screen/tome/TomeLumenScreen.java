@@ -51,7 +51,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

@@ -15,8 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.Event;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -105,7 +105,7 @@ public class AttributeEvent {
 
     public static double postProcessModded(Player player, Supplier<? extends PerkAttributeType> type, double value) {
         PostProcessModded ev = new PostProcessModded(value, type.get(), player);
-        NeoForge.EVENT_BUS.post(ev);
+        MinecraftForge.EVENT_BUS.post(ev);
         return ev.getValue();
     }
 
@@ -115,7 +115,7 @@ public class AttributeEvent {
 
     public static double postProcessModded(Player player, PerkAttributeType type, double value) {
         PostProcessModded ev = new PostProcessModded(value, type, player);
-        NeoForge.EVENT_BUS.post(ev);
+        MinecraftForge.EVENT_BUS.post(ev);
         return ev.getValue();
     }
 
@@ -135,7 +135,7 @@ public class AttributeEvent {
 
     public static double postProcessVanilla(double value, AttributeInstance attribute) {
         AttributeEvent.PostProcessVanilla event = new AttributeEvent.PostProcessVanilla(attribute, value);
-        NeoForge.EVENT_BUS.post(event);
+        MinecraftForge.EVENT_BUS.post(event);
         return attribute.getAttribute().value().sanitizeValue(event.getValue());
     }
 }

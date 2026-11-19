@@ -10,9 +10,7 @@ package hellfirepvp.astralsorcery.common;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.InterModComms;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
+import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +28,7 @@ import java.util.function.Supplier;
 public enum Mods {
 
     MINECRAFT("minecraft", true),
-    NEOFORGE(NeoForgeVersion.MOD_ID, true),
+    FORGE("forge", true),
     ASTRAL_SORCERY(AstralSorcery.MODID, true),
     DRACONIC_EVOLUTION("draconicevolution"),
     CURIOS("curios"),
@@ -59,7 +57,7 @@ public enum Mods {
 
     @Nonnull
     public ResourceLocation key(String path) {
-        return ResourceLocation.fromNamespaceAndPath(this.getModId(), path);
+        return new ResourceLocation(this.getModId(), path);
     }
 
     public static Optional<Mods> byModId(String modId) {

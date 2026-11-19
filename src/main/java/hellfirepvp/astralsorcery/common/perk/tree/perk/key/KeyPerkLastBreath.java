@@ -28,10 +28,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -99,15 +99,15 @@ public class KeyPerkLastBreath extends KeyPerk {
 
     public static class Config extends ConfigEntry {
 
-        public ModConfigSpec.DoubleValue damageMultiplier;
-        public ModConfigSpec.DoubleValue digSpeedMultiplier;
+        public ForgeConfigSpec.DoubleValue damageMultiplier;
+        public ForgeConfigSpec.DoubleValue digSpeedMultiplier;
 
         public Config() {
             super("key_last_breath");
         }
 
         @Override
-        public void createEntries(ModConfigSpec.Builder cfgBuilder) {
+        public void createEntries(ForgeConfigSpec.Builder cfgBuilder) {
             this.damageMultiplier = cfgBuilder
                     .comment("Maximum additional multiplier to damage dealt, the lower hp gets, from 0 to this value when health reaches 0.")
                     .translation(translationKey("damageMultiplier"))

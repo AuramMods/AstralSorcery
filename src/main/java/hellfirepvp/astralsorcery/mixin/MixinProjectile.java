@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.mixin;
 import hellfirepvp.astralsorcery.common.event.ProjectileInaccuracyEvent;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -30,7 +30,7 @@ public class MixinProjectile {
     public float modifyInaccuracy(float inaccuracy) {
         Projectile thisProjectile = MiscUtil.cast(this);
         ProjectileInaccuracyEvent event = new ProjectileInaccuracyEvent(thisProjectile, inaccuracy);
-        NeoForge.EVENT_BUS.post(event);
+        MinecraftForge.EVENT_BUS.post(event);
         return event.getInaccuracy();
     }
 }

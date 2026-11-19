@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.data.sync.client.*;
 import hellfirepvp.astralsorcery.common.data.sync.server.*;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
 
 /**
  * This class is part of the Astral Sorcery Mod

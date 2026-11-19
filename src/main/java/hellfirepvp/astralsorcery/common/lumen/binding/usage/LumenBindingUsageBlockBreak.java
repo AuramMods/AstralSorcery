@@ -14,9 +14,9 @@ import hellfirepvp.astralsorcery.common.lib.types.LumenBindingUsageTypesAS;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.level.BlockEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod

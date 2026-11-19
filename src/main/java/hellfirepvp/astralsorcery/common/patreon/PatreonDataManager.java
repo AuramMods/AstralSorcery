@@ -12,8 +12,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.patreon.type.TypeFlare;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class PatreonDataManager {
                 PatreonEffect pe = effectType.getProvider().buildEffect(playerUUID, effect.getParameters());
 
                 pe.initialize();
-                pe.attachEventListeners(NeoForge.EVENT_BUS);
+                pe.attachEventListeners(MinecraftForge.EVENT_BUS);
                 PatreonEffectHelper.playerEffectMap.computeIfAbsent(playerUUID, uuid -> new ArrayList<>()).add(pe);
                 PatreonEffectHelper.effectMap.put(pe.getEffectUUID(), pe);
             } catch (Exception exc) {
@@ -92,7 +92,7 @@ public class PatreonDataManager {
             UUID dev = UUID.fromString("380df991-f603-344c-a090-369bad2a924a");
             PatreonEffect effect = new TypeFlare(UUID.fromString("17f84a37-6d9d-4ad2-8b85-ac333390f6f2"), FlareColor.STANDARD);
 
-            effect.attachEventListeners(NeoForge.EVENT_BUS);
+            effect.attachEventListeners(MinecraftForge.EVENT_BUS);
             PatreonEffectHelper.playerEffectMap.computeIfAbsent(dev, uuid -> new ArrayList<>()).add(effect);
             PatreonEffectHelper.effectMap.put(effect.getEffectUUID(), effect);
         }

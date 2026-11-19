@@ -19,11 +19,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.bus.api.EventPriority;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -100,11 +100,11 @@ public class BlockBreakUtil {
             event.setCanceled(true);
         };
 
-        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, BlockDropsEvent.class, eventHandler);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, BlockDropsEvent.class, eventHandler);
         try {
             run.run();
         } finally {
-            NeoForge.EVENT_BUS.unregister(eventHandler);
+            MinecraftForge.EVENT_BUS.unregister(eventHandler);
         }
         return eventObj.get();
     }

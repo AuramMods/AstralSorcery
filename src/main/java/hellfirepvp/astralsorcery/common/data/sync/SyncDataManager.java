@@ -11,11 +11,11 @@ package hellfirepvp.astralsorcery.common.data.sync;
 import hellfirepvp.astralsorcery.common.network.play.PktSyncData;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.server.level.ServerLevel;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.HashMap;

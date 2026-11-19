@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.event.EventHooks;
 
 /**

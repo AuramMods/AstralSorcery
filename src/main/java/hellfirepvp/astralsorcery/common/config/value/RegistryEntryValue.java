@@ -12,7 +12,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Optional;
 
@@ -26,15 +26,15 @@ import java.util.Optional;
 public final class RegistryEntryValue<T> {
 
     private final ResourceKey<Registry<T>> registryKey;
-    private final ModConfigSpec.ConfigValue<String> cfg;
+    private final ForgeConfigSpec.ConfigValue<String> cfg;
 
-    private RegistryEntryValue(ResourceKey<Registry<T>> registryKey, ModConfigSpec.ConfigValue<String> cfg) {
+    private RegistryEntryValue(ResourceKey<Registry<T>> registryKey, ForgeConfigSpec.ConfigValue<String> cfg) {
         this.registryKey = registryKey;
         this.cfg = cfg;
     }
 
-    public static <T> RegistryEntryValue<T> defineConfig(ModConfigSpec.Builder builder, ResourceKey<Registry<T>> registryKey, String path, ResourceLocation defaultKey) {
-        ModConfigSpec.ConfigValue<String> cfg = builder.define(path, defaultKey.toString(), obj -> {
+    public static <T> RegistryEntryValue<T> defineConfig(ForgeConfigSpec.Builder builder, ResourceKey<Registry<T>> registryKey, String path, ResourceLocation defaultKey) {
+        ForgeConfigSpec.ConfigValue<String> cfg = builder.define(path, defaultKey.toString(), obj -> {
             if (!(obj instanceof String str)) return false;
             ResourceLocation resKey = ResourceLocation.tryParse(str);
             return resKey != null;

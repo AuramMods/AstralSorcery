@@ -59,7 +59,7 @@ public class RenderPageCraftingRecipe extends RenderPageRecipe<CraftingRecipe> {
                 this.renderShapelessRecipe(guiGraphics, x, y, lookupProvider, shapelessRecipe);
             } else {
                 ResourceLocation id = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
-                id = id == null ? ResourceLocation.withDefaultNamespace("unregistered_sadface") : id;
+                id = id == null ? new ResourceLocation("minecraft", "unregistered_sadface") : id;
                 Component errorDisplay = Component.translatable("tome.research.info.recipe_cannot_display", id.toString());
 
                 Font font = Minecraft.getInstance().font;

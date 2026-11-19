@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.common.recipe.lightwell;
 
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipeInput;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * This class is part of the Astral Sorcery Mod

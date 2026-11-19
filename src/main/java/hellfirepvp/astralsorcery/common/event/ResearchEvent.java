@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchFlag;
 import hellfirepvp.astralsorcery.common.research.ResearchTier;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nullable;
 

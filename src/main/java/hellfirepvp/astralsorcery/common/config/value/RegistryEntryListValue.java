@@ -12,7 +12,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +27,15 @@ import java.util.List;
 public final class RegistryEntryListValue<T> {
 
     private final ResourceKey<Registry<T>> registryKey;
-    private final ModConfigSpec.ConfigValue<List<? extends String>> cfg;
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> cfg;
 
-    private RegistryEntryListValue(ResourceKey<Registry<T>> registryKey, ModConfigSpec.ConfigValue<List<? extends String>> cfg) {
+    private RegistryEntryListValue(ResourceKey<Registry<T>> registryKey, ForgeConfigSpec.ConfigValue<List<? extends String>> cfg) {
         this.registryKey = registryKey;
         this.cfg = cfg;
     }
 
-    public static <T> RegistryEntryListValue<T> defineConfig(ModConfigSpec.Builder builder, ResourceKey<Registry<T>> registryKey, String path, List<ResourceLocation> defaultList, ResourceLocation defaultNewElement) {
-        ModConfigSpec.ConfigValue<List<? extends String>> cfg = builder.defineListAllowEmpty(path, defaultList.stream().map(ResourceLocation::toString).toList(), defaultNewElement::toString, obj -> {
+    public static <T> RegistryEntryListValue<T> defineConfig(ForgeConfigSpec.Builder builder, ResourceKey<Registry<T>> registryKey, String path, List<ResourceLocation> defaultList, ResourceLocation defaultNewElement) {
+        ForgeConfigSpec.ConfigValue<List<? extends String>> cfg = builder.defineListAllowEmpty(path, defaultList.stream().map(ResourceLocation::toString).toList(), defaultNewElement::toString, obj -> {
             if (!(obj instanceof String str)) return false;
             ResourceLocation resKey = ResourceLocation.tryParse(str);
             return resKey != null;

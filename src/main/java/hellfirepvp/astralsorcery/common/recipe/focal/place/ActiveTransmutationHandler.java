@@ -18,7 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
 import net.neoforged.neoforge.common.util.TriState;
 
 import java.util.Collections;
@@ -52,7 +52,7 @@ public class ActiveTransmutationHandler {
             return RecipeFinder.of(level).findFocalTransmutationRecipe(cst, pos, isFocusedStarlight).map(r -> {
                 ActiveFocalTransmutationRecipe activeRecipe = ActiveFocalTransmutationRecipe.create(r, cst, pos, level.getGameTime());
                 RecipeEvent.FocalTransmutation.Start start = new RecipeEvent.FocalTransmutation.Start(activeRecipe);
-                NeoForge.EVENT_BUS.post(start);
+                MinecraftForge.EVENT_BUS.post(start);
                 if (start.isCanceled()) return null;
 
                 activeRecipes.computeIfAbsent(level.dimension(), dim -> new HashMap<>()).put(pos, activeRecipe);
@@ -80,7 +80,7 @@ public class ActiveTransmutationHandler {
             FocalPointTransmutationSparkle.at(activeRecipe.getTransmutationPos(), activeRecipe.getRecipe().getColor()).sendToNearby(level);
             if (activeRecipe.isFinished()) {
                 activeRecipe.finish(usedInput, level);
-                NeoForge.EVENT_BUS.post(new RecipeEvent.FocalTransmutation.End(activeRecipe));
+                MinecraftForge.EVENT_BUS.post(new RecipeEvent.FocalTransmutation.End(activeRecipe));
                 removeTransmutation(level, pos);
                 return TriState.DEFAULT;
             }

@@ -62,10 +62,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class ClientProxy extends CommonProxy {
         RenderPageRecipe.registerPageFactory(RecipeTypesAS.LIGHTWELL_TYPE.getKey(), RenderPageLightwell::new);
         RenderPageRecipe.registerPageFactory(RecipeTypesAS.INFUSION_TYPE.getKey(), RenderPageStarlightInfusion::new);
         RenderPageRecipe.registerPageFactory(RecipeTypesAS.ALTAR_CRAFTING_TYPE.getKey(), RenderPageAltar::new);
-        RenderPageRecipe.registerPageFactory(ResourceKey.create(Registries.RECIPE_TYPE, ResourceLocation.withDefaultNamespace("crafting")), RenderPageCraftingRecipe::new);
+        RenderPageRecipe.registerPageFactory(ResourceKey.create(Registries.RECIPE_TYPE, new ResourceLocation("minecraft", "crafting")), RenderPageCraftingRecipe::new);
 
         this.clientConfig.build();
     }
