@@ -8,8 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
-import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
+import hellfirepvp.astralsorcery.common.block.tile.base.FluidLitTileBlock;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.tile.TileLightwell;
 import hellfirepvp.astralsorcery.common.util.InteractUtil;
@@ -21,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -31,7 +29,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
@@ -41,9 +38,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class LightwellBlock extends BaseTickTileBlock<TileLightwell> {
+public class LightwellBlock extends FluidLitTileBlock<TileLightwell> {
 
-    public static MapCodec<LightwellBlock> CODEC = simpleCodec(LightwellBlock::new);
     private static final VoxelShape SHAPE = createShape();
 
     public LightwellBlock(Properties properties) {
@@ -63,7 +59,7 @@ public class LightwellBlock extends BaseTickTileBlock<TileLightwell> {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -82,20 +78,8 @@ public class LightwellBlock extends BaseTickTileBlock<TileLightwell> {
     }
 
     @Override
-    public boolean hasDynamicLightEmission(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        AuxiliaryLightManager lightMgr = level.getAuxLightManager(pos);
-        if (lightMgr == null) return 0;
-        return lightMgr.getLightAt(pos);
-    }
-
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!level.isClientSide()) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!level.isClientSide() && !state.is(newState.getBlock())) {
             MiscUtil.getTileAt(level, pos, TileLightwell.class, true).ifPresent(TileLightwell::breakCatalyst);
         }
 
@@ -105,11 +89,6 @@ public class LightwellBlock extends BaseTickTileBlock<TileLightwell> {
     @Override
     protected BlockEntityTicker<TileLightwell> createTicker() {
         return this.ticker();
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

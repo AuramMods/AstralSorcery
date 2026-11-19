@@ -9,13 +9,12 @@
 package hellfirepvp.astralsorcery.common.network.play;
 
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
+import hellfirepvp.astralsorcery.common.util.SyncedAuxiliaryLightManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -52,10 +51,10 @@ public class PktSyncAuxiliaryLightManager extends PlayPacketHandler.ToClient<Pkt
     @Override
     public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
-            Level level = context.player().level();
-            AuxiliaryLightManager lightMgr = level.getAuxLightManager(payload.pos());
-            if (lightMgr == null) return;
-            lightMgr.setLightAt(payload.pos(), payload.lightLevel());
+            Player player = context.player();
+            if (player != null) {
+                SyncedAuxiliaryLightManager.applyClientLight(player.level(), payload.pos(), payload.lightLevel());
+            }
         });
     }
 

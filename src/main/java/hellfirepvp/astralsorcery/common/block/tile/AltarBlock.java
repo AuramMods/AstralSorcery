@@ -88,7 +88,7 @@ public class AltarBlock extends BaseTickTileBlock<TileAltar> {
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!(newState.getBlock() instanceof AltarBlock)) {
             super.onRemove(state, level, pos, newState, movedByPiston);
         }

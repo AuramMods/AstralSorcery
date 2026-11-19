@@ -31,12 +31,16 @@ public class PropertiesAS {
                 .requiresCorrectToolForDrops()
                 .sound(SoundType.STONE);
 
-        public static final BlockBehaviour.Properties MARBLE_NO_OCCLUSION = BlockBehaviour.Properties.of()
-                .mapColor(MapColor.QUARTZ)
-                .strength(3F, 5F)
-                .requiresCorrectToolForDrops()
-                .sound(SoundType.STONE)
-                .noOcclusion();
+        public static final BlockBehaviour.Properties MARBLE_NO_OCCLUSION = marbleNoOcclusion();
+
+        public static BlockBehaviour.Properties marbleNoOcclusion() {
+            return BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.QUARTZ)
+                    .strength(3F, 5F)
+                    .requiresCorrectToolForDrops()
+                    .sound(SoundType.STONE)
+                    .noOcclusion();
+        }
 
         public static final BlockBehaviour.Properties WOODEN_FOLIAGE = BlockBehaviour.Properties.of()
                 .mapColor(MapColor.COLOR_GREEN)
@@ -95,12 +99,14 @@ public class PropertiesAS {
                 .lightLevel(state -> 15)
                 .noCollission();
 
-        public static final BlockBehaviour.Properties CHALICE_GOLD_MACHINERY = BlockBehaviour.Properties.of()
-                .mapColor(MapColor.GOLD)
-                .strength(1.0F, 4.0F)
-                .sound(SoundType.STONE)
-                .noOcclusion()
-                .requiresCorrectToolForDrops();
+        public static BlockBehaviour.Properties chaliceGoldMachinery() {
+            return BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.GOLD)
+                    .strength(1.0F, 4.0F)
+                    .sound(SoundType.STONE)
+                    .noOcclusion()
+                    .requiresCorrectToolForDrops();
+        }
     }
 
 }

@@ -8,8 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
-import com.mojang.serialization.MapCodec;
-import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
+import hellfirepvp.astralsorcery.common.block.tile.base.FluidLitTileBlock;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.tile.TileChalice;
 import hellfirepvp.astralsorcery.common.util.InteractUtil;
@@ -22,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,7 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -40,9 +37,8 @@ import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
  * Created by HellFirePvP
  * Date: 11.04.2026
  */
-public class ChaliceBlock extends BaseTickTileBlock<TileChalice> {
+public class ChaliceBlock extends FluidLitTileBlock<TileChalice> {
 
-    public static final MapCodec<ChaliceBlock> CODEC = simpleCodec(ChaliceBlock::new);
     private static final VoxelShape SHAPE = Shapes.box(2D / 16D, 0D / 16D, 2D / 16D, 14D / 16D, 14D / 16D, 14D / 16D);
 
     public ChaliceBlock(Properties properties) {
@@ -50,12 +46,7 @@ public class ChaliceBlock extends BaseTickTileBlock<TileChalice> {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -81,18 +72,6 @@ public class ChaliceBlock extends BaseTickTileBlock<TileChalice> {
                     () -> InteractUtil.tryTransferFluidIntoBlock(held, player, level, pos, newStack -> InteractUtil.handleContainerReplacement(player, newStack, hand))
             ).orElse(ItemInteractionResult.SUCCESS);
         }).orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
-    }
-
-    @Override
-    public boolean hasDynamicLightEmission(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        AuxiliaryLightManager lightMgr = level.getAuxLightManager(pos);
-        if (lightMgr == null) return 0;
-        return lightMgr.getLightAt(pos);
     }
 
     @Override

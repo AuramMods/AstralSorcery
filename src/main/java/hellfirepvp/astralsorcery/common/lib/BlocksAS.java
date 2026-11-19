@@ -151,19 +151,19 @@ public class BlocksAS {
                     .dynamicShape()));
 
     public static final RegisteredItemLike<LumenArrayBlock> LUMEN_ARRAY =
-            register("lumen_array", () -> new LumenArrayBlock(MARBLE_NO_OCCLUSION));
+            register("lumen_array", () -> new LumenArrayBlock(marbleNoOcclusion()));
     public static final RegisteredItemLike<LumenAlchemyArrayBlock> LUMEN_ALCHEMY_ARRAY =
-            register("lumen_alchemy_array", () -> new LumenAlchemyArrayBlock(MARBLE_NO_OCCLUSION));
+            register("lumen_alchemy_array", () -> new LumenAlchemyArrayBlock(marbleNoOcclusion()));
     public static final RegisteredItemLike<LumenFilamentBlock> LUMEN_FILAMENT =
             register("lumen_filament", () -> new LumenFilamentBlock(INFUSED_GLASS_LIT));
     public static final RegisteredItemLike<LumenCrystallizerBlock> LUMEN_CRYSTALLIZER =
-            register("lumen_crystallizer", () -> new LumenCrystallizerBlock(MARBLE_NO_OCCLUSION));
+            register("lumen_crystallizer", () -> new LumenCrystallizerBlock(marbleNoOcclusion()));
     public static final RegisteredItemLike<LightwellBlock> LIGHTWELL =
-            register("lightwell", () -> new LightwellBlock(MARBLE_NO_OCCLUSION));
+            register("lightwell", () -> new LightwellBlock(marbleNoOcclusion()));
     public static final RegisteredItemLike<InfuserBlock> INFUSER =
             register("infuser", () -> new InfuserBlock(MARBLE_NO_OCCLUSION));
     public static final RegisteredItemLike<ChaliceBlock> CHALICE =
-            register("chalice", () -> new ChaliceBlock(CHALICE_GOLD_MACHINERY));
+            register("chalice", () -> new ChaliceBlock(chaliceGoldMachinery()));
     public static final RegisteredItemLike<AttunementAltarBlock> ATTUNEMENT_ALTAR =
             register("attunement_altar", () -> new AttunementAltarBlock(MARBLE_NO_OCCLUSION));
     public static final RegisteredItemLike<TranslucentBlock> TRANSLUCENT_BLOCK =

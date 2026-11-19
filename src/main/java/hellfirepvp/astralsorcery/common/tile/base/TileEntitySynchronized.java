@@ -194,7 +194,7 @@ public abstract class TileEntitySynchronized<T extends TileEntitySynchronized.Da
     public void onTileEntityRemove(Level level, BlockPos pos) {}
 
     public void setLight(ServerLevel sLevel, int light) {
-        SyncedAuxiliaryLightManager.get(sLevel).setLightAt(this.getBlockPos(), light);
+        SyncedAuxiliaryLightManager.setLightAt(sLevel, this.getBlockPos(), light);
     }
 
     public static class Data {

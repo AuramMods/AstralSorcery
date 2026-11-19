@@ -92,7 +92,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
         if (this.getTileData().getTicksExisted() % 20 == 0) {
             FluidStack stack = this.getTileData().getContainedFluid();
             if (!stack.isEmpty()) {
-                this.setLight(level, stack.getFluidType().getLightLevel(stack));
+                this.setLight(level, stack.getFluid().getFluidType().getLightLevel(stack));
             } else {
                 this.setLight(level, 0);
             }
