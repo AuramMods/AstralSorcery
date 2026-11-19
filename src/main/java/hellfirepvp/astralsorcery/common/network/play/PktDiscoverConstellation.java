@@ -16,9 +16,7 @@ import hellfirepvp.astralsorcery.common.research.ResearchMessageHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -29,14 +27,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktDiscoverConstellation extends PlayPacketHandler.ToServer<PktDiscoverConstellation.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("discover_constellation");
     static final StreamCodec<FriendlyByteBuf, PktDiscoverConstellation.Request> CODEC =
             StreamCodec.composite(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS), Request::constellation, Request::new);
 
     public static final PktDiscoverConstellation HANDLER = new PktDiscoverConstellation();
 
     private PktDiscoverConstellation() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request discover(BaseConstellation constellation) {
@@ -49,7 +46,7 @@ public class PktDiscoverConstellation extends PlayPacketHandler.ToServer<PktDisc
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
                 if (ResearchHelper.discoverConstellation(sPlayer, payload.constellation())) {
@@ -59,12 +56,6 @@ public class PktDiscoverConstellation extends PlayPacketHandler.ToServer<PktDisc
         });
     }
 
-    public record Request(BaseConstellation constellation) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public record Request(BaseConstellation constellation) {}
 
 }

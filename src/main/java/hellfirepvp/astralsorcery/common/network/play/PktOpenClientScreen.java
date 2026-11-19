@@ -13,19 +13,16 @@ import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class PktOpenClientScreen extends PlayPacketHandler.ToClient<PktOpenClientScreen.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("open_client_screen");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC =
             StreamCodec.composite(CodecUtil.enumStreamCodec(ScreenType.class), Request::screenType, Request::new);
 
     public static final PktOpenClientScreen HANDLER = new PktOpenClientScreen();
 
     private PktOpenClientScreen() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request openScreen(ScreenType screenType) {
@@ -38,7 +35,7 @@ public class PktOpenClientScreen extends PlayPacketHandler.ToClient<PktOpenClien
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             switch (payload.screenType()) {
                 case TOME -> TomeItem.openTomeScreen();
@@ -46,13 +43,7 @@ public class PktOpenClientScreen extends PlayPacketHandler.ToClient<PktOpenClien
         });
     }
 
-    public record Request(ScreenType screenType) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public record Request(ScreenType screenType) {}
 
     public enum ScreenType {
         TOME

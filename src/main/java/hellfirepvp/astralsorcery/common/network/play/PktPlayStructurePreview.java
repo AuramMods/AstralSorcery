@@ -23,11 +23,9 @@ import hellfirepvp.observerlib.common.registry.RegistryProviders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -38,7 +36,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktPlayStructurePreview extends PlayPacketHandler.ToClient<PktPlayStructurePreview.Request> {
 
-    static final CustomPacketPayload.Type<PktPlayStructurePreview.Request> TYPE = makeType("structure_preview");
     static final StreamCodec<FriendlyByteBuf, PktPlayStructurePreview.Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.BLOCK_POS,
             Request::tilePos,
@@ -49,7 +46,7 @@ public class PktPlayStructurePreview extends PlayPacketHandler.ToClient<PktPlayS
     public static final PktPlayStructurePreview HANDLER = new PktPlayStructurePreview();
 
     private PktPlayStructurePreview() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request showPreview(BlockPos tilePos, ObserverRegistryObject registryObject) {
@@ -62,7 +59,7 @@ public class PktPlayStructurePreview extends PlayPacketHandler.ToClient<PktPlayS
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             ObserversAS.getByName(payload.observerKey()).ifPresent(obj -> {
                 Player clientPlayer = context.player();
@@ -98,11 +95,5 @@ public class PktPlayStructurePreview extends PlayPacketHandler.ToClient<PktPlayS
         });
     }
 
-    public record Request(BlockPos tilePos, ResourceKey<ObserverProvider<?>> observerKey) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public record Request(BlockPos tilePos, ResourceKey<ObserverProvider<?>> observerKey) {}
 }

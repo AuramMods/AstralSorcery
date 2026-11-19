@@ -9,8 +9,17 @@
 package hellfirepvp.astralsorcery.common.network;
 
 import hellfirepvp.astralsorcery.common.network.play.*;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import hellfirepvp.astralsorcery.AstralSorcery;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.network.NetworkRegistry.ChannelBuilder;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -19,42 +28,73 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class NetworkRegistry {
+public final class NetworkRegistry {
 
-    public static final String NET_VERSION = "1";
+    public static final String NET_VERSION = "forge-1";
 
-    public static void registerPackets(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(NET_VERSION);
+    private static final SimpleChannel CHANNEL = ChannelBuilder.named(AstralSorcery.key("play"))
+            .networkProtocolVersion(() -> NET_VERSION)
+            .clientAcceptedVersions(NET_VERSION::equals)
+            .serverAcceptedVersions(NET_VERSION::equals)
+            .simpleChannel();
 
-        // Server -> Client
-        PktSyncPlayerProgress.HANDLER.register(registrar);
-        PktSyncResearchNodes.HANDLER.register(registrar);
-        PktSyncData.HANDLER.register(registrar);
-        PktUpdateLinkSession.HANDLER.register(registrar);
-        PktPlayVisualEffect.HANDLER.register(registrar);
-        PktSyncModifierSource.HANDLER.register(registrar);
-        PktSyncPerkTree.HANDLER.register(registrar);
-        PktSyncPerkLevels.HANDLER.register(registrar);
-        PktSyncPerkActivity.HANDLER.register(registrar);
-        PktSyncCustomDestroyProgress.HANDLER.register(registrar);
-        PktSyncAuxiliaryLightManager.HANDLER.register(registrar);
-        PktSyncLumenBindingTypes.HANDLER.register(registrar);
-        PktPlayStructurePreview.HANDLER.register(registrar);
-        PktOpenClientScreen.HANDLER.register(registrar);
+    private NetworkRegistry() {}
 
-        // Client -> Server
-        PktAdjustAstrolabeAngle.HANDLER.register(registrar);
-        PktDiscoverConstellation.HANDLER.register(registrar);
-        PktRequestSocketPerkItem.HANDLER.register(registrar);
-        PktRequestCancelLinkSession.HANDLER.register(registrar);
-        PktRequestGatewayTeleport.HANDLER.register(registrar);
-        PktRequestLearnedTomeNavigation.HANDLER.register(registrar);
-        PktSetStructureMarker.HANDLER.register(registrar);
+    public static void registerPackets() {
+        List<PlayPacketHandler<?>> handlers = List.of(
+                PktSyncPlayerProgress.HANDLER,
+                PktSyncResearchNodes.HANDLER,
+                PktSyncData.HANDLER,
+                PktUpdateLinkSession.HANDLER,
+                PktPlayVisualEffect.HANDLER,
+                PktSyncModifierSource.HANDLER,
+                PktSyncPerkTree.HANDLER,
+                PktSyncPerkLevels.HANDLER,
+                PktSyncPerkActivity.HANDLER,
+                PktSyncCustomDestroyProgress.HANDLER,
+                PktSyncAuxiliaryLightManager.HANDLER,
+                PktSyncLumenBindingTypes.HANDLER,
+                PktPlayStructurePreview.HANDLER,
+                PktOpenClientScreen.HANDLER,
+                PktAdjustAstrolabeAngle.HANDLER,
+                PktDiscoverConstellation.HANDLER,
+                PktRequestSocketPerkItem.HANDLER,
+                PktRequestCancelLinkSession.HANDLER,
+                PktRequestGatewayTeleport.HANDLER,
+                PktRequestLearnedTomeNavigation.HANDLER,
+                PktSetStructureMarker.HANDLER,
+                PktRequestSeed.HANDLER,
+                PktRequestUnlockPerk.HANDLER,
+                PktRequestPerkSealAction.HANDLER,
+                PktRequestRemovePerk.HANDLER
+        );
+        for (int discriminator = 0; discriminator < handlers.size(); discriminator++) {
+            handlers.get(discriminator).register(CHANNEL, discriminator);
+        }
+    }
 
-        // Bi-Directional
-        PktRequestSeed.HANDLER.register(registrar);
-        PktRequestUnlockPerk.HANDLER.register(registrar);
-        PktRequestPerkSealAction.HANDLER.register(registrar);
-        PktRequestRemovePerk.HANDLER.register(registrar);
+    public static void sendToServer(Object packet) {
+        CHANNEL.sendToServer(packet);
+    }
+
+    public static void sendToPlayer(ServerPlayer player, Object packet) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
+    }
+
+    public static void sendToAllPlayers(Object packet) {
+        CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
+    }
+
+    public static void sendToPlayersTrackingChunk(ServerLevel level, ChunkPos pos, Object packet) {
+        LevelChunk chunk = level.getChunkSource().getChunkNow(pos.x, pos.z);
+        if (chunk != null) {
+            CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), packet);
+        }
+    }
+
+    public static void sendToPlayersNear(ServerLevel level, @Nullable ServerPlayer excluded,
+                                         double x, double y, double z, double range, Object packet) {
+        PacketDistributor.TargetPoint target = new PacketDistributor.TargetPoint(excluded, x, y, z, range, level.dimension());
+        CHANNEL.send(PacketDistributor.NEAR.with(() -> target), packet);
     }
 }

@@ -28,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.HashSet;
 import java.util.List;
@@ -110,11 +110,11 @@ public class PlayerEventHandler {
             }
         }
 
-        PacketDistributor.sendToPlayer(sPlayer, PktSyncPerkTree.sync());
-        PacketDistributor.sendToPlayer(sPlayer, PktSyncResearchNodes.newRequest());
-        PacketDistributor.sendToPlayer(sPlayer, PktSyncData.syncAll(SyncDataManager.getInstance()));
-        PacketDistributor.sendToPlayer(sPlayer, PktSyncPerkLevels.sync(sPlayer));
-        PacketDistributor.sendToPlayer(sPlayer, PktSyncPlayerProgress.newRequest(ResearchManager.getProgress(sPlayer, LogicalSide.SERVER)));
-        PacketDistributor.sendToPlayer(sPlayer, PktSyncLumenBindingTypes.newRequest());
+        NetworkRegistry.sendToPlayer(sPlayer, PktSyncPerkTree.sync());
+        NetworkRegistry.sendToPlayer(sPlayer, PktSyncResearchNodes.newRequest());
+        NetworkRegistry.sendToPlayer(sPlayer, PktSyncData.syncAll(SyncDataManager.getInstance()));
+        NetworkRegistry.sendToPlayer(sPlayer, PktSyncPerkLevels.sync(sPlayer));
+        NetworkRegistry.sendToPlayer(sPlayer, PktSyncPlayerProgress.newRequest(ResearchManager.getProgress(sPlayer, LogicalSide.SERVER)));
+        NetworkRegistry.sendToPlayer(sPlayer, PktSyncLumenBindingTypes.newRequest());
     }
 }

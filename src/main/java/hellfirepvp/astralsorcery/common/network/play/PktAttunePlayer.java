@@ -16,9 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -29,14 +27,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktAttunePlayer extends PlayPacketHandler.ToServer<PktAttunePlayer.Request> {
 
-    static final CustomPacketPayload.Type<PktAttunePlayer.Request> TYPE = makeType("attune_player");
     static final StreamCodec<FriendlyByteBuf, PktAttunePlayer.Request> CODEC =
             StreamCodec.composite(ByteBufCodecs.BLOCK_POS, Request::altarPos, Request::new);
 
     public static final PktAttunePlayer HANDLER = new PktAttunePlayer();
 
     private PktAttunePlayer() {
-        super(TYPE);
+        super(Request.class);
     }
 
     @Override
@@ -45,7 +42,7 @@ public class PktAttunePlayer extends PlayPacketHandler.ToServer<PktAttunePlayer.
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
                 MiscUtil.getTileAt(sPlayer.serverLevel(), payload.altarPos(), TileAttunementAltar.class, false).ifPresent(altar -> {
@@ -61,11 +58,5 @@ public class PktAttunePlayer extends PlayPacketHandler.ToServer<PktAttunePlayer.
         });
     }
 
-    public static record Request(BlockPos altarPos) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(BlockPos altarPos) {}
 }

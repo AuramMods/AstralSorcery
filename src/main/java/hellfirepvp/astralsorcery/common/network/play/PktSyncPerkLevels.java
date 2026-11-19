@@ -13,10 +13,8 @@ import hellfirepvp.astralsorcery.common.perk.PerkLevelManager;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -27,7 +25,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktSyncPerkLevels extends PlayPacketHandler.ToClient<PktSyncPerkLevels.Request> {
 
-    static final CustomPacketPayload.Type<PktSyncPerkLevels.Request> TYPE = makeType("sync_perk_levels");
     static final StreamCodec<FriendlyByteBuf, PktSyncPerkLevels.Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             Request::maxPerkLevel,
@@ -37,7 +34,7 @@ public class PktSyncPerkLevels extends PlayPacketHandler.ToClient<PktSyncPerkLev
     public static final PktSyncPerkLevels HANDLER = new PktSyncPerkLevels();
 
     private PktSyncPerkLevels() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static PktSyncPerkLevels.Request sync(ServerPlayer sPlayer) {
@@ -50,18 +47,12 @@ public class PktSyncPerkLevels extends PlayPacketHandler.ToClient<PktSyncPerkLev
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             PerkLevelManager.getInstance().initializeClientLevels(payload.maxPerkLevel());
         });
     }
 
-    public static record Request(int maxPerkLevel) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(int maxPerkLevel) {}
 
 }

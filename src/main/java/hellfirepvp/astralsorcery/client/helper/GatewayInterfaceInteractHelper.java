@@ -29,7 +29,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.Collections;
 import java.util.List;
@@ -122,7 +122,7 @@ public class GatewayInterfaceInteractHelper {
 
         if (focusTick == TELEPORT_TRIGGER) {
             Minecraft.getInstance().player.setShiftKeyDown(false);
-            PacketDistributor.sendToServer(PktRequestGatewayTeleport.teleportTo(focusedTarget.getEntryLevelKey(), focusedTarget.getEntry().getPos()));
+            NetworkRegistry.sendToServer(PktRequestGatewayTeleport.teleportTo(focusedTarget.getEntryLevelKey(), focusedTarget.getEntry().getPos()));
         }
     }
 

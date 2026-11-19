@@ -18,10 +18,8 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,6 @@ import java.util.List;
  */
 public class PktSyncPerkTree extends PlayPacketHandler.ToClient<PktSyncPerkTree.Request> {
 
-    static final CustomPacketPayload.Type<PktSyncPerkTree.Request> TYPE = makeType("sync_perk_tree");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             CodecUtil.rawJsonObjectStreamCodec().apply(ByteBufCodecs.list()),
             Request::rawPerkTree,
@@ -45,7 +42,7 @@ public class PktSyncPerkTree extends PlayPacketHandler.ToClient<PktSyncPerkTree.
     public static final PktSyncPerkTree HANDLER = new PktSyncPerkTree();
 
     private PktSyncPerkTree() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static PktSyncPerkTree.Request sync() {
@@ -60,7 +57,7 @@ public class PktSyncPerkTree extends PlayPacketHandler.ToClient<PktSyncPerkTree.
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> this.handleClient(payload));
     }
 
@@ -73,11 +70,5 @@ public class PktSyncPerkTree extends PlayPacketHandler.ToClient<PktSyncPerkTree.
         PerkTree.getInstance().receivePerkTree(data.prepare());
     }
 
-    public static record Request(List<JsonObject> rawPerkTree) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(List<JsonObject> rawPerkTree) {}
 }

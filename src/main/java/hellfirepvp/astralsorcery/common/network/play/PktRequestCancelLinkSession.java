@@ -12,9 +12,7 @@ import hellfirepvp.astralsorcery.common.linking.session.LinkSessionHelper;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -25,13 +23,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktRequestCancelLinkSession extends PlayPacketHandler.ToServer<PktRequestCancelLinkSession.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("request_cancel_link_session");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.unit(Request.INSTANCE);
 
     public static final PktRequestCancelLinkSession HANDLER = new PktRequestCancelLinkSession();
 
     private PktRequestCancelLinkSession() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request cancelSession() {
@@ -44,7 +41,7 @@ public class PktRequestCancelLinkSession extends PlayPacketHandler.ToServer<PktR
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
                 LinkSessionHelper.stopSession(sPlayer);
@@ -52,15 +49,11 @@ public class PktRequestCancelLinkSession extends PlayPacketHandler.ToServer<PktR
         });
     }
 
-    public static class Request implements CustomPacketPayload {
+    public static class Request {
 
         private static final Request INSTANCE = new Request();
 
         private Request() {}
 
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
     }
 }

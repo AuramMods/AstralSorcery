@@ -16,10 +16,8 @@ import hellfirepvp.astralsorcery.common.perk.source.ModifierSource;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Optional;
 
@@ -32,7 +30,6 @@ import java.util.Optional;
  */
 public class PktSyncModifierSource extends PlayPacketHandler.ToClient<PktSyncModifierSource.Request> {
 
-    static final CustomPacketPayload.Type<PktSyncModifierSource.Request> TYPE = makeType("sync_modifier_source");
     static final StreamCodec<FriendlyByteBuf, PktSyncModifierSource.Request> CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(ActionType.class),
             Request::action,
@@ -46,7 +43,7 @@ public class PktSyncModifierSource extends PlayPacketHandler.ToClient<PktSyncMod
     public static final PktSyncModifierSource HANDLER = new PktSyncModifierSource();
 
     private PktSyncModifierSource() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request add(ModifierSource source) {
@@ -67,7 +64,7 @@ public class PktSyncModifierSource extends PlayPacketHandler.ToClient<PktSyncMod
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
 
@@ -91,13 +88,7 @@ public class PktSyncModifierSource extends PlayPacketHandler.ToClient<PktSyncMod
         });
     }
 
-    public static record Request(ActionType action, Optional<ModifierSource> existingSource, Optional<ModifierSource> newSource) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(ActionType action, Optional<ModifierSource> existingSource, Optional<ModifierSource> newSource) {}
 
     private enum ActionType {
 

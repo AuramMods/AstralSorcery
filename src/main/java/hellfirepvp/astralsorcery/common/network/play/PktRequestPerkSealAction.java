@@ -21,11 +21,9 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -36,7 +34,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktRequestPerkSealAction extends PlayPacketHandler.BiDirectional<PktRequestPerkSealAction.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("request_perk_seal_action");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(Action.class),
             Request::action,
@@ -48,7 +45,7 @@ public class PktRequestPerkSealAction extends PlayPacketHandler.BiDirectional<Pk
     public static final PktRequestPerkSealAction HANDLER = new PktRequestPerkSealAction();
 
     private PktRequestPerkSealAction() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request unsealPerk(ResourceLocation perkKey) {
@@ -60,7 +57,7 @@ public class PktRequestPerkSealAction extends PlayPacketHandler.BiDirectional<Pk
     }
 
     @Override
-    public void handleClient(Request payload, IPayloadContext context) {
+    public void handleClient(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             PerkTree.getInstance().getPerk(LogicalSide.CLIENT, payload.perkKey()).ifPresent(perk -> {
                 if (Minecraft.getInstance().screen instanceof TomePerkTreeScreen perkTreeScreen) {
@@ -74,7 +71,7 @@ public class PktRequestPerkSealAction extends PlayPacketHandler.BiDirectional<Pk
     }
 
     @Override
-    public void handleServer(Request payload, IPayloadContext context) {
+    public void handleServer(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
                 PerkTree.getInstance().getPerk(LogicalSide.SERVER, payload.perkKey()).ifPresent(perk -> {
@@ -106,13 +103,7 @@ public class PktRequestPerkSealAction extends PlayPacketHandler.BiDirectional<Pk
         return CODEC;
     }
 
-    public static record Request(Action action, ResourceLocation perkKey) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(Action action, ResourceLocation perkKey) {}
 
     public static enum Action {
 

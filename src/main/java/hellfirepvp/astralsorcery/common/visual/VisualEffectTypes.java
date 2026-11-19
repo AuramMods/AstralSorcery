@@ -22,7 +22,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,11 +72,11 @@ public class VisualEffectTypes {
     public interface Effect {
 
         default void sendEffect(ServerPlayer sPlayer) {
-            PacketDistributor.sendToPlayer(sPlayer, PktPlayVisualEffect.playEffect(this));
+            NetworkRegistry.sendToPlayer(sPlayer, PktPlayVisualEffect.playEffect(this));
         }
 
         default void sendToNearby(ServerLevel sLevel, Vec3i pos) {
-            PacketDistributor.sendToPlayersNear(sLevel, null, pos.getX(), pos.getY(), pos.getZ(), 64,
+            NetworkRegistry.sendToPlayersNear(sLevel, null, pos.getX(), pos.getY(), pos.getZ(), 64,
                     PktPlayVisualEffect.playEffect(this));
         }
 

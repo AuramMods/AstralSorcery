@@ -14,8 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -26,7 +24,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktSyncCustomDestroyProgress extends PlayPacketHandler.ToClient<PktSyncCustomDestroyProgress.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("sync_custom_destroy_progress");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             Request::entityId,
@@ -42,7 +39,7 @@ public class PktSyncCustomDestroyProgress extends PlayPacketHandler.ToClient<Pkt
     public static final PktSyncCustomDestroyProgress HANDLER = new PktSyncCustomDestroyProgress();
 
     private PktSyncCustomDestroyProgress() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request destroyProgress(int entityId, BlockPos originPos, BlockPos breakPos, int progress) {
@@ -59,7 +56,7 @@ public class PktSyncCustomDestroyProgress extends PlayPacketHandler.ToClient<Pkt
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (payload.progress >= 0 && payload.progress < 10) {
                 ClientBlockDestroyProgressHelper.addBreakProgress(payload.entityId, payload.originPos, payload.breakPos, payload.progress);
@@ -69,11 +66,5 @@ public class PktSyncCustomDestroyProgress extends PlayPacketHandler.ToClient<Pkt
         });
     }
 
-    public record Request(int entityId, BlockPos originPos, BlockPos breakPos, int progress) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public record Request(int entityId, BlockPos originPos, BlockPos breakPos, int progress) {}
 }

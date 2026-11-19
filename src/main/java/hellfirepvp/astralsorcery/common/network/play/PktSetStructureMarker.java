@@ -15,10 +15,8 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -29,7 +27,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktSetStructureMarker extends PlayPacketHandler.ToServer<PktSetStructureMarker.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("set_structure_marker");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.BLOCK_POS, Request::pos,
             ByteBufCodecs.RESOURCE_LOCATION, Request::markerId,
@@ -38,7 +35,7 @@ public class PktSetStructureMarker extends PlayPacketHandler.ToServer<PktSetStru
     public static final PktSetStructureMarker HANDLER = new PktSetStructureMarker();
 
     private PktSetStructureMarker() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request setMarker(BlockPos pos, ResourceLocation markerId) {
@@ -51,7 +48,7 @@ public class PktSetStructureMarker extends PlayPacketHandler.ToServer<PktSetStru
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (!(context.player() instanceof ServerPlayer sPlayer) || !sPlayer.canUseGameMasterBlocks()) {
                 return;
@@ -64,11 +61,5 @@ public class PktSetStructureMarker extends PlayPacketHandler.ToServer<PktSetStru
         });
     }
 
-    public record Request(BlockPos pos, ResourceLocation markerId) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public record Request(BlockPos pos, ResourceLocation markerId) {}
 }

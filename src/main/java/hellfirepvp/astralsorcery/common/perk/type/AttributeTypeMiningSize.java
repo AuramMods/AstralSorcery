@@ -34,7 +34,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -162,6 +162,6 @@ public class AttributeTypeMiningSize extends PerkAttributeType {
     }
 
     private static void sendToAllNearby(ServerLevel sLevel, BlockPos pos, PktSyncCustomDestroyProgress.Request pkt) {
-        PacketDistributor.sendToPlayersNear(sLevel, null, pos.getX(), pos.getY(), pos.getZ(), 32, pkt);
+        NetworkRegistry.sendToPlayersNear(sLevel, null, pos.getX(), pos.getY(), pos.getZ(), 32, pkt);
     }
 }

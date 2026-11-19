@@ -18,8 +18,6 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +32,6 @@ import java.util.stream.Collectors;
  */
 public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request> {
 
-    static final CustomPacketPayload.Type<PktSyncData.Request> TYPE = makeType("sync_data");
     static final StreamCodec<FriendlyByteBuf, PktSyncData.Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL,
             Request::syncAll,
@@ -47,7 +44,7 @@ public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request>
     public static final PktSyncData HANDLER = new PktSyncData();
 
     private PktSyncData() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request syncAll(SyncDataManager dataManager) {
@@ -68,7 +65,7 @@ public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request>
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (payload.syncAll()) {
                 payload.syncPayload().forEach(syncData -> {
@@ -82,7 +79,7 @@ public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request>
         });
     }
 
-    public static record Request(boolean syncAll, List<ClientSyncData<?>> syncPayload, List<ClientSyncDiffData<?>> syncDiffPayload) implements CustomPacketPayload {
+    public static record Request(boolean syncAll, List<ClientSyncData<?>> syncPayload, List<ClientSyncDiffData<?>> syncDiffPayload) {
 
         public static Request all(List<ClientSyncData<?>> syncPayload) {
             return new Request(true, syncPayload, List.of());
@@ -92,9 +89,5 @@ public class PktSyncData extends PlayPacketHandler.ToClient<PktSyncData.Request>
             return new Request(false, List.of(), syncDiffPayload);
         }
 
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
     }
 }

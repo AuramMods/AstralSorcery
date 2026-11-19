@@ -26,7 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class LinkSessionEffectHelper {
         if (!event.isAttack()) return;
 
         ClientLinkHelper.getActiveSession().ifPresent(session -> {
-            PacketDistributor.sendToServer(PktRequestCancelLinkSession.cancelSession());
+            NetworkRegistry.sendToServer(PktRequestCancelLinkSession.cancelSession());
         });
     }
 

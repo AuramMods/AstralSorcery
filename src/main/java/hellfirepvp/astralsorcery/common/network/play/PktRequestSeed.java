@@ -14,10 +14,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -28,7 +26,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktRequestSeed extends PlayPacketHandler.BiDirectional<PktRequestSeed.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("request_seed");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.resourceKey(Registries.DIMENSION),
             Request::dimKey,
@@ -42,7 +39,7 @@ public class PktRequestSeed extends PlayPacketHandler.BiDirectional<PktRequestSe
     public static final PktRequestSeed HANDLER = new PktRequestSeed();
 
     private PktRequestSeed() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request newRequest(ResourceKey<Level> dimKey, int session) {
@@ -55,25 +52,21 @@ public class PktRequestSeed extends PlayPacketHandler.BiDirectional<PktRequestSe
     }
 
     @Override
-    public void handleClient(Request payload, IPayloadContext context) {
+    public void handleClient(Request payload, PacketContext context) {
         context.enqueueWork(() -> LevelEffectSeedCache.updateClientSeedCache(payload.dimKey(), payload.session(), payload.seed()));
     }
 
     @Override
-    public void handleServer(Request payload, IPayloadContext context) {
+    public void handleServer(Request payload, PacketContext context) {
         context.enqueueWork(() -> context.reply(payload.response(LevelEffectSeedCache.getServerWorldSeed(payload.dimKey()))));
     }
 
-    public static record Request(ResourceKey<Level> dimKey, int session, long seed) implements CustomPacketPayload {
+    public static record Request(ResourceKey<Level> dimKey, int session, long seed) {
 
         public Request response(long seed) {
             return new Request(this.dimKey(), this.session(), seed);
         }
 
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
     }
 
 }

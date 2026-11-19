@@ -36,7 +36,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -70,7 +70,7 @@ public class InteractEventHandler {
                 event.setCancellationResult(InteractionResult.SUCCESS);
 
                 if (event.getEntity() instanceof ServerPlayer sPlayer) {
-                    PacketDistributor.sendToPlayer(sPlayer, PktOpenClientScreen.openScreen(PktOpenClientScreen.ScreenType.TOME));
+                    NetworkRegistry.sendToPlayer(sPlayer, PktOpenClientScreen.openScreen(PktOpenClientScreen.ScreenType.TOME));
                 }
             }
         });

@@ -14,8 +14,6 @@ import hellfirepvp.astralsorcery.common.research.data.ResearchNodeLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
@@ -28,14 +26,13 @@ import java.util.List;
  */
 public class PktSyncResearchNodes extends PlayPacketHandler.ToClient<PktSyncResearchNodes.Request> {
 
-    static final CustomPacketPayload.Type<PktSyncResearchNodes.Request> TYPE = makeType("sync_research_nodes");
     static final StreamCodec<FriendlyByteBuf, PktSyncResearchNodes.Request> CODEC =
             ResearchNode.SYNC_CODEC.apply(ByteBufCodecs.list()).map(Request::new, Request::nodes);
 
     public static final PktSyncResearchNodes HANDLER = new PktSyncResearchNodes();
 
     private PktSyncResearchNodes() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request newRequest() {
@@ -48,15 +45,9 @@ public class PktSyncResearchNodes extends PlayPacketHandler.ToClient<PktSyncRese
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> ResearchNodeLoader.getInstance().updateServerNodes(payload.nodes()));
     }
 
-    public static record Request(List<ResearchNode> nodes) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(List<ResearchNode> nodes) {}
 }

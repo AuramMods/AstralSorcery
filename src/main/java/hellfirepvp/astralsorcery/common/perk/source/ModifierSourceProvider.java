@@ -16,7 +16,7 @@ import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -77,14 +77,14 @@ public abstract class ModifierSourceProvider<T extends ModifierSource> {
         if (needsRemoval) {
             if (needsAddition) {
                 PerkApplicationManager.updateSource(sPlayer, LogicalSide.SERVER, existing, source);
-                PacketDistributor.sendToPlayer(sPlayer, PktSyncModifierSource.update(existing, source));
+                NetworkRegistry.sendToPlayer(sPlayer, PktSyncModifierSource.update(existing, source));
             } else {
                 PerkApplicationManager.modifySource(sPlayer, LogicalSide.SERVER, existing, PerkManager.Action.REMOVE);
-                PacketDistributor.sendToPlayer(sPlayer, PktSyncModifierSource.remove(existing));
+                NetworkRegistry.sendToPlayer(sPlayer, PktSyncModifierSource.remove(existing));
             }
         } else if (needsAddition) {
             PerkApplicationManager.modifySource(sPlayer, LogicalSide.SERVER, source, PerkManager.Action.ADD);
-            PacketDistributor.sendToPlayer(sPlayer, PktSyncModifierSource.add(source));
+            NetworkRegistry.sendToPlayer(sPlayer, PktSyncModifierSource.add(source));
         }
         this.setCachedSource(sPlayer, sourceIdentifier, source);
     }

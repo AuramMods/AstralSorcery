@@ -20,11 +20,9 @@ import hellfirepvp.astralsorcery.common.research.perk.PerkAllocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -35,7 +33,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktRequestRemovePerk extends PlayPacketHandler.BiDirectional<PktRequestRemovePerk.Request> {
 
-    static final CustomPacketPayload.Type<PktRequestRemovePerk.Request> TYPE = makeType("request_remove_perk");
     static final StreamCodec<FriendlyByteBuf, PktRequestRemovePerk.Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.RESOURCE_LOCATION,
             PktRequestRemovePerk.Request::perkKey,
@@ -45,7 +42,7 @@ public class PktRequestRemovePerk extends PlayPacketHandler.BiDirectional<PktReq
     public static final PktRequestRemovePerk HANDLER = new PktRequestRemovePerk();
 
     private PktRequestRemovePerk() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static PktRequestRemovePerk.Request remove(ResourceLocation perkKey) {
@@ -58,7 +55,7 @@ public class PktRequestRemovePerk extends PlayPacketHandler.BiDirectional<PktReq
     }
 
     @Override
-    public void handleClient(Request payload, IPayloadContext context) {
+    public void handleClient(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             PerkTree.getInstance().getPerk(LogicalSide.CLIENT, payload.perkKey()).ifPresent(perk -> {
                 if (Minecraft.getInstance().screen instanceof TomePerkTreeScreen perkTreeScreen) {
@@ -69,7 +66,7 @@ public class PktRequestRemovePerk extends PlayPacketHandler.BiDirectional<PktReq
     }
 
     @Override
-    public void handleServer(Request payload, IPayloadContext context) {
+    public void handleServer(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
                 PerkTree.getInstance().getPerk(LogicalSide.SERVER, payload.perkKey()).ifPresent(perk -> {
@@ -85,11 +82,5 @@ public class PktRequestRemovePerk extends PlayPacketHandler.BiDirectional<PktReq
         });
     }
 
-    public static record Request(ResourceLocation perkKey) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(ResourceLocation perkKey) {}
 }

@@ -26,7 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.*;
 
@@ -66,7 +66,7 @@ public class PerkManager {
         modifyAllPerks(event.getEntity(), LogicalSide.SERVER, Action.ADD);
 
         if (event.getEntity() instanceof ServerPlayer sPlayer) {
-            PacketDistributor.sendToPlayer(sPlayer, PktSyncPerkActivity.applyAll());
+            NetworkRegistry.sendToPlayer(sPlayer, PktSyncPerkActivity.applyAll());
         }
     }
 
@@ -80,7 +80,7 @@ public class PerkManager {
 
         PerkCooldownHelper.removeAllCooldowns(event.getOriginal(), LogicalSide.SERVER);
         if (event.getEntity() instanceof ServerPlayer sPlayer) {
-            PacketDistributor.sendToPlayer(sPlayer, PktSyncPerkActivity.applyAll());
+            NetworkRegistry.sendToPlayer(sPlayer, PktSyncPerkActivity.applyAll());
         }
     }
 

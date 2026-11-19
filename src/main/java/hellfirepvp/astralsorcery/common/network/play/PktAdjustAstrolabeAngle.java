@@ -16,10 +16,8 @@ import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -30,14 +28,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktAdjustAstrolabeAngle extends PlayPacketHandler.ToServer<PktAdjustAstrolabeAngle.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("adjust_astrolabe_angle");
     static final StreamCodec<FriendlyByteBuf, PktAdjustAstrolabeAngle.Request> CODEC =
             StreamCodec.composite(ByteBufCodecs.FLOAT, Request::newAngle, Request::new);
 
     public static final PktAdjustAstrolabeAngle HANDLER = new PktAdjustAstrolabeAngle();
 
     private PktAdjustAstrolabeAngle() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request adjustAngle(float newAngle) {
@@ -50,7 +47,7 @@ public class PktAdjustAstrolabeAngle extends PlayPacketHandler.ToServer<PktAdjus
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer && AstrolabeItem.isUsingAstrolabe(sPlayer)) {
                 ItemStack useStack = sPlayer.getItemInHand(sPlayer.getUsedItemHand());
@@ -62,12 +59,6 @@ public class PktAdjustAstrolabeAngle extends PlayPacketHandler.ToServer<PktAdjus
         });
     }
 
-    public static record Request(float newAngle) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(float newAngle) {}
 
 }

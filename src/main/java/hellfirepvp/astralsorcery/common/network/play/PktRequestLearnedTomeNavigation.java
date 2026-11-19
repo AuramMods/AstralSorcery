@@ -12,9 +12,7 @@ import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.research.ResearchHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -26,13 +24,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class PktRequestLearnedTomeNavigation extends PlayPacketHandler.ToServer<PktRequestLearnedTomeNavigation.Request> {
 
     static final Request INSTANCE = new Request();
-    static final CustomPacketPayload.Type<PktRequestLearnedTomeNavigation.Request> TYPE = makeType("request_learned_tome_navigation");
     static final StreamCodec<FriendlyByteBuf, PktRequestLearnedTomeNavigation.Request> CODEC = StreamCodec.unit(INSTANCE);
 
     public static final PktRequestLearnedTomeNavigation HANDLER = new PktRequestLearnedTomeNavigation();
 
     private PktRequestLearnedTomeNavigation() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request request() {
@@ -45,7 +42,7 @@ public class PktRequestLearnedTomeNavigation extends PlayPacketHandler.ToServer<
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
                 ResearchHelper.setLearnedToNavigateTome(sPlayer);
@@ -53,11 +50,5 @@ public class PktRequestLearnedTomeNavigation extends PlayPacketHandler.ToServer<
         });
     }
 
-    public static record Request() implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request() {}
 }

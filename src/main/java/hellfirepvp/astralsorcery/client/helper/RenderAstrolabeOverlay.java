@@ -69,7 +69,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -421,7 +421,7 @@ public class RenderAstrolabeOverlay {
                 drawnLines.clear();
                 drawLineStart = null;
 
-                PacketDistributor.sendToServer(PktDiscoverConstellation.discover(cst));
+                NetworkRegistry.sendToServer(PktDiscoverConstellation.discover(cst));
                 return;
             }
         }
@@ -524,7 +524,7 @@ public class RenderAstrolabeOverlay {
             AstrolabeAngleComponent cmp = player.getUseItem().getOrDefault(DataComponentsAS.ASTROLABE_ANGLE, AstrolabeAngleComponent.DEFAULT);
             float adjustedAngle = cmp.angle() + (float) event.getScrollDeltaY();
             player.getUseItem().set(DataComponentsAS.ASTROLABE_ANGLE, new AstrolabeAngleComponent(adjustedAngle, cmp.matchesAll()));
-            PacketDistributor.sendToServer(PktAdjustAstrolabeAngle.adjustAngle(adjustedAngle));
+            NetworkRegistry.sendToServer(PktAdjustAstrolabeAngle.adjustAngle(adjustedAngle));
             event.setCanceled(true);
         }
     }

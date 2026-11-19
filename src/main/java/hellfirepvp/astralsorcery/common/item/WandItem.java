@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -121,7 +121,7 @@ public class WandItem extends ItemCustom implements InterceptInteractItem.Block 
                             level.setBlock(pos.offset(offset), state.getDescriptiveState(0), Block.UPDATE_ALL);
                         });
                     } else {
-                        PacketDistributor.sendToPlayer(sPlayer, PktPlayStructurePreview.showPreview(pos, registryObject));
+                        NetworkRegistry.sendToPlayer(sPlayer, PktPlayStructurePreview.showPreview(pos, registryObject));
                     }
                 }
             }

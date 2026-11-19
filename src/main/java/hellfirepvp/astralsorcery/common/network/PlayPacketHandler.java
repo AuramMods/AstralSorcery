@@ -8,78 +8,130 @@
 
 package hellfirepvp.astralsorcery.common.network;
 
-import hellfirepvp.astralsorcery.AstralSorcery;
-import hellfirepvp.astralsorcery.common.util.NameUtil;
-import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
 
-/**
- * This class is part of the Astral Sorcery Mod
- * The complete source code for this mod can be found on GitHub.
- * Class: PlayPacketHandler
- * Created by HellFirePvP
- * Date: 07.09.2026 / 10:00
- */
-public abstract class PlayPacketHandler<T extends CustomPacketPayload> {
+import javax.annotation.Nullable;
+import java.util.Optional;
 
-    private final CustomPacketPayload.Type<T> type;
+public abstract class PlayPacketHandler<T> {
 
-    PlayPacketHandler(CustomPacketPayload.Type<T> type) {
-        this.type = type;
-    }
+    private final Class<T> packetType;
+    private final NetworkDirection direction;
 
-    public final CustomPacketPayload.Type<T> type() {
-        return this.type;
-    }
-
-    public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> makeType(String name) {
-        return new CustomPacketPayload.Type<>(NameUtil.prefixPath(AstralSorcery.key(name), "play/"));
+    PlayPacketHandler(Class<T> packetType, @Nullable NetworkDirection direction) {
+        this.packetType = packetType;
+        this.direction = direction;
     }
 
     public abstract StreamCodec<FriendlyByteBuf, T> codec();
 
-    public abstract void register(PayloadRegistrar registrar);
+    protected abstract void receive(T packet, PacketContext context);
 
-    public abstract static class ToClient<T extends CustomPacketPayload> extends PlayPacketHandler<T> implements IPayloadHandler<T> {
-
-        protected ToClient(CustomPacketPayload.Type<T> type) {
-            super(type);
-        }
-
-        public final void register(PayloadRegistrar registrar) {
-            registrar.playToClient(this.type(), this.codec(), this);
-        }
+    final void register(SimpleChannel channel, int discriminator) {
+        channel.registerMessage(discriminator, this.packetType,
+                (packet, buffer) -> this.codec().encode(buffer, packet),
+                buffer -> this.codec().decode(buffer),
+                (packet, contextSupplier) -> {
+                    NetworkEvent.Context context = contextSupplier.get();
+                    context.setPacketHandled(true);
+                    this.receive(packet, new PacketContext(channel, context));
+                }, Optional.ofNullable(this.direction));
     }
 
-    public abstract static class ToServer<T extends CustomPacketPayload> extends PlayPacketHandler<T> implements IPayloadHandler<T> {
+    public abstract static class ToClient<T> extends PlayPacketHandler<T> {
 
-        protected ToServer(CustomPacketPayload.Type<T> type) {
-            super(type);
+        protected ToClient(Class<T> packetType) {
+            super(packetType, NetworkDirection.PLAY_TO_CLIENT);
         }
 
-        public final void register(PayloadRegistrar registrar) {
-            registrar.playToServer(this.type(), this.codec(), this);
+        @Override
+        protected final void receive(T packet, PacketContext context) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.handle(packet, context));
         }
+
+        public abstract void handle(T packet, PacketContext context);
     }
 
-    public abstract static class BiDirectional<T extends CustomPacketPayload> extends PlayPacketHandler<T> {
+    public abstract static class ToServer<T> extends PlayPacketHandler<T> {
 
-        protected BiDirectional(CustomPacketPayload.Type<T> type) {
-            super(type);
+        protected ToServer(Class<T> packetType) {
+            super(packetType, NetworkDirection.PLAY_TO_SERVER);
         }
 
-        public final void register(PayloadRegistrar registrar) {
-            registrar.playBidirectional(this.type(), this.codec(), new DirectionalPayloadHandler<>(this::handleClient, this::handleServer));
+        @Override
+        protected final void receive(T packet, PacketContext context) {
+            this.handle(packet, context);
         }
 
-        public abstract void handleClient(T payload, IPayloadContext context);
-
-        public abstract void handleServer(T payload, IPayloadContext context);
+        public abstract void handle(T packet, PacketContext context);
     }
 
+    public abstract static class BiDirectional<T> extends PlayPacketHandler<T> {
+
+        protected BiDirectional(Class<T> packetType) {
+            super(packetType, null);
+        }
+
+        @Override
+        protected final void receive(T packet, PacketContext context) {
+            switch (context.forge.getDirection()) {
+                case PLAY_TO_SERVER -> this.handleServer(packet, context);
+                case PLAY_TO_CLIENT -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+                        () -> () -> this.handleClient(packet, context));
+                default -> throw new IllegalStateException("Astral Sorcery packets require a play connection");
+            }
+        }
+
+        public abstract void handleClient(T payload, PacketContext context);
+
+        public abstract void handleServer(T payload, PacketContext context);
+    }
+
+    public static final class PacketContext {
+
+        private final SimpleChannel channel;
+        private final NetworkEvent.Context forge;
+
+        private PacketContext(SimpleChannel channel, NetworkEvent.Context forge) {
+            this.channel = channel;
+            this.forge = forge;
+        }
+
+        public void enqueueWork(Runnable work) {
+            this.forge.enqueueWork(() -> {
+                if (this.forge.getNetworkManager().isConnected()) {
+                    work.run();
+                }
+            });
+        }
+
+        @Nullable
+        public Player player() {
+            if (this.forge.getDirection() == NetworkDirection.PLAY_TO_SERVER) {
+                return this.forge.getSender();
+            }
+            return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> this::clientPlayer);
+        }
+
+        @Nullable
+        private Player clientPlayer() {
+            Minecraft minecraft = Minecraft.getInstance();
+            ClientPacketListener connection = minecraft.getConnection();
+            return connection != null && connection.getConnection() == this.forge.getNetworkManager()
+                    ? minecraft.player : null;
+        }
+
+        public void reply(Object packet) {
+            this.channel.reply(packet, this.forge);
+        }
+    }
 }

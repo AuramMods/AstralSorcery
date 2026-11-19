@@ -16,7 +16,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.lighting.LightEngine;
 import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -46,7 +46,7 @@ public class SyncedAuxiliaryLightManager implements AuxiliaryLightManager {
         int oldValue = lightMgr.getLightAt(pos);
         lightMgr.setLightAt(pos, value);
         if (oldValue != value) {
-            PacketDistributor.sendToPlayersTrackingChunk(this.sLevel, new ChunkPos(pos),
+            NetworkRegistry.sendToPlayersTrackingChunk(this.sLevel, new ChunkPos(pos),
                     PktSyncAuxiliaryLightManager.updateLight(pos, value));
         }
     }

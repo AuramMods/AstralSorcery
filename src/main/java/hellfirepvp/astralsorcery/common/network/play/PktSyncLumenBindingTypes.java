@@ -16,11 +16,9 @@ import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +32,6 @@ import java.util.Map;
  */
 public class PktSyncLumenBindingTypes extends PlayPacketHandler.ToClient<PktSyncLumenBindingTypes.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("sync_lumen_binding_types");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.map(size -> new HashMap<>(),
                     ByteBufCodecs.RESOURCE_LOCATION,
@@ -50,7 +47,7 @@ public class PktSyncLumenBindingTypes extends PlayPacketHandler.ToClient<PktSync
     public static final PktSyncLumenBindingTypes HANDLER = new PktSyncLumenBindingTypes();
 
     private PktSyncLumenBindingTypes() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request newRequest() {
@@ -64,18 +61,14 @@ public class PktSyncLumenBindingTypes extends PlayPacketHandler.ToClient<PktSync
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() ->
                 LumenBindingTypeLoader.getInstance().updateClientBindings(payload.bindings(), payload.lumenApplicationMapping()));
     }
 
     public static record Request(Map<ResourceLocation, LumenBindingType> bindings,
-                                 Map<ResourceKey<Lumen>, ResourceLocation> lumenApplicationMapping) implements CustomPacketPayload {
+                                 Map<ResourceKey<Lumen>, ResourceLocation> lumenApplicationMapping) {
 
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
     }
 
 }

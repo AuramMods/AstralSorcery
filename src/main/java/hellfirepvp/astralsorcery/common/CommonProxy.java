@@ -164,7 +164,6 @@ public class CommonProxy {
         //Registry
         RegistryBootstrap.registerDeferredRegisterEvents(modEventBus);
         modEventBus.addListener(InitCapabilities::init);
-        modEventBus.addListener(NetworkRegistry::registerPackets);
         modEventBus.addListener(BaseConfiguration::reloadConfigurations);
         modEventBus.addListener(this::onBuildCreativeTabContents);
         modEventBus.addListener(this::onCommonSetup);
@@ -242,10 +241,11 @@ public class CommonProxy {
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
+        NetworkRegistry.registerPackets();
         FluidsAS.addLiquidInteractions();
         PatreonDataManager.loadPatreonEffects();
         ItemsAS.ITEM_REGISTER.getEntries().forEach(holder -> {
-            holder.asOptional().ifPresent(item -> {
+            holder.ifPresent(item -> {
                 if (item instanceof DispenseItemBehavior behavior) {
                     DispenserBlock.registerBehavior(item, behavior);
                 }

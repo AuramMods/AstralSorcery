@@ -14,8 +14,6 @@ import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.research.SyncPlayerProgress;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -26,7 +24,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktSyncPlayerProgress extends PlayPacketHandler.ToClient<PktSyncPlayerProgress.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("sync_player_progress");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             SyncPlayerProgress.SYNC_CODEC,
             Request::progress,
@@ -36,7 +33,7 @@ public class PktSyncPlayerProgress extends PlayPacketHandler.ToClient<PktSyncPla
     public static final PktSyncPlayerProgress HANDLER = new PktSyncPlayerProgress();
 
     private PktSyncPlayerProgress() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request newRequest(PlayerProgress progress) {
@@ -49,15 +46,9 @@ public class PktSyncPlayerProgress extends PlayPacketHandler.ToClient<PktSyncPla
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> ResearchManager.setClientProgress(payload.progress.load()));
     }
 
-    public static record Request(SyncPlayerProgress progress) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(SyncPlayerProgress progress) {}
 }

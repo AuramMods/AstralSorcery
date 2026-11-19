@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
@@ -85,7 +85,7 @@ public class ScreenStructureMarker extends Screen {
     public void onClose() {
         Optional.ofNullable(ResourceLocation.tryParse(this.identifierBox.getValue()))
                 .filter(markerId -> !markerId.equals(this.initialMarkerId))
-                .ifPresent(markerId -> PacketDistributor.sendToServer(PktSetStructureMarker.setMarker(this.markerPos, markerId)));
+                .ifPresent(markerId -> NetworkRegistry.sendToServer(PktSetStructureMarker.setMarker(this.markerPos, markerId)));
 
         super.onClose();
     }

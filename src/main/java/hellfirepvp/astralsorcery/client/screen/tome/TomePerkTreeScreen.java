@@ -72,7 +72,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
@@ -809,7 +809,7 @@ public class TomePerkTreeScreen extends TomeScreen {
                 if (perkData.hasPerkEffect(perk) &&
                         !perkData.isPerkSealed(perk) &&
                         PerkSealItem.consumePerkSeal(player, true)) {
-                    PacketDistributor.sendToServer(PktRequestPerkSealAction.sealPerk(perk.getKey()));
+                    NetworkRegistry.sendToServer(PktRequestPerkSealAction.sealPerk(perk.getKey()));
                     return true;
                 }
             }
@@ -823,7 +823,7 @@ public class TomePerkTreeScreen extends TomeScreen {
                 if ((perkData.hasPerkAllocation(perk, PerkAllocationType.UNLOCKED) || perkData.hasPerkAllocation(perk, PerkAllocationType.UNLOCKED_NON_CONNECT)) &&
                         !perkData.isPerkSealed(perk) &&
                         perk.mayRemovePerk(progress, player)) {
-                    PacketDistributor.sendToServer(PktRequestRemovePerk.remove(perk.getKey()));
+                    NetworkRegistry.sendToServer(PktRequestRemovePerk.remove(perk.getKey()));
                     return true;
                 }
             }
@@ -840,7 +840,7 @@ public class TomePerkTreeScreen extends TomeScreen {
                     if (!perkData.hasPerkAllocation(perk) &&
                             perk.mayUnlockPerk(progress, player) &&
                             perk.hasPlayerPerkAllowingUnlock(progress, player)) {
-                        PacketDistributor.sendToServer(PktRequestUnlockPerk.unlock(perk.getKey()));
+                        NetworkRegistry.sendToServer(PktRequestUnlockPerk.unlock(perk.getKey()));
                         this.unlockPrimed = null;
                         return true;
                     }
@@ -887,7 +887,7 @@ public class TomePerkTreeScreen extends TomeScreen {
             if (button == 1) {
                 if (perk instanceof GemSocketPerk gemSocketPerk && perkData.hasPerkEffect(perk)) {
                     if (gemSocketPerk.hasGemStack(progress)) {
-                        PacketDistributor.sendToServer(PktRequestSocketPerkItem.dropItem(gemSocketPerk));
+                        NetworkRegistry.sendToServer(PktRequestSocketPerkItem.dropItem(gemSocketPerk));
                         ClientProxy.scheduleEffectTask(10, () -> {
                             if (Minecraft.getInstance().screen == this) {
                                 this.onSearchInput();
@@ -909,7 +909,7 @@ public class TomePerkTreeScreen extends TomeScreen {
                         perk.hasPlayerPerkAllowingUnlock(progress, player)) {
                     this.unlockPrimed = perk;
                 } else if (this.sealBreakPrimed != null && this.sealBreakDClickTimeout > 0) {
-                    PacketDistributor.sendToServer(PktRequestPerkSealAction.unsealPerk(this.sealBreakPrimed.getKey()));
+                    NetworkRegistry.sendToServer(PktRequestPerkSealAction.unsealPerk(this.sealBreakPrimed.getKey()));
                 } else if (perkData.isPerkSealed(perk)) {
                     this.sealBreakPrimed = perk;
                     this.sealBreakDClickTimeout = 4;
@@ -988,7 +988,7 @@ public class TomePerkTreeScreen extends TomeScreen {
         if (!perk.canSocketItem(stack, player, ResearchManager.getClientProgress(), LogicalSide.CLIENT)) return false;
 
         this.closeSocketMenu();
-        PacketDistributor.sendToServer(PktRequestSocketPerkItem.insertItem(perk, slotId));
+        NetworkRegistry.sendToServer(PktRequestSocketPerkItem.insertItem(perk, slotId));
         PlayableSoundInstance.of(SoundEvents.GLASS_HIT, SoundSource.MASTER)
                 .forUI()
                 .volume(0.35F)

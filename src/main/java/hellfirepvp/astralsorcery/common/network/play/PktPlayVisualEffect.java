@@ -12,9 +12,7 @@ import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.util.RandomSource;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -25,14 +23,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktPlayVisualEffect extends PlayPacketHandler.ToClient<PktPlayVisualEffect.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("play_visual_effect");
     static final StreamCodec<FriendlyByteBuf, PktPlayVisualEffect.Request> CODEC =
             StreamCodec.composite(VisualEffectTypes.STREAM_CODEC, Request::effect, Request::new);
 
     public static final PktPlayVisualEffect HANDLER = new PktPlayVisualEffect();
 
     private PktPlayVisualEffect() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request playEffect(VisualEffectTypes.Effect effect) {
@@ -45,18 +42,12 @@ public class PktPlayVisualEffect extends PlayPacketHandler.ToClient<PktPlayVisua
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             payload.effect().playEffect(RandomSource.create());
         });
     }
 
-    public static record Request(VisualEffectTypes.Effect effect) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(VisualEffectTypes.Effect effect) {}
 
 }

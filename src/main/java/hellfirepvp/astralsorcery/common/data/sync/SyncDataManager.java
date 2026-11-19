@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
@@ -84,7 +84,7 @@ public class SyncDataManager {
 
     private void onServerTick(ServerTickEvent.Post event) {
         if (this.dirtyData.isEmpty()) return;
-        PacketDistributor.sendToAllPlayers(PktSyncData.syncDiff(this, this.dirtyData));
+        NetworkRegistry.sendToAllPlayers(PktSyncData.syncDiff(this, this.dirtyData));
         this.dirtyData.clear();
     }
 

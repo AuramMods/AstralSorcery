@@ -14,10 +14,8 @@ import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Optional;
 
@@ -30,7 +28,6 @@ import java.util.Optional;
  */
 public class PktUpdateLinkSession extends PlayPacketHandler.ToClient<PktUpdateLinkSession.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("update_link_session");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.fromCodec(ActiveLinkSession.CODEC)),
             Request::session,
@@ -40,7 +37,7 @@ public class PktUpdateLinkSession extends PlayPacketHandler.ToClient<PktUpdateLi
     public static final PktUpdateLinkSession HANDLER = new PktUpdateLinkSession();
 
     private PktUpdateLinkSession() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request updateSession(ActiveLinkSession session) {
@@ -57,7 +54,7 @@ public class PktUpdateLinkSession extends PlayPacketHandler.ToClient<PktUpdateLi
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> this.handleClient(payload));
     }
 
@@ -66,12 +63,6 @@ public class PktUpdateLinkSession extends PlayPacketHandler.ToClient<PktUpdateLi
         ClientLinkHelper.setActiveSession(payload.session().orElse(null));
     }
 
-    public static record Request(Optional<ActiveLinkSession> session) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public static record Request(Optional<ActiveLinkSession> session) {}
 
 }

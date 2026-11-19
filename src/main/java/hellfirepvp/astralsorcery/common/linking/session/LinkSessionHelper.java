@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -97,7 +97,7 @@ public class LinkSessionHelper {
 
         ActiveLinkSession session = new ActiveLinkSession(player.getUUID(), reference, listLinks(player.serverLevel(), linkable), referenceResolver);
         ACTIVE_SESSIONS.put(player.getUUID(), session);
-        PacketDistributor.sendToPlayer(player, PktUpdateLinkSession.updateSession(session));
+        NetworkRegistry.sendToPlayer(player, PktUpdateLinkSession.updateSession(session));
         player.sendSystemMessage(Component.translatable("message.astralsorcery.linking.start", linkable.getDisplayName(player.serverLevel())).withStyle(ChatFormatting.GREEN));
     }
 
@@ -119,7 +119,7 @@ public class LinkSessionHelper {
         if (ACTIVE_SESSIONS.get(sPlayer.getUUID()) == session) { //Only copy & update explicitly this session
             ActiveLinkSession updatedSession = session.updateLinks(listLinks(sPlayer.serverLevel(), linkable));
             ACTIVE_SESSIONS.put(sPlayer.getUUID(), updatedSession);
-            PacketDistributor.sendToPlayer(sPlayer, PktUpdateLinkSession.updateSession(updatedSession));
+            NetworkRegistry.sendToPlayer(sPlayer, PktUpdateLinkSession.updateSession(updatedSession));
         }
     }
 
@@ -130,7 +130,7 @@ public class LinkSessionHelper {
     private static void stopSession(ServerPlayer player, boolean sync) {
         ActiveLinkSession existingSession = ACTIVE_SESSIONS.remove(player.getUUID());
         if (sync && existingSession != null) {
-            PacketDistributor.sendToPlayer(player, PktUpdateLinkSession.stopSession());
+            NetworkRegistry.sendToPlayer(player, PktUpdateLinkSession.stopSession());
             player.sendSystemMessage(Component.translatable("message.astralsorcery.linking.stop").withStyle(ChatFormatting.RED));
         }
     }

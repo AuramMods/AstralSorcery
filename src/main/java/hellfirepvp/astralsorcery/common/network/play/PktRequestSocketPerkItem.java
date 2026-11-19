@@ -18,12 +18,10 @@ import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -34,7 +32,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class PktRequestSocketPerkItem extends PlayPacketHandler.ToServer<PktRequestSocketPerkItem.Request> {
 
-    static final CustomPacketPayload.Type<Request> TYPE = makeType("request_socket_perk_item");
     static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(Action.class),
             Request::action,
@@ -48,7 +45,7 @@ public class PktRequestSocketPerkItem extends PlayPacketHandler.ToServer<PktRequ
     public static final PktRequestSocketPerkItem HANDLER = new PktRequestSocketPerkItem();
 
     private PktRequestSocketPerkItem() {
-        super(TYPE);
+        super(Request.class);
     }
 
     public static Request insertItem(GemSocketPerk perk, int playerSlotId) {
@@ -65,7 +62,7 @@ public class PktRequestSocketPerkItem extends PlayPacketHandler.ToServer<PktRequ
     }
 
     @Override
-    public void handle(Request payload, IPayloadContext context) {
+    public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
                 PerkTree.getInstance().getPerk(LogicalSide.SERVER, payload.perkKey()).ifPresent(perk -> {
@@ -96,13 +93,7 @@ public class PktRequestSocketPerkItem extends PlayPacketHandler.ToServer<PktRequ
         });
     }
 
-    public record Request(Action action, ResourceLocation perkKey, int inventorySlot) implements CustomPacketPayload {
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
+    public record Request(Action action, ResourceLocation perkKey, int inventorySlot) {}
 
     public enum Action {
 

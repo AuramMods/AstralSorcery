@@ -30,7 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -243,7 +243,7 @@ public class ResearchHelper {
 
         PlayerProgress newProgress = ResearchManager.getProgress(player, LogicalSide.SERVER);
 
-        PacketDistributor.sendToPlayer(player, PktSyncPlayerProgress.newRequest(newProgress));
+        NetworkRegistry.sendToPlayer(player, PktSyncPlayerProgress.newRequest(newProgress));
         ResearchManager.scheduleSave(player, true);
         return true;
     }
@@ -254,7 +254,7 @@ public class ResearchHelper {
 
         if (!fn.test(progress)) return false;
 
-        PacketDistributor.sendToPlayer(player, PktSyncPlayerProgress.newRequest(progress));
+        NetworkRegistry.sendToPlayer(player, PktSyncPlayerProgress.newRequest(progress));
         ResearchManager.scheduleSave(player, false);
         return true;
     }
@@ -316,7 +316,7 @@ public class ResearchHelper {
             if (!perkData.canSealPerk(perk)) return false;
 
             PerkApplicationManager.modifySource(player, LogicalSide.SERVER, perk, PerkManager.Action.REMOVE);
-            PacketDistributor.sendToPlayer(player, PktSyncModifierSource.remove(perk));
+            NetworkRegistry.sendToPlayer(player, PktSyncModifierSource.remove(perk));
 
             if (!perkData.sealPerk(perk)) {
                 // We probably have bigger problems here
@@ -341,7 +341,7 @@ public class ResearchHelper {
         // that that perk actually is unsealed and has modifiers again.
         // Yea i know it's not great, but is what it is...
         if (success) {
-            PacketDistributor.sendToPlayer(player, PktSyncModifierSource.add(perk));
+            NetworkRegistry.sendToPlayer(player, PktSyncModifierSource.add(perk));
         }
         return success;
     }
@@ -355,7 +355,7 @@ public class ResearchHelper {
             perkData.updateAllocatedPerkData(perk, newData);
             PerkApplicationManager.modifySource(player, LogicalSide.SERVER, perk, PerkManager.Action.ADD);
 
-            PacketDistributor.sendToPlayer(player, PktSyncPerkActivity.changeData(perk, oldData, newData));
+            NetworkRegistry.sendToPlayer(player, PktSyncPerkActivity.changeData(perk, oldData, newData));
             return true;
         });
     }
@@ -377,7 +377,7 @@ public class ResearchHelper {
                 syncRemovable.add(perk);
             }
         }
-        PacketDistributor.sendToPlayer(player, PktSyncPerkActivity.removePerks(syncRemovable));
+        NetworkRegistry.sendToPlayer(player, PktSyncPerkActivity.removePerks(syncRemovable));
     }
 
     private static boolean doRemovePerk(PlayerProgress progress, ServerPlayer player, AbstractPerk<?> perk, PerkAllocation allocation, boolean sync) {
@@ -398,7 +398,7 @@ public class ResearchHelper {
                 PerkRemovalResult actualResult = perkData.removePerkAllocation(perk, allocation, false);
                 if (actualResult.removesPerk()) {
                     if (sync) {
-                        PacketDistributor.sendToPlayer(player, PktSyncModifierSource.remove(perk));
+                        NetworkRegistry.sendToPlayer(player, PktSyncModifierSource.remove(perk));
                     }
                 }
                 return true;
@@ -424,7 +424,7 @@ public class ResearchHelper {
             perkData.updateAllocatedPerkData(perk, MiscUtil.cast(newData));
 
             PerkApplicationManager.modifySource(player, LogicalSide.SERVER, perk, PerkManager.Action.ADD);
-            PacketDistributor.sendToPlayer(player, PktSyncModifierSource.add(perk));
+            NetworkRegistry.sendToPlayer(player, PktSyncModifierSource.add(perk));
             return true;
         }
     }

@@ -52,7 +52,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 import org.joml.Matrix4f;
 
 import java.util.*;
@@ -133,7 +133,7 @@ public class TomeResearchClusterRenderer {
             if (nodeBox.contains(mouseX, mouseY)) {
                 ResearchNode node = this.renderedNodes.get(nodeBox);
                 Minecraft.getInstance().setScreen(TomePagesScreen.fromProgressNode(screen, node));
-                PacketDistributor.sendToServer(PktRequestLearnedTomeNavigation.request());
+                NetworkRegistry.sendToServer(PktRequestLearnedTomeNavigation.request());
                 return true;
             }
         }

@@ -31,7 +31,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.List;
 
@@ -146,7 +146,7 @@ public class CelestialStrikeEffect extends VectorPosEffect {
 
     @Override
     public void sendToNearby(ServerLevel sLevel, Vec3i pos) {
-        PacketDistributor.sendToPlayersNear(sLevel, null, pos.getX(), pos.getY(), pos.getZ(), 96,
+        NetworkRegistry.sendToPlayersNear(sLevel, null, pos.getX(), pos.getY(), pos.getZ(), 96,
                 PktPlayVisualEffect.playEffect(this));
     }
 }

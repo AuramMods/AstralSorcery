@@ -16,7 +16,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.PacketDistributor;
+import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class LevelEffectSeedCache {
                 lastServerQuery = current;
                 activeSession++;
 
-                PacketDistributor.sendToServer(PktRequestSeed.newRequest(dim, activeSession));
+                NetworkRegistry.sendToServer(PktRequestSeed.newRequest(dim, activeSession));
             }
             return Optional.empty();
         }
