@@ -35,15 +35,16 @@ public class LumenDataProvider implements IBlockComponentProvider, IServerDataPr
                 int capacity = tag.getInt("capacity");
                 if (capacity <= 0) continue;
 
-                LumenStack.CODEC.parse(NbtOps.INSTANCE, tag).result().ifPresent(stack -> {
-                    int amount = stack.getAmount();
-                    var lumen = stack.getLumen();
-                    int color = lumen.getColor(ClientProxy.getClientTick()).getColor();
-                    var style = helper.progressStyle().color(color);
-                    var text = lumen.getHoverName().plainCopy().append(": " + amount + " / " + capacity).withStyle(ChatFormatting.WHITE);
+                LumenStack stack = LumenStack.CODEC.parse(NbtOps.INSTANCE, tag).result().orElse(LumenStack.EMPTY);
+                if (stack.isEmpty()) continue;
 
-                    tooltip.add(helper.progress((float) amount / capacity, text, style, BoxStyle.DEFAULT, true));
-                });
+                int amount = stack.getAmount();
+                var lumen = stack.getLumen();
+                int color = lumen.getColor(ClientProxy.getClientTick()).getColor();
+                var style = helper.progressStyle().color(color);
+                var text = lumen.getHoverName().plainCopy().append(": " + amount + " / " + capacity).withStyle(ChatFormatting.WHITE);
+
+                tooltip.add(helper.progress((float) amount / capacity, text, style, BoxStyle.DEFAULT, true));
             }
         }
     }
