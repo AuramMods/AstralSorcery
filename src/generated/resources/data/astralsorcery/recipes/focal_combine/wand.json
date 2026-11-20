@@ -1,0 +1,28 @@
+{
+  "type": "astralsorcery:focal_combine",
+  "color": -14500865,
+  "duration": 400,
+  "inputs": [
+    {
+      "item": "astralsorcery:marble_raw"
+    },
+    {
+      "item": "astralsorcery:marble_raw"
+    },
+    {
+      "tag": "forge:gems/aquamarine"
+    },
+    {
+      "tag": "forge:gems/aquamarine"
+    },
+    {
+      "tag": "forge:ender_pearls"
+    }
+  ],
+  "outputs": [
+    {
+      "Count": 1,
+      "id": "astralsorcery:wand"
+    }
+  ]
+}

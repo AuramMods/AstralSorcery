@@ -1,0 +1,15 @@
+{
+  "type": "astralsorcery:infusion",
+  "accept_chalice_input": true,
+  "consume_multiple_fluids": false,
+  "duration": 200,
+  "fluid_consumption_chance": 0.03,
+  "fluid_input": "astralsorcery:liquid_starlight",
+  "item_input": {
+    "tag": "forge:gems/aquamarine"
+  },
+  "output": {
+    "Count": 1,
+    "id": "astralsorcery:resonating_gem"
+  }
+}
