@@ -47,7 +47,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.event.EventHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.joml.Vector3f;
 
 /**
@@ -98,10 +98,10 @@ public class EntityShootingStar extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(SHOOT_VEC, new Vector3f());
-        builder.define(SEED, 0L);
-        builder.define(LAST_UPDATE, 0L);
+    protected void defineSynchedData() {
+        this.entityData.define(SHOOT_VEC, new Vector3f());
+        this.entityData.define(SEED, 0L);
+        this.entityData.define(LAST_UPDATE, 0L);
     }
 
     protected Vector3 getAdjustedMovement() {
@@ -117,6 +117,7 @@ public class EntityShootingStar extends ThrowableProjectile {
     @Override
     public void tick() {
         super.tick();
+        if (this.isRemoved()) return;
 
         Level level = this.level();
         long lastUpdate = this.entityData.get(LAST_UPDATE);
@@ -135,8 +136,9 @@ public class EntityShootingStar extends ThrowableProjectile {
                     hit = hit.above();
                 }
                 HitResult result = new BlockHitResult(new Vec3(this.getX(), hit.getY() + 0.1F, this.getZ()), Direction.UP, hit, false);
-                if (!EventHooks.onProjectileImpact(this, result)) {
+                if (!ForgeEventFactory.onProjectileImpact(this, result)) {
                     this.onHit(result);
+                    return;
                 }
             }
         }
@@ -166,7 +168,7 @@ public class EntityShootingStar extends ThrowableProjectile {
         FXRenderOffsetFunction<?> offsetFn = (fx, renderPosition, pTicks) -> {
             Entity view = Minecraft.getInstance().cameraEntity;
             if (view == null) return renderPosition;
-            float eyeHeight = view.getDimensions(Pose.STANDING).eyeHeight();
+            float eyeHeight = view.getEyeHeight(Pose.STANDING);
             Vector3 viewPos = new Vector3(view).addY(eyeHeight);
 
             Vector3 toView = renderPosition.copy().subtract(viewPos);
@@ -178,7 +180,7 @@ public class EntityShootingStar extends ThrowableProjectile {
         FXScaleFunction<?> scaleFn = FXScaleFunction.SHRINK.andThen((fx, scale, pTicks) -> {
             Entity view = Minecraft.getInstance().cameraEntity;
             if (view == null) return scale;
-            float eyeHeight = view.getDimensions(Pose.STANDING).eyeHeight();
+            float eyeHeight = view.getEyeHeight(Pose.STANDING);
             Vector3 viewPos = new Vector3(view).addY(eyeHeight);
 
             Vector3 toView = fx.getPos().subtract(viewPos);
@@ -270,6 +272,7 @@ public class EntityShootingStar extends ThrowableProjectile {
 
     protected void impact(Vec3 vec) {
         if (this.pendingRemoval) return;
+        this.pendingRemoval = true;
         this.discard();
 
         Level level = this.level();
@@ -301,7 +304,7 @@ public class EntityShootingStar extends ThrowableProjectile {
     }
 
     @Override
-    protected double getDefaultGravity() {
+    protected float getGravity() {
         return 0;
     }
 }
