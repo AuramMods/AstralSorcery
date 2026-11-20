@@ -9,11 +9,14 @@
 package hellfirepvp.astralsorcery.common.lib;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -34,10 +37,16 @@ public final class AttributesAS {
     public static void register(IEventBus bus) {
         REGISTER.register(bus);
         bus.addListener(AttributesAS::addPlayerAttributes);
+        bus.addListener(AttributesAS::registerJumpFallModifier);
     }
 
     private static void addPlayerAttributes(EntityAttributeModificationEvent event) {
         REGISTER.getEntries().forEach(attribute -> event.add(EntityType.PLAYER, attribute.get()));
+    }
+
+    private static void registerJumpFallModifier(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> MobEffects.JUMP.addAttributeModifier(SAFE_FALL_DISTANCE.get(),
+                "303d9fe2-98e6-3008-ac90-94639f4cc759", 1, AttributeModifier.Operation.ADDITION));
     }
 
     private static RegistryObject<Attribute> register(String id, String description, double base, double min, double max) {

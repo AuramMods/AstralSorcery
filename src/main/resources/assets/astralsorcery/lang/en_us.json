@@ -1,4 +1,9 @@
 {
+    "attribute.name.generic.fall_damage_multiplier": "Fall Damage Multiplier",
+    "attribute.name.generic.safe_fall_distance": "Safe Fall Distance",
+    "attribute.name.generic.scale": "Scale",
+    "attribute.name.generic.step_height": "Step Height",
+    "attribute.name.player.block_break_speed": "Block Break Speed",
     "itemGroup.astralsorcery": "Astral Sorcery",
     "itemGroup.astralsorcery.papers": "Astral Sorcery - Constellation Papers",
     "itemGroup.astralsorcery.lumen": "Astral Sorcery - Lumen",

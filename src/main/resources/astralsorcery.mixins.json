@@ -15,6 +15,7 @@
         "MixinLevelChunk",
         "MixinLivingEntity",
         "MixinPlayer",
+        "MixinPlayerMiningSpeed",
         "MixinProjectile",
         "MixinServerGamePacketListenerImpl",
         "MixinServerLevel"
