@@ -14,6 +14,13 @@ java {
     withSourcesJar()
 }
 
+sourceSets {
+    gameTest {
+        compileClasspath += main.output + main.compileClasspath
+        runtimeClasspath += main.output + main.runtimeClasspath
+    }
+}
+
 def gameDir = { String profile -> layout.projectDirectory.dir("run/${profile}").asFile }
 def integrationMods = providers.gradleProperty('integrationMods').map { it.toBoolean() }.orElse(false)
 
@@ -42,7 +49,14 @@ minecraft {
         server {
             args '--nogui'
         }
-        gameTestServer {}
+        gameTestServer {
+            property 'java.awt.headless', 'true'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.gameTest
+                }
+            }
+        }
         data {
             args '--mod', mod_id, '--all',
                     '--output', file('src/generated/resources/').absolutePath,
