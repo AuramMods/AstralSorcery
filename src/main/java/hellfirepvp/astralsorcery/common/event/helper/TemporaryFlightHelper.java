@@ -8,17 +8,14 @@
 
 package hellfirepvp.astralsorcery.common.event.helper;
 
-import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.util.tick.TimeoutList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-
-import java.util.UUID;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -29,22 +26,56 @@ import java.util.UUID;
  */
 public class TemporaryFlightHelper {
 
-    private static final ResourceLocation MODIFIER_ID = AstralSorcery.key("temporary_flight");
-    private static final AttributeModifier MODIFIER = new AttributeModifier(MODIFIER_ID, 1, AttributeModifier.Operation.ADD_VALUE);
-    private static final TimeoutList<Player> temporaryFlight = new TimeoutList<>(player -> {
-        AttributeInstance attr = player.getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
-        if (attr != null) attr.removeModifier(MODIFIER_ID);
-    });
+    private static final TimeoutList<ServerPlayer> temporaryFlight = new TimeoutList<>(TemporaryFlightHelper::releaseFlight);
 
     private TemporaryFlightHelper() {}
 
     public static void attachListeners(IEventBus bus) {
         bus.addListener(temporaryFlight::onServerTick);
         bus.addListener(TemporaryFlightHelper::onDisconnect);
+        bus.addListener(TemporaryFlightHelper::onClone);
+        bus.addListener(TemporaryFlightHelper::onServerStopped);
     }
 
     private static void onDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
-        temporaryFlight.remove(event.getEntity());
+        removePlayer(event.getEntity());
+    }
+
+    private static void onClone(PlayerEvent.Clone event) {
+        removePlayer(event.getOriginal());
+    }
+
+    private static void onServerStopped(ServerStoppedEvent event) {
+        temporaryFlight.clear();
+    }
+
+    private static void removePlayer(Player player) {
+        if (player instanceof ServerPlayer serverPlayer && temporaryFlight.remove(serverPlayer)) {
+            releaseFlight(serverPlayer);
+        }
+    }
+
+    private static void releaseFlight(ServerPlayer player) {
+        if (player.isCreative() || player.isSpectator()) return;
+
+        Abilities abilities = player.getAbilities();
+        abilities.mayfly = false;
+        abilities.flying = false;
+        updateAbilities(player);
+    }
+
+    private static void updateAbilities(ServerPlayer player) {
+        if (player.connection != null && player.connection.isAcceptingMessages()) {
+            player.onUpdateAbilities();
+        }
+    }
+
+    public static void removeTemporaryFlightFromSave(ServerPlayer player, CompoundTag playerTag) {
+        if (temporaryFlight.contains(player) && !player.isCreative() && !player.isSpectator()) {
+            CompoundTag abilities = playerTag.getCompound("abilities");
+            abilities.putBoolean("mayfly", false);
+            abilities.putBoolean("flying", false);
+        }
     }
 
     public static boolean allowFlight(Player player) {
@@ -52,13 +83,20 @@ public class TemporaryFlightHelper {
     }
 
     public static boolean allowFlight(Player player, int timeout) {
-        if (temporaryFlight.setOrAddTimeout(timeout, player)) {
-            AttributeInstance attr = player.getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
-            if (attr != null && !attr.hasModifier(MODIFIER_ID)) {
-                attr.addTransientModifier(MODIFIER);
-            }
-            return true;
+        if (!(player instanceof ServerPlayer serverPlayer) || player.isCreative() || player.isSpectator()) {
+            return false;
         }
-        return false;
+
+        Abilities abilities = player.getAbilities();
+        if (abilities.mayfly && !temporaryFlight.contains(serverPlayer)) {
+            return false;
+        }
+
+        temporaryFlight.setOrAddTimeout(timeout, serverPlayer);
+        if (!abilities.mayfly) {
+            abilities.mayfly = true;
+            updateAbilities(serverPlayer);
+        }
+        return true;
     }
 }
