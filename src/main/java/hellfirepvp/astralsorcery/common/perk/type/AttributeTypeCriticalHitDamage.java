@@ -43,7 +43,7 @@ public class AttributeTypeCriticalHitDamage extends PerkAttributeType {
     }
 
     private void onCritHit(CriticalHitEvent event) {
-        if (!event.isCriticalHit()) return;
+        if (!AttributeTypeCriticalHitChance.isCritical(event)) return;
 
         Player attacker = event.getEntity();
         LogicalSide side = SidedHelper.getSide(attacker);
@@ -56,7 +56,7 @@ public class AttributeTypeCriticalHitDamage extends PerkAttributeType {
                 .getModifier(attacker, progress, this);
         critDmg = AttributeEvent.postProcessModded(attacker, this, critDmg);
         if (critDmg >= 0) {
-            event.setDamageMultiplier(event.getDamageMultiplier() * critDmg);
+            event.setDamageModifier(event.getDamageModifier() * critDmg);
         }
     }
 

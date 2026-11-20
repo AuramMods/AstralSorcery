@@ -9,7 +9,6 @@
 package hellfirepvp.astralsorcery.common.perk.type;
 
 import hellfirepvp.astralsorcery.common.event.AttributeEvent;
-import hellfirepvp.astralsorcery.common.lib.PerksAS;
 import hellfirepvp.astralsorcery.common.perk.PerkManager;
 import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
@@ -17,6 +16,7 @@ import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
@@ -48,7 +48,7 @@ public class AttributeTypeCriticalHitChance extends PerkAttributeType {
     }
 
     private void onCritHit(CriticalHitEvent event) {
-        if (event.isCriticalHit()) return;
+        if (isCritical(event)) return;
 
         Player attacker = event.getEntity();
         LogicalSide side = SidedHelper.getSide(attacker);
@@ -61,8 +61,13 @@ public class AttributeTypeCriticalHitChance extends PerkAttributeType {
                 .modifyValue(attacker, progress, this, 0);
         critChance = AttributeEvent.postProcessModded(attacker, this, critChance);
         if (critChance >= this.rand.nextFloat()) {
-            event.setCriticalHit(true);
+            event.setResult(Event.Result.ALLOW);
         }
+    }
+
+    static boolean isCritical(CriticalHitEvent event) {
+        Event.Result result = event.getResult();
+        return result == Event.Result.ALLOW || (result == Event.Result.DEFAULT && event.isVanillaCritical());
     }
 
     private void onArrowSpawn(EntityJoinLevelEvent event) {
