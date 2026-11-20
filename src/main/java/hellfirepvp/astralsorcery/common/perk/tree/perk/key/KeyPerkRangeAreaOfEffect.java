@@ -26,9 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -68,7 +66,7 @@ public class KeyPerkRangeAreaOfEffect extends KeyPerk {
 
     private void onDamage(DamageResolutionEvent.BeforeAbsorption event) {
         DamageSource source = event.getSource();
-        if (source.isDirect()) return;
+        if (source.getDirectEntity() == source.getEntity()) return;
         LivingEntity target = event.getEntity();
 
         if (!(source.getEntity() instanceof ServerPlayer sPlayer)) return;
@@ -88,10 +86,9 @@ public class KeyPerkRangeAreaOfEffect extends KeyPerk {
                 if (sPlayer.isAlliedTo(livingTarget)) return;
                 if (livingTarget.isInvulnerable()) return;
 
-                double dmg = 1F + sPlayer.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO) * event.getAmount();
-                dmg = EnchantmentHelper.modifyDamage(sLevel, attackStack, livingTarget, source, (float) dmg);
-
-                livingTarget.hurt(source, (float) dmg);
+                float damage = 1F + EnchantmentHelper.getSweepingDamageRatio(sPlayer) * event.getAmount();
+                damage += EnchantmentHelper.getDamageBonus(attackStack, livingTarget.getMobType());
+                livingTarget.hurt(source, damage);
             });
         });
     }

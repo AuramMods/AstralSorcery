@@ -158,7 +158,7 @@ public class TimeStopZone {
             BlockState state = sLevel.getBlockState(pos);
             if (state.getBlock() instanceof EntityBlock entityBlock && state.hasBlockEntity()) {
                 BlockEntity be = entityBlock.newBlockEntity(pos, state);
-                if (be != null && be.isValidBlockState(state)) {
+                if (be != null && be.getType().isValid(state)) {
                     BlockEntityTicker<?> ticker = state.getTicker(sLevel, be.getType());
                     if (ticker != null) {
                         sLevel.addBlockEntityTicker(tile);

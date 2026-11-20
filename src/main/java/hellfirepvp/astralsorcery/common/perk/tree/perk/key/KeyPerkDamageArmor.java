@@ -89,9 +89,7 @@ public class KeyPerkDamageArmor extends KeyPerk {
             if (!slot.isArmor()) continue;
             ItemStack stack = target.getItemBySlot(slot);
             if (stack.isEmpty()) continue;
-            stack.hurtAndBreak(armorDmg, sPlayer.serverLevel(), sPlayer, item -> {
-                target.onEquippedItemBroken(item, slot);
-            });
+            stack.hurtAndBreak(armorDmg, sPlayer, attacker -> target.broadcastBreakEvent(slot));
         }
     }
 

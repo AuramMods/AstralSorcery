@@ -11,10 +11,14 @@ package hellfirepvp.astralsorcery.mixin;
 import hellfirepvp.astralsorcery.common.event.helper.TemporaryFlightHelper;
 import hellfirepvp.astralsorcery.common.item.AstrolabeItem;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
+import hellfirepvp.astralsorcery.common.util.SpinAttackWeapon;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TridentItem;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,7 +32,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Date: 07.09.2026 / 10:00
  */
 @Mixin(Player.class)
-public class MixinPlayer {
+public class MixinPlayer implements SpinAttackWeapon {
+
+    @Unique
+    private ItemStack astralsorcery$spinAttackWeapon = ItemStack.EMPTY;
+
+    @Inject(method = "startAutoSpinAttack", at = @At("HEAD"))
+    private void rememberSpinAttackWeapon(int duration, CallbackInfo ci) {
+        ItemStack usedItem = ((Player) (Object) this).getUseItem();
+        this.astralsorcery$spinAttackWeapon = usedItem.getItem() instanceof TridentItem ? usedItem : ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack astralsorcery$getSpinAttackWeapon() {
+        return ((Player) (Object) this).isAutoSpinAttack() ? this.astralsorcery$spinAttackWeapon : ItemStack.EMPTY;
+    }
 
     @Inject(method = "isScoping", at = @At("HEAD"), cancellable = true)
     public void isSextantScoping(CallbackInfoReturnable<Boolean> cir) {

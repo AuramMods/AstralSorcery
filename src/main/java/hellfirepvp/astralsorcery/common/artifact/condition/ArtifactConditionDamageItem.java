@@ -13,6 +13,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactCondition;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
+import hellfirepvp.astralsorcery.common.util.SpinAttackWeapon;
 import hellfirepvp.astralsorcery.common.lib.types.ArtifactConditionTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.network.FriendlyByteBuf;
@@ -25,6 +26,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
@@ -90,10 +92,14 @@ public class ArtifactConditionDamageItem extends ArtifactCondition implements On
 
     @Override
     public boolean isFulfilled(ItemEntityArtifact artifact, RandomSource rand, DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof LivingEntity livingEntity) {
-            for (Ingredient ingredient : this.getItems()) {
-                if (ingredient.test(livingEntity.getWeaponItem())) return true;
-            }
+        if (!(source.getDirectEntity() instanceof LivingEntity attacker)) return false;
+
+        ItemStack weapon = attacker instanceof SpinAttackWeapon spinning
+                ? spinning.astralsorcery$getSpinAttackWeapon()
+                : ItemStack.EMPTY;
+        if (weapon.isEmpty()) weapon = attacker.getMainHandItem();
+        for (Ingredient ingredient : this.getItems()) {
+            if (ingredient.test(weapon)) return true;
         }
         return false;
     }
