@@ -159,6 +159,7 @@ tasks.matching { it.name == 'runServer' }.configureEach {
 }
 
 tasks.named('processResources', ProcessResources).configure {
+    from('LICENSE')
     def metadataKeys = [
             'minecraft_version_range', 'forge_version_range', 'loader_version_range', 'mod_id',
             'mod_name', 'mod_license', 'mod_authors', 'mod_description',
