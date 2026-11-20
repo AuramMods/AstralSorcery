@@ -34,8 +34,8 @@ public final class RegistryEntryListValue<T> {
         this.cfg = cfg;
     }
 
-    public static <T> RegistryEntryListValue<T> defineConfig(ForgeConfigSpec.Builder builder, ResourceKey<Registry<T>> registryKey, String path, List<ResourceLocation> defaultList, ResourceLocation defaultNewElement) {
-        ForgeConfigSpec.ConfigValue<List<? extends String>> cfg = builder.defineListAllowEmpty(path, defaultList.stream().map(ResourceLocation::toString).toList(), defaultNewElement::toString, obj -> {
+    public static <T> RegistryEntryListValue<T> defineConfig(ForgeConfigSpec.Builder builder, ResourceKey<Registry<T>> registryKey, String path, List<ResourceLocation> defaultList) {
+        ForgeConfigSpec.ConfigValue<List<? extends String>> cfg = builder.defineListAllowEmpty(path, defaultList.stream().map(ResourceLocation::toString).toList(), obj -> {
             if (!(obj instanceof String str)) return false;
             ResourceLocation resKey = ResourceLocation.tryParse(str);
             return resKey != null;

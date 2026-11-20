@@ -47,10 +47,10 @@ public class RenderingConfig extends ConfigEntry {
         this.skyRenderDimensions = cfgBuilder
                 .comment("Dimensions in which to do Astral Sorcery's sky render. Only applies to dimensions with a normal sky type.")
                 .translation(translationKey("skyRenderDimensions"))
-                .defineListAllowEmpty("skyRenderDimensions", List.of("minecraft:overworld"), () -> "minecraft:overworld", s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
+                .defineListAllowEmpty("skyRenderDimensions", List.of("minecraft:overworld"), s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
         this.constellationOverlaySkyDimensions = cfgBuilder
                 .comment("Dimensions in which to only render constellations on top of its sky render. Ignored for dimensions listed in skyRenderDimensions. Be aware that this also prevents the Solar and Lunar Eclipses from being shown/rendered in the sky")
                 .translation(translationKey("constellationOverlaySkyDimensions"))
-                .defineListAllowEmpty("constellationOverlaySkyDimensions", List.of(), () -> "minecraft:overworld", s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
+                .defineListAllowEmpty("constellationOverlaySkyDimensions", List.of(), s -> s instanceof String str && ResourceLocation.tryParse(str) != null);
     }
 }

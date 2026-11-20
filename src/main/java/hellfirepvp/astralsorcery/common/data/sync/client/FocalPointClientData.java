@@ -78,7 +78,11 @@ public class FocalPointClientData extends ClientData {
         double chunkDistance = Mth.square((distance + 16) / 16);
         ChunkPos chunkComparison = pos.toChunkPos();
         return MapStream.of(this.focalPoints.getOrDefault(level.dimension(), Collections.emptyMap()))
-                .filterKey(chPos -> chPos.distanceSquared(chunkComparison) <= chunkDistance)
+                .filterKey(chPos -> {
+                    double deltaX = (double) chPos.x - chunkComparison.x;
+                    double deltaZ = (double) chPos.z - chunkComparison.z;
+                    return deltaX * deltaX + deltaZ * deltaZ <= chunkDistance;
+                })
                 .valueStream()
                 .flatMap(Collection::stream)
                 .toList();
