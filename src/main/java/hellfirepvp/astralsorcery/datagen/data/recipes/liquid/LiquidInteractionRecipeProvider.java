@@ -12,11 +12,12 @@ import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.recipe.builder.LiquidInteractionRecipeBuilder;
 import hellfirepvp.astralsorcery.common.recipe.liquid.interaction.result.LiquidInteractionResultDropItem;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -32,7 +33,7 @@ public class LiquidInteractionRecipeProvider {
 
     private LiquidInteractionRecipeProvider() {}
 
-    public static void registerRecipes(RecipeOutput recipeOutput) {
+    public static void registerRecipes(Consumer<FinishedRecipe> recipeOutput) {
         SizedFluidIngredient water = SizedFluidIngredient.of(Fluids.WATER, DEFAULT_AMOUNT);
         SizedFluidIngredient lava = SizedFluidIngredient.of(Fluids.LAVA, DEFAULT_AMOUNT);
         SizedFluidIngredient waterBucket = SizedFluidIngredient.of(Fluids.WATER, OBSIDIAN_AMOUNT);

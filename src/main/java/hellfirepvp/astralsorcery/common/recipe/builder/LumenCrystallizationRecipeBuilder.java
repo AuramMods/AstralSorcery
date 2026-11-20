@@ -12,13 +12,11 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenCrystallizationRecipe;
+import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -27,6 +25,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -38,7 +37,7 @@ import java.util.Map;
 public class LumenCrystallizationRecipeBuilder implements RecipeBuilder {
 
     private String group = "";
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
 
     private final Ingredient input;
     private final Lumen lumen;
@@ -75,7 +74,7 @@ public class LumenCrystallizationRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public LumenCrystallizationRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public LumenCrystallizationRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         this.criteria.put(name, criterion);
         return this;
     }
@@ -92,18 +91,16 @@ public class LumenCrystallizationRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput) {
+    public void save(Consumer<FinishedRecipe> recipeOutput) {
         ResourceLocation id = RegistriesAS.REGISTRY_LUMEN.get().getKey(this.lumen);
         this.save(recipeOutput, id.withSuffix(this.recipeIdSuffix));
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
         id = AstralSorcery.key(id.getPath());
-        Advancement.Builder advancementBuilder = recipeOutput.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
+        ResourceLocation recipeId = id.withPrefix("lumen_crystallization/");
+        Advancement.Builder advancementBuilder = AstralFinishedRecipe.advancement(recipeId);
         this.criteria.forEach(advancementBuilder::addCriterion);
 
         LumenCrystallizationRecipe recipe = new LumenCrystallizationRecipe(
@@ -113,6 +110,7 @@ public class LumenCrystallizationRecipeBuilder implements RecipeBuilder {
                 this.lumenConsumedPerOperation
         );
         recipe.setGroup(this.group);
-        recipeOutput.accept(id.withPrefix("lumen_crystallization/"), recipe, advancementBuilder.build(id.withPrefix("recipes/")));
+        recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, LumenCrystallizationRecipe.CODEC,
+                id.withPrefix("recipes/"), advancementBuilder));
     }
 }

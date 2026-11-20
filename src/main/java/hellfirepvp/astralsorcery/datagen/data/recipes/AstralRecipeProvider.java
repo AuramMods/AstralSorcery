@@ -20,10 +20,11 @@ import hellfirepvp.astralsorcery.datagen.data.recipes.lumen.LumenCrystallization
 import hellfirepvp.astralsorcery.datagen.data.recipes.lumen.LumenGenerationRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -34,13 +35,17 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AstralRecipeProvider extends RecipeProvider {
 
+    private final CompletableFuture<HolderLookup.Provider> registries;
+
     public AstralRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+        super(output);
+        this.registries = registries;
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider provider) {
-        recipeOutput = new GeneratedRecipeBuffer.BufferedRecipeOutput(recipeOutput, provider);
+    protected void buildRecipes(Consumer<FinishedRecipe> recipeOutput) {
+        HolderLookup.Provider provider = this.registries.join();
+        recipeOutput = new GeneratedRecipeBuffer.BufferedRecipeOutput(recipeOutput);
 
         AltarRecipeProvider.registerRecipes(recipeOutput, provider);
         FocalCombineRecipeProvider.registerRecipes(recipeOutput);

@@ -11,14 +11,12 @@ package hellfirepvp.astralsorcery.common.recipe.builder;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.recipe.lightwell.LightwellRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
+import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -28,6 +26,7 @@ import net.minecraft.world.level.material.Fluid;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -39,7 +38,7 @@ import java.util.Map;
 public class LightwellRecipeBuilder implements RecipeBuilder {
 
     private String group = "";
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
 
     private final Ingredient input;
     private final Fluid generatedFluid;
@@ -79,7 +78,7 @@ public class LightwellRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public LightwellRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public LightwellRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         this.criteria.put(name, criterion);
         return this;
     }
@@ -96,18 +95,16 @@ public class LightwellRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput) {
+    public void save(Consumer<FinishedRecipe> recipeOutput) {
         ResourceLocation id = BuiltInRegistries.FLUID.getKey(this.generatedFluid);
         this.save(recipeOutput, id.withSuffix(this.recipeIdSuffix));
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
         id = AstralSorcery.key(id.getPath());
-        Advancement.Builder advancementBuilder = recipeOutput.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
+        ResourceLocation recipeId = id.withPrefix("lightwell/");
+        Advancement.Builder advancementBuilder = AstralFinishedRecipe.advancement(recipeId);
         this.criteria.forEach(advancementBuilder::addCriterion);
 
         LightwellRecipe recipe = new LightwellRecipe(
@@ -118,6 +115,7 @@ public class LightwellRecipeBuilder implements RecipeBuilder {
                 this.shatterMultiplier
         );
         recipe.setGroup(this.group);
-        recipeOutput.accept(id.withPrefix("lightwell/"), recipe, advancementBuilder.build(id.withPrefix("recipes/")));
+        recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, LightwellRecipe.CODEC,
+                id.withPrefix("recipes/"), advancementBuilder));
     }
 }

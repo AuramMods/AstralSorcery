@@ -20,14 +20,12 @@ import hellfirepvp.astralsorcery.common.recipe.altar.effect.AltarEffect;
 import hellfirepvp.astralsorcery.common.recipe.altar.output.AltarRecipeOutputModifier;
 import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
+import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.NonNullList;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -44,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -56,7 +55,7 @@ public class AltarRecipeBuilder implements RecipeBuilder {
 
     private ResourceLocation recipeId = null;
     private String group = "";
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
 
     private final TileAltar.AltarType requiredType;
     private final NonNullList<String> gridLines = NonNullList.withSize(3, "   ");
@@ -259,7 +258,7 @@ public class AltarRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public AltarRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public AltarRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         this.criteria.put(name, criterion);
         return this;
     }
@@ -276,12 +275,10 @@ public class AltarRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
         id = this.recipeId != null ? this.recipeId : AstralSorcery.key(id.getPath());
-        Advancement.Builder advancementBuilder = recipeOutput.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
+        ResourceLocation recipeId = id.withPrefix("altar/");
+        Advancement.Builder advancementBuilder = AstralFinishedRecipe.advancement(recipeId);
         this.criteria.forEach(advancementBuilder::addCriterion);
 
         if (this.mayChain &&
@@ -308,6 +305,7 @@ public class AltarRecipeBuilder implements RecipeBuilder {
                 this.effects,
                 this.outputModifiers);
         recipe.setGroup(this.group);
-        recipeOutput.accept(id.withPrefix("altar/"), recipe, advancementBuilder.build(id.withPrefix("recipes/")));
+        recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, AltarRecipe.CODEC,
+                id.withPrefix("recipes/"), advancementBuilder));
     }
 }

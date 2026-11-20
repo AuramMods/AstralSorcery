@@ -20,7 +20,7 @@ import hellfirepvp.astralsorcery.common.recipe.liquid.output.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -29,7 +29,7 @@ import hellfirepvp.astralsorcery.common.ingredient.StackDataIngredient;
 import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -38,13 +38,13 @@ import java.util.concurrent.CompletableFuture;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class LiquidStarlightRecipeProvider extends RecipeProvider {
+public abstract class LiquidStarlightRecipeProvider extends RecipeProvider {
 
-    private LiquidStarlightRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    private LiquidStarlightRecipeProvider(PackOutput output) {
+        super(output);
     }
 
-    public static void registerRecipes(RecipeOutput recipeOutput, HolderLookup.Provider provider) {
+    public static void registerRecipes(Consumer<FinishedRecipe> recipeOutput, HolderLookup.Provider provider) {
         LiquidStarlightRecipeBuilder.builder("infused_wood", new SizedIngredient(Ingredient.of(ItemTags.LOGS), 1))
                 .addOutputModifier(LiquidStarlightOutputDropItem.create(ItemsAS.BLOCK_INFUSED_WOOD_RAW.toStack()))
                 .duration(6)

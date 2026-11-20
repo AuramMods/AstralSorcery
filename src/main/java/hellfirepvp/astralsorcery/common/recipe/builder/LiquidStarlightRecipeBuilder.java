@@ -12,13 +12,11 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.recipe.liquid.LiquidStarlightRecipe;
 import hellfirepvp.astralsorcery.common.recipe.liquid.output.LiquidStarlightRecipeOutputModifier;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
+import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -29,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -40,7 +39,7 @@ import java.util.Map;
 public class LiquidStarlightRecipeBuilder implements RecipeBuilder {
 
     private String group = "";
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
 
     private final String recipeName;
     private final SizedIngredient input;
@@ -98,7 +97,7 @@ public class LiquidStarlightRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public LiquidStarlightRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public LiquidStarlightRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         this.criteria.put(name, criterion);
         return this;
     }
@@ -115,17 +114,15 @@ public class LiquidStarlightRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput) {
+    public void save(Consumer<FinishedRecipe> recipeOutput) {
         this.save(recipeOutput, AstralSorcery.key(this.recipeName));
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
         id = AstralSorcery.key(id.getPath());
-        Advancement.Builder advancementBuilder = recipeOutput.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
+        ResourceLocation recipeId = id.withPrefix("liquid_starlight/");
+        Advancement.Builder advancementBuilder = AstralFinishedRecipe.advancement(recipeId);
         this.criteria.forEach(advancementBuilder::addCriterion);
 
         LiquidStarlightRecipe recipe = new LiquidStarlightRecipe(
@@ -139,6 +136,7 @@ public class LiquidStarlightRecipeBuilder implements RecipeBuilder {
                 this.consumesInputs
         );
         recipe.setGroup(this.group);
-        recipeOutput.accept(id.withPrefix("liquid_starlight/"), recipe, advancementBuilder.build(id.withPrefix("recipes/")));
+        recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, LiquidStarlightRecipe.CODEC,
+                id.withPrefix("recipes/"), advancementBuilder));
     }
 }

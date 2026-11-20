@@ -12,20 +12,17 @@ import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.research.tome.TomePageRecipe;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -53,17 +50,16 @@ public class GeneratedRecipeBuffer {
 
     public static TomePageRecipe findRecipe(RecipeType<?> type, ItemStack output) {
         return BuiltInRegistries.RECIPE_TYPE.getResourceKey(type)
-                .map(BuiltInRegistries.RECIPE_TYPE::getHolderOrThrow)
-                .map(holder -> findRecipe(holder, output))
+                .flatMap(key -> find(type, output).map(ref -> TomePageRecipe.of(key, ref.id())))
                 .orElseThrow();
     }
 
     public static TomePageRecipe findRecipe(ResolvingRecipeTypeRegistryObject<?> type, ItemLike output) {
-        return findRecipe(type.holder(), new ItemStack(output));
+        return findRecipe(type.get(), new ItemStack(output));
     }
 
     public static TomePageRecipe findRecipe(ResolvingRecipeTypeRegistryObject<?> type, ItemStack output) {
-        return findRecipe(type.holder(), output);
+        return findRecipe(type.get(), output);
     }
 
     public static TomePageRecipe findRecipe(Holder<RecipeType<?>> type, ItemLike output) {
@@ -71,9 +67,7 @@ public class GeneratedRecipeBuffer {
     }
 
     public static TomePageRecipe findRecipe(Holder<RecipeType<?>> type, ItemStack output) {
-        return find(type.value(), output)
-                .map(ref -> TomePageRecipe.of(type.getKey(), ref.id()))
-                .orElseThrow();
+        return findRecipe(type.value(), output);
     }
 
     public static <T extends Recipe<?>> Optional<RecipeReference<T>> find(RecipeType<T> type, ItemLike output) {
@@ -82,37 +76,39 @@ public class GeneratedRecipeBuffer {
 
     public static <T extends Recipe<?>> Optional<RecipeReference<T>> find(RecipeType<T> type, ItemStack output) {
         return TRACKED_RECIPES.getOrDefault(type, Collections.emptyList()).stream()
-                .filter(ref -> ItemStack.isSameItemSameComponents(ref.generatedOutput(), output))
+                .filter(ref -> ItemStack.isSameItemSameTags(ref.generatedOutput(), output))
                 .findFirst()
                 .map(MiscUtil::<RecipeReference<T>, RecipeReference<?>>cast);
     }
 
-    public static class BufferedRecipeOutput implements RecipeOutput {
+    public static class BufferedRecipeOutput implements Consumer<FinishedRecipe> {
 
-        private final RecipeOutput decorated;
-        private final HolderLookup.Provider provider;
+        private final Consumer<FinishedRecipe> output;
 
-        public BufferedRecipeOutput(RecipeOutput decorated, HolderLookup.Provider provider) {
-            this.decorated = decorated;
-            this.provider = provider;
+        public BufferedRecipeOutput(Consumer<FinishedRecipe> output) {
+            this.output = output;
+            TRACKED_RECIPES.clear();
         }
 
         @Override
-        public Advancement.Builder advancement() {
-            return this.decorated.advancement();
-        }
-
-        @Override
-        public void accept(ResourceLocation id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions) {
-            this.decorated.accept(id, recipe, advancement, conditions);
-            if (recipe instanceof CustomRecipe customRecipe) {
-                addRecipe(customRecipe.getRecipeType(), id, recipe);
-            } else if (recipe instanceof ShapedRecipe ||
-                    recipe instanceof ShapelessRecipe ||
-                    recipe instanceof AbstractCookingRecipe) {
-                ItemStack result = recipe.getResultItem(this.provider).copy();
-                addRecipe(recipe.getType(), id, recipe, result);
+        public void accept(FinishedRecipe finished) {
+            this.output.accept(finished);
+            if (finished instanceof AstralFinishedRecipe<?> astral) {
+                this.trackCustomRecipe(astral);
+                return;
             }
+
+            var serializer = finished.getType();
+            if (serializer == RecipeSerializer.SHAPED_RECIPE || serializer == RecipeSerializer.SHAPELESS_RECIPE
+                    || serializer instanceof SimpleCookingSerializer<?>) {
+                Recipe<?> recipe = RecipeManager.fromJson(finished.getId(), finished.serializeRecipe());
+                addRecipe(recipe.getType(), finished.getId(), recipe, recipe.getResultItem(RegistryAccess.EMPTY).copy());
+            }
+        }
+
+        private <R extends CustomRecipe<R, ?>> void trackCustomRecipe(AstralFinishedRecipe<R> finished) {
+            R recipe = finished.recipe();
+            addRecipe(recipe.getRecipeType(), finished.getId(), recipe);
         }
     }
 

@@ -14,9 +14,8 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.recipe.builder.LumenGenerationRecipeBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -25,7 +24,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import hellfirepvp.astralsorcery.common.ingredient.StackDataIngredient;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -34,13 +33,13 @@ import java.util.concurrent.CompletableFuture;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class LumenGenerationRecipeProvider extends RecipeProvider {
+public abstract class LumenGenerationRecipeProvider extends RecipeProvider {
 
-    private LumenGenerationRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    private LumenGenerationRecipeProvider(PackOutput output) {
+        super(output);
     }
 
-    public static void registerRecipes(RecipeOutput recipeOutput) {
+    public static void registerRecipes(Consumer<FinishedRecipe> recipeOutput) {
         LumenGenerationRecipeBuilder.builder(Ingredient.of(ItemsAS.BLOCK_HYACINTH), LumenAS.AEVITAS.get())
                 .producedLumenAmount(4)
                 .productionAttemptMultiplier(4F)

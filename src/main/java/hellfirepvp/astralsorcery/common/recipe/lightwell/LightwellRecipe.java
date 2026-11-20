@@ -24,10 +24,8 @@ import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import hellfirepvp.astralsorcery.common.ingredient.FluidIngredient;
 
 import java.util.function.Supplier;
 
@@ -89,7 +87,7 @@ public class LightwellRecipe extends CustomRecipe<LightwellRecipe, LightwellReci
     @Override
     public boolean matches(LightwellRecipeInput input, Level level) {
         if (this.getInput().test(input.getItemInput())) {
-            return input.getExistingFluidOutput().isEmpty() || input.getExistingFluidOutput().is(this.getGeneratedFluid());
+            return input.getExistingFluidOutput().isEmpty() || input.getExistingFluidOutput().getFluid() == this.getGeneratedFluid();
         }
         return false;
     }

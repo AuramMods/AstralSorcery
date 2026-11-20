@@ -25,7 +25,7 @@ import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -36,7 +36,7 @@ import hellfirepvp.astralsorcery.common.ingredient.StackDataIngredient;
 import net.minecraftforge.common.crafting.IntersectionIngredient;
 import net.minecraftforge.fluids.FluidType;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -45,13 +45,13 @@ import java.util.concurrent.CompletableFuture;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class AltarRecipeProvider extends RecipeProvider {
+public abstract class AltarRecipeProvider extends RecipeProvider {
 
-    private AltarRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    private AltarRecipeProvider(PackOutput output) {
+        super(output);
     }
 
-    public static void registerRecipes(RecipeOutput recipeOutput, HolderLookup.Provider provider) {
+    public static void registerRecipes(Consumer<FinishedRecipe> recipeOutput, HolderLookup.Provider provider) {
         registerVanillaConversionRecipes(recipeOutput);
         registerIlluminationRecipes(recipeOutput);
         registerResonanceRecipes(recipeOutput);
@@ -60,7 +60,7 @@ public class AltarRecipeProvider extends RecipeProvider {
         registerRadianceRecipes(recipeOutput);
     }
 
-    private static void registerIlluminationRecipes(RecipeOutput recipeOutput) {
+    private static void registerIlluminationRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.ILLUMINATION)
                 .setRecipeId(ItemsAS.CRYSTAL_PICKAXE)
                 .addOutput(ItemsAS.CRYSTAL_PICKAXE)
@@ -272,7 +272,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
     }
 
-    private static void registerResonanceRecipes(RecipeOutput recipeOutput) {
+    private static void registerResonanceRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.RESONANCE)
                 .setRecipeId(ItemsAS.BLOCK_INFUSER)
                 .addOutput(ItemsAS.BLOCK_INFUSER)
@@ -629,7 +629,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);*/
     }
 
-    private static void registerLuminanceRecipes(RecipeOutput recipeOutput) {
+    private static void registerLuminanceRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.LUMINANCE)
                 .setRecipeId(ItemsAS.LINKING_TOOL)
                 .addOutput(ItemsAS.LINKING_TOOL)
@@ -1136,7 +1136,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
     }
 
-    private static void registerLumenEngravingRecipes(RecipeOutput recipeOutput, HolderLookup.Provider provider) {
+    private static void registerLumenEngravingRecipes(Consumer<FinishedRecipe> recipeOutput, HolderLookup.Provider provider) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.LUMINANCE)
                 .setRecipeId(AstralSorcery.key("altar_lumen_engraving_virel"))
                 .addOutput(ItemsAS.ROCK_CRYSTAL)
@@ -1323,7 +1323,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
     }
 
-    private static void registerRadianceRecipes(RecipeOutput recipeOutput) {
+    private static void registerRadianceRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.RADIANCE)
                 .setRecipeId(ItemsAS.BLOCK_STELLAR_FILAMENT)
                 .addOutput(BlocksAS.STELLAR_FILAMENT.toStack(3))
@@ -1447,7 +1447,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
     }
 
-    private static void registerVanillaConversionRecipes(RecipeOutput recipeOutput) {
+    private static void registerVanillaConversionRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.ILLUMINATION)
                 .setRecipeId(ItemsAS.TOME)
                 .addOutput(ItemsAS.TOME)
@@ -1516,7 +1516,7 @@ public class AltarRecipeProvider extends RecipeProvider {
         registerVanillaInfusedWoodConversionRecipes(recipeOutput);
     }
 
-    private static void registerVanillaMarbleConversionRecipes(RecipeOutput recipeOutput) {
+    private static void registerVanillaMarbleConversionRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.ILLUMINATION)
                 .setRecipeId(ItemsAS.BLOCK_MARBLE_ARCH)
                 .addOutput(ItemsAS.BLOCK_MARBLE_ARCH.toStack(2))
@@ -1630,7 +1630,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
     }
 
-    private static void registerVanillaSootyMarbleConversionRecipes(RecipeOutput recipeOutput) {
+    private static void registerVanillaSootyMarbleConversionRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.ILLUMINATION)
                 .setRecipeId(ItemsAS.BLOCK_SOOTY_MARBLE_ARCH)
                 .addOutput(ItemsAS.BLOCK_SOOTY_MARBLE_ARCH.toStack(2))
@@ -1744,7 +1744,7 @@ public class AltarRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
     }
 
-    private static void registerVanillaInfusedWoodConversionRecipes(RecipeOutput recipeOutput) {
+    private static void registerVanillaInfusedWoodConversionRecipes(Consumer<FinishedRecipe> recipeOutput) {
         AltarRecipeBuilder.builder(TileAltar.AltarType.ILLUMINATION)
                 .setRecipeId(ItemsAS.BLOCK_INFUSED_WOOD_PLANKS)
                 .addOutput(ItemsAS.BLOCK_INFUSED_WOOD_PLANKS.toStack(4))

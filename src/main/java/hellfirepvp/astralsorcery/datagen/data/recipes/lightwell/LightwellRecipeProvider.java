@@ -14,16 +14,15 @@ import hellfirepvp.astralsorcery.common.lib.constants.ColorsAS;
 import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import hellfirepvp.astralsorcery.common.recipe.builder.LightwellRecipeBuilder;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -32,13 +31,13 @@ import java.util.concurrent.CompletableFuture;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class LightwellRecipeProvider extends RecipeProvider {
+public abstract class LightwellRecipeProvider extends RecipeProvider {
 
-    private LightwellRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    private LightwellRecipeProvider(PackOutput output) {
+        super(output);
     }
 
-    public static void registerRecipes(RecipeOutput recipeOutput) {
+    public static void registerRecipes(Consumer<FinishedRecipe> recipeOutput) {
         LightwellRecipeBuilder.builder(Ingredient.of(TagsAS.Items.GEMS_AQUAMARINE), FluidsAS.LIQUID_STARLIGHT.getSource().get(), "_aquamarine")
                 .color(ColorWrapper.opaque(0x00A7FF))
                 .productionMultiplier(0.35F)

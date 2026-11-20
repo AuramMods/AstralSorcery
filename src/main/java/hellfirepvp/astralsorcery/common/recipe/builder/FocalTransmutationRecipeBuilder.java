@@ -12,13 +12,11 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.recipe.focal.place.FocalTransmutationRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
+import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.WeightedEntry;
@@ -33,6 +31,7 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -44,7 +43,7 @@ import java.util.*;
 public class FocalTransmutationRecipeBuilder implements RecipeBuilder {
 
     private String group = "";
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
 
     private int duration = 100;
     private ColorWrapper color = ColorWrapper.WHITE;
@@ -112,7 +111,7 @@ public class FocalTransmutationRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public FocalTransmutationRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public FocalTransmutationRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         this.criteria.put(name, criterion);
         return this;
     }
@@ -126,7 +125,7 @@ public class FocalTransmutationRecipeBuilder implements RecipeBuilder {
     @Override
     public Item getResult() {
         return this.outputStates.stream()
-                .map(WeightedEntry.Wrapper::data)
+                .map(WeightedEntry.Wrapper::getData)
                 .map(state -> state.getBlock().asItem())
                 .filter(item -> item != Items.AIR)
                 .findFirst()
@@ -134,12 +133,10 @@ public class FocalTransmutationRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput, ResourceLocation id) {
+    public void save(Consumer<FinishedRecipe> recipeOutput, ResourceLocation id) {
         id = AstralSorcery.key(id.getPath());
-        Advancement.Builder advancementBuilder = recipeOutput.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
+        ResourceLocation recipeId = id.withPrefix("focal_transmutation/");
+        Advancement.Builder advancementBuilder = AstralFinishedRecipe.advancement(recipeId);
         this.criteria.forEach(advancementBuilder::addCriterion);
 
         FocalTransmutationRecipe recipe = new FocalTransmutationRecipe(
@@ -152,6 +149,7 @@ public class FocalTransmutationRecipeBuilder implements RecipeBuilder {
                 this.requiresFocusedStarlight
         );
         recipe.setGroup(this.group);
-        recipeOutput.accept(id.withPrefix("focal_transmutation/"), recipe, advancementBuilder.build(id.withPrefix("recipes/")));
+        recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, FocalTransmutationRecipe.CODEC,
+                id.withPrefix("recipes/"), advancementBuilder));
     }
 }

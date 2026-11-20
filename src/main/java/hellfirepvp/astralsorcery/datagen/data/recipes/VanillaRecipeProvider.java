@@ -12,8 +12,6 @@ import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
-import hellfirepvp.astralsorcery.common.recipe.RecipeChangeColor;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
@@ -21,7 +19,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -30,13 +28,13 @@ import java.util.concurrent.CompletableFuture;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class VanillaRecipeProvider extends RecipeProvider {
+public abstract class VanillaRecipeProvider extends RecipeProvider {
 
-    private VanillaRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    private VanillaRecipeProvider(PackOutput output) {
+        super(output);
     }
 
-    public static void registerCraftingRecipes(RecipeOutput recipeOutput) {
+    public static void registerCraftingRecipes(Consumer<FinishedRecipe> recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ItemsAS.TOME)
                 .pattern("A")
                 .pattern("B")
@@ -248,7 +246,7 @@ public class VanillaRecipeProvider extends RecipeProvider {
                 .save(recipeOutput, RecipeBuilder.getDefaultRecipeId(BlocksAS.INFUSED_WOOD_STAIRS).withPrefix("infused_wood/"));
     }
 
-    public static void registerStonecuttingRecipes(RecipeOutput recipeOutput) {
+    public static void registerStonecuttingRecipes(Consumer<FinishedRecipe> recipeOutput) {
         stonecutterResultFromBase(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ItemsAS.BLOCK_MARBLE_ARCH, ItemsAS.BLOCK_MARBLE_RAW);
         stonecutterResultFromBase(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ItemsAS.BLOCK_MARBLE_BRICKS, ItemsAS.BLOCK_MARBLE_RAW);
         stonecutterResultFromBase(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ItemsAS.BLOCK_MARBLE_CHISELED, ItemsAS.BLOCK_MARBLE_RAW);
@@ -268,15 +266,15 @@ public class VanillaRecipeProvider extends RecipeProvider {
         stonecutterResultFromBase(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ItemsAS.BLOCK_SOOTY_MARBLE_STAIRS, ItemsAS.BLOCK_SOOTY_MARBLE_RAW);
     }
 
-    public static void registerSmeltingRecipes(RecipeOutput recipeOutput) {
+    public static void registerSmeltingRecipes(Consumer<FinishedRecipe> recipeOutput) {
         oreSmelting(recipeOutput, List.of(ItemsAS.BLOCK_STARMETAL_ORE, ItemsAS.RAW_STARMETAL), RecipeCategory.MISC, ItemsAS.STARMETAL_INGOT, 0.7F, 200, "");
         oreBlasting(recipeOutput, List.of(ItemsAS.BLOCK_STARMETAL_ORE, ItemsAS.RAW_STARMETAL), RecipeCategory.MISC, ItemsAS.STARMETAL_INGOT, 0.7F, 100, "");
     }
 
-    public static void registerSpecialRecipes(RecipeOutput recipeOutput) {
-        SpecialRecipeBuilder.special(RecipeChangeColor.IlluminationWandChangeColor::new)
-                .save(recipeOutput, RecipeTypesAS.ILLUMINATION_WAND_CHANGE_COLOR_SERIALIZER.getId());
-        SpecialRecipeBuilder.special(RecipeChangeColor.CelestialGatewayChangeColor::new)
-                .save(recipeOutput, RecipeTypesAS.CELESTIAL_GATEWAY_CHANGE_COLOR_SERIALIZER.getId());
+    public static void registerSpecialRecipes(Consumer<FinishedRecipe> recipeOutput) {
+        SpecialRecipeBuilder.special(RecipeTypesAS.ILLUMINATION_WAND_CHANGE_COLOR_SERIALIZER.get())
+                .save(recipeOutput, RecipeTypesAS.ILLUMINATION_WAND_CHANGE_COLOR_SERIALIZER.getId().toString());
+        SpecialRecipeBuilder.special(RecipeTypesAS.CELESTIAL_GATEWAY_CHANGE_COLOR_SERIALIZER.get())
+                .save(recipeOutput, RecipeTypesAS.CELESTIAL_GATEWAY_CHANGE_COLOR_SERIALIZER.getId().toString());
     }
 }

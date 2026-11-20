@@ -12,14 +12,13 @@ import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import hellfirepvp.astralsorcery.common.recipe.builder.InfusionRecipeBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -28,13 +27,13 @@ import java.util.concurrent.CompletableFuture;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class InfusionRecipeProvider extends RecipeProvider {
+public abstract class InfusionRecipeProvider extends RecipeProvider {
 
-    private InfusionRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    private InfusionRecipeProvider(PackOutput output) {
+        super(output);
     }
 
-    public static void registerRecipes(RecipeOutput recipeOutput) {
+    public static void registerRecipes(Consumer<FinishedRecipe> recipeOutput) {
         InfusionRecipeBuilder.builder(Ingredient.of(TagsAS.Items.GEMS_AQUAMARINE), FluidsAS.LIQUID_STARLIGHT.getSource(), ItemsAS.RESONATING_GEM.toStack())
                 .setConsumptionChance(0.03F)
                 .save(recipeOutput);
