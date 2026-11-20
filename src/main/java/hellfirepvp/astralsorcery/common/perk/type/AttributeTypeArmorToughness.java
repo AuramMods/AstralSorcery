@@ -9,7 +9,6 @@
 package hellfirepvp.astralsorcery.common.perk.type;
 
 import hellfirepvp.astralsorcery.common.perk.type.base.VanillaAttributeType;
-import net.minecraft.core.Holder;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
@@ -25,7 +24,7 @@ import javax.annotation.Nonnull;
 public class AttributeTypeArmorToughness extends VanillaAttributeType {
     @Nonnull
     @Override
-    public Holder<Attribute> getAttribute() {
+    public Attribute getAttribute() {
         return Attributes.ARMOR_TOUGHNESS;
     }
 }

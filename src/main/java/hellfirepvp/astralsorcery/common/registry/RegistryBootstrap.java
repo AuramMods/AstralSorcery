@@ -29,6 +29,7 @@ public class RegistryBootstrap {
         ItemsAS.ITEM_REGISTER.register(modLifecycleBus);
         EntityDataSerializersAS.DATA_SERIALIZERS_REGISTER.register(modLifecycleBus);
         EntitiesAS.ENTITY_REGISTER.register(modLifecycleBus);
+        AttributesAS.register(modLifecycleBus);
         TileEntitiesAS.TILE_REGISTER.register(modLifecycleBus);
         MobEffectsAS.MOB_EFFECT_REGISTER.register(modLifecycleBus);
         CreativeTabsAS.CREATIVE_TAB_REGISTER.register(modLifecycleBus);

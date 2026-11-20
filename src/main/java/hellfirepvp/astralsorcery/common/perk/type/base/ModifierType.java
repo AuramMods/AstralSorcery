@@ -9,7 +9,6 @@
 package hellfirepvp.astralsorcery.common.perk.type.base;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.Util;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
@@ -39,11 +38,19 @@ public enum ModifierType {
     }
 
     public static ModifierType fromVanillaAttributeOperation(AttributeModifier.Operation op) {
-        return MiscUtil.getEnumEntry(ModifierType.class, op.id());
+        return switch (op) {
+            case ADDITION -> ADDITION;
+            case MULTIPLY_BASE -> ADDED_MULTIPLY;
+            case MULTIPLY_TOTAL -> STACKING_MULTIPLY;
+        };
     }
 
     public AttributeModifier.Operation getVanillaAttributeOperation() {
-        return AttributeModifier.Operation.values()[ordinal()];
+        return switch (this) {
+            case ADDITION -> AttributeModifier.Operation.ADDITION;
+            case ADDED_MULTIPLY -> AttributeModifier.Operation.MULTIPLY_BASE;
+            case STACKING_MULTIPLY -> AttributeModifier.Operation.MULTIPLY_TOTAL;
+        };
     }
 
     // We don't need the explicit + addition to positive percentages

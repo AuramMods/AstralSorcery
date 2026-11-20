@@ -13,14 +13,17 @@ import hellfirepvp.astralsorcery.common.perk.PerkManager;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSource;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.LogicalSide;
 
-import java.util.EnumMap;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -31,7 +34,7 @@ import java.util.Locale;
  */
 public abstract class VanillaAttributeType extends PerkAttributeType implements VanillaPerkAttributeType {
 
-    private final EnumMap<ModifierType, ResourceLocation> modifierIds = new EnumMap<>(ModifierType.class);
+    private final Map<ModifierType, ModifierIdentity> modifierIds = new ConcurrentHashMap<>();
 
     protected VanillaAttributeType() {
         this(false);
@@ -39,16 +42,12 @@ public abstract class VanillaAttributeType extends PerkAttributeType implements 
 
     protected VanillaAttributeType(boolean isOnlyMultiplicative) {
         super(isOnlyMultiplicative);
-        String path = this.getAttribute().unwrapKey().map(key -> key.location().getPath()).orElseThrow();
-
-        for (ModifierType type : ModifierType.values()) {
-            String idName = String.format("dynamic_vanilla_modifier_%s_%s", path, type.name().toLowerCase(Locale.ROOT));
-            this.modifierIds.put(type, AstralSorcery.key(idName));
-        }
     }
 
-    protected ResourceLocation getModifierID(ModifierType type) {
-        return this.modifierIds.get(type);
+    private ModifierIdentity createModifierIdentity(ModifierType type) {
+        String path = BuiltInRegistries.ATTRIBUTE.getKey(this.getAttribute()).getPath();
+        String name = AstralSorcery.key("dynamic_vanilla_modifier_" + path + "_" + type.name().toLowerCase(Locale.ROOT)).toString();
+        return new ModifierIdentity(UUID.nameUUIDFromBytes(name.getBytes(StandardCharsets.UTF_8)), name);
     }
 
     @Override
@@ -70,12 +69,15 @@ public abstract class VanillaAttributeType extends PerkAttributeType implements 
 
         PlayerProgress progress = ResearchManager.getProgress(player, side);
         for (ModifierType type : ModifierType.values()) {
-            attr.removeModifier(this.getModifierID(type));
+            ModifierIdentity modifier = this.modifierIds.computeIfAbsent(type, this::createModifierIdentity);
+            attr.removeModifier(modifier.id());
 
             float amount = PerkManager.getOrCreateAttributes(player).getModifier(player, progress, this, type) - 1;
             if (!type.isNeutralVanillaValue(amount)) {
-                attr.addTransientModifier(new AttributeModifier(this.getModifierID(type), amount, type.getVanillaAttributeOperation()));
+                attr.addTransientModifier(new AttributeModifier(modifier.id(), modifier.name(), amount, type.getVanillaAttributeOperation()));
             }
         }
     }
+
+    private record ModifierIdentity(UUID id, String name) {}
 }

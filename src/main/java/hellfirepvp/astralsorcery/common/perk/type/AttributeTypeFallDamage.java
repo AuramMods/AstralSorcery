@@ -9,9 +9,8 @@
 package hellfirepvp.astralsorcery.common.perk.type;
 
 import hellfirepvp.astralsorcery.common.perk.type.base.VanillaAttributeType;
-import net.minecraft.core.Holder;
+import hellfirepvp.astralsorcery.common.lib.AttributesAS;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +29,7 @@ public class AttributeTypeFallDamage extends VanillaAttributeType {
 
     @Nonnull
     @Override
-    public Holder<Attribute> getAttribute() {
-        return Attributes.FALL_DAMAGE_MULTIPLIER;
+    public Attribute getAttribute() {
+        return AttributesAS.FALL_DAMAGE_MULTIPLIER.get();
     }
 }

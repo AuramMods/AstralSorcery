@@ -9,9 +9,8 @@
 package hellfirepvp.astralsorcery.common.perk.type;
 
 import hellfirepvp.astralsorcery.common.perk.type.base.VanillaAttributeType;
-import net.minecraft.core.Holder;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.neoforged.neoforge.common.NeoForgeMod;
+import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +29,7 @@ public class AttributeTypeSwimSpeed extends VanillaAttributeType {
 
     @Nonnull
     @Override
-    public Holder<Attribute> getAttribute() {
-        return NeoForgeMod.SWIM_SPEED;
+    public Attribute getAttribute() {
+        return ForgeMod.SWIM_SPEED.get();
     }
 }

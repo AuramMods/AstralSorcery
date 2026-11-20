@@ -10,9 +10,8 @@ package hellfirepvp.astralsorcery.common.perk.reader;
 
 import hellfirepvp.astralsorcery.common.perk.PerkAttributeMap;
 import hellfirepvp.astralsorcery.common.perk.type.base.ModifierType;
-import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
+import hellfirepvp.astralsorcery.common.perk.type.base.VanillaAttributeType;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
-import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -30,12 +29,12 @@ import java.util.function.Supplier;
  */
 public class ReaderVanillaAttribute extends PerkAttributeTypeReader {
 
-    protected final Holder<Attribute> attribute;
+    private final Supplier<? extends VanillaAttributeType> vanillaType;
     protected boolean formatAsDecimal = false;
 
-    public ReaderVanillaAttribute(Supplier<? extends PerkAttributeType> type, Holder<Attribute> reference) {
+    public ReaderVanillaAttribute(Supplier<? extends VanillaAttributeType> type) {
         super(type);
-        this.attribute = reference;
+        this.vanillaType = type;
     }
 
     public <T extends ReaderVanillaAttribute> T formatAsDecimal() {
@@ -45,8 +44,9 @@ public class ReaderVanillaAttribute extends PerkAttributeTypeReader {
 
     @Override
     public double getDefaultValue(PerkAttributeMap statMap, Player player, LogicalSide side) {
-        AttributeInstance ai = player.getAttribute(this.attribute);
-        return ai == null ? this.attribute.value().getDefaultValue() : ai.getBaseValue();
+        Attribute attribute = this.vanillaType.get().getAttribute();
+        AttributeInstance ai = player.getAttribute(attribute);
+        return ai == null ? attribute.getDefaultValue() : ai.getBaseValue();
     }
 
     @Override

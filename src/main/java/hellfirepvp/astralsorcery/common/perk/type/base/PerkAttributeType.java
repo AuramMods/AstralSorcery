@@ -16,7 +16,6 @@ import hellfirepvp.astralsorcery.common.perk.reader.PerkAttributeTypeReader;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSource;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.Util;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -62,11 +61,11 @@ public class PerkAttributeType {
         return new PerkAttributeType(isOnlyMultiplicative);
     }
 
-    public static Optional<PerkAttributeType> fromVanillaType(Holder<Attribute> attribute) {
+    public static Optional<PerkAttributeType> fromVanillaType(Attribute attribute) {
         return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().stream()
                 .filter(type -> type instanceof VanillaPerkAttributeType)
                 .map(type -> (VanillaPerkAttributeType) type)
-                .filter(type -> type.getAttribute().is(attribute))
+                .filter(type -> type.getAttribute() == attribute)
                 .findFirst()
                 .map(MiscUtil::cast);
     }

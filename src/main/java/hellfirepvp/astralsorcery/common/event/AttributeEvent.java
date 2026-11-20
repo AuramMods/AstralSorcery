@@ -10,7 +10,6 @@ package hellfirepvp.astralsorcery.common.event;
 
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -59,7 +58,7 @@ public class AttributeEvent {
             return this.instance;
         }
 
-        public Holder<Attribute> getAttribute() {
+        public Attribute getAttribute() {
             return this.instance.getAttribute();
         }
 
@@ -136,6 +135,6 @@ public class AttributeEvent {
     public static double postProcessVanilla(double value, AttributeInstance attribute) {
         AttributeEvent.PostProcessVanilla event = new AttributeEvent.PostProcessVanilla(attribute, value);
         MinecraftForge.EVENT_BUS.post(event);
-        return attribute.getAttribute().value().sanitizeValue(event.getValue());
+        return attribute.getAttribute().sanitizeValue(event.getValue());
     }
 }

@@ -21,10 +21,7 @@ import hellfirepvp.astralsorcery.common.perk.source.provider.PerkSourceProvider;
 import hellfirepvp.astralsorcery.common.perk.source.provider.equipment.EquipmentSourceProvider;
 import hellfirepvp.astralsorcery.common.perk.type.*;
 import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
-import net.minecraft.core.Holder;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.neoforged.neoforge.common.NeoForgeMod;
+import hellfirepvp.astralsorcery.common.perk.type.base.VanillaAttributeType;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -136,35 +133,35 @@ public class PerksAS {
                 type("perk_experience", AttributeTypes.PERK_EXPERIENCE, ReaderPercentageAttribute::new);
 
         public static final RegistryObject<PerkAttributeTypeReader.Type> ARMOR =
-                vanillaType("armor", AttributeTypes.ARMOR, Attributes.ARMOR);
+                vanillaType("armor", AttributeTypes.ARMOR);
         public static final RegistryObject<PerkAttributeTypeReader.Type> ARMOR_TOUGHNESS =
-                vanillaType("armor_toughness", AttributeTypes.ARMOR_TOUGHNESS, Attributes.ARMOR_TOUGHNESS);
+                vanillaType("armor_toughness", AttributeTypes.ARMOR_TOUGHNESS);
         public static final RegistryObject<PerkAttributeTypeReader.Type> ATTACK_DAMAGE =
-                vanillaDecimalType("attack_damage", AttributeTypes.ATTACK_DAMAGE, Attributes.ATTACK_DAMAGE);
+                vanillaDecimalType("attack_damage", AttributeTypes.ATTACK_DAMAGE);
         public static final RegistryObject<PerkAttributeTypeReader.Type> ATTACK_REACH =
-                vanillaDecimalType("attack_reach", AttributeTypes.ATTACK_REACH, Attributes.ENTITY_INTERACTION_RANGE);
+                vanillaDecimalType("attack_reach", AttributeTypes.ATTACK_REACH);
         public static final RegistryObject<PerkAttributeTypeReader.Type> ATTACK_SPEED =
-                vanillaDecimalType("attack_speed", AttributeTypes.ATTACK_SPEED, Attributes.ATTACK_SPEED);
+                vanillaDecimalType("attack_speed", AttributeTypes.ATTACK_SPEED);
         public static final RegistryObject<PerkAttributeTypeReader.Type> BLOCK_BREAK_SPEED =
-                vanillaType("block_break_speed", AttributeTypes.BLOCK_BREAK_SPEED, Attributes.BLOCK_BREAK_SPEED);
+                vanillaType("block_break_speed", AttributeTypes.BLOCK_BREAK_SPEED);
         public static final RegistryObject<PerkAttributeTypeReader.Type> BLOCK_REACH =
-                vanillaDecimalType("block_reach", AttributeTypes.BLOCK_REACH, Attributes.BLOCK_INTERACTION_RANGE);
+                vanillaDecimalType("block_reach", AttributeTypes.BLOCK_REACH);
         public static final RegistryObject<PerkAttributeTypeReader.Type> FALL_DAMAGE =
-                vanillaDecimalType("fall_damage", AttributeTypes.FALL_DAMAGE, Attributes.FALL_DAMAGE_MULTIPLIER);
+                vanillaDecimalType("fall_damage", AttributeTypes.FALL_DAMAGE);
         public static final RegistryObject<PerkAttributeTypeReader.Type> LUCK =
-                vanillaDecimalType("luck", AttributeTypes.LUCK, Attributes.LUCK);
+                vanillaDecimalType("luck", AttributeTypes.LUCK);
         public static final RegistryObject<PerkAttributeTypeReader.Type> MAX_HEALTH =
-                vanillaType("max_health", AttributeTypes.MAX_HEALTH, Attributes.MAX_HEALTH);
+                vanillaType("max_health", AttributeTypes.MAX_HEALTH);
         public static final RegistryObject<PerkAttributeTypeReader.Type> MOVEMENT_SPEED =
-                vanillaDecimalType("movement_speed", AttributeTypes.MOVEMENT_SPEED, Attributes.MOVEMENT_SPEED);
+                vanillaDecimalType("movement_speed", AttributeTypes.MOVEMENT_SPEED);
         public static final RegistryObject<PerkAttributeTypeReader.Type> SAFE_FALL_DISTANCE =
-                vanillaType("safe_fall_distance", AttributeTypes.SAFE_FALL_DISTANCE, Attributes.SAFE_FALL_DISTANCE);
+                vanillaType("safe_fall_distance", AttributeTypes.SAFE_FALL_DISTANCE);
         public static final RegistryObject<PerkAttributeTypeReader.Type> SCALE =
-                vanillaDecimalType("scale", AttributeTypes.SCALE, Attributes.SCALE);
+                vanillaDecimalType("scale", AttributeTypes.SCALE);
         public static final RegistryObject<PerkAttributeTypeReader.Type> STEP_HEIGHT =
-                vanillaType("step_height", AttributeTypes.STEP_HEIGHT, Attributes.STEP_HEIGHT);
+                vanillaType("step_height", AttributeTypes.STEP_HEIGHT);
         public static final RegistryObject<PerkAttributeTypeReader.Type> SWIM_SPEED =
-                vanillaDecimalType("swim_speed", AttributeTypes.SWIM_SPEED, NeoForgeMod.SWIM_SPEED);
+                vanillaDecimalType("swim_speed", AttributeTypes.SWIM_SPEED);
 
         public static final RegistryObject<PerkAttributeTypeReader.Type> BLOCK_CHANCE =
                 type("block_chance", AttributeTypes.BLOCK_CHANCE, ReaderAddedPercentage::withPercent);
@@ -204,20 +201,14 @@ public class PerksAS {
             return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name, () -> new PerkAttributeTypeReader.Type(type, reader.apply(type)));
         }
 
-        private static RegistryObject<PerkAttributeTypeReader.Type> vanillaType(String name,
-                                                                                                              Supplier<? extends PerkAttributeType> type,
-                                                                                                              Holder<Attribute> attribute) {
-            return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name, () -> {
-                return new PerkAttributeTypeReader.Type(type, new ReaderVanillaAttribute(type, attribute));
-            });
+        private static RegistryObject<PerkAttributeTypeReader.Type> vanillaType(String name, Supplier<? extends VanillaAttributeType> type) {
+            return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name,
+                    () -> new PerkAttributeTypeReader.Type(type, new ReaderVanillaAttribute(type)));
         }
 
-        private static RegistryObject<PerkAttributeTypeReader.Type> vanillaDecimalType(String name,
-                                                                                                                     Supplier<? extends PerkAttributeType> type,
-                                                                                                                     Holder<Attribute> attribute) {
-            return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name, () -> {
-                return new PerkAttributeTypeReader.Type(type, new ReaderVanillaAttribute(type, attribute).formatAsDecimal());
-            });
+        private static RegistryObject<PerkAttributeTypeReader.Type> vanillaDecimalType(String name, Supplier<? extends VanillaAttributeType> type) {
+            return PERK_ATTRIBUTE_TYPE_READER_REGISTER.register(name,
+                    () -> new PerkAttributeTypeReader.Type(type, new ReaderVanillaAttribute(type).formatAsDecimal()));
         }
     }
 
