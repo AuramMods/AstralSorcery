@@ -215,7 +215,7 @@ public class AstralLumenBindingDataProvider extends LumenBindingDataProvider {
                         LumenBindingDynamicModifierEffect.builder()
                                 .addModifier(rand.nextLong(), BLOCK_BREAK_SPEED, ADDED_MULTIPLY, 0.15F)
                                 .build()))
-                .potionEffect(MobEffectsAS.RAMPAGE, IntRange.of(minutes(1), minutes(3)), IntRange.of(2, 3))
+                .potionEffect(MobEffectsAS.RAMPAGE.get(), IntRange.of(minutes(1), minutes(3)), IntRange.of(2, 3))
                 .build()
                 .registerBinding(LumenAS.DYNAMIS);
 
@@ -302,7 +302,7 @@ public class AstralLumenBindingDataProvider extends LumenBindingDataProvider {
                                         .build(),
                                 LumenBindingAoeCropGrowthEffect.INSTANCE
                         )))
-                .potionEffect(MobEffectsAS.PHOENIX_BLESSING, IntRange.of(minutes(5), minutes(10)), IntRange.of(0))
+                .potionEffect(MobEffectsAS.PHOENIX_BLESSING.get(), IntRange.of(minutes(5), minutes(10)), IntRange.of(0))
                 .build()
                 .registerBinding(LumenAS.AION);
 

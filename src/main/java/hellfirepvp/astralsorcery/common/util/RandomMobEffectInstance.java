@@ -12,7 +12,7 @@ import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
-import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -43,13 +43,13 @@ public class RandomMobEffectInstance {
             SINGLE_CODEC.optionalFieldOf("hidden_effect").forGetter(RandomMobEffectInstance::getHiddenEffect)
     ).apply(inst, RandomMobEffectInstance::new));
     public static final StreamCodec<FriendlyByteBuf, RandomMobEffectInstance> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderRegistry(Registries.MOB_EFFECT),
+            ByteBufCodecs.registry(Registries.MOB_EFFECT),
             RandomMobEffectInstance::getEffect,
             IntRange.STREAM_CODEC,
             RandomMobEffectInstance::getDurationRange,
             IntRange.STREAM_CODEC,
             RandomMobEffectInstance::getAmplifierRange,
-            ByteBufCodecs.optional(ByteBufCodecs.holderRegistry(Registries.MOB_EFFECT)),
+            ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.MOB_EFFECT)),
             randomEffect -> randomEffect.getHiddenEffect().map(RandomMobEffectInstance::getEffect),
             ByteBufCodecs.optional(IntRange.STREAM_CODEC),
             randomEffect -> randomEffect.getHiddenEffect().map(RandomMobEffectInstance::getDurationRange),
@@ -57,46 +57,46 @@ public class RandomMobEffectInstance {
             randomEffect -> randomEffect.getHiddenEffect().map(RandomMobEffectInstance::getAmplifierRange),
             RandomMobEffectInstance::new);
 
-    private final Holder<MobEffect> effect;
+    private final MobEffect effect;
     private final IntRange durationRange, amplifierRange;
     @Nullable
     private final RandomMobEffectInstance hiddenEffect;
 
-    private RandomMobEffectInstance(Holder<MobEffect> effect, IntRange durationRange, IntRange amplifierRange,
-                                    Optional<Holder<MobEffect>> hiddenEffect, Optional<IntRange> hiddenDurationRange, Optional<IntRange> hiddenAmplifierRange) {
+    private RandomMobEffectInstance(MobEffect effect, IntRange durationRange, IntRange amplifierRange,
+                                    Optional<MobEffect> hiddenEffect, Optional<IntRange> hiddenDurationRange, Optional<IntRange> hiddenAmplifierRange) {
         this.effect = effect;
         this.durationRange = durationRange;
         this.amplifierRange = amplifierRange;
-        this.hiddenEffect = hiddenEffect.map(effectHolder -> new RandomMobEffectInstance(effectHolder,
+        this.hiddenEffect = hiddenEffect.map(effectType -> new RandomMobEffectInstance(effectType,
                 hiddenDurationRange.orElse(IntRange.of(0, 0)),
                 hiddenAmplifierRange.orElse(IntRange.of(0, 0)),
                 Optional.empty()))
                 .orElse(null);
     }
-    private RandomMobEffectInstance(Holder<MobEffect> effect, IntRange durationRange, IntRange amplifierRange, Optional<RandomMobEffectInstance> hiddenEffect) {
+    private RandomMobEffectInstance(MobEffect effect, IntRange durationRange, IntRange amplifierRange, Optional<RandomMobEffectInstance> hiddenEffect) {
         this.effect = effect;
         this.durationRange = durationRange;
         this.amplifierRange = amplifierRange;
         this.hiddenEffect = hiddenEffect.orElse(null);
     }
 
-    public static RandomMobEffectInstance of(Holder<MobEffect> effect, IntRange durationRange, IntRange amplifierRange, @Nullable RandomMobEffectInstance hiddenEffect) {
+    public static RandomMobEffectInstance of(MobEffect effect, IntRange durationRange, IntRange amplifierRange, @Nullable RandomMobEffectInstance hiddenEffect) {
         return new RandomMobEffectInstance(effect, durationRange, amplifierRange, Optional.ofNullable(hiddenEffect));
     }
 
-    public static RandomMobEffectInstance of(Holder<MobEffect> effect, IntRange durationRange, IntRange amplifierRange) {
+    public static RandomMobEffectInstance of(MobEffect effect, IntRange durationRange, IntRange amplifierRange) {
         return of(effect, durationRange, amplifierRange, null);
     }
 
-    private static Products.P3<RecordCodecBuilder.Mu<RandomMobEffectInstance>, Holder<MobEffect>, IntRange, IntRange> effectFields(RecordCodecBuilder.Instance<RandomMobEffectInstance> instance) {
+    private static Products.P3<RecordCodecBuilder.Mu<RandomMobEffectInstance>, MobEffect, IntRange, IntRange> effectFields(RecordCodecBuilder.Instance<RandomMobEffectInstance> instance) {
         return instance.group(
-                MobEffect.CODEC.fieldOf("effect").forGetter(RandomMobEffectInstance::getEffect),
+                BuiltInRegistries.MOB_EFFECT.byNameCodec().fieldOf("effect").forGetter(RandomMobEffectInstance::getEffect),
                 IntRange.CODEC.fieldOf("duration_range").forGetter(RandomMobEffectInstance::getDurationRange),
                 IntRange.CODEC.fieldOf("amplifier_range").forGetter(RandomMobEffectInstance::getAmplifierRange)
         );
     }
 
-    public Holder<MobEffect> getEffect() {
+    public MobEffect getEffect() {
         return this.effect;
     }
 
@@ -121,11 +121,11 @@ public class RandomMobEffectInstance {
         return new MobEffectInstance(this.getEffect(),
                 duration,
                 this.amplifierRange.getRandom(rand),
-                true, true, true, hidden);
+                true, true, true, hidden, this.effect.createFactorData());
     }
 
     public Component getDisplay() {
-        MutableComponent name = Component.translatable(this.effect.value().getDescriptionId());
+        MutableComponent name = Component.translatable(this.effect.getDescriptionId());
         int minAmp = this.amplifierRange.getMinInclusive();
         int maxAmp = this.amplifierRange.getMaxInclusive();
         if (minAmp == maxAmp) {

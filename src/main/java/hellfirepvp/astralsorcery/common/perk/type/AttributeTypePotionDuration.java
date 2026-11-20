@@ -55,7 +55,7 @@ public class AttributeTypePotionDuration extends PerkAttributeType {
     }
 
     private void modifyPotionDuration(Player player, LogicalSide side, MobEffectInstance newInstance, MobEffectInstance existingInstance) {
-        if (newInstance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL ||
+        if (newInstance.getEffect().getCategory() == MobEffectCategory.HARMFUL ||
                 existingInstance.getAmplifier() > newInstance.getAmplifier()) {
             return;
         }

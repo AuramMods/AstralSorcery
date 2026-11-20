@@ -12,7 +12,6 @@ import hellfirepvp.astralsorcery.common.lumen.binding.LumenBinding;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
 import hellfirepvp.astralsorcery.common.util.RandomMobEffectInstance;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 
@@ -43,11 +42,11 @@ public class LumenBindingTypeBuilder {
         return this;
     }
 
-    public LumenBindingTypeBuilder potionEffect(Holder<MobEffect> instance, IntRange duration, IntRange amplifier) {
+    public LumenBindingTypeBuilder potionEffect(MobEffect instance, IntRange duration, IntRange amplifier) {
         return this.potionEffect(RandomMobEffectInstance.of(instance, duration, amplifier));
     }
 
-    public LumenBindingTypeBuilder potionEffect(Holder<MobEffect> instance, IntRange duration, IntRange amplifier, RandomMobEffectInstance hiddenEffect) {
+    public LumenBindingTypeBuilder potionEffect(MobEffect instance, IntRange duration, IntRange amplifier, RandomMobEffectInstance hiddenEffect) {
         return this.potionEffect(RandomMobEffectInstance.of(instance, duration, amplifier, hiddenEffect));
     }
 

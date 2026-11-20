@@ -15,7 +15,6 @@ import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.RandomMobEffectInstance;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import hellfirepvp.astralsorcery.common.event.damage.DamageResolutionEvent;
-import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
@@ -61,7 +60,7 @@ public class LumenBindingHitAddEffectEffect extends LumenBindingEffect {
         return new LumenBindingHitAddEffectEffect(effect, chance);
     }
 
-    public static LumenBindingHitAddEffectEffect of(Holder<MobEffect> effect, IntRange durationRange, IntRange amplifierRange, float chance) {
+    public static LumenBindingHitAddEffectEffect of(MobEffect effect, IntRange durationRange, IntRange amplifierRange, float chance) {
         return of(RandomMobEffectInstance.of(effect, durationRange, amplifierRange), chance);
     }
 

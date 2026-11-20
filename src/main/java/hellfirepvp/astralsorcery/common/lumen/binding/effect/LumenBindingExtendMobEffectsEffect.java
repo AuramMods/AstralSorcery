@@ -88,7 +88,7 @@ public class LumenBindingExtendMobEffectsEffect extends LumenBindingEffect {
                     cooldowns.put(uuid, gameTime + effect.getCooldownTicks());
 
                     List<MobEffectInstance> toExtend = sPlayer.getActiveEffects().stream()
-                            .filter(inst -> inst.getEffect().value().getCategory() == MobEffectCategory.BENEFICIAL)
+                            .filter(inst -> inst.getEffect().getCategory() == MobEffectCategory.BENEFICIAL)
                             .map(inst -> MobEffectUtil.newDuration(inst, inst.getDuration() + effect.getExtensionTicks()))
                             .toList();
                     toExtend.forEach(sPlayer::addEffect);

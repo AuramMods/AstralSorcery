@@ -70,7 +70,7 @@ public class KeyPerkCleanseNegativeEffects extends KeyPerk {
         if (!prog.getPerkData().hasPerkEffect(this)) return;
 
         List<MobEffectInstance> badEffects = sPlayer.getActiveEffects().stream()
-                .filter(effect -> effect.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
+                .filter(effect -> effect.getEffect().getCategory() == MobEffectCategory.HARMFUL)
                 .toList();
         if (badEffects.isEmpty()) return;
         MiscUtil.getRandomEntry(badEffects, this.rand).ifPresent(effect -> {
