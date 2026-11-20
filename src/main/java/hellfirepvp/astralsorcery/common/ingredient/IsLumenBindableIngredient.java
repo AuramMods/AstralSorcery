@@ -59,7 +59,7 @@ public class IsLumenBindableIngredient implements AstralIngredient {
     public boolean isPotionLumenBindable(ItemStack stack) {
         if (!stack.is(ItemsAS.STARDEW.get())) return false;
         CompoundTag tag = stack.getTag();
-        if (tag == null || !(tag.contains("Potion", Tag.TAG_STRING) || tag.contains("CustomPotionEffects", Tag.TAG_LIST))) {
+        if (tag == null || !(tag.contains(PotionUtils.TAG_POTION, Tag.TAG_STRING) || tag.contains(PotionUtils.TAG_CUSTOM_POTION_EFFECTS, Tag.TAG_LIST))) {
             return false;
         }
         if (stack.getDamageValue() == stack.getMaxDamage()) return false;

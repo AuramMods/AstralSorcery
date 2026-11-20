@@ -34,7 +34,9 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Mth;
@@ -42,15 +44,16 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -98,26 +101,27 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
                 .orElse(ItemStack.EMPTY);
         if (bindableInput.isEmpty()) return;
 
-        Holder<Lumen> lumenRef = DataComponentsAS.LUMEN.getOrDefault(inputEntity.getItem(), LumenComponent.EMPTY).lumen();
-        if (lumenRef.is(LumenAS.NONE.getKey())) return;
-        Lumen lumen = lumenRef.value();
+        LumenComponent lumenComponent = DataComponentsAS.LUMEN.getOrDefault(inputEntity.getItem(), LumenComponent.EMPTY);
+        if (LumenAS.NONE.is(lumenComponent.key())) return;
+        Lumen lumen = lumenComponent.lumen().value();
 
-        LumenBindingTypeLoader.getInstance().getLumenBindingType(side, lumenRef.getKey()).ifPresent(bindingKey -> {
+        LumenBindingTypeLoader.getInstance().getLumenBindingType(side, lumenComponent.key()).ifPresent(bindingKey -> {
             ItemStack output = bindableInput.copyWithCount(1);
 
             if (IsLumenBindableIngredient.INSTANCE.isPotionLumenBindable(output)) {
-                if (lumenRef.is(LumenAS.PRISMATIC.getKey())) {
+                if (LumenAS.PRISMATIC.is(lumenComponent.key())) {
                     FlagsComponent cmp = DataComponentsAS.FLAGS.getOrDefault(output, FlagsComponent.EMPTY);
                     if (!cmp.isSet(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN)) {
 
-                        PotionContents contents = output.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-                        PotionContents newContents = new PotionContents(Optional.empty(), contents.customColor(), List.of());
-                        for (MobEffectInstance effect : contents.customEffects()) {
+                        List<MobEffectInstance> effects = new ArrayList<>();
+                        for (MobEffectInstance effect : PotionUtils.getCustomEffects(output)) {
                             effect = MobEffectUtil.newDuration(effect, Mth.ceil(effect.getDuration() * (1.2F + this.rand.nextFloat() * 0.5F)));
                             effect = MobEffectUtil.newAmplifier(effect, effect.getAmplifier() + 1);
-                            newContents = newContents.withEffectAdded(effect);
+                            effects.add(effect);
                         }
-                        output.set(DataComponents.POTION_CONTENTS, newContents);
+                        PotionUtils.setPotion(output, Potions.EMPTY);
+                        output.removeTagKey(PotionUtils.TAG_CUSTOM_POTION_EFFECTS);
+                        PotionUtils.setCustomEffects(output, effects);
 
                         cmp = cmp.setFlag(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN);
                         DataComponentsAS.FLAGS.set(output, cmp);
@@ -126,10 +130,11 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
                 } else {
                     LumenBindingTypeLoader.getInstance().getBindingType(side, bindingKey).ifPresent(bindingType -> {
                         bindingType.getPotionEffect().ifPresent(effect -> {
-                            PotionContents contents = output.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-                            contents = new PotionContents(Optional.empty(), contents.customColor(), contents.customEffects());
-                            contents = contents.withEffectAdded(effect);
-                            output.set(DataComponents.POTION_CONTENTS, contents);
+                            PotionUtils.setPotion(output, Potions.EMPTY);
+                            CompoundTag tag = output.getOrCreateTag();
+                            ListTag effects = tag.getList(PotionUtils.TAG_CUSTOM_POTION_EFFECTS, Tag.TAG_COMPOUND);
+                            effects.add(effect.save(new CompoundTag()));
+                            tag.put(PotionUtils.TAG_CUSTOM_POTION_EFFECTS, effects);
                             DataComponentsAS.RARITY.set(output, EnumExtensions.RARITY_RELIC);
 
                             ItemUtil.dropItem(level, inputEntity.getX(), inputEntity.getY(), inputEntity.getZ(), output);
@@ -144,7 +149,7 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
             int storeMaxAmount = cmp.getStoredLumen(lumen).map(StoredLumenComponent.StoredLumen::maxAmount).orElse(cmp.properties().capacity());
             int storedAmount = cmp.getStoredLumen(lumen).map(StoredLumenComponent.StoredLumen::amount).orElse(0);
 
-            if (!lumenRef.is(LumenAS.PRISMATIC.getKey())) {
+            if (!LumenAS.PRISMATIC.is(lumenComponent.key())) {
                 Set<Lumen> otherCopy = new HashSet<>(cmp.boundLumen().keySet());
                 for (Lumen otherLumen : otherCopy) {
                     if (otherLumen.getRegistryKey().isEmpty() || !LumenAS.PRISMATIC.is(otherLumen.getRegistryKey().get())) {
