@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.client.util.structure;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
@@ -136,7 +136,7 @@ public class StructureDisplayStorage {
             int sections = level.getSectionsCount();
             this.sections = new ChunkSection[sections];
             for (int y = 0; y < sections; y++) {
-                this.sections[y] = new ChunkSection(level, this, y * 16);
+                this.sections[y] = new ChunkSection(level, this, SectionPos.sectionToBlockCoord(level.getSectionYFromSectionIndex(y)));
             }
         }
 
@@ -168,7 +168,7 @@ public class StructureDisplayStorage {
 
         @Override
         public FluidState getFluidState(int x, int y, int z) {
-            return super.getFluidState(new BlockPos(x, y, z));
+            return this.getFluidState(new BlockPos(x, y, z));
         }
 
         @Nullable
@@ -196,7 +196,7 @@ public class StructureDisplayStorage {
 
         @Nullable
         @Override
-        public CompoundTag getBlockEntityNbtForSaving(BlockPos pos, HolderLookup.Provider registries) {
+        public CompoundTag getBlockEntityNbtForSaving(BlockPos pos) {
             return null;
         }
 

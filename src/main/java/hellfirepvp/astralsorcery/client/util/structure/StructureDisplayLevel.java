@@ -11,7 +11,6 @@ package hellfirepvp.astralsorcery.client.util.structure;
 import com.mojang.serialization.Lifecycle;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -20,13 +19,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.profiling.InactiveProfiler;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
@@ -45,7 +43,6 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.PrimaryLevelData;
 import net.minecraft.world.phys.Vec3;
@@ -66,14 +63,13 @@ import java.util.List;
 public class StructureDisplayLevel extends Level implements WorldGenLevel {
 
     private final StructureDisplayStorage storage = new StructureDisplayStorage(this);
-    private final TickRateManager tickRateManager = new TickRateManager();
     private final Scoreboard scoreboard = new Scoreboard();
     private final Holder<Biome> plainsBiome;
     private final BoundingBox structureBox;
     private final ChunkSource chunkSource;
 
     protected StructureDisplayLevel(RegistryAccess registryAccess, BoundingBox structureBox) {
-        super(LevelData.EMPTY, Level.OVERWORLD, registryAccess, resolveOverworld(registryAccess), Minecraft.getInstance()::getProfiler, true, false, 0, 0);
+        super(LevelData.EMPTY, Level.OVERWORLD, registryAccess, resolveOverworld(registryAccess), () -> InactiveProfiler.INSTANCE, true, false, 0, 0);
         this.plainsBiome = registryAccess.registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
         this.structureBox = structureBox;
         this.chunkSource = new StructureDisplayLevelComponents.Chunks(this);
@@ -161,23 +157,18 @@ public class StructureDisplayLevel extends Level implements WorldGenLevel {
         return this.getEntities().get(id);
     }
 
-    @Override
-    public TickRateManager tickRateManager() {
-        return this.tickRateManager;
-    }
-
     @Nullable
     @Override
-    public MapItemSavedData getMapData(MapId mapId) {
+    public MapItemSavedData getMapData(String mapId) {
         return null;
     }
 
     @Override
-    public void setMapData(MapId mapId, MapItemSavedData mapData) {}
+    public void setMapData(String mapId, MapItemSavedData mapData) {}
 
     @Override
-    public MapId getFreeMapId() {
-        return new MapId(0);
+    public int getFreeMapId() {
+        return 0;
     }
 
     @Override
@@ -197,27 +188,6 @@ public class StructureDisplayLevel extends Level implements WorldGenLevel {
     protected LevelEntityGetter<Entity> getEntities() {
         return StructureDisplayLevelComponents.Entities.EMPTY;
     }
-
-    @Override
-    public PotionBrewing potionBrewing() {
-        return PotionBrewing.EMPTY;
-    }
-
-    @Override
-    public void setDayTimeFraction(float dayTimeFraction) {}
-
-    @Override
-    public float getDayTimeFraction() {
-        return 0;
-    }
-
-    @Override
-    public float getDayTimePerTick() {
-        return 0;
-    }
-
-    @Override
-    public void setDayTimePerTick(float dayTimePerTick) {}
 
     @Override
     public long getSeed() {
@@ -248,7 +218,7 @@ public class StructureDisplayLevel extends Level implements WorldGenLevel {
     public void levelEvent(@Nullable Player player, int type, BlockPos pos, int data) {}
 
     @Override
-    public void gameEvent(Holder<GameEvent> gameEvent, Vec3 pos, GameEvent.Context context) {}
+    public void gameEvent(GameEvent gameEvent, Vec3 pos, GameEvent.Context context) {}
 
     @Override
     public float getShade(Direction direction, boolean shade) {

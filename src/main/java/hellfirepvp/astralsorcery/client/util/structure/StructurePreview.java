@@ -36,7 +36,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -80,25 +79,26 @@ public class StructurePreview {
         this.center = center;
         this.levelKey = level.dimension();
         this.structure = structure;
-        this.buildContents(level.registryAccess());
+        this.buildContents(level);
 
         this.persistenceTest = this.persistenceTest.and((lvl, pos) -> lvl.dimension().equals(this.levelKey));
     }
 
-    private void buildContents(RegistryAccess registryAccess) {
+    private void buildContents(Level level) {
         structure.getContents().forEach((relative, matchState) -> {
             BlockState state = matchState.getDescriptiveState(0L);
             this.states.put(relative, state);
             if (state.hasBlockEntity() && state.getBlock() instanceof EntityBlock entityBlock) {
                 BlockEntity tile = entityBlock.newBlockEntity(center.offset(relative), state);
+                if (tile == null) return;
+                tile.setLevel(level);
                 this.tiles.put(relative, tile);
 
                 MatchableTile matchTile = structure.getTileEntityAt(relative);
                 if (matchTile == null) return;
-                CompoundTag tag = new CompoundTag();
-                tile.saveWithoutMetadata(registryAccess);
+                CompoundTag tag = tile.saveWithoutMetadata();
                 matchTile.writeDisplayData(tile, 0L, tag);
-                tile.loadWithComponents(tag, registryAccess);
+                tile.load(tag);
             }
         });
     }
