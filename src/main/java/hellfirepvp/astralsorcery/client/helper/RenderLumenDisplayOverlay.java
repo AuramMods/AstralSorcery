@@ -12,20 +12,20 @@ import com.mojang.datafixers.util.Either;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityLumenDisplay;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.client.ClientHooks;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 
 import java.util.List;
 
@@ -41,14 +41,14 @@ public class RenderLumenDisplayOverlay {
     public static final ResourceLocation LUMEN_LAYER_ID = AstralSorcery.key("lumen_display_overlay");
     public static final LayerRenderer RENDERER = new LayerRenderer();
 
-    public static void registerLayers(RegisterGuiLayersEvent event) {
-        event.registerBelow(VanillaGuiLayers.CROSSHAIR, LUMEN_LAYER_ID, RENDERER);
+    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelow(VanillaGuiOverlay.CROSSHAIR.id(), LUMEN_LAYER_ID.getPath(), RENDERER);
     }
 
-    public static class LayerRenderer implements LayeredDraw.Layer {
+    public static class LayerRenderer implements IGuiOverlay {
 
         @Override
-        public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
             if (Minecraft.getInstance().options.hideGui) return;
             if (Minecraft.getInstance().level == null) return;
 
@@ -61,7 +61,7 @@ public class RenderLumenDisplayOverlay {
             MiscUtil.getTileAt(level, blockHitResult.getBlockPos(), TileEntityLumenDisplay.class, true).ifPresent(tile -> {
                 tile.getDisplayTooltip().ifPresent(cmp -> {
                     Font font = Minecraft.getInstance().font;
-                    List<ClientTooltipComponent> components = ClientHooks.gatherTooltipComponentsFromElements(ItemStack.EMPTY,
+                    List<ClientTooltipComponent> components = ForgeHooksClient.gatherTooltipComponentsFromElements(ItemStack.EMPTY,
                             List.of(Either.right(cmp)), 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), font);
 
                     guiGraphics.pose().pushPose();

@@ -36,7 +36,6 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.neoforged.neoforge.client.GlStateBackup;
 import org.joml.Matrix4f;
 
 /**
@@ -83,7 +82,7 @@ public class ArtifactDecoratedClientComponent implements ClientTooltipComponent 
         if (container.canAddEffects()) {
             this.createParticles(container);
         }
-        container.renderAll(guiGraphics, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+        container.renderAll(guiGraphics, Minecraft.getInstance().getFrameTime());
         RenderSystem.enableDepthTest();
 
         this.text.renderText(font, x, y, guiGraphics.pose().last().pose(), guiGraphics.bufferSource());

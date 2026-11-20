@@ -68,7 +68,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.*;
+import net.minecraftforge.client.event.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,8 +153,8 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(RenderersAS::registerTileEntityRenders);
         modEventBus.addListener(ModelLayersAS::registerModelLayers);
         modEventBus.addListener(ClientExtensionsAS::registerExtensions);
-        modEventBus.addListener(RenderLumenDisplayOverlay::registerLayers);
-        modEventBus.addListener(RenderPerkExperienceOverlay::registerLayers);
+        modEventBus.addListener(RenderLumenDisplayOverlay::registerOverlays);
+        modEventBus.addListener(RenderPerkExperienceOverlay::registerOverlays);
         modEventBus.addListener(MenuScreensAS::registerScreens);
 
         modEventBus.addListener(this::registerCustomComponents);

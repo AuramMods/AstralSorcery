@@ -34,9 +34,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -72,7 +72,7 @@ public class WandPreviewRenderHelper {
 
     public static void attachEventListeners(IEventBus eventBus) {
         eventBus.addListener(WandPreviewRenderHelper::onRenderLevelStage);
-        eventBus.addListener(WandPreviewRenderHelper::onRenderGuiLayer);
+        eventBus.addListener(WandPreviewRenderHelper::onRenderGuiOverlay);
     }
 
     private static void onRenderLevelStage(RenderLevelStageEvent event) {
@@ -203,8 +203,8 @@ public class WandPreviewRenderHelper {
                 level, origin, true, -1, maxBlocks, false);
     }
 
-    private static void onRenderGuiLayer(RenderGuiLayerEvent.Post event) {
-        if (!event.getName().equals(VanillaGuiLayers.HOTBAR)) return;
+    private static void onRenderGuiOverlay(RenderGuiOverlayEvent.Post event) {
+        if (!event.getOverlay().id().equals(VanillaGuiOverlay.HOTBAR.id())) return;
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;

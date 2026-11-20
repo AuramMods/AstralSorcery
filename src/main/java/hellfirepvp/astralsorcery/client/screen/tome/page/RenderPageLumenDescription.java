@@ -26,7 +26,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.client.ClientHooks;
+import net.minecraftforge.client.ForgeHooksClient;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -79,7 +79,7 @@ public class RenderPageLumenDescription extends RenderPage {
 
     private int renderComponent(GuiGraphics guiGraphics, StoredLumenDisplayTooltip cmp, int x, int y) {
         Font font = Minecraft.getInstance().font;
-        List<ClientTooltipComponent> components = ClientHooks.gatherTooltipComponentsFromElements(ItemStack.EMPTY,
+        List<ClientTooltipComponent> components = ForgeHooksClient.gatherTooltipComponentsFromElements(ItemStack.EMPTY,
                 List.of(Either.right(cmp)), 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), font);
 
         guiGraphics.pose().pushPose();

@@ -23,11 +23,9 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -36,8 +34,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -51,8 +51,8 @@ public class RenderPerkExperienceOverlay {
     public static final ResourceLocation PERK_EXPERIENCE_ID = AstralSorcery.key("perk_experience_overlay");
     public static final LayerRenderer RENDERER = new LayerRenderer();
 
-    public static void registerLayers(RegisterGuiLayersEvent event) {
-        event.registerBelow(VanillaGuiLayers.EXPERIENCE_BAR, PERK_EXPERIENCE_ID, RENDERER);
+    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelow(VanillaGuiOverlay.EXPERIENCE_BAR.id(), PERK_EXPERIENCE_ID.getPath(), RENDERER);
     }
 
     public static void onClientTick(ClientTickEvent event) {
@@ -69,7 +69,7 @@ public class RenderPerkExperienceOverlay {
         RENDERER.updateRevealTicks();
     }
 
-    public static class LayerRenderer implements LayeredDraw.Layer {
+    public static class LayerRenderer implements IGuiOverlay {
 
         private static final int fadeTicks = 15;
         private static final float visibilityChange = 1F / ((float) fadeTicks);
@@ -96,7 +96,7 @@ public class RenderPerkExperienceOverlay {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
             if (Minecraft.getInstance().options.hideGui) return;
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
