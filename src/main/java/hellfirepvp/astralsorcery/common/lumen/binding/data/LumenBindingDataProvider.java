@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.common.lumen.binding.data;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.lumen.binding.LumenBindingType;
+import hellfirepvp.astralsorcery.datagen.data.DatagenJson;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
@@ -84,7 +85,7 @@ public abstract class LumenBindingDataProvider implements DataProvider {
             this.registerBindingTypes();
 
             if (!this.lumenMapping.isEmpty()) {
-                registers.add(DataProvider.saveStable(output,
+                registers.add(DatagenJson.saveStable(output,
                         provider,
                         LumenBindingTypeMapping.CODEC,
                         LumenBindingTypeMapping.of(this.lumenMapping),
@@ -98,7 +99,7 @@ public abstract class LumenBindingDataProvider implements DataProvider {
                 builtBindingTypes.add(bindingType);
 
                 Path path = this.pathProvider.json(bindingType.id);
-                registers.add(DataProvider.saveStable(output, provider, LumenBindingType.CODEC, bindingType.bindingType, path));
+                registers.add(DatagenJson.saveStable(output, provider, LumenBindingType.CODEC, bindingType.bindingType, path));
             });
 
             return CompletableFuture.allOf(registers.toArray(CompletableFuture[]::new));

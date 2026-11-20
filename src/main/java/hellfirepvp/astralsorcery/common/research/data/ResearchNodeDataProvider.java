@@ -9,6 +9,7 @@
 package hellfirepvp.astralsorcery.common.research.data;
 
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
+import hellfirepvp.astralsorcery.datagen.data.DatagenJson;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -57,7 +58,7 @@ public abstract class ResearchNodeDataProvider implements DataProvider {
                 }
 
                 Path path = this.pathProvider.json(node.getKey());
-                nodesRegisters.add(DataProvider.saveStable(output, provider, ResearchNode.CODEC, node, path));
+                nodesRegisters.add(DatagenJson.saveStable(output, provider, ResearchNode.CODEC, node, path));
             });
 
             return CompletableFuture.allOf(nodesRegisters.toArray(CompletableFuture[]::new));

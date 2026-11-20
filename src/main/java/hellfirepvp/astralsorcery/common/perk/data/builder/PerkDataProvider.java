@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.perk.data.builder;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.perk.data.RawPerkData;
+import hellfirepvp.astralsorcery.datagen.data.DatagenJson;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -60,7 +61,7 @@ public abstract class PerkDataProvider implements DataProvider {
                 builtPerks.add(builtPerk);
 
                 Path path = this.pathProvider.json(perkName);
-                perkRegisters.add(DataProvider.saveStable(output, provider, RawPerkData.CODEC, builtPerk.getRawPerk(), path));
+                perkRegisters.add(DatagenJson.saveStable(output, provider, RawPerkData.CODEC, builtPerk.getRawPerk(), path));
             });
 
             if (generateFullTree) {
@@ -70,7 +71,7 @@ public abstract class PerkDataProvider implements DataProvider {
                         .toList();
 
                 Path allPerksPath = this.pathProvider.json(AstralSorcery.key("_full_tree"));
-                perkRegisters.add(DataProvider.saveStable(output, provider, RawPerkData.CODEC.listOf(), builtRawPerks, allPerksPath));
+                perkRegisters.add(DatagenJson.saveStable(output, provider, RawPerkData.CODEC.listOf(), builtRawPerks, allPerksPath));
             }
 
             return CompletableFuture.allOf(perkRegisters.toArray(CompletableFuture[]::new));

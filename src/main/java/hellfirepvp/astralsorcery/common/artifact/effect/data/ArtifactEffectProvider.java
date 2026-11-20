@@ -15,6 +15,7 @@ import hellfirepvp.astralsorcery.common.artifact.effect.*;
 import hellfirepvp.astralsorcery.common.util.data.FloatRange;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import hellfirepvp.astralsorcery.common.util.data.RandomWeightedList;
+import hellfirepvp.astralsorcery.datagen.data.DatagenJson;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -139,7 +140,7 @@ public abstract class ArtifactEffectProvider implements DataProvider {
                 builtEffects.add(condition);
 
                 Path path = this.pathProvider.json(effectName);
-                effectRegisters.add(DataProvider.saveStable(output, provider, SelectableArtifactEffect.CODEC, condition.toSelectable(), path));
+                effectRegisters.add(DatagenJson.saveStable(output, provider, SelectableArtifactEffect.CODEC, condition.toSelectable(), path));
             });
 
             return CompletableFuture.allOf(effectRegisters.toArray(CompletableFuture[]::new));

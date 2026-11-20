@@ -13,6 +13,7 @@ import hellfirepvp.astralsorcery.common.artifact.ArtifactPartIdSelector;
 import hellfirepvp.astralsorcery.common.artifact.SelectableArtifactCondition;
 import hellfirepvp.astralsorcery.common.artifact.condition.*;
 import hellfirepvp.astralsorcery.common.util.data.DescribedEntityPredicate;
+import hellfirepvp.astralsorcery.datagen.data.DatagenJson;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
@@ -128,7 +129,7 @@ public abstract class ArtifactConditionProvider implements DataProvider {
                 builtConditions.add(condition);
 
                 Path path = this.pathProvider.json(conditionName);
-                conditionRegisters.add(DataProvider.saveStable(output, provider, SelectableArtifactCondition.CODEC, condition.toSelectable(), path));
+                conditionRegisters.add(DatagenJson.saveStable(output, provider, SelectableArtifactCondition.CODEC, condition.toSelectable(), path));
             });
 
             return CompletableFuture.allOf(conditionRegisters.toArray(CompletableFuture[]::new));
