@@ -104,8 +104,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
     runtimeOnly "io.github.llamalad7:mixinextras-forge:${mixinextras_version}"
-    jarJar("io.github.llamalad7:mixinextras-forge:[${mixinextras_version},0.6)") {
-        jarJar.pin(it, mixinextras_version)
+    jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}") {
+        jarJar.ranged(it, "[${mixinextras_version},0.6)")
     }
 }
 
