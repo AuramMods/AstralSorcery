@@ -20,6 +20,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -36,11 +38,15 @@ public class MobEffectsAS {
 
     public static final RegistryObject<MobEffect> RAMPAGE =
             register("rampage", () -> new BasicMobEffect(MobEffectCategory.BENEFICIAL, 0xBB4400)
-                    .addAttributeModifier(Attributes.ATTACK_DAMAGE, Mods.MINECRAFT.key("effect.rampage.damage"), 0.2F, AttributeModifier.Operation.ADD_VALUE)
-                    .addAttributeModifier(Attributes.ATTACK_SPEED, Mods.MINECRAFT.key("effect.rampage.speed"), 0.03F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
-                    .addAttributeModifier(Attributes.MOVEMENT_SPEED, Mods.MINECRAFT.key("effect.rampage.movement"), 0.03F, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                    .addAttributeModifier(Attributes.ATTACK_DAMAGE, modifierId("effect.rampage.damage"), 0.2F, AttributeModifier.Operation.ADDITION)
+                    .addAttributeModifier(Attributes.ATTACK_SPEED, modifierId("effect.rampage.speed"), 0.03F, AttributeModifier.Operation.MULTIPLY_BASE)
+                    .addAttributeModifier(Attributes.MOVEMENT_SPEED, modifierId("effect.rampage.movement"), 0.03F, AttributeModifier.Operation.MULTIPLY_BASE));
     public static final RegistryObject<MobEffect> PHOENIX_BLESSING =
             register("phoenix_blessing", () -> new RevivalMobEffect(MobEffectCategory.BENEFICIAL, 0xFF9944));
+
+    private static String modifierId(String name) {
+        return UUID.nameUUIDFromBytes(Mods.MINECRAFT.key(name).toString().getBytes(StandardCharsets.UTF_8)).toString();
+    }
 
     private static <T extends MobEffect> RegistryObject<T> register(String name, Supplier<T> effectFn) {
         return MOB_EFFECT_REGISTER.register(name, effectFn);

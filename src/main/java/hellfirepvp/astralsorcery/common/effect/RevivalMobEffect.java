@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.effect;
 
 import hellfirepvp.astralsorcery.common.lib.MobEffectsAS;
 import hellfirepvp.astralsorcery.common.util.MobEffectUtil;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -33,10 +33,6 @@ public class RevivalMobEffect extends BasicMobEffect {
         super(category, color);
     }
 
-    public RevivalMobEffect(MobEffectCategory category, int color, ParticleOptions particle) {
-        super(category, color, particle);
-    }
-
     @Override
     public void attachEventListeners(IEventBus bus) {
         super.attachEventListeners(bus);
@@ -47,12 +43,11 @@ public class RevivalMobEffect extends BasicMobEffect {
         if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
 
         LivingEntity entity = event.getEntity();
-        if (!entity.hasEffect(MobEffectsAS.PHOENIX_BLESSING)) return;
-
         Level level = entity.level();
         if (level.isClientSide()) return;
 
-        MobEffectInstance inst = entity.getEffect(MobEffectsAS.PHOENIX_BLESSING);
+        MobEffect blessing = MobEffectsAS.PHOENIX_BLESSING.get();
+        MobEffectInstance inst = entity.getEffect(blessing);
         if (inst == null || inst.getDuration() <= 0) return;
         int amplifier = inst.getAmplifier();
         int nextAmplifier = amplifier - 1;
@@ -63,7 +58,7 @@ public class RevivalMobEffect extends BasicMobEffect {
         entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 1));
         entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0));
 
-        entity.removeEffect(MobEffectsAS.PHOENIX_BLESSING);
+        entity.removeEffect(blessing);
         if (nextAmplifier > 0) {
             entity.addEffect(MobEffectUtil.newAmplifier(inst, nextAmplifier));
         }

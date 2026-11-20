@@ -67,12 +67,13 @@ public class KeyPerkRampage extends KeyPerk {
         PlayerProgress progress = ResearchManager.getProgress(sPlayer, side);
         if (!progress.getPerkData().hasPerkEffect(this)) return;
 
-        MobEffectInstance rampageInst = sPlayer.getEffect(MobEffectsAS.RAMPAGE);
+        var rampage = MobEffectsAS.RAMPAGE.get();
+        MobEffectInstance rampageInst = sPlayer.getEffect(rampage);
         if (rampageInst != null) {
             rampageInst = MobEffectUtil.newAmplifier(rampageInst, rampageInst.getAmplifier() + 1);
             rampageInst = MobEffectUtil.newDuration(rampageInst, Math.max(rampageInst.getDuration(), 60));
         } else {
-            rampageInst = new MobEffectInstance(MobEffectsAS.RAMPAGE, 60, 0, false, false, true);
+            rampageInst = new MobEffectInstance(rampage, 60, 0, false, false, true);
         }
         sPlayer.addEffect(rampageInst);
     }

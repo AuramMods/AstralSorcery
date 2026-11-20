@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.effect;
 
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -25,11 +24,6 @@ public class BasicMobEffect extends MobEffect {
 
     public BasicMobEffect(MobEffectCategory category, int color) {
         super(category, color);
-        this.attachEventListeners(MinecraftForge.EVENT_BUS);
-    }
-
-    public BasicMobEffect(MobEffectCategory category, int color, ParticleOptions particle) {
-        super(category, color, particle);
         this.attachEventListeners(MinecraftForge.EVENT_BUS);
     }
 
