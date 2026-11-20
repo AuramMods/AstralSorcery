@@ -62,9 +62,9 @@ public class VSFXPlaneParticle extends EntityVisualScreenFX {
         float v1 = uv.v() + uv.vHeight();
 
         PoseStack.Pose pose = graphics.pose().last();
-        buf.addVertex(pose, x,         y,         0).setUv(u0, v0).setColor(color);
-        buf.addVertex(pose, x,         y + scale, 0).setUv(u0, v1).setColor(color);
-        buf.addVertex(pose, x + scale, y + scale, 0).setUv(u1, v1).setColor(color);
-        buf.addVertex(pose, x + scale, y,         0).setUv(u1, v0).setColor(color);
+        buf.vertex(pose.pose(), x,         y,         0).uv(u0, v0).color(color).endVertex();
+        buf.vertex(pose.pose(), x,         y + scale, 0).uv(u0, v1).color(color).endVertex();
+        buf.vertex(pose.pose(), x + scale, y + scale, 0).uv(u1, v1).color(color).endVertex();
+        buf.vertex(pose.pose(), x + scale, y,         0).uv(u1, v0).color(color).endVertex();
     }
 }

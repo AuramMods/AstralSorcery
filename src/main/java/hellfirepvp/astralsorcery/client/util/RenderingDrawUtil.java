@@ -98,10 +98,10 @@ public class RenderingDrawUtil {
         float u0 = uv.u(), v0 = uv.v();
         float u1 = uv.u() + uv.uWidth(), v1 = uv.v() + uv.vHeight();
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR, GameRenderer::getPositionTexColorShader, buf -> {
-            buf.addVertex(pose, x,         y, 0)         .setUv(u0, v0).setColor(color.getColor());
-            buf.addVertex(pose, x,         y + height, 0).setUv(u0, v1).setColor(color.getColor());
-            buf.addVertex(pose, x + width, y + height, 0).setUv(u1, v1).setColor(color.getColor());
-            buf.addVertex(pose, x + width, y, 0)         .setUv(u1, v0).setColor(color.getColor());
+            buf.vertex(pose.pose(), x,         y, 0)         .uv(u0, v0).color(color.getColor()).endVertex();
+            buf.vertex(pose.pose(), x,         y + height, 0).uv(u0, v1).color(color.getColor()).endVertex();
+            buf.vertex(pose.pose(), x + width, y + height, 0).uv(u1, v1).color(color.getColor()).endVertex();
+            buf.vertex(pose.pose(), x + width, y, 0)         .uv(u1, v0).color(color.getColor()).endVertex();
         });
     }
 
@@ -119,10 +119,10 @@ public class RenderingDrawUtil {
         float u0 = uv.u(), v0 = uv.v();
         float u1 = uv.u() + uv.uWidth(), v1 = uv.v() + uv.vHeight();
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX, GameRenderer::getPositionTexShader, buf -> {
-            buf.addVertex(pose, x,         y, 0)         .setUv(u0, v0);
-            buf.addVertex(pose, x,         y + height, 0).setUv(u0, v1);
-            buf.addVertex(pose, x + width, y + height, 0).setUv(u1, v1);
-            buf.addVertex(pose, x + width, y, 0)         .setUv(u1, v0);
+            buf.vertex(pose.pose(), x,         y, 0)         .uv(u0, v0).endVertex();
+            buf.vertex(pose.pose(), x,         y + height, 0).uv(u0, v1).endVertex();
+            buf.vertex(pose.pose(), x + width, y + height, 0).uv(u1, v1).endVertex();
+            buf.vertex(pose.pose(), x + width, y, 0)         .uv(u1, v0).endVertex();
         });
     }
 
@@ -131,35 +131,39 @@ public class RenderingDrawUtil {
 
         from
                 .drawPos(matr, vb)
-                .setUv(uv.u(), uv.v())
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight)
-                .setOverlay(packedOverlay)
-                .setNormal(0, 1, 0);
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv(uv.u(), uv.v())
+                .overlayCoords(packedOverlay)
+                .uv2(packedLight)
+                .normal(0, 1, 0)
+                .endVertex();
 
         from.copy().add(vecV)
                 .drawPos(matr, vb)
-                .setUv(uv.u(), uv.v() + uv.vHeight())
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight)
-                .setOverlay(packedOverlay)
-                .setNormal(0, 1, 0);
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv(uv.u(), uv.v() + uv.vHeight())
+                .overlayCoords(packedOverlay)
+                .uv2(packedLight)
+                .normal(0, 1, 0)
+                .endVertex();
 
         from.copy().add(vecU).add(vecV)
                 .drawPos(matr, vb)
-                .setUv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight())
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight)
-                .setOverlay(packedOverlay)
-                .setNormal(0, 1, 0);
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight())
+                .overlayCoords(packedOverlay)
+                .uv2(packedLight)
+                .normal(0, 1, 0)
+                .endVertex();
 
         from.copy().add(vecU)
                 .drawPos(matr, vb)
-                .setUv(uv.u() + uv.uWidth(), uv.v())
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight)
-                .setOverlay(packedOverlay)
-                .setNormal(0, 1, 0);
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv(uv.u() + uv.uWidth(), uv.v())
+                .overlayCoords(packedOverlay)
+                .uv2(packedLight)
+                .normal(0, 1, 0)
+                .endVertex();
     }
 
     public static void renderFacingQuad(VertexConsumer vb, Quaternionf quat, Vector3 pos, ColorWrapper color, float scale, int packedLight, UVFrame uv) {
@@ -178,24 +182,28 @@ public class RenderingDrawUtil {
         Matrix4f pose = poseStack.last().pose();
         new Vector3(1, -1, 0).rotate(quat).multiply(scale).add(pos)
                 .drawPos(pose, vb)
-                .setUv(u + uLength, v + vLength)
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight);
+                .uv(u + uLength, v + vLength)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv2(packedLight)
+                .endVertex();
         new Vector3(1, 1, 0).rotate(quat).multiply(scale).add(pos.getX(), pos.getY(), pos.getZ())
                 .drawPos(pose, vb)
-                .setUv(u + uLength, v)
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight);
+                .uv(u + uLength, v)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv2(packedLight)
+                .endVertex();
         new Vector3(-1, 1, 0).rotate(quat).multiply(scale).add(pos.getX(), pos.getY(), pos.getZ())
                 .drawPos(pose, vb)
-                .setUv(u, v)
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight);
+                .uv(u, v)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv2(packedLight)
+                .endVertex();
         new Vector3(-1, -1, 0).rotate(quat).multiply(scale).add(pos.getX(), pos.getY(), pos.getZ())
                 .drawPos(pose, vb)
-                .setUv(u, v + vLength)
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setLight(packedLight);
+                .uv(u, v + vLength)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
+                .uv2(packedLight)
+                .endVertex();
     }
 
     public static void renderAngledTexturedQuad(VertexConsumer vb, PoseStack pose, Vector3 pos, Vector3 axis, float angle, float scale, UVFrame uv, ColorWrapper color, int packedLight) {
@@ -203,15 +211,15 @@ public class RenderingDrawUtil {
         Matrix4f matr = pose.last().pose();
 
         Vector3 vec = renderOffset.copy().rotate(Math.toRadians(90), axis).normalize().multiply(scale).add(pos);
-        vec.drawPos(matr, vb).setUv(uv.u(), uv.v() + uv.vHeight()).setColor(color.getColor()).setLight(packedLight);
+        vec.drawPos(matr, vb).uv(uv.u(), uv.v() + uv.vHeight()).color(color.getColor()).uv2(packedLight).endVertex();
 
         vec = renderOffset.copy().multiply(-1F).normalize().multiply(scale).add(pos);
-        vec.drawPos(matr, vb).setUv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight()).setColor(color.getColor()).setLight(packedLight);
+        vec.drawPos(matr, vb).uv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight()).color(color.getColor()).uv2(packedLight).endVertex();
 
         vec = renderOffset.copy().rotate(Math.toRadians(270), axis).normalize().multiply(scale).add(pos);
-        vec.drawPos(matr, vb).setUv(uv.u() + uv.uWidth(), uv.v()).setColor(color.getColor()).setLight(packedLight);
+        vec.drawPos(matr, vb).uv(uv.u() + uv.uWidth(), uv.v()).color(color.getColor()).uv2(packedLight).endVertex();
 
         vec = renderOffset.copy().normalize().multiply(scale).add(pos);
-        vec.drawPos(matr, vb).setUv(uv.u(), uv.v()).setColor(color.getColor()).setLight(packedLight);
+        vec.drawPos(matr, vb).uv(uv.u(), uv.v()).color(color.getColor()).uv2(packedLight).endVertex();
     }
 }

@@ -97,17 +97,21 @@ public class VSFXLightBeam extends EntityVisualScreenFX {
         Vector2f dirNormalTo = new Vector2f(dirNormal).mul(sizeTo / 2F);
 
         PoseStack.Pose pose = graphics.pose().last();
-        buf.addVertex(pose, from.x() + dirNormalFrom.x(), from.y() + dirNormalFrom.y(), 0)
-                .setUv(uv.u(), uv.v())
-                .setColor(color);
-        buf.addVertex(pose, to.x() + dirNormalTo.x(), to.y() + dirNormalTo.y(), 0)
-                .setUv(uv.u(), uv.v() + uv.vHeight())
-                .setColor(color);
-        buf.addVertex(pose, to.x() - dirNormalTo.x(), to.y() - dirNormalTo.y(), 0)
-                .setUv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight())
-                .setColor(color);
-        buf.addVertex(pose, from.x() - dirNormalFrom.x(), from.y() - dirNormalFrom.y(), 0)
-                .setUv(uv.u() + uv.uWidth(), uv.v())
-                .setColor(color);
+        buf.vertex(pose.pose(), from.x() + dirNormalFrom.x(), from.y() + dirNormalFrom.y(), 0)
+                .uv(uv.u(), uv.v())
+                .color(color)
+                .endVertex();
+        buf.vertex(pose.pose(), to.x() + dirNormalTo.x(), to.y() + dirNormalTo.y(), 0)
+                .uv(uv.u(), uv.v() + uv.vHeight())
+                .color(color)
+                .endVertex();
+        buf.vertex(pose.pose(), to.x() - dirNormalTo.x(), to.y() - dirNormalTo.y(), 0)
+                .uv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight())
+                .color(color)
+                .endVertex();
+        buf.vertex(pose.pose(), from.x() - dirNormalFrom.x(), from.y() - dirNormalFrom.y(), 0)
+                .uv(uv.u() + uv.uWidth(), uv.v())
+                .color(color)
+                .endVertex();
     }
 }

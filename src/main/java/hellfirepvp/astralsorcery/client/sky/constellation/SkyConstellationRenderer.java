@@ -164,10 +164,10 @@ public class SkyConstellationRenderer {
             pose.mulPose(Axis.ZP.rotationDegrees(starPoint.y()));
 
             Matrix4f mat = pose.last().pose();
-            buf.addVertex(mat, -size, 100,  size).setUv(1, 1).setColor(color.getColor());
-            buf.addVertex(mat,  size, 100,  size).setUv(0, 1).setColor(color.getColor());
-            buf.addVertex(mat,  size, 100, -size).setUv(0, 0).setColor(color.getColor());
-            buf.addVertex(mat, -size, 100, -size).setUv(1, 0).setColor(color.getColor());
+            buf.vertex(mat, -size, 100,  size).uv(1, 1).color(color.getColor()).endVertex();
+            buf.vertex(mat,  size, 100,  size).uv(0, 1).color(color.getColor()).endVertex();
+            buf.vertex(mat,  size, 100, -size).uv(0, 0).color(color.getColor()).endVertex();
+            buf.vertex(mat, -size, 100, -size).uv(1, 0).color(color.getColor()).endVertex();
 
             pose.popPose();
         });
@@ -203,22 +203,22 @@ public class SkyConstellationRenderer {
             Matrix4f rot = new Matrix4f()
                     .rotate(Axis.YP.rotationDegrees(start.x() - offset.x()))
                     .rotate(Axis.ZP.rotationDegrees(start.y() - offset.y()));
-            buf.addVertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).setUv(0, 0).setColor(color.getColor());
+            buf.vertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).uv(0, 0).color(color.getColor()).endVertex();
 
             rot = new Matrix4f()
                     .rotate(Axis.YP.rotationDegrees(end.x() - offset.x()))
                     .rotate(Axis.ZP.rotationDegrees(end.y() - offset.y()));
-            buf.addVertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).setUv(1, 0).setColor(color.getColor());
+            buf.vertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).uv(1, 0).color(color.getColor()).endVertex();
 
             rot = new Matrix4f()
                     .rotate(Axis.YP.rotationDegrees(end.x() + offset.x()))
                     .rotate(Axis.ZP.rotationDegrees(end.y() + offset.y()));
-            buf.addVertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).setUv(1, 1).setColor(color.getColor());
+            buf.vertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).uv(1, 1).color(color.getColor()).endVertex();
 
             rot = new Matrix4f()
                     .rotate(Axis.YP.rotationDegrees(start.x() + offset.x()))
                     .rotate(Axis.ZP.rotationDegrees(start.y() + offset.y()));
-            buf.addVertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).setUv(0, 1).setColor(color.getColor());
+            buf.vertex(new Matrix4f(poseMatrix).mul(rot), 0, 100, 0).uv(0, 1).color(color.getColor()).endVertex();
         });
     }
 

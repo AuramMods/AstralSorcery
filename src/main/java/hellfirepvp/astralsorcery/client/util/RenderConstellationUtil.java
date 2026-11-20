@@ -84,8 +84,9 @@ public class RenderConstellationUtil {
 
                         Vector3 pos = vec00.copy().add(dir.copy().multiply(u)).add(vecV.copy().multiply(v));
                         pos.drawPos(offset, buf)
-                                .setColor(c)
-                                .setUv(u, v);
+                                .uv(u, v)
+                                .color(c)
+                                .endVertex();
                     }
                 });
             });
@@ -112,8 +113,9 @@ public class RenderConstellationUtil {
 
                     Vector3 pos = starVec.copy().addX(uLength * u * 2).addY(vLength * v * 2);
                     pos.drawPos(offset, buf)
-                            .setColor(c)
-                            .setUv(u, v);
+                            .uv(u, v)
+                            .color(c)
+                            .endVertex();
                 }
 
                 stars.put(star.asPoint().toFloat(), new FloatRectangle((float) starVec.getX(), (float) starVec.getY(), uLength * 2, vLength * 2));
@@ -150,16 +152,16 @@ public class RenderConstellationUtil {
                     .add(drawOffset);
 
             Vector3 at = offset.copy().add(dirU.copy().multiply(0)).add(dirV.copy().multiply(1));
-            at.drawPos(pose, vb).setUv(1, 0).setColor(connectionColor);
+            at.drawPos(pose, vb).uv(1, 0).color(connectionColor).endVertex();
 
             at = offset.copy().add(dirU.copy().multiply(1)).add(dirV.copy().multiply(1));
-            at.drawPos(pose, vb).setUv(0, 0).setColor(connectionColor);
+            at.drawPos(pose, vb).uv(0, 0).color(connectionColor).endVertex();
 
             at = offset.copy().add(dirU.copy().multiply(1)).add(dirV.copy().multiply(0));
-            at.drawPos(pose, vb).setUv(0, 1).setColor(connectionColor);
+            at.drawPos(pose, vb).uv(0, 1).color(connectionColor).endVertex();
 
             //at = offset.copy().add(dirU.copy().multiply(0)).add(dirV.copy().multiply(0));
-            offset.drawPos(pose, vb).setUv(1, 1).setColor(connectionColor);
+            offset.drawPos(pose, vb).uv(1, 1).color(connectionColor).endVertex();
         }
 
         dirU = new Vector3(starSize * 2, 0, 0);
@@ -174,16 +176,16 @@ public class RenderConstellationUtil {
                     .add(drawOffset);
 
             Vector3 at = offset.copy().add(dirU.copy().multiply(0)).add(dirV.copy().multiply(1));
-            at.drawPos(pose, vb).setUv(1, 0).setColor(starColor);
+            at.drawPos(pose, vb).uv(1, 0).color(starColor).endVertex();
 
             at = offset.copy().add(dirU.copy().multiply(1)).add(dirV.copy().multiply(1));
-            at.drawPos(pose, vb).setUv(0, 0).setColor(starColor);
+            at.drawPos(pose, vb).uv(0, 0).color(starColor).endVertex();
 
             at = offset.copy().add(dirU.copy().multiply(1)).add(dirV.copy().multiply(0));
-            at.drawPos(pose, vb).setUv(0, 1).setColor(starColor);
+            at.drawPos(pose, vb).uv(0, 1).color(starColor).endVertex();
 
             //at = offset.copy().add(dirU.copy().multiply(0)).add(dirV.copy().multiply(0));
-            offset.drawPos(pose, vb).setUv(1, 1).setColor(starColor);
+            offset.drawPos(pose, vb).uv(1, 1).color(starColor).endVertex();
         }
     }
 }

@@ -123,12 +123,12 @@ public class VFXLightBeam extends EntityVisualFX {
         Vector3 normTo = angleNorm.multiply(this.toSize * scale);
 
         renderTo.copy().add(normTo.copy().multiply(-1))
-                .drawPos(vb).setColor(color.getColor()).setUv(uv.u(), uv.v() + uv.vHeight());
+                .drawPos(vb).uv(uv.u(), uv.v() + uv.vHeight()).color(color.getColor()).endVertex();
         renderTo.copy().add(normTo.copy())
-                .drawPos(vb).setColor(color.getColor()).setUv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight());
+                .drawPos(vb).uv(uv.u() + uv.uWidth(), uv.v() + uv.vHeight()).color(color.getColor()).endVertex();
         renderFrom.copy().add(normFrom.copy())
-                .drawPos(vb).setColor(color.getColor()).setUv(uv.u() + uv.uWidth(), uv.v());
+                .drawPos(vb).uv(uv.u() + uv.uWidth(), uv.v()).color(color.getColor()).endVertex();
         renderFrom.copy().add(normFrom.copy().multiply(-1))
-                .drawPos(vb).setColor(color.getColor()).setUv(uv.u(), uv.v());
+                .drawPos(vb).uv(uv.u(), uv.v()).color(color.getColor()).endVertex();
     }
 }

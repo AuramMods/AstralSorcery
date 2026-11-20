@@ -69,18 +69,22 @@ public interface TomeStarParallaxLayer {
         }
 
         PoseStack.Pose offset = guiGraphics.pose().last();
-        buf.addVertex(offset, minX, maxY, 0)
-                .setColor(0.75F, 0.75F, 0.75F, 0.7F)
-                .setUv(u,  v + vL);
-        buf.addVertex(offset, maxX, maxY, 0)
-                .setColor(0.75F, 0.75F, 0.75F, 0.7F)
-                .setUv(u + uL, v + vL);
-        buf.addVertex(offset, maxX, minY, 0)
-                .setColor(0.75F, 0.75F, 0.75F, 0.7F)
-                .setUv(u + uL, v);
-        buf.addVertex(offset, minX, minY, 0)
-                .setColor(0.75F, 0.75F, 0.75F, 0.7F)
-                .setUv(u, v);
+        buf.vertex(offset.pose(), minX, maxY, 0)
+                .uv(u,  v + vL)
+                .color(0.75F, 0.75F, 0.75F, 0.7F)
+                .endVertex();
+        buf.vertex(offset.pose(), maxX, maxY, 0)
+                .uv(u + uL, v + vL)
+                .color(0.75F, 0.75F, 0.75F, 0.7F)
+                .endVertex();
+        buf.vertex(offset.pose(), maxX, minY, 0)
+                .uv(u + uL, v)
+                .color(0.75F, 0.75F, 0.75F, 0.7F)
+                .endVertex();
+        buf.vertex(offset.pose(), minX, minY, 0)
+                .uv(u, v)
+                .color(0.75F, 0.75F, 0.75F, 0.7F)
+                .endVertex();
     }
 
 }

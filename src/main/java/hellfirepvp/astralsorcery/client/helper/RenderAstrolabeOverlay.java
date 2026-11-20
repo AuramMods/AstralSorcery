@@ -317,16 +317,16 @@ public class RenderAstrolabeOverlay {
                 .multiply(lineSize / 2);
 
         Vector3 v = new Vector3(line.getLeft().x() - offset.getX(), line.getLeft().y() - offset.getY(), 0);
-        v.drawPos(pose.pose(), buf).setUv(0, 0).setColor(drawColor.getColor());
+        v.drawPos(pose.pose(), buf).uv(0, 0).color(drawColor.getColor()).endVertex();
 
         v = new Vector3(line.getRight().x() - offset.getX(), line.getRight().y() - offset.getY(), 0);
-        v.drawPos(pose.pose(), buf).setUv(1, 0).setColor(drawColor.getColor());
+        v.drawPos(pose.pose(), buf).uv(1, 0).color(drawColor.getColor()).endVertex();
 
         v = new Vector3(line.getRight().x() + offset.getX(), line.getRight().y() + offset.getY(), 0);
-        v.drawPos(pose.pose(), buf).setUv(1, 1).setColor(drawColor.getColor());
+        v.drawPos(pose.pose(), buf).uv(1, 1).color(drawColor.getColor()).endVertex();
 
         v = new Vector3(line.getLeft().x() + offset.getX(), line.getLeft().y() + offset.getY(), 0);
-        v.drawPos(pose.pose(), buf).setUv(0, 1).setColor(drawColor.getColor());
+        v.drawPos(pose.pose(), buf).uv(0, 1).color(drawColor.getColor()).endVertex();
     }
 
     private static FloatPoint getProjectedAngles(Player player, double pointX, double pointY) {

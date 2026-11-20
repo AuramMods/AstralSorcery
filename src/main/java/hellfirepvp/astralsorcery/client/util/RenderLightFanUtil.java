@@ -70,15 +70,15 @@ public class RenderLightFanUtil {
             v3.set(0.0F, f1, f2);
 
             PoseStack.Pose pose = poseStack.last();
-            buf.addVertex(pose, origin).setColor(color);
-            buf.addVertex(pose, v1).setColor(brightColor);
-            buf.addVertex(pose, v2).setColor(brightColor);
-            buf.addVertex(pose, origin).setColor(color);
-            buf.addVertex(pose, v2).setColor(brightColor);
-            buf.addVertex(pose, v3).setColor(brightColor);
-            buf.addVertex(pose, origin).setColor(color);
-            buf.addVertex(pose, v3).setColor(brightColor);
-            buf.addVertex(pose, v1).setColor(brightColor);
+            buf.vertex(pose.pose(), origin.x(), origin.y(), origin.z()).color(color).endVertex();
+            buf.vertex(pose.pose(), v1.x(), v1.y(), v1.z()).color(brightColor).endVertex();
+            buf.vertex(pose.pose(), v2.x(), v2.y(), v2.z()).color(brightColor).endVertex();
+            buf.vertex(pose.pose(), origin.x(), origin.y(), origin.z()).color(color).endVertex();
+            buf.vertex(pose.pose(), v2.x(), v2.y(), v2.z()).color(brightColor).endVertex();
+            buf.vertex(pose.pose(), v3.x(), v3.y(), v3.z()).color(brightColor).endVertex();
+            buf.vertex(pose.pose(), origin.x(), origin.y(), origin.z()).color(color).endVertex();
+            buf.vertex(pose.pose(), v3.x(), v3.y(), v3.z()).color(brightColor).endVertex();
+            buf.vertex(pose.pose(), v1.x(), v1.y(), v1.z()).color(brightColor).endVertex();
         }
         poseStack.popPose();
     }

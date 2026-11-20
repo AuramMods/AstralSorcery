@@ -269,10 +269,10 @@ public class AstralSkyRenderer {
 
         RenderSystem.setShaderTexture(0, REF_TEX_MOON_PHASES);
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX, GameRenderer::getPositionTexShader, buf -> {
-            buf.addVertex(matr, -moonSize, -100,  moonSize).setUv(maxU, maxV);
-            buf.addVertex(matr,  moonSize, -100,  moonSize).setUv(minU, maxV);
-            buf.addVertex(matr,  moonSize, -100, -moonSize).setUv(minU, minV);
-            buf.addVertex(matr, -moonSize, -100, -moonSize).setUv(maxU, minV);
+            buf.vertex(matr, -moonSize, -100,  moonSize).uv(maxU, maxV).endVertex();
+            buf.vertex(matr,  moonSize, -100,  moonSize).uv(minU, maxV).endVertex();
+            buf.vertex(matr,  moonSize, -100, -moonSize).uv(minU, minV).endVertex();
+            buf.vertex(matr, -moonSize, -100, -moonSize).uv(maxU, minV).endVertex();
         });
     }
 
@@ -289,10 +289,10 @@ public class AstralSkyRenderer {
         Matrix4f matr = renderStack.last().pose();
 
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX, GameRenderer::getPositionTexShader, buf -> {
-            buf.addVertex(matr, -sunSize, 100, -sunSize).setUv( uOffset      / 7F, 0);
-            buf.addVertex(matr,  sunSize, 100, -sunSize).setUv((uOffset + 1) / 7F, 0);
-            buf.addVertex(matr,  sunSize, 100,  sunSize).setUv((uOffset + 1) / 7F, 1);
-            buf.addVertex(matr, -sunSize, 100,  sunSize).setUv( uOffset      / 7F, 1);
+            buf.vertex(matr, -sunSize, 100, -sunSize).uv( uOffset      / 7F, 0).endVertex();
+            buf.vertex(matr,  sunSize, 100, -sunSize).uv((uOffset + 1) / 7F, 0).endVertex();
+            buf.vertex(matr,  sunSize, 100,  sunSize).uv((uOffset + 1) / 7F, 1).endVertex();
+            buf.vertex(matr, -sunSize, 100,  sunSize).uv( uOffset      / 7F, 1).endVertex();
         });
 
         renderStack.popPose();
@@ -304,10 +304,10 @@ public class AstralSkyRenderer {
 
         RenderSystem.setShaderTexture(0, REF_TEX_SUN);
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX, GameRenderer::getPositionTexShader, buf -> {
-            buf.addVertex(matr, -sunSize, 100, -sunSize).setUv(0, 0);
-            buf.addVertex(matr,  sunSize, 100, -sunSize).setUv(1, 0);
-            buf.addVertex(matr,  sunSize, 100,  sunSize).setUv(1, 1);
-            buf.addVertex(matr, -sunSize, 100,  sunSize).setUv(0, 1);
+            buf.vertex(matr, -sunSize, 100, -sunSize).uv(0, 0).endVertex();
+            buf.vertex(matr,  sunSize, 100, -sunSize).uv(1, 0).endVertex();
+            buf.vertex(matr,  sunSize, 100,  sunSize).uv(1, 1).endVertex();
+            buf.vertex(matr, -sunSize, 100,  sunSize).uv(0, 1).endVertex();
         });
     }
 
@@ -326,13 +326,13 @@ public class AstralSkyRenderer {
         float a = duskDawnColors[3];
 
         RenderUtil.draw(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR, GameRenderer::getPositionColorShader, buf -> {
-            buf.addVertex(0, 100, 0).setColor(r, g, b, a);
+            buf.vertex(0, 100, 0).color(r, g, b, a).endVertex();
 
             for (int i = 0; i <= 16; i++) {
                 float f6 = (float) i * ((float) Math.PI * 2F) / 16F;
                 float f7 = Mth.sin(f6);
                 float f8 = Mth.cos(f6);
-                buf.addVertex(f7 * 120F, f8 * 120F, -f8 * 40F * a).setColor(r, g, b, 0F);
+                buf.vertex(f7 * 120F, f8 * 120F, -f8 * 40F * a).color(r, g, b, 0F).endVertex();
             }
         });
 

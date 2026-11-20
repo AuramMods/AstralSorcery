@@ -94,10 +94,10 @@ public class WrappedPostPass extends PostPass {
         this.outTarget.bindWrite(false);
         RenderSystem.depthFunc(this.depthDrawFn);
         BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        bufferbuilder.addVertex(0.0F, 0.0F, 500.0F);
-        bufferbuilder.addVertex(outWidth, 0.0F, 500.0F);
-        bufferbuilder.addVertex(outWidth, outHeight, 500.0F);
-        bufferbuilder.addVertex(0.0F, outHeight, 500.0F);
+        bufferbuilder.vertex(0.0F, 0.0F, 500.0F).endVertex();
+        bufferbuilder.vertex(outWidth, 0.0F, 500.0F).endVertex();
+        bufferbuilder.vertex(outWidth, outHeight, 500.0F).endVertex();
+        bufferbuilder.vertex(0.0F, outHeight, 500.0F).endVertex();
         BufferUploader.draw(bufferbuilder.buildOrThrow());
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
         effect.clear();

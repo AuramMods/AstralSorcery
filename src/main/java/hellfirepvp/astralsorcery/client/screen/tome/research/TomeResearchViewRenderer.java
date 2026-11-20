@@ -306,10 +306,10 @@ public class TomeResearchViewRenderer extends TomeResearchPartRenderer implement
         Blending.DEFAULT.apply();
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR, GameRenderer::getPositionTexColorShader, buf -> {
             PoseStack.Pose pose = guiGraphics.pose().last();
-            buf.addVertex(pose, minX, maxY, 0).setColor(br, br, br, br).setUv(0, 0.5F + part);
-            buf.addVertex(pose, maxX, maxY, 0).setColor(br, br, br, br).setUv(1, 0.5F + part);
-            buf.addVertex(pose, maxX, minY, 0).setColor(br, br, br, br).setUv(1, 0.5F - part);
-            buf.addVertex(pose, minX, minY, 0).setColor(br, br, br, br).setUv(0, 0.5F - part);
+            buf.vertex(pose.pose(), minX, maxY, 0).uv(0, 0.5F + part).color(br, br, br, br).endVertex();
+            buf.vertex(pose.pose(), maxX, maxY, 0).uv(1, 0.5F + part).color(br, br, br, br).endVertex();
+            buf.vertex(pose.pose(), maxX, minY, 0).uv(1, 0.5F - part).color(br, br, br, br).endVertex();
+            buf.vertex(pose.pose(), minX, minY, 0).uv(0, 0.5F - part).color(br, br, br, br).endVertex();
         });
 
         RenderSystem.disableBlend();
@@ -350,10 +350,10 @@ public class TomeResearchViewRenderer extends TomeResearchPartRenderer implement
         Blending.DEFAULT.apply();
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR, GameRenderer::getPositionTexColorShader, buf -> {
             PoseStack.Pose pose = guiGraphics.pose().last();
-            buf.addVertex(pose, offset.x(),         offset.y() + height, 0).setColor(br, br, br, br).setUv(0, 1);
-            buf.addVertex(pose, offset.x() + width, offset.y() + height, 0).setColor(br, br, br, br).setUv(1, 1);
-            buf.addVertex(pose, offset.x() + width, offset.y(),          0).setColor(br, br, br, br).setUv(1, 0);
-            buf.addVertex(pose, offset.x(),         offset.y(),          0).setColor(br, br, br, br).setUv(0, 0);
+            buf.vertex(pose.pose(), offset.x(),         offset.y() + height, 0).uv(0, 1).color(br, br, br, br).endVertex();
+            buf.vertex(pose.pose(), offset.x() + width, offset.y() + height, 0).uv(1, 1).color(br, br, br, br).endVertex();
+            buf.vertex(pose.pose(), offset.x() + width, offset.y(),          0).uv(1, 0).color(br, br, br, br).endVertex();
+            buf.vertex(pose.pose(), offset.x(),         offset.y(),          0).uv(0, 0).color(br, br, br, br).endVertex();
         });
 
         RenderSystem.disableBlend();
@@ -372,10 +372,10 @@ public class TomeResearchViewRenderer extends TomeResearchPartRenderer implement
         TexturesAS.SCREEN_TOME_BACKGROUND_RESEARCH.bindTexture();
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR, GameRenderer::getPositionTexColorShader, buf -> {
             PoseStack.Pose pose = guiGraphics.pose().last();
-            buf.addVertex(pose, minX, maxY, 0).setColor(br, br, br, 1.0F).setUv(0, 1);
-            buf.addVertex(pose, maxX, maxY, 0).setColor(br, br, br, 1.0F).setUv(1, 1);
-            buf.addVertex(pose, maxX, minY, 0).setColor(br, br, br, 1.0F).setUv(1, 0);
-            buf.addVertex(pose, minX, minY, 0).setColor(br, br, br, 1.0F).setUv(0, 0);
+            buf.vertex(pose.pose(), minX, maxY, 0).uv(0, 1).color(br, br, br, 1.0F).endVertex();
+            buf.vertex(pose.pose(), maxX, maxY, 0).uv(1, 1).color(br, br, br, 1.0F).endVertex();
+            buf.vertex(pose.pose(), maxX, minY, 0).uv(1, 0).color(br, br, br, 1.0F).endVertex();
+            buf.vertex(pose.pose(), minX, minY, 0).uv(0, 0).color(br, br, br, 1.0F).endVertex();
         });
     }
 

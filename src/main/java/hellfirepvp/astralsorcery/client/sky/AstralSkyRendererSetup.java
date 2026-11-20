@@ -35,10 +35,10 @@ public class AstralSkyRendererSetup {
         float f = Math.signum(offsetY) * 512.0F;
         float f1 = 512.0F;
         BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION);
-        bufferbuilder.addVertex(0.0F, offsetY, 0.0F);
+        bufferbuilder.vertex(0.0F, offsetY, 0.0F).endVertex();
 
         for (int i = -180; i <= 180; i += 45) {
-            bufferbuilder.addVertex(f * Mth.cos((float)i * (float) (Math.PI / 180.0)), offsetY, f1 * Mth.sin((float)i * (float) (Math.PI / 180.0)));
+            bufferbuilder.vertex(f * Mth.cos((float)i * (float) (Math.PI / 180.0)), offsetY, f1 * Mth.sin((float)i * (float) (Math.PI / 180.0))).endVertex();
         }
 
         return bufferbuilder.buildOrThrow();
@@ -94,8 +94,9 @@ public class AstralSkyRendererSetup {
                     float d25 = d24 * d9 - d22 * d10;
                     float d26 = d22 * d9 + d24 * d10;
 
-                    buffer.addVertex(d5 + d25, d6 + d23, d7 + d26)
-                            .setUv(((j + 1) & 2) >> 1, ((j + 2) & 2) >> 1);
+                    buffer.vertex(d5 + d25, d6 + d23, d7 + d26)
+                            .uv(((j + 1) & 2) >> 1, ((j + 2) & 2) >> 1)
+                            .endVertex();
                 }
             }
         }

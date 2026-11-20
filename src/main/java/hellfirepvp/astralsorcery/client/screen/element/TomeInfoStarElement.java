@@ -102,10 +102,10 @@ public class TomeInfoStarElement extends AbstractWidget {
         Vector3 uv10   = new Vector3( widthHeight / 2D, -widthHeight / 2D, 0).rotate(deg, Vector3.RotAxis.Z_AXIS);
 
         Matrix4f matr = renderStack.last().pose();
-        vb.addVertex(matr, (float) uv01.getX(),   (float) uv01.getY(),   0).setUv(0, 1);
-        vb.addVertex(matr, (float) uv11.getX(),   (float) uv11.getY(),   0).setUv(1, 1);
-        vb.addVertex(matr, (float) uv10.getX(),   (float) uv10.getY(),   0).setUv(1, 0);
-        vb.addVertex(matr, (float) offset.getX(), (float) offset.getY(), 0).setUv(0, 0);
+        vb.vertex(matr, (float) uv01.getX(),   (float) uv01.getY(),   0).uv(0, 1).endVertex();
+        vb.vertex(matr, (float) uv11.getX(),   (float) uv11.getY(),   0).uv(1, 1).endVertex();
+        vb.vertex(matr, (float) uv10.getX(),   (float) uv10.getY(),   0).uv(1, 0).endVertex();
+        vb.vertex(matr, (float) offset.getX(), (float) offset.getY(), 0).uv(0, 0).endVertex();
     }
 
     @Override

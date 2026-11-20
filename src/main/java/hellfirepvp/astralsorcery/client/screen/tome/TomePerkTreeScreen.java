@@ -660,8 +660,9 @@ public class TomePerkTreeScreen extends TomeScreen {
 
             Vector3 pos = vec.copy().addX(effectSize * u * 2).addY(effectSize * v * 2);
             pos.drawPos(matr, buf)
-                    .setColor(1F, 1F, 1F, alpha)
-                    .setUv(uv.u() + uv.uWidth() * u, uv.v() + uv.vHeight() * v);
+                    .uv(uv.u() + uv.uWidth() * u, uv.v() + uv.vHeight() * v)
+                    .color(1F, 1F, 1F, alpha)
+                    .endVertex();
         }
     }
 
@@ -676,8 +677,9 @@ public class TomePerkTreeScreen extends TomeScreen {
 
             Vector3 pos = vec.copy().addX(effectSize * u * 2).addY(effectSize * v * 2);
             pos.drawPos(matr, buf)
-                    .setColor(0.8F, 0.1F, 0.1F, 1F)
-                    .setUv(uv.u() + uv.uWidth() * u, uv.v() + uv.vHeight() * v);
+                    .uv(uv.u() + uv.uWidth() * u, uv.v() + uv.vHeight() * v)
+                    .color(0.8F, 0.1F, 0.1F, 1F)
+                    .endVertex();
         }
     }
 
@@ -692,8 +694,9 @@ public class TomePerkTreeScreen extends TomeScreen {
 
             Vector3 pos = vec.copy().addX(effectSize * u * 2).addY(effectSize * v * 2);
             pos.drawPos(matr, buf)
-                    .setColor(0.4F, 0.1F, 0.1F, 1F)
-                    .setUv(uv.u() + uv.uWidth() * u, uv.v() + uv.vHeight() * v);
+                    .uv(uv.u() + uv.uWidth() * u, uv.v() + uv.vHeight() * v)
+                    .color(0.4F, 0.1F, 0.1F, 1F)
+                    .endVertex();
         }
     }
 
@@ -727,7 +730,7 @@ public class TomePerkTreeScreen extends TomeScreen {
             int v = ((i + 2) & 2) >> 1;
 
             Vector3 pos = vec00.copy().add(dir.copy().multiply(u)).add(vecV.copy().multiply(v));
-            pos.drawPos(offset, buf).setColor(rR, rG, rB, rA).setUv(u, v);
+            pos.drawPos(offset, buf).uv(u, v).color(rR, rG, rB, rA).endVertex();
         }
     }
 

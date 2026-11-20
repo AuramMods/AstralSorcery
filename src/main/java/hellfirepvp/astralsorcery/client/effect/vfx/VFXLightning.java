@@ -165,13 +165,13 @@ public class VFXLightning extends EntityVisualFX {
         Vector3 perpTo = perp.multiply(size);
 
         Vector3 vec = from.copy().add(perpFrom.copy().multiply(-1));
-        vec.drawPos(vb).setColor(color.getColor()).setUv(1, 1);
+        vec.drawPos(vb).uv(1, 1).color(color.getColor()).endVertex();
         vec = from.copy().add(perpFrom);
-        vec.drawPos(vb).setColor(color.getColor()).setUv(1, 0);
+        vec.drawPos(vb).uv(1, 0).color(color.getColor()).endVertex();
         vec = to.copy().add(perpTo);
-        vec.drawPos(vb).setColor(color.getColor()).setUv(0, 0);
+        vec.drawPos(vb).uv(0, 0).color(color.getColor()).endVertex();
         vec = to.copy().add(perpTo.copy().multiply(-1));
-        vec.drawPos(vb).setColor(color.getColor()).setUv(0, 1);
+        vec.drawPos(vb).uv(0, 1).color(color.getColor()).endVertex();
     }
 
     @Override

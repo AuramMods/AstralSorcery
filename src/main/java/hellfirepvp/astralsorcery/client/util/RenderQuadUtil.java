@@ -96,10 +96,10 @@ public class RenderQuadUtil {
             int b = this.color.getBlue();
             int a = this.color.getAlpha();
             Matrix4f offset = this.renderStack.last().pose();
-            buf.addVertex(offset, offsetX,         offsetY + height, 0).setColor(r, g, b, a).setUv(u, v + vWidth);
-            buf.addVertex(offset, offsetX + width, offsetY + height, 0).setColor(r, g, b, a).setUv(u + uWidth, v + vWidth);
-            buf.addVertex(offset, offsetX + width, offsetY,          0).setColor(r, g, b, a).setUv(u + uWidth, v);
-            buf.addVertex(offset, offsetX,         offsetY,          0).setColor(r, g, b, a).setUv(u, v);
+            buf.vertex(offset, offsetX,         offsetY + height, 0).uv(u, v + vWidth).color(r, g, b, a).endVertex();
+            buf.vertex(offset, offsetX + width, offsetY + height, 0).uv(u + uWidth, v + vWidth).color(r, g, b, a).endVertex();
+            buf.vertex(offset, offsetX + width, offsetY,          0).uv(u + uWidth, v).color(r, g, b, a).endVertex();
+            buf.vertex(offset, offsetX,         offsetY,          0).uv(u, v).color(r, g, b, a).endVertex();
             return this;
         }
     }

@@ -72,9 +72,9 @@ public class VFXColorSphere extends EntityVisualFX {
         ColorWrapper color = this.getColor(pTicks).copyWithAlpha(this.getAlphaI(pTicks));
 
         this.sphereFaces.forEach(face -> {
-            relativePos.copy().add(face.getV1()).drawPos(vb).setColor(color.getColor());
-            relativePos.copy().add(face.getV2()).drawPos(vb).setColor(color.getColor());
-            relativePos.copy().add(face.getV3()).drawPos(vb).setColor(color.getColor());
+            relativePos.copy().add(face.getV1()).drawPos(vb).color(color.getColor()).endVertex();
+            relativePos.copy().add(face.getV2()).drawPos(vb).color(color.getColor()).endVertex();
+            relativePos.copy().add(face.getV3()).drawPos(vb).color(color.getColor()).endVertex();
         });
     }
 }

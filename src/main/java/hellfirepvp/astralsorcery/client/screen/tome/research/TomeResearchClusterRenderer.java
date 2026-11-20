@@ -183,10 +183,10 @@ public class TomeResearchClusterRenderer {
                     }
 
                     PoseStack.Pose pose = guiGraphics.pose().last();
-                    buf.addVertex(pose, nodeBox.x(),    nodeBox.maxY(), 0).setColor(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).setUv(0, 1);
-                    buf.addVertex(pose, nodeBox.maxX(), nodeBox.maxY(), 0).setColor(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).setUv(1, 1);
-                    buf.addVertex(pose, nodeBox.maxX(), nodeBox.y(),    0).setColor(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).setUv(1, 0);
-                    buf.addVertex(pose, nodeBox.x(),    nodeBox.y(),    0).setColor(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).setUv(0, 0);
+                    buf.vertex(pose.pose(), nodeBox.x(),    nodeBox.maxY(), 0).uv(0, 1).color(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).endVertex();
+                    buf.vertex(pose.pose(), nodeBox.maxX(), nodeBox.maxY(), 0).uv(1, 1).color(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).endVertex();
+                    buf.vertex(pose.pose(), nodeBox.maxX(), nodeBox.y(),    0).uv(1, 0).color(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).endVertex();
+                    buf.vertex(pose.pose(), nodeBox.x(),    nodeBox.y(),    0).uv(0, 0).color(zoomAlpha, zoomAlpha, zoomAlpha, zoomAlpha).endVertex();
                 });
             });
             RenderSystem.disableBlend();
@@ -279,17 +279,21 @@ public class TomeResearchClusterRenderer {
                     Vector3 posDir = pos.vectorFromHereTo(next);
                     Vector3 origin = pos.copy().subtract(widthVec.copy().divide(2));
                     origin.drawPos(matr, buf)
-                            .setColor(srcBr, srcBr, srcBr, srcAlpha)
-                            .setUv(0, 0);
+                            .uv(0, 0)
+                            .color(srcBr, srcBr, srcBr, srcAlpha)
+                            .endVertex();
                     origin.copy().add(widthVec).drawPos(matr, buf)
-                            .setColor(srcBr, srcBr, srcBr, srcAlpha)
-                            .setUv(0, 1);
+                            .uv(0, 1)
+                            .color(srcBr, srcBr, srcBr, srcAlpha)
+                            .endVertex();
                     origin.copy().add(posDir).add(widthVec).drawPos(matr, buf)
-                            .setColor(dstBr, dstBr, dstBr, dstAlpha)
-                            .setUv(1, 1);
+                            .uv(1, 1)
+                            .color(dstBr, dstBr, dstBr, dstAlpha)
+                            .endVertex();
                     origin.copy().add(posDir).drawPos(matr, buf)
-                            .setColor(dstBr, dstBr, dstBr, dstAlpha)
-                            .setUv(1, 0);
+                            .uv(1, 0)
+                            .color(dstBr, dstBr, dstBr, dstAlpha)
+                            .endVertex();
                 }
             });
         });
