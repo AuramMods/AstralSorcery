@@ -11,8 +11,7 @@ package hellfirepvp.astralsorcery.common.research;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
-import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
+import net.minecraftforge.common.IExtensibleEnum;
 
 import java.util.Locale;
 
@@ -55,7 +54,7 @@ public enum ResearchFlag implements StringRepresentable, IExtensibleEnum {
         return this.name().toLowerCase(Locale.ROOT);
     }
 
-    public static ExtensionInfo getExtensionInfo() {
-        return ExtensionInfo.nonExtended(ResearchFlag.class);
+    public static ResearchFlag create(String name, boolean isShareable) {
+        throw new IllegalStateException("Research flag enum not extended");
     }
 }

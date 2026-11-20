@@ -11,8 +11,7 @@ package hellfirepvp.astralsorcery.common.event;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
-import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
-import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
+import net.minecraftforge.common.IExtensibleEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +75,8 @@ public class CrystalPropertyEvent extends Event {
 
             CHISEL_SPLIT_CRYSTAL;
 
-            public static ExtensionInfo getExtensionInfo() {
-                return ExtensionInfo.nonExtended(Type.class);
+            public static Type create(String name) {
+                throw new IllegalStateException("Crystal property event enum not extended");
             }
         }
     }
@@ -122,8 +121,8 @@ public class CrystalPropertyEvent extends Event {
             MERGE_CRYSTALS,
             ALTAR_RECIPE_MERGE;
 
-            public static ExtensionInfo getExtensionInfo() {
-                return ExtensionInfo.nonExtended(Type.class);
+            public static Type create(String name) {
+                throw new IllegalStateException("Crystal property event enum not extended");
             }
         }
     }
@@ -169,8 +168,8 @@ public class CrystalPropertyEvent extends Event {
             FORM_CRYSTAL_CLUSTER,
             ENGRAVE_PROPERTY;
 
-            public static ExtensionInfo getExtensionInfo() {
-                return ExtensionInfo.nonExtended(Type.class);
+            public static Type create(String name) {
+                throw new IllegalStateException("Crystal property event enum not extended");
             }
         }
     }
