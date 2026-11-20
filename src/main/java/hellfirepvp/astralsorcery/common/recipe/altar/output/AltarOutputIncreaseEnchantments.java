@@ -19,7 +19,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -43,6 +42,8 @@ public class AltarOutputIncreaseEnchantments extends AltarRecipeOutputModifier {
             AltarOutputIncreaseEnchantments::new);
     public static final Type<AltarOutputIncreaseEnchantments> TYPE = new Type<>(CODEC, STREAM_CODEC);
 
+    private static final int MAX_ENCHANTMENT_LEVEL = 255;
+
     private final float additionalLevelChance;
 
     public AltarOutputIncreaseEnchantments(float additionalLevelChance) {
@@ -64,17 +65,18 @@ public class AltarOutputIncreaseEnchantments extends AltarRecipeOutputModifier {
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
         if (output.isEnchanted()) {
-            EnchantmentHelper.updateEnchantments(output, enchantments -> {
-                RandomSource rand = RandomSource.create();
-                enchantments.keySet().forEach(ench -> {
-                    if (ench.is(EnchantmentTags.CURSE)) return;
-                    if (ench.value().getMaxLevel() == 1) return;
+            var enchantments = EnchantmentHelper.getEnchantments(output);
+            RandomSource rand = RandomSource.create();
+            enchantments.replaceAll((enchantment, level) -> {
+                if (enchantment.isCurse() || enchantment.getMaxLevel() == 1 || level >= MAX_ENCHANTMENT_LEVEL) return level;
 
-                    int newLevel = enchantments.getLevel(ench) + 1;
-                    while (rand.nextFloat() < this.additionalLevelChance) newLevel++;
-                    enchantments.upgrade(ench, newLevel);
-                });
+                int increased = level + 1;
+                while (increased < MAX_ENCHANTMENT_LEVEL && rand.nextFloat() < this.additionalLevelChance) {
+                    increased++;
+                }
+                return increased;
             });
+            EnchantmentHelper.setEnchantments(enchantments, output);
         }
         return output;
     }
