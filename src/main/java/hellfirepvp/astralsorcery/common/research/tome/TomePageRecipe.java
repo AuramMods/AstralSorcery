@@ -62,7 +62,7 @@ public record TomePageRecipe(ResourceKey<RecipeType<?>> type, ResourceLocation r
     }
 
     public static TomePageRecipe of(RegistryObject<? extends RecipeType<?>> type, ResourceLocation recipeId) {
-        return of(type.getKey(), recipeId);
+        return of(ResourceKey.create(Registries.RECIPE_TYPE, type.getId()), recipeId);
     }
 
     public static TomePageRecipe of(ResourceKey<RecipeType<?>> type, ResourceLocation recipeId) {

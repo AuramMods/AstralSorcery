@@ -18,13 +18,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
@@ -41,6 +44,18 @@ import java.util.List;
  */
 public class RenderPageCraftingRecipe extends RenderPageRecipe<CraftingRecipe> {
 
+    private static final AbstractContainerMenu PREVIEW_MENU = new AbstractContainerMenu(null, 0) {
+        @Override
+        public ItemStack quickMoveStack(Player player, int slot) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public boolean stillValid(Player player) {
+            return false;
+        }
+    };
+
     public RenderPageCraftingRecipe(@Nullable ResearchNode node, int nodePage, ResourceLocation recipeId) {
         super(node, nodePage, () -> RecipeType.CRAFTING, recipeId);
     }
@@ -51,13 +66,13 @@ public class RenderPageCraftingRecipe extends RenderPageRecipe<CraftingRecipe> {
 
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection == null) return;
-        HolderLookup.Provider lookupProvider = connection.registryAccess();
+        RegistryAccess registries = connection.registryAccess();
 
         this.resolveRecipeOrWriteError(guiGraphics, x, y).map(RecipeHolder::value).ifPresent(recipe -> {
             if (recipe instanceof ShapedRecipe shapedRecipe) {
-                this.renderShapedRecipe(guiGraphics, x, y, lookupProvider, shapedRecipe);
+                this.renderCraftingRecipe(guiGraphics, x, y, registries, shapedRecipe, shapedRecipe.getWidth(), shapedRecipe.getHeight());
             } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-                this.renderShapelessRecipe(guiGraphics, x, y, lookupProvider, shapelessRecipe);
+                this.renderCraftingRecipe(guiGraphics, x, y, registries, shapelessRecipe, 3, 3);
             } else {
                 ResourceLocation id = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
                 id = id == null ? new ResourceLocation("minecraft", "unregistered_sadface") : id;
@@ -80,41 +95,26 @@ public class RenderPageCraftingRecipe extends RenderPageRecipe<CraftingRecipe> {
         });
     }
 
-    private void renderShapedRecipe(GuiGraphics guiGraphics, int x, int y, HolderLookup.Provider lookupProvider, ShapedRecipe shapedRecipe) {
-        this.renderPageOverlay(guiGraphics, x, y, TexturesAS.SCREEN_TOME_PAGE_GRID_CRAFTING);
+    private void renderCraftingRecipe(GuiGraphics graphics, int x, int y, RegistryAccess registries, CraftingRecipe recipe,
+                                      int width, int height) {
+        this.renderPageOverlay(graphics, x, y, TexturesAS.SCREEN_TOME_PAGE_GRID_CRAFTING);
 
-        NonNullList<ItemStack> inputPattern = NonNullList.withSize(9, ItemStack.EMPTY);
-        for (int xx = 0; xx < shapedRecipe.getWidth(); xx++) {
-            for (int yy = 0; yy < shapedRecipe.getHeight(); yy++) {
-                int index = xx + yy * shapedRecipe.getWidth();
-                inputPattern.set(xx + yy * 3, IngredientUtil.getRandomDisplayStack(shapedRecipe.getIngredients().get(index), 0));
-            }
-        }
-        CraftingInput input = CraftingInput.of(shapedRecipe.getWidth(), shapedRecipe.getWidth(), inputPattern);
-        ItemStack resultStack = shapedRecipe.assemble(input, lookupProvider);
+        NonNullList<Ingredient> ingredients = recipe.getIngredients();
+        CraftingContainer input = createPreviewInput(ingredients, width, height);
+        ItemStack result = recipe.assemble(input, registries);
 
         int midX = x + TomePage.DEFAULT_WIDTH / 2;
         int resultY = y + 18 + 60 / 2;
-        this.renderOutput(guiGraphics, midX - 8, resultY - 8, 16, 16, resultStack);
-
-        this.renderInputGrid(guiGraphics, x, y, shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getIngredients());
+        this.renderOutput(graphics, midX - 8, resultY - 8, 16, 16, result);
+        this.renderInputGrid(graphics, x, y, width, height, ingredients);
     }
 
-    private void renderShapelessRecipe(GuiGraphics guiGraphics, int x, int y, HolderLookup.Provider lookupProvider, ShapelessRecipe shapelessRecipe) {
-        this.renderPageOverlay(guiGraphics, x, y, TexturesAS.SCREEN_TOME_PAGE_GRID_CRAFTING);
-
-        NonNullList<ItemStack> inputPattern = NonNullList.withSize(9, ItemStack.EMPTY);
-        for (int i = 0; i < shapelessRecipe.getIngredients().size(); i++) {
-            inputPattern.set(i, IngredientUtil.getRandomDisplayStack(shapelessRecipe.getIngredients().get(i), 0));
+    private static CraftingContainer createPreviewInput(NonNullList<Ingredient> ingredients, int width, int height) {
+        NonNullList<ItemStack> stacks = NonNullList.withSize(width * height, ItemStack.EMPTY);
+        for (int index = 0; index < ingredients.size(); index++) {
+            stacks.set(index, IngredientUtil.getRandomDisplayStack(ingredients.get(index), 0).copy());
         }
-        CraftingInput input = CraftingInput.of(3, 3, inputPattern);
-        ItemStack resultStack = shapelessRecipe.assemble(input, lookupProvider);
-
-        int midX = x + TomePage.DEFAULT_WIDTH / 2;
-        int resultY = y + 18 + 60 / 2;
-        this.renderOutput(guiGraphics, midX - 8, resultY - 8, 16, 16, resultStack);
-
-        this.renderInputGrid(guiGraphics, x, y, 3, 3, shapelessRecipe.getIngredients());
+        return new TransientCraftingContainer(PREVIEW_MENU, width, height, stacks);
     }
 
     private void renderInputGrid(GuiGraphics guiGraphics, int x, int y, int width, int height, NonNullList<Ingredient> inputPattern) {

@@ -88,7 +88,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
     private static final DecimalFormat FLUID_BUCKET_FORMAT = new DecimalFormat("#.###");
     private static final Map<ResourceKey<RecipeType<?>>, RenderPageRecipe.Factory<?>> PAGE_FACTORIES = new HashMap<>();
 
-    protected SequencedMap<IntRectangle, TooltipInfo> thisFrameHovers = new LinkedHashMap<>();
+    protected final Map<IntRectangle, TooltipInfo> thisFrameHovers = new LinkedHashMap<>();
     protected List<IntRectangle> recipeIdCopyHovers = new ArrayList<>();
 
     private final Supplier<RecipeType<T>> recipeType;
@@ -101,7 +101,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
     }
 
     public static Factory<?> registerPageFactory(Holder<RecipeType<?>> type, Factory<?> factory) {
-        return registerPageFactory(type.getKey(), factory);
+        return registerPageFactory(type.unwrapKey().orElseThrow(), factory);
     }
 
     public static Factory<?> registerPageFactory(ResourceKey<RecipeType<?>> type, Factory<?> factory) {
@@ -177,7 +177,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
     }
 
     public boolean handleRecipeIdCopyClick(int mouseX, int mouseY) {
-        if (Minecraft.getInstance().getDebugOverlay().showDebugScreen() && Screen.hasControlDown() && Minecraft.getInstance().player != null)  {
+        if (Minecraft.getInstance().options.renderDebug && Screen.hasControlDown() && Minecraft.getInstance().player != null)  {
             for (IntRectangle rect : this.recipeIdCopyHovers) {
                 if (rect.contains(mouseX, mouseY)) {
                     ResourceLocation id = this.resolveRecipe().map(RecipeHolder::id).orElse(null);
@@ -359,7 +359,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
 
         List<Component> tooltip = new ArrayList<>();
         this.addTooltip(fluidStack, tooltip);
-        if (Minecraft.getInstance().getDebugOverlay().showDebugScreen()) {
+        if (Minecraft.getInstance().options.renderDebug) {
             this.resolveRecipe().ifPresent(recipe -> {
                 tooltip.add(Component.empty());
                 tooltip.add(Component.translatable("screen.astralsorcery.element.recipe_debug.registry_name", recipe.id().toString())
@@ -387,7 +387,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
 
         List<Component> tooltip = new ArrayList<>();
         this.addTooltip(output, tooltip);
-        if (Minecraft.getInstance().getDebugOverlay().showDebugScreen()) {
+        if (Minecraft.getInstance().options.renderDebug) {
             this.resolveRecipe().ifPresent(recipe -> {
                 tooltip.add(Component.empty());
                 tooltip.add(Component.translatable("screen.astralsorcery.element.recipe_debug.registry_name", recipe.id().toString())
@@ -498,8 +498,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
     protected void addTooltip(ItemStack stack, List<Component> out) {
         try {
             TooltipFlag flag = Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
-            Item.TooltipContext ctx = Item.TooltipContext.of(Minecraft.getInstance().level);
-            out.addAll(stack.getTooltipLines(ctx, Minecraft.getInstance().player, flag));
+            out.addAll(stack.getTooltipLines(Minecraft.getInstance().player, flag));
         } catch (Exception exc) {
             out.add(Component.translatable("ingredient.astralsorcery.tooltip.error").withStyle(ChatFormatting.RED));
         }
@@ -507,7 +506,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
 
     protected void addTooltip(FluidStack stack, List<Component> out) {
         try {
-            Component displayName = stack.getHoverName();
+            Component displayName = stack.getDisplayName();
             out.add(displayName);
 
             if (Minecraft.getInstance().options.advancedItemTooltips) {

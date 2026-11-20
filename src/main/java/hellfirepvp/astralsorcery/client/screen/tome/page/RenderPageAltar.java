@@ -468,7 +468,7 @@ public class RenderPageAltar extends RenderPageRecipe<AltarRecipe> {
 
         List<Component> tooltip = new ArrayList<>();
         this.addTooltip(output, tooltip);
-        if (Minecraft.getInstance().getDebugOverlay().showDebugScreen()) {
+        if (Minecraft.getInstance().options.renderDebug) {
             this.resolveRecipe().ifPresent(recipe -> {
                 tooltip.add(Component.empty());
                 tooltip.add(Component.translatable("screen.astralsorcery.element.recipe_debug.registry_name", recipe.id().toString())
