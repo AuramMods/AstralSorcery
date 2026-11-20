@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.client.lib;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent;
 
 /**
@@ -21,7 +21,7 @@ import net.minecraftforge.client.event.ModelEvent;
  */
 public class CustomModelsAS {
 
-    public static final ModelResourceLocation ASTROLABE_IN_HAND = ModelResourceLocation.standalone(AstralSorcery.key("item/astrolabe_in_hand"));
+    public static final ResourceLocation ASTROLABE_IN_HAND = AstralSorcery.key("item/astrolabe_in_hand");
 
     public static void registerCustomModels(ModelEvent.RegisterAdditional event) {
         event.register(ASTROLABE_IN_HAND);

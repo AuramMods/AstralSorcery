@@ -155,7 +155,6 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(ClientExtensionsAS::registerExtensions);
         modEventBus.addListener(RenderLumenDisplayOverlay::registerOverlays);
         modEventBus.addListener(RenderPerkExperienceOverlay::registerOverlays);
-        modEventBus.addListener(MenuScreensAS::registerScreens);
 
         modEventBus.addListener(this::registerCustomComponents);
     }
@@ -228,8 +227,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
-        InitBlockRenderTypes.init();
-        InitItemProperties.init();
+        event.enqueueWork(() -> {
+            InitBlockRenderTypes.init();
+            InitItemProperties.init();
+            MenuScreensAS.registerScreens();
+        });
     }
 
     private void registerCustomComponents(RegisterClientTooltipComponentFactoriesEvent event) {

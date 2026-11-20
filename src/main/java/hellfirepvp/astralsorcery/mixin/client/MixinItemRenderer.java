@@ -44,24 +44,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinItemRenderer {
 
     @Unique
-    private static final ModelResourceLocation astralSorcery_1_21$ASTROLABE_MODEL = ModelResourceLocation.inventory(AstralSorcery.key("astrolabe"));
+    private static final ModelResourceLocation astralSorcery_1_21$ASTROLABE_MODEL = new ModelResourceLocation(AstralSorcery.key("astrolabe"), "inventory");
 
     @Shadow public abstract ItemModelShaper getItemModelShaper();
 
     @Shadow public abstract void render(ItemStack itemStack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay, BakedModel p_model);
 
-    @ModifyVariable(method = "getModel", at = @At("HEAD"), argsOnly = true, order = 800)
+    @ModifyVariable(method = "getModel", at = @At("HEAD"), argsOnly = true)
     public ItemStack getVeiledModelStack(ItemStack stack) {
         return VeiledItemStackHelper.getDisplayedStack(stack);
     }
 
-    @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true, order = 800)
+    @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
     public ItemStack getVeiledRenderStack(ItemStack itemStack) {
         return VeiledItemStackHelper.getDisplayedStack(itemStack);
     }
 
-    @Inject(method = "getModel", at = @At(value = "HEAD"), cancellable = true)
-    public void getCustomSextantModel(ItemStack stack, Level level, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
+    @Inject(method = "getModel", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z", ordinal = 0), cancellable = true)
+    public void getAstrolabeModel(ItemStack stack, Level level, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
         if (stack.is(ItemsAS.ASTROLABE.get())) {
             BakedModel model = this.getItemModelShaper().getModelManager().getModel(CustomModelsAS.ASTROLABE_IN_HAND);
 
@@ -71,15 +72,16 @@ public abstract class MixinItemRenderer {
         }
     }
 
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "render", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 0), cancellable = true)
     public void replaceRenderModel(ItemStack itemStack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay, BakedModel model, CallbackInfo ci) {
         boolean override = displayContext == ItemDisplayContext.GUI ||
                 displayContext == ItemDisplayContext.GROUND ||
                 displayContext == ItemDisplayContext.FIXED;
         if (override && itemStack.is(ItemsAS.ASTROLABE.get())) {
             FlagExecutor.run(FlagExecutor.Flag.RENDER_ASTROLABE_ITEM, () -> {
-                BakedModel sextantModel = this.getItemModelShaper().getModelManager().getModel(astralSorcery_1_21$ASTROLABE_MODEL);
-                this.render(itemStack, displayContext, leftHand, poseStack, bufferSource, combinedLight, combinedOverlay, sextantModel);
+                BakedModel astrolabeModel = this.getItemModelShaper().getModelManager().getModel(astralSorcery_1_21$ASTROLABE_MODEL);
+                this.render(itemStack, displayContext, leftHand, poseStack, bufferSource, combinedLight, combinedOverlay, astrolabeModel);
                 ci.cancel();
             });
         }
