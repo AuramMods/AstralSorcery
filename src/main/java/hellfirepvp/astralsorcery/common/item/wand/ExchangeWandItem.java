@@ -17,6 +17,7 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lumen.ILumenHandler;
 import hellfirepvp.astralsorcery.common.util.BlockFinder;
+import hellfirepvp.astralsorcery.common.util.BlockUtil;
 import hellfirepvp.astralsorcery.common.util.LumenUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.RayTraceUtil;
@@ -38,8 +39,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -163,15 +162,10 @@ public class ExchangeWandItem extends ItemCustom {
             if (!player.mayUseItemAt(exchangePos, Direction.UP, wandStack)) continue;
 
             ItemStack blockItem = new ItemStack(replacementState.getBlock());
-            boolean hasItems = player.isCreative() || WandBlockStorageHelper.consumeBlock(player, blockItem);
-            if (!hasItems) continue;
-
-            if (!player.gameMode.destroyBlock(exchangePos)) continue;
-
-            if (EventHooks.onBlockPlace(player, BlockSnapshot.create(level.dimension(), level, exchangePos), Direction.UP)) continue;
-
-            level.setBlockAndUpdate(exchangePos, replacementState);
-            exchanged++;
+            if (BlockUtil.replaceBlockWithPlacementEvent(level, player, exchangePos, replacementState, Direction.UP,
+                    () -> player.isCreative() || WandBlockStorageHelper.consumeBlock(player, blockItem))) {
+                exchanged++;
+            }
         }
 
         if (useLumen && exchanged > 0 && !player.isCreative()) {

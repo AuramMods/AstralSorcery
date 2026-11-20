@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -94,6 +95,21 @@ public class BlockUtil {
     }
 
     public static boolean setBlockWithPlacementEvent(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, Direction face) {
+        return setBlockWithPlacementEvent(level, player, pos, state, face, () -> true);
+    }
+
+    public static boolean setBlockWithPlacementEvent(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
+                                                     Direction face, BooleanSupplier consume) {
+        return changeBlockWithPlacementEvent(level, player, pos, state, face, () -> true, consume);
+    }
+
+    public static boolean replaceBlockWithPlacementEvent(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
+                                                         Direction face, BooleanSupplier consume) {
+        return changeBlockWithPlacementEvent(level, player, pos, state, face, () -> player.gameMode.destroyBlock(pos), consume);
+    }
+
+    private static boolean changeBlockWithPlacementEvent(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
+                                                         Direction face, BooleanSupplier prepare, BooleanSupplier consume) {
         // Resolve this event before the caller spends items or plays the placement sound.
         // Keep the snapshots owned by a surrounding ItemStack.useOn separate.
         boolean wasCapturing = level.captureBlockSnapshots;
@@ -101,7 +117,8 @@ public class BlockUtil {
         try {
             return captureLevelChanges(level, () -> {
                 BlockSnapshot replaced = BlockSnapshot.create(level.dimension(), level, pos);
-                if (!level.setBlockAndUpdate(pos, state) || ForgeEventFactory.onBlockPlace(player, replaced, face)) {
+                if (!prepare.getAsBoolean() || !level.setBlockAndUpdate(pos, state) ||
+                        ForgeEventFactory.onBlockPlace(player, replaced, face) || !consume.getAsBoolean()) {
                     return ChangeResult.revert(false);
                 }
                 return ChangeResult.apply(true);

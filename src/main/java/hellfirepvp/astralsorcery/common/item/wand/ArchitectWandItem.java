@@ -37,8 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -186,14 +184,12 @@ public class ArchitectWandItem extends ItemCustom {
             BlockState stateToPlace = entry.getValue();
 
             if (!player.mayUseItemAt(placePos, Direction.UP, wandStack)) continue;
-            if (EventHooks.onBlockPlace(player, BlockSnapshot.create(level.dimension(), level, placePos), Direction.UP)) continue;
 
             ItemStack blockItem = new ItemStack(stateToPlace.getBlock());
-            boolean hasItems = player.isCreative() || WandBlockStorageHelper.consumeBlock(player, blockItem);
-            if (!hasItems) continue;
-
-            level.setBlockAndUpdate(placePos, stateToPlace);
-            placed++;
+            if (BlockUtil.setBlockWithPlacementEvent(level, player, placePos, stateToPlace, Direction.UP,
+                    () -> player.isCreative() || WandBlockStorageHelper.consumeBlock(player, blockItem))) {
+                placed++;
+            }
         }
 
         if (useLumen && placed > 0 && !player.isCreative()) {
