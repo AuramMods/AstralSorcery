@@ -38,7 +38,6 @@ public class FlagExecutor {
 
         RENDER_ASTROLABE_ITEM,
         CHAIN_BLOCK_BREAK,
-        TREE_GROWTH,
         RANGED_SWEEP_ATTACK,
         AOE_DAMAGE_BURST,
         DAMAGE_REFLECT_ATTACK,

@@ -94,33 +94,33 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
     }
 
     protected void setupTreeGrowthHandler(ServerLevel level, double radius) {
-        TreeGrowUtil.addHandler(level, this.getBlockPos(), radius, (event, tree) -> {
-            tree.simulateGrowTree(level, event.getRandom()).forEach(snapshot -> {
-                LevelAccessor evLevel = event.getLevel();
-                // These snapshots were taken after simulated growth, before restoring the original blocks.
-                BlockState grownState = snapshot.getReplacedBlock();
-                //Reset blocks we don't capture
-                if (!this.canCaptureBlock(evLevel, snapshot.getPos(), grownState)) {
-                    evLevel.setBlock(snapshot.getPos(), grownState, Block.UPDATE_CLIENTS);
-                    return;
-                }
-                evLevel.setBlock(snapshot.getPos(), BlocksAS.TRANSLUCENT_TREE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
-                MiscUtil.getTileAt(evLevel, snapshot.getPos(), TileTranslucentTree.class, true).ifPresent(tile -> {
-                    TileTranslucentTree.Data data = tile.getTileData();
-                    data.setStoredState(grownState);
-                    data.setTreeBeaconPos(this.getBlockPos());
-                    data.markForUpdate();
+        TreeGrowUtil.addHandler(level, this.getBlockPos(), radius, (pos, grownState) -> {
+            if (!this.canCaptureBlock(level, pos, grownState) ||
+                    !level.setBlock(pos, BlocksAS.TRANSLUCENT_TREE.get().defaultBlockState(), Block.UPDATE_CLIENTS)) {
+                return false;
+            }
+            TileTranslucentTree tile = MiscUtil.getTileAt(level, pos, TileTranslucentTree.class, true).orElse(null);
+            if (tile == null) {
+                level.setBlock(pos, grownState, Block.UPDATE_CLIENTS);
+                return false;
+            }
 
-                    this.getTileData().addTreeComponent(snapshot.getPos(), this.isLog(grownState) ? CONFIG.logWeight.get() : 1);
-                });
-
-                //Revert if something went wrong
-                if (!MiscUtil.getTileExists(evLevel, snapshot.getPos(), TileTranslucentTree.class, true)) {
-                    evLevel.setBlock(snapshot.getPos(), grownState, Block.UPDATE_CLIENTS);
-                }
-            });
+            TileTranslucentTree.Data data = tile.getTileData();
+            data.setStoredState(grownState);
+            data.setTreeBeaconPos(this.getBlockPos());
+            data.markForUpdate();
+            this.getTileData().addTreeComponent(pos, this.isLog(grownState) ? CONFIG.logWeight.get() : 1);
             return true;
         });
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        if (this.getLevel() instanceof ServerLevel level) {
+            TreeGrowUtil.removeHandler(level, this.getBlockPos());
+            this.registeredGrowHandlerRadius = -1;
+        }
     }
 
     private void gatherCycle(ServerLevel level) {

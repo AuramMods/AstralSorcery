@@ -154,7 +154,7 @@ public class KnownTreeRegistry extends JsonDataRegistry<KnownTreeRegistry.TreeEn
 
         public boolean isLog(BlockState state) {
             for (ResourceKey<Block> log : this.logBlocks) {
-                if (state.is(log)) return true;
+                if (state.getBlockHolder().is(log)) return true;
             }
             for (TagKey<Block> logTag : this.logTags) {
                 if (state.is(logTag)) return true;
@@ -164,7 +164,7 @@ public class KnownTreeRegistry extends JsonDataRegistry<KnownTreeRegistry.TreeEn
 
         public boolean isLeaf(BlockState state) {
             for (ResourceKey<Block> leaf : this.leafBlocks) {
-                if (state.is(leaf)) return true;
+                if (state.getBlockHolder().is(leaf)) return true;
             }
             for (TagKey<Block> leafTag : this.leafTags) {
                 if (state.is(leafTag)) return true;

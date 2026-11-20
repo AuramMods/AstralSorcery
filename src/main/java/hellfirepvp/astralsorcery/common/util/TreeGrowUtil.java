@@ -11,128 +11,98 @@ package hellfirepvp.astralsorcery.common.util;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.BooleanSupplier;
 
 /**
- * This class is part of the Astral Sorcery Mod
- * The complete source code for this mod can be found on GitHub.
- * Class: TreeGrowUtil
- * Created by HellFirePvP
- * Date: 07.09.2026 / 10:00
+ * Captures native tree feature placement for nearby tree beacons.
  */
 public class TreeGrowUtil {
 
-    private static final Map<ResourceKey<Level>, Set<Entry>> handlers = new HashMap<>();
-    private static final Table<ResourceKey<Level>, ChunkPos, Set<Entry>> chunkHandlers = HashBasedTable.create();
+    private static final Map<ServerLevel, Map<BlockPos, Entry>> handlers = new HashMap<>();
+    private static final Table<ServerLevel, ChunkPos, Set<Entry>> chunkHandlers = HashBasedTable.create();
 
-    public static void addHandler(ServerLevel level, BlockPos pos, double range, BiPredicate<BlockGrowFeatureEvent, TreeUtil.Tree> handler) {
-        Entry newEntry = new Entry(pos, range, handler);
-        handlers.computeIfAbsent(level.dimension(), k -> new HashSet<>()).add(newEntry);
-
-        int chunkRange = (int) Math.ceil(range / 16);
-        ChunkPos centerChunk = new ChunkPos(pos);
-
-        for (int dx = -chunkRange; dx <= chunkRange; dx++) {
-            for (int dz = -chunkRange; dz <= chunkRange; dz++) {
-                ChunkPos chunkPos = new ChunkPos(centerChunk.x + dx, centerChunk.z + dz);
-                Map<ChunkPos, Set<Entry>> chunkPosMap = chunkHandlers.row(level.dimension());
-                if (!chunkPosMap.containsKey(chunkPos)) chunkPosMap.put(chunkPos, new HashSet<>());
-                chunkPosMap.computeIfAbsent(chunkPos, k -> new HashSet<>()).add(newEntry);
-            }
+    public static void addHandler(ServerLevel level, BlockPos pos, double range, BiPredicate<BlockPos, BlockState> handler) {
+        removeHandler(level, pos);
+        Entry entry = new Entry(pos.immutable(), range, handler);
+        handlers.computeIfAbsent(level, ignored -> new HashMap<>()).put(entry.pos(), entry);
+        Map<ChunkPos, Set<Entry>> chunks = chunkHandlers.row(level);
+        for (ChunkPos chunk : affectedChunks(entry)) {
+            chunks.computeIfAbsent(chunk, ignored -> new HashSet<>()).add(entry);
         }
     }
 
     public static void removeHandler(ServerLevel level, BlockPos pos) {
-        Entry foundEntry = null;
-        Set<Entry> levelEntries = handlers.get(level.dimension());
-        if (levelEntries != null) {
-            for (Entry entry : levelEntries) {
-                if (entry.pos.equals(pos)) {
-                    foundEntry = entry;
-                    break;
-                }
-            }
-            if (foundEntry != null) {
-                levelEntries.remove(foundEntry);
+        Map<BlockPos, Entry> entries = handlers.get(level);
+        if (entries == null) return;
+        Entry entry = entries.remove(pos);
+        if (entry == null) return;
+        if (entries.isEmpty()) handlers.remove(level);
 
-                int chunkRange = (int) Math.ceil(foundEntry.range / 16);
-                ChunkPos centerChunk = new ChunkPos(pos);
+        Map<ChunkPos, Set<Entry>> chunks = chunkHandlers.row(level);
+        for (ChunkPos chunk : affectedChunks(entry)) {
+            chunks.computeIfPresent(chunk, (ignored, bucket) -> {
+                bucket.remove(entry);
+                return bucket.isEmpty() ? null : bucket;
+            });
+        }
+    }
 
-                for (int dx = -chunkRange; dx <= chunkRange; dx++) {
-                    for (int dz = -chunkRange; dz <= chunkRange; dz++) {
-                        ChunkPos chunkPos = new ChunkPos(centerChunk.x + dx, centerChunk.z + dz);
-                        Map<ChunkPos, Set<Entry>> chunkPosMap = chunkHandlers.row(level.dimension());
-                        if (chunkPosMap.isEmpty()) continue;
+    private static List<ChunkPos> affectedChunks(Entry entry) {
+        int radius = (int) Math.ceil(entry.range() / 16);
+        ChunkPos center = new ChunkPos(entry.pos());
+        return ChunkPos.rangeClosed(center, radius).toList();
+    }
 
-                        Set<Entry> entriesInChunk = chunkPosMap.get(chunkPos);
-                        if (entriesInChunk != null) {
-                            entriesInChunk.remove(foundEntry);
-                            if (entriesInChunk.isEmpty()) {
-                                chunkPosMap.remove(chunkPos);
-                            }
-                        }
+    public static boolean placeTree(ServerLevel level, BlockPos origin, BooleanSupplier growth) {
+        Set<Entry> entries = chunkHandlers.get(level, new ChunkPos(origin));
+        if (entries == null) return growth.getAsBoolean();
+
+        List<Entry> nearby = entries.stream()
+                .filter(entry -> entry.pos().distSqr(origin) <= entry.range() * entry.range())
+                .sorted(Comparator.comparingDouble((Entry entry) -> entry.pos().distSqr(origin)).thenComparing(Entry::pos))
+                .toList();
+        if (nearby.isEmpty()) return growth.getAsBoolean();
+
+        // Preserve Forge's chosen feature and notify clients only after the beacons process its changes.
+        return BlockUtil.captureLevelChanges(level, () -> {
+            boolean placed = growth.getAsBoolean();
+            if (placed) {
+                List<BlockPos> changedPositions = level.capturedBlockSnapshots.stream().map(BlockSnapshot::getPos).distinct().toList();
+                for (BlockPos pos : changedPositions) {
+                    BlockState grown = level.getBlockState(pos);
+                    for (Entry entry : nearby) {
+                        if (entry.handler().test(pos, grown)) break;
                     }
                 }
             }
-        }
+            return BlockUtil.ChangeResult.apply(placed);
+        }).value();
     }
 
     public static void attachEventListeners(IEventBus bus) {
-        bus.addListener(TreeGrowUtil::onGrow);
         bus.addListener(TreeGrowUtil::onUnload);
     }
 
-    private static void onGrow(BlockGrowFeatureEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel sLevel)) return;
-        FlagExecutor.run(FlagExecutor.Flag.TREE_GROWTH, () -> {
-            TreeUtil.wrapTree(event.getLevel(), event.getPos()).ifPresent(tree -> {
-                ResourceKey<Level> dim = sLevel.dimension();
-                ChunkPos chunkPos = new ChunkPos(event.getPos());
-
-                Set<Entry> relevantEntries = chunkHandlers.get(dim, chunkPos);
-                if (relevantEntries != null) {
-                    for (Entry entry : relevantEntries) {
-                        double distanceSq = entry.pos.distSqr(event.getPos());
-                        if (distanceSq <= entry.range * entry.range) {
-                            if (entry.handler.test(event, tree)) {
-                                event.setCanceled(true);
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    }
-
     private static void onUnload(LevelEvent.Unload event) {
-        if (event.getLevel() instanceof Level level) {
-            handlers.remove(level.dimension());
+        if (event.getLevel() instanceof ServerLevel level) {
+            handlers.remove(level);
+            chunkHandlers.row(level).clear();
         }
     }
 
-    private record Entry(BlockPos pos, double range, BiPredicate<BlockGrowFeatureEvent, TreeUtil.Tree> handler) {
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || getClass() != o.getClass()) return false;
-            Entry entry = (Entry) o;
-            return Objects.equals(pos, entry.pos);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(pos);
-        }
-    }
+    private record Entry(BlockPos pos, double range, BiPredicate<BlockPos, BlockState> handler) {}
 }
