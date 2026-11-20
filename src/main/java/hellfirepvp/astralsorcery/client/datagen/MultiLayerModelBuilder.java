@@ -13,7 +13,10 @@ import hellfirepvp.astralsorcery.datagen.assets.AstralBlockStateProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.*;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 
 /**
  * This class is part of the Astral Sorcery Mod

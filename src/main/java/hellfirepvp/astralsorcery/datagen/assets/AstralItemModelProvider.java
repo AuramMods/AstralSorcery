@@ -259,7 +259,7 @@ public class AstralItemModelProvider extends ItemModelProvider {
                 .parent(new ModelFile.UncheckedModelFile("item/generated"));
 
         stacks.forEach(stack -> {
-            ItemPropertyFunction func = ItemProperties.getProperty(stack, propertyKey);
+            ItemPropertyFunction func = ItemProperties.getProperty(stack.getItem(), propertyKey);
             if (func == null) throw new IllegalArgumentException("No property function found " + propertyKey);
             float value = func.call(stack, null, null, 0);
             ResourceLocation variantKey = suffixPath(modelId, "_" + modelNameSuffix.apply(stack));
@@ -289,12 +289,13 @@ public class AstralItemModelProvider extends ItemModelProvider {
     }
 
     private ItemModelBuilder simpleBlockModel(RegisteredItemLike<? extends Block> block) {
-        return this.simpleBlockItem(block.getId());
+        ResourceLocation id = block.getId();
+        return this.withExistingParent(id.toString(), id.withPrefix("block/"));
     }
 
     private void simpleBucket(RegisteredItemLike<? extends Item> item, RegistryObject<? extends Fluid> fluidSource) {
         withExistingParent(item.getId().getPath(),
-                new ResourceLocation("neoforge", "item/bucket"))
+                new ResourceLocation("forge", "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(fluidSource.get());
     }

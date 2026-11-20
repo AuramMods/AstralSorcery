@@ -230,7 +230,7 @@ public class AstralBlockStateProvider extends BlockStateProvider {
         return model(AstralSorcery.key("_custom/nothing"));
     }
 
-    public static ModelFile model(RegistryObject<?> entry) {
+    public static ModelFile model(RegisteredItemLike<?> entry) {
         return model(entry.getId());
     }
 
