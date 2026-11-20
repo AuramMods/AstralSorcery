@@ -204,7 +204,6 @@ public class CommonProxy {
         PatreonManager.attachListeners(eventBus);
         LumenBindingHitAddEffectEffect.attachEventListeners(eventBus);
         LumenBindingPlaceLightEffect.attachEventListeners(eventBus);
-        LumenBindingCollectDropsEffect.attachEventListeners(eventBus);
         LumenBindingAbsorbDamageEffect.attachEventListeners(eventBus);
         LumenBindingDamageBurstEffect.attachEventListeners(eventBus);
         LumenBindingExtendMobEffectsEffect.attachEventListeners(eventBus);

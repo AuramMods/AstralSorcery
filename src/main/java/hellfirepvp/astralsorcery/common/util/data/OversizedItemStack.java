@@ -58,7 +58,7 @@ public class OversizedItemStack {
     }
 
     public boolean matches(ItemStack stack) {
-        return ItemStack.isSameItemSameComponents(this.getStack(), stack);
+        return ItemStack.isSameItemSameTags(this.getStack(), stack);
     }
 
     public int getCount() {
@@ -97,11 +97,11 @@ public class OversizedItemStack {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         OversizedItemStack that = (OversizedItemStack) o;
-        return count == that.count && ItemStack.isSameItemSameComponents(stack, that.stack);
+        return count == that.count && ItemStack.isSameItemSameTags(stack, that.stack);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stack, count);
+        return Objects.hash(stack.getItem(), stack.getTag(), count);
     }
 }

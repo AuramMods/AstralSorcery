@@ -14,17 +14,13 @@ import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.types.LumenBindingEffectTypesAS;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
-import hellfirepvp.astralsorcery.common.util.data.MapStream;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
 import java.util.List;
 
@@ -41,37 +37,31 @@ public class LumenBindingCollectDropsEffect extends LumenBindingEffect {
     public static final MapCodec<LumenBindingCollectDropsEffect> CODEC = MapCodec.unit(INSTANCE);
     public static final StreamCodec<FriendlyByteBuf, LumenBindingCollectDropsEffect> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
-    public static void attachEventListeners(IEventBus bus) {
-        bus.addListener(EventPriority.LOWEST, LumenBindingCollectDropsEffect::onBlockDrops);
-    }
+    public static void collectDrops(ServerPlayer player, List<ItemEntity> drops) {
+        if (drops.isEmpty()) return;
 
-    private static void onBlockDrops(BlockDropsEvent event) {
-        if (event.getBreaker() instanceof ServerPlayer sPlayer) {
-            forEachEffect(sPlayer, LumenBindingCollectDropsEffect.class, (stack, effect) -> {
-                int slotId = ItemUtil.findItemsInInventory(sPlayer, s -> s.is(ItemsAS.AKASHIC_SINGULARITY.get())).keySet()
-                        .stream().findFirst().orElse(-1);
-                ItemStack singularity;
-                if (slotId == -1) {
-                    singularity = ItemsAS.AKASHIC_SINGULARITY.toStack();
-                    slotId = sPlayer.getInventory().getFreeSlot();
-                    if (slotId == -1) {
-                        return; // Well, I GUESS we can't do fck all here. Player error or something.
-                    }
-                } else {
-                    singularity = sPlayer.getInventory().getItem(slotId);
-                }
+        forEachEffect(player, LumenBindingCollectDropsEffect.class, (stack, effect) -> {
+            int slot = ItemUtil.findItemsInInventory(player, item -> item.is(ItemsAS.AKASHIC_SINGULARITY.get())).keySet()
+                    .stream().findFirst().orElse(-1);
+            ItemStack singularity;
+            if (slot == -1) {
+                slot = player.getInventory().getFreeSlot();
+                if (slot == -1) return;
+                singularity = ItemsAS.AKASHIC_SINGULARITY.toStack();
+            } else {
+                singularity = player.getInventory().getItem(slot);
+            }
 
-                StoredItemsComponent cmp = DataComponentsAS.STORED_ITEMS.getOrDefault(singularity, StoredItemsComponent.EMPTY);
-                for (ItemEntity itemEntity : event.getDrops()) {
-                    if (itemEntity.isRemoved()) continue;
+            StoredItemsComponent contents = DataComponentsAS.STORED_ITEMS.getOrDefault(singularity, StoredItemsComponent.EMPTY);
+            for (ItemEntity item : drops) {
+                if (item.isRemoved()) continue;
 
-                    cmp = cmp.accept(itemEntity.getItem());
-                    itemEntity.discard();
-                }
-                DataComponentsAS.STORED_ITEMS.set(singularity, cmp);
-                sPlayer.getInventory().setItem(slotId, singularity);
-            });
-        }
+                contents = contents.accept(item.getItem());
+                item.discard();
+            }
+            DataComponentsAS.STORED_ITEMS.set(singularity, contents);
+            player.getInventory().setItem(slot, singularity);
+        });
     }
 
     @Override

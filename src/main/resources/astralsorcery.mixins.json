@@ -19,7 +19,8 @@
         "MixinPlayerScale",
         "MixinProjectile",
         "MixinServerGamePacketListenerImpl",
-        "MixinServerLevel"
+        "MixinServerLevel",
+        "MixinServerPlayerGameMode"
     ],
     "client": [
         "client.AccessorGameRenderer",

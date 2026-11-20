@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.util;
 
+import hellfirepvp.astralsorcery.common.lumen.binding.effect.LumenBindingCollectDropsEffect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -62,7 +63,8 @@ public class BlockBreakUtil {
                     return BlockUtil.ChangeResult.revert(Result.failure());
                 }
                 state.getBlock().destroy(sLevel, pos, state);
-                state.getBlock().playerDestroy(sLevel, fakePlayer, pos, state, blockEntity, tool);
+                dropPlayerResources(sLevel, fakePlayer, () ->
+                        state.getBlock().playerDestroy(sLevel, fakePlayer, pos, state, blockEntity, tool));
                 return BlockUtil.ChangeResult.apply(Result.success(drops, experience));
             })).value();
         } catch (Exception exc) {
@@ -70,6 +72,16 @@ public class BlockBreakUtil {
         } finally {
             fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, previousTool);
         }
+    }
+
+    public static void dropPlayerResources(ServerLevel level, ServerPlayer player, Runnable harvest) {
+        List<Entity> drops = BlockUtil.collectDrops(level, captured -> {
+            harvest.run();
+            return captured;
+        });
+        List<ItemEntity> items = drops.stream().filter(ItemEntity.class::isInstance).map(ItemEntity.class::cast).toList();
+        LumenBindingCollectDropsEffect.collectDrops(player, items);
+        drops.stream().filter(entity -> !entity.isRemoved()).forEach(level::addFreshEntity);
     }
 
     public static class Result {

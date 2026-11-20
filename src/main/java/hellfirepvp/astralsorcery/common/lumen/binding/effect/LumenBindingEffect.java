@@ -27,12 +27,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.RegistryObject;
-import org.apache.commons.lang3.stream.Streams;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.stream.StreamSupport;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -78,7 +78,7 @@ public abstract class LumenBindingEffect {
     }
 
     public static <T extends LumenBindingEffect, R> List<R> forEachEffect(LivingEntity entity, Class<T> usageType, BiFunction<ItemStack, T, R> fn) {
-        return Streams.of(entity.getAllSlots())
+        return StreamSupport.stream(entity.getAllSlots().spliterator(), false)
                 .filter(stack -> !stack.isEmpty())
                 .map(stack -> forEachEffectTypes(entity, stack, (lumen, binding) -> {
                     List<LumenBindingEffect> effects = new ArrayList<>();
