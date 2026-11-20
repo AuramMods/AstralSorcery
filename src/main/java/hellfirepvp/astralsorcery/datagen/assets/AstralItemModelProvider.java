@@ -281,7 +281,8 @@ public class AstralItemModelProvider extends ItemModelProvider {
     }
 
     private ItemModelBuilder handheldItem(ItemLike item) {
-        return this.handheldItem(item.asItem());
+        ResourceLocation itemKey = BuiltInRegistries.ITEM.getKey(item.asItem());
+        return this.singleTexture(itemKey.toString(), mcLoc("item/handheld"), "layer0", itemKey.withPrefix("item/"));
     }
 
     private ItemModelBuilder multiLayerAllModel(RegisteredItemLike<? extends Block> block) {
