@@ -64,7 +64,7 @@ public class KeyPerkMendArmor extends KeyPerk implements TickablePerk {
         PlayerProgress progress = ResearchManager.getProgress(sPlayer, side);
         if (!progress.getPerkData().hasPerkEffect(this)) return;
 
-        float repairChance = CONFIG.chanceToRepair.getAsInt();
+        float repairChance = CONFIG.chanceToRepair.get();
         repairChance /= PerkManager.getOrCreateAttributes(sPlayer).getModifier(sPlayer, progress, PerksAS.AttributeTypes.PERK_EFFECT);
         int repairChanceInt = Math.max(MiscUtil.roundChanced(repairChance, this.rand), 1);
         for (ItemStack stack : sPlayer.getArmorSlots()) {

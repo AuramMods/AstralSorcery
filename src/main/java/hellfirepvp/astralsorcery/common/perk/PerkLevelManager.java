@@ -46,7 +46,7 @@ public class PerkLevelManager {
     }
 
     public void initializeServerLevels() {
-        int maxLevel = PerkConfig.CONFIG.perkLevelCap.getAsInt();
+        int maxLevel = PerkConfig.CONFIG.perkLevelCap.get();
         this.levelData.setData(LogicalSide.SERVER, new LevelData(maxLevel));
     }
 

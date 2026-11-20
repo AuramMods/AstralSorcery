@@ -72,7 +72,7 @@ public class KeyPerkGrowPlants extends KeyPerk implements TickablePerk {
         if (chancedCount <= 0) return;
 
         for (int i = 0; i < chancedCount; i++) {
-            int radius = CONFIG.radius.getAsInt();
+            int radius = CONFIG.radius.get();
             BlockPos randPos = player.blockPosition().offset(
                     this.rand.nextInt(radius * 2 + 1) - radius,
                     this.rand.nextInt(radius * 2 + 1) - radius,

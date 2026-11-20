@@ -77,7 +77,7 @@ public class KeyPerkCheatDeath extends KeyPerk implements CooldownPerk {
         if (!progress.getPerkData().hasPerkEffect(this)) return;
 
         //Yea this doesn't scale with perk effect. it's intentional. rip whoever is reading this looking for this information.
-        PerkCooldownHelper.setCooldownActiveForPlayer(sPlayer, this, CONFIG.cooldownTicks.getAsInt());
+        PerkCooldownHelper.setCooldownActiveForPlayer(sPlayer, this, CONFIG.cooldownTicks.get());
         ServerSoundHelper.playSoundAround(SoundEvents.TOTEM_USE, SoundSource.PLAYERS, sPlayer.level(), sPlayer.position(), 1F, 1F);
         sPlayer.setHealth(1F);
         sPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 400, 2));

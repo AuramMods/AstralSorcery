@@ -74,7 +74,7 @@ public class KeyPerkProjectileDistance extends KeyPerk {
         if (!progress.getPerkData().hasPerkEffect(this)) return;
         LivingEntity target = event.getEntity();
 
-        double dist = sPlayer.distanceTo(target) / CONFIG.distanceCap.getAsDouble();
+        double dist = sPlayer.distanceTo(target) / CONFIG.distanceCap.get();
         dist = Math.min(Math.pow(dist, 1.5F), 1);
 
         float mult = PerkManager.getOrCreateAttributes(sPlayer)

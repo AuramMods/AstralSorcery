@@ -97,7 +97,7 @@ public class RootPerkArmara extends RootPerk<AbstractPerk.Data> {
 
         CombatTracker tracker = sPlayer.getCombatTracker();
         if (tracker.inCombat) {
-            if (tracker.getCombatDuration() > this.getConfig().extendedCombatDuration.getAsInt()) {
+            if (tracker.getCombatDuration() > this.getConfig().extendedCombatDuration.get()) {
                 effectMultiplier *= 0.05F;
             }
         }

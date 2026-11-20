@@ -83,7 +83,7 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
     public void serverTick(ServerLevel level) {
         super.serverTick(level);
 
-        double cfgRange = CONFIG.range.getAsDouble();
+        double cfgRange = CONFIG.range.get();
         if (this.registeredGrowHandlerRadius != cfgRange) {
             this.setupTreeGrowthHandler(level, cfgRange);
             this.registeredGrowHandlerRadius = cfgRange;
@@ -150,7 +150,7 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
         int cycles = Math.max(1, MiscUtil.roundChanced(this.getTileData().getStoredStarlight() * 0.75F, rand));
         this.getTileData().setStoredStarlight(0);
 
-        float pivotCount = CONFIG.productionPivot.getAsInt();
+        float pivotCount = CONFIG.productionPivot.get();
         for (int i = 0; i < cycles; i++) {
             int storedCount = this.getTileData().treeComponentWeights.size();
             float pivotChance = storedCount / pivotCount;
@@ -161,12 +161,12 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
             MiscUtil.getWeightedRandomEntry(components.keySet(), rand, components::get).ifPresent(pos -> {
                 MiscUtil.getTileAt(level, pos, TileTranslucentTree.class, false).ifPresent(tile -> {
                     boolean doEffect = false;
-                    if (rand.nextInt(Math.max(1, CONFIG.harvestChance.getAsInt())) == 0) {
+                    if (rand.nextInt(Math.max(1, CONFIG.harvestChance.get())) == 0) {
                         this.doHarvest(level, tile);
                         doEffect = true;
                     }
 
-                    if (rand.nextInt(Math.max(1, CONFIG.breakChance.getAsInt())) == 0) {
+                    if (rand.nextInt(Math.max(1, CONFIG.breakChance.get())) == 0) {
                         if (tile.removeBlock(level) && this.getTileData().removeTreeComponent(pos)) {
                             this.getTileData().markForUpdate();
                             doEffect = true;
@@ -217,7 +217,7 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
         float markerAlpha = 0.7F + alpha * 0.3F;
 
         Vector3 thisPos = Vector3.atBottomCenter(this);
-        double radius = CONFIG.range.getAsDouble();
+        double radius = CONFIG.range.get();
         int count = MiscUtil.roundChanced(radius * 0.15F, rand);
         for (int i = 0; i < count; i++) {
             Vector3 offset = Vector3.random(rand).setY(0).normalize().multiply(radius);

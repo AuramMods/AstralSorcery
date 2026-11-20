@@ -87,7 +87,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
     }
 
     protected void init() {
-        this.triggerTimeout = ArtifactConfig.CONFIG.triggerDelay.getAsInt();
+        this.triggerTimeout = ArtifactConfig.CONFIG.triggerDelay.get();
         this.setInvulnerable(true);
         this.setUnlimitedLifetime();
     }
@@ -147,7 +147,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
             Entity entity = sLevel.getEntity(uuid);
             return entity == null || !entity.isAlive();
         });
-        return Math.max(0, ArtifactConfig.CONFIG.spawnedMobLimit.getAsInt() - this.spawnedMobs.size());
+        return Math.max(0, ArtifactConfig.CONFIG.spawnedMobLimit.get() - this.spawnedMobs.size());
     }
 
     public void addSpawnedMob(Entity entity) {
@@ -162,7 +162,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
                 nextComponent = nextComponent.changeStability(ArtifactStability.STABLE);
             }
             RandomSource negativeSrc = nextComponent.getRandom();
-            if (negativeSrc.nextFloat() < ArtifactConfig.CONFIG.negativeEffectGainChance.getAsDouble()) {
+            if (negativeSrc.nextFloat() < ArtifactConfig.CONFIG.negativeEffectGainChance.get()) {
                 ArtifactEffect newEffect = ArtifactEffectLoader.getNegativeInstance().pickNewEffect(negativeSrc, nextComponent.getRawNegativeEffects()).orElse(null);
                 if (newEffect != null) {
                     nextComponent = nextComponent.addFailureEffect(newEffect);
@@ -191,7 +191,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
 
     private void resetTrigger() {
         this.activeTrigger = null;
-        this.triggerTimeout = ArtifactConfig.CONFIG.triggerDelay.getAsInt();
+        this.triggerTimeout = ArtifactConfig.CONFIG.triggerDelay.get();
         this.setNoColor();
     }
 
@@ -243,7 +243,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
                     if (this.triggerTimeout <= 0 &&
                             this.activeTrigger == null &&
                             this.tickCount % 20 == 0 &&
-                            this.random.nextInt(ArtifactConfig.CONFIG.triggerChance.getAsInt()) == 0) {
+                            this.random.nextInt(ArtifactConfig.CONFIG.triggerChance.get()) == 0) {
 
                         ActiveArtifactTrigger.makeTrigger(component).ifPresent(trigger -> {
                             this.activeTrigger = trigger;
@@ -281,7 +281,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
                         if (!component.stability().mayTriggerPulse()) return;
 
                         long nextPulseTick = component.getNextPulseTick();
-                        if (nextPulseTick <  sLevel.getGameTime() - (ArtifactConfig.CONFIG.pulseDelay.getAsInt() * 2L)) {
+                        if (nextPulseTick <  sLevel.getGameTime() - (ArtifactConfig.CONFIG.pulseDelay.get() * 2L)) {
                             component = component.updatePulseTick(sLevel);
                             this.setArtifactComponent(component);
                         }
@@ -293,7 +293,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
 
                             if (this.activeTrigger == null) {
                                 if (component.failureEffects().isEmpty() ||
-                                        sLevel.getGameTime() + ArtifactConfig.CONFIG.pulseDelay.getAsInt() * 2L >= nextPulseTick) {
+                                        sLevel.getGameTime() + ArtifactConfig.CONFIG.pulseDelay.get() * 2L >= nextPulseTick) {
                                     RandomSource rand = RandomSource.create();
                                     ArtifactEffect newEffect = ArtifactEffectLoader.getNegativeInstance().pickNewEffect(rand, component.getRawNegativeEffects()).orElse(null);
                                     if (newEffect != null) {

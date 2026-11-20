@@ -101,7 +101,7 @@ public class RootPerkDiscidia extends RootPerk<AbstractPerk.Data> {
         float effectMultiplier = 1F;
         CombatTracker tracker = sPlayer.getCombatTracker();
         if (tracker.inCombat) {
-            if (tracker.getCombatDuration() > this.getConfig().extendedCombatDuration.getAsInt()) {
+            if (tracker.getCombatDuration() > this.getConfig().extendedCombatDuration.get()) {
                 effectMultiplier *= 0.01F;
             }
         }
