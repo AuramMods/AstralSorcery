@@ -15,9 +15,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -49,7 +50,7 @@ public record EnchantmentModifierComponent(List<EnchantmentModifier> modifiers) 
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         this.modifiers().forEach(modifier -> tooltipAdder.accept(modifier.getDisplay()));
     }
 }

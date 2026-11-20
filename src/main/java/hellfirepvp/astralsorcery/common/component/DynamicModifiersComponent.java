@@ -18,12 +18,9 @@ import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipProvider;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -80,8 +77,7 @@ public record DynamicModifiersComponent(List<DynamicAttributeModifier> modifiers
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
-        Player player = context.player();
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         PlayerProgress progress = player != null ? ResearchManager.getProgress(player, SidedHelper.getSide(player)) : null;
 
         this.modifiers().forEach(modifier -> {

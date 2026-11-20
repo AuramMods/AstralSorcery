@@ -17,9 +17,10 @@ import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -47,7 +48,7 @@ public record AstrolabeAngleComponent(float angle, boolean matchesAll) implement
             AstrolabeAngleComponent::new);
 
     public AstrolabeAngleComponent(float angle, boolean matchesAll) {
-        this.angle = Math.clamp(angle, 0, 90);
+        this.angle = Mth.clamp(angle, 0, 90);
         this.matchesAll = matchesAll;
     }
 
@@ -59,7 +60,7 @@ public record AstrolabeAngleComponent(float angle, boolean matchesAll) implement
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         if (this.matchesAll()) return;
         int angle = Math.round(this.angle());
         tooltipAdder.accept(

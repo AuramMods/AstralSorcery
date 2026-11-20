@@ -17,9 +17,10 @@ import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -115,7 +116,7 @@ public record StoredItemsComponent(List<OversizedItemStack> contents) implements
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         this.contents.subList(0, Math.min(12, this.contents.size()))
                 .forEach(overSizedStack -> tooltipAdder.accept(overSizedStack.getDisplay().withStyle(ChatFormatting.GRAY)));
         if (this.contents.size() > 12) {

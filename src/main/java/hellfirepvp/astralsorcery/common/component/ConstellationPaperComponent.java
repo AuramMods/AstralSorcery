@@ -23,7 +23,6 @@ import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -76,9 +75,8 @@ public class ConstellationPaperComponent implements DynamicTooltipComponent {
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         this.getConstellation().ifPresent(cst -> {
-            Player player = context.player();
             if (player != null) {
                 this.addConstellationTooltip(cst, player, stack, tooltipAdder);
             }

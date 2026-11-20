@@ -15,9 +15,10 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -41,7 +42,7 @@ public record StoredPlayerProgressComponent(Optional<PlayerProgress> progress, O
     ).apply(inst, StoredPlayerProgressComponent::new));
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         if (this.creative()) {
             tooltipAdder.accept(Component.translatable("item.astralsorcery.knowledge_share.creative").withStyle(ChatFormatting.LIGHT_PURPLE));
             return;

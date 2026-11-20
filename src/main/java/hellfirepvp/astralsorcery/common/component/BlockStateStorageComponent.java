@@ -10,15 +10,15 @@ package hellfirepvp.astralsorcery.common.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +55,9 @@ public record BlockStateStorageComponent(List<BlockState> storedStates) implemen
     }
 
     public BlockStateStorageComponent withAddedState(BlockState state) {
-        return new BlockStateStorageComponent(Util.copyAndAdd(this.storedStates, state));
+        List<BlockState> states = new ArrayList<>(this.storedStates);
+        states.add(state);
+        return new BlockStateStorageComponent(states);
     }
 
     public BlockStateStorageComponent withClearedStates() {
@@ -70,10 +72,10 @@ public record BlockStateStorageComponent(List<BlockState> storedStates) implemen
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         for (BlockState state : this.storedStates) {
             Component blockName = state.getBlock().getName();
-            tooltipAdder.accept(blockName.copy().withColor(0xAAAAFF));
+            tooltipAdder.accept(blockName.copy().withStyle(style -> style.withColor(0xAAAAFF)));
         }
     }
 }

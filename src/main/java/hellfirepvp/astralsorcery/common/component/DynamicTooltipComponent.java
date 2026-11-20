@@ -9,9 +9,10 @@
 package hellfirepvp.astralsorcery.common.component;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 /**
@@ -23,6 +24,6 @@ import java.util.function.Consumer;
  */
 public interface DynamicTooltipComponent {
 
-    void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context);
+    void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player);
 
 }

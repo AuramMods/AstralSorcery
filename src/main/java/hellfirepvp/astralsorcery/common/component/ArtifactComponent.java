@@ -20,10 +20,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -129,7 +130,7 @@ public record ArtifactComponent(ArtifactType artifactType,
     public long getNextPulseTick() {
         if (this.lastPulseGameTick == -1) return -1;
         if (!this.stability().mayTriggerPulse()) return -1;
-        int adjustedDelay = Mth.floor(this.stability().getPulseDelayMultiplier() * ArtifactConfig.CONFIG.pulseDelay.getAsInt());
+        int adjustedDelay = Mth.floor(this.stability().getPulseDelayMultiplier() * ArtifactConfig.CONFIG.pulseDelay.get());
         return this.lastPulseGameTick + adjustedDelay;
     }
 
@@ -157,14 +158,14 @@ public record ArtifactComponent(ArtifactType artifactType,
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
         tooltipAdder.accept(this.stability().getDisplay());
 
         this.conditions().forEach(finished -> tooltipAdder.accept(finished.getDisplay(true)));
         this.activeCondition().ifPresent(active -> tooltipAdder.accept(active.getDisplay(false)));
 
-        if (this.stability().mayTriggerPulse() && context.player() != null) {
-            Level level = context.player().level();
+        if (this.stability().mayTriggerPulse() && player != null) {
+            Level level = player.level();
             long gameTime = level.getGameTime();
             if (this.lastPulseGameTick() != -1 && gameTime >= this.getNextPulseTick()) {
                 tooltipAdder.accept(Component.empty());

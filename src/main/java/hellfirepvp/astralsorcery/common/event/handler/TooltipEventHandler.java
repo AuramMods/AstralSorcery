@@ -10,17 +10,12 @@ package hellfirepvp.astralsorcery.common.event.handler;
 
 import hellfirepvp.astralsorcery.common.component.DynamicTooltipComponent;
 import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
-import hellfirepvp.astralsorcery.common.component.StoredLumenComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import net.minecraft.Util;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import javax.annotation.Nullable;
@@ -43,20 +38,18 @@ public class TooltipEventHandler {
 
     private static void onTooltip(ItemTooltipEvent event) {
         List<Component> newLines = new ArrayList<>();
-        addComponentTooltip(event.getItemStack(), event.getContext(), newLines::add, event.getEntity(), event.getFlags());
+        addComponentTooltip(event.getItemStack(), newLines::add, event.getEntity());
         addStoredLumenTooltip(event.getItemStack(), newLines::add);
 
         List<Component> tip = event.getToolTip();
         tip.addAll(Math.min(1, tip.size()), newLines);
     }
 
-    public static void addComponentTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> tooltipAdder, @Nullable Player player, TooltipFlag flag) {
-        AttributeTooltipContext ctx = AttributeTooltipContext.of(player, context, flag);
-
-        BuiltInRegistries.DATA_COMPONENT_TYPE.forEach(componentType -> {
-            Object component = stack.get(componentType);
+    public static void addComponentTooltip(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
+        DataComponentsAS.values().forEach(type -> {
+            Object component = type.get(stack);
             if (component instanceof DynamicTooltipComponent dynamicTooltipComponent) {
-                dynamicTooltipComponent.addTooltips(stack, tooltipAdder, ctx);
+                dynamicTooltipComponent.addTooltips(stack, tooltipAdder, player);
             }
         });
     }

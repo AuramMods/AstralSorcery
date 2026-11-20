@@ -18,12 +18,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipProvider;
-import net.neoforged.neoforge.common.util.AttributeTooltipContext;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -133,8 +131,8 @@ public class CrystalAttributesComponent implements DynamicTooltipComponent {
     }
 
     @Override
-    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, AttributeTooltipContext context) {
-        int tick = context.player() != null ? context.player().tickCount : 0;
+    public void addTooltips(ItemStack stack, Consumer<Component> tooltipAdder, @Nullable Player player) {
+        int tick = player != null ? player.tickCount : 0;
         for (CrystalProperty property : RegistriesAS.REGISTRY_CRYSTAL_PROPERTIES.get()) {
             this.getAttribute(property).ifPresent(attribute -> {
                 MutableComponent name = attribute.getProperty().getName(attribute.getTier(), tick);
