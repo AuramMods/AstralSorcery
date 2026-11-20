@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -91,23 +92,30 @@ public class BlockUtil {
     }
 
     public static <T> LevelChanges<T> captureLevelChanges(Level level, Supplier<ChangeResult<T>> fn) {
-        DeferredDrops parent = DEFERRED_DROPS.get();
-        DeferredDrops drops = new DeferredDrops(level, parent);
-        DEFERRED_DROPS.set(drops);
-        LevelChanges<T> changes;
-        try {
-            changes = captureBlockSnapshots(level, fn, drops);
-        } finally {
-            if (parent == null) {
-                DEFERRED_DROPS.remove();
-            } else {
-                DEFERRED_DROPS.set(parent);
-            }
-        }
+        DeferredDrops drops = new DeferredDrops(level);
+        LevelChanges<T> changes = withDeferredDrops(drops, () -> captureBlockSnapshots(level, fn, drops));
         if (drops.committed) {
             drops.entities.forEach(level::addFreshEntity);
         }
         return changes;
+    }
+
+    static <T> T collectDrops(ServerLevel level, Function<List<Entity>, T> action) {
+        DeferredDrops drops = new DeferredDrops(level);
+        return withDeferredDrops(drops, () -> action.apply(drops.entities));
+    }
+
+    private static <T> T withDeferredDrops(DeferredDrops drops, Supplier<T> action) {
+        DEFERRED_DROPS.set(drops);
+        try {
+            return action.get();
+        } finally {
+            if (drops.parent == null) {
+                DEFERRED_DROPS.remove();
+            } else {
+                DEFERRED_DROPS.set(drops.parent);
+            }
+        }
     }
 
     public static boolean deferDrop(ServerLevel level, Entity entity) {
@@ -197,9 +205,9 @@ public class BlockUtil {
         private final List<Entity> entities = new ArrayList<>();
         private boolean committed;
 
-        private DeferredDrops(Level level, @Nullable DeferredDrops parent) {
+        private DeferredDrops(Level level) {
             this.level = level;
-            this.parent = parent;
+            this.parent = DEFERRED_DROPS.get();
         }
     }
 
