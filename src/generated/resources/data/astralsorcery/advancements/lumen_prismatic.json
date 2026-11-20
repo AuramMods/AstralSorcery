@@ -13,13 +13,13 @@
     "description": {
       "translate": "advancement.astralsorcery.lumen_prismatic.description"
     },
+    "frame": "task",
+    "hidden": false,
     "icon": {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:prismatic"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "item": "astralsorcery:lumen_crystal",
+      "nbt": "{astralsorcery:{\"astralsorcery:lumen\":{value:\"astralsorcery:prismatic\"}}}"
     },
+    "show_toast": true,
     "title": {
       "translate": "advancement.astralsorcery.lumen_prismatic.title"
     }

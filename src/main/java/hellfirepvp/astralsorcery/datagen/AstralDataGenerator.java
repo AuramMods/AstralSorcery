@@ -32,7 +32,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 
@@ -91,7 +91,7 @@ public class AstralDataGenerator {
             gen.addProvider(true, new AstralLumenBindingDataProvider(output, lookupProvider));
             //gen.addProvider(true, new DebugPerkTreeProvider(output, lookupProvider));
             gen.addProvider(true, new AstralPerkTreeProvider(output, lookupProvider));
-            gen.addProvider(true, new AdvancementProvider(output, lookupProvider, fileHelper, List.of(
+            gen.addProvider(true, new ForgeAdvancementProvider(output, lookupProvider, fileHelper, List.of(
                     new AstralAdvancementProvider()
             )));
         }

@@ -13,10 +13,12 @@
     "description": {
       "translate": "advancement.astralsorcery.perk_level_30.description"
     },
+    "frame": "task",
+    "hidden": false,
     "icon": {
-      "count": 1,
-      "id": "astralsorcery:perk_seal"
+      "item": "astralsorcery:perk_seal"
     },
+    "show_toast": true,
     "title": {
       "translate": "advancement.astralsorcery.perk_level_30.title"
     }

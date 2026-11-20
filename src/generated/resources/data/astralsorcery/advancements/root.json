@@ -4,7 +4,9 @@
       "conditions": {
         "items": [
           {
-            "items": "astralsorcery:tome"
+            "items": [
+              "astralsorcery:tome"
+            ]
           }
         ]
       },
@@ -17,9 +19,10 @@
     "description": {
       "translate": "advancement.astralsorcery.root.description"
     },
+    "frame": "task",
+    "hidden": false,
     "icon": {
-      "count": 1,
-      "id": "astralsorcery:tome"
+      "item": "astralsorcery:tome"
     },
     "show_toast": false,
     "title": {

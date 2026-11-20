@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "items": "astralsorcery:rock_crystal"
+            "items": [
+              "astralsorcery:rock_crystal"
+            ]
           }
         ]
       },
@@ -17,10 +19,12 @@
     "description": {
       "translate": "advancement.astralsorcery.rock_crystal.description"
     },
+    "frame": "task",
+    "hidden": false,
     "icon": {
-      "count": 1,
-      "id": "astralsorcery:rock_crystal"
+      "item": "astralsorcery:rock_crystal"
     },
+    "show_toast": true,
     "title": {
       "translate": "advancement.astralsorcery.rock_crystal.title"
     }

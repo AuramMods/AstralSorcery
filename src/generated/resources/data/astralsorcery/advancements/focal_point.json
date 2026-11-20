@@ -2,6 +2,7 @@
   "parent": "astralsorcery:root",
   "criteria": {
     "discover_focal_point": {
+      "conditions": {},
       "trigger": "astralsorcery:focal_point_discovery"
     }
   },
@@ -10,10 +11,12 @@
     "description": {
       "translate": "advancement.astralsorcery.focal_point.description"
     },
+    "frame": "task",
+    "hidden": false,
     "icon": {
-      "count": 1,
-      "id": "astralsorcery:astrolabe"
+      "item": "astralsorcery:astrolabe"
     },
+    "show_toast": true,
     "title": {
       "translate": "advancement.astralsorcery.focal_point.title"
     }

@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "items": "astralsorcery:celestial_crystal"
+            "items": [
+              "astralsorcery:celestial_crystal"
+            ]
           }
         ]
       },
@@ -17,10 +19,12 @@
     "description": {
       "translate": "advancement.astralsorcery.celestial_crystal.description"
     },
+    "frame": "task",
+    "hidden": false,
     "icon": {
-      "count": 1,
-      "id": "astralsorcery:celestial_crystal"
+      "item": "astralsorcery:celestial_crystal"
     },
+    "show_toast": true,
     "title": {
       "translate": "advancement.astralsorcery.celestial_crystal.title"
     }

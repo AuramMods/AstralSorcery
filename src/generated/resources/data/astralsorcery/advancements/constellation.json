@@ -2,6 +2,7 @@
   "parent": "astralsorcery:root",
   "criteria": {
     "discover_constellation": {
+      "conditions": {},
       "trigger": "astralsorcery:constellation_discovery"
     }
   },
@@ -10,10 +11,12 @@
     "description": {
       "translate": "advancement.astralsorcery.constellation.description"
     },
+    "frame": "task",
+    "hidden": false,
     "icon": {
-      "count": 1,
-      "id": "astralsorcery:constellation_paper"
+      "item": "astralsorcery:constellation_paper"
     },
+    "show_toast": true,
     "title": {
       "translate": "advancement.astralsorcery.constellation.title"
     }
