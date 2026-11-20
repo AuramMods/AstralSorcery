@@ -23,7 +23,6 @@ import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -71,18 +70,8 @@ public class LumenIngredientHelper implements IIngredientHelper<LumenStack> {
     }
 
     @Override
-    public String getGroupingUid(LumenStack ingredient) {
+    public String getWildcardId(LumenStack ingredient) {
         return "lumen:" + this.getResourceLocation(ingredient);
-    }
-
-    @Override
-    public Object getUid(LumenStack ingredient, UidContext context) {
-        Lumen lumen = ingredient.getLumen();
-        Object subData = this.subtypeManager.getSubtypeData(LumenIngredientType.INSTANCE, ingredient, context);
-        if (subData != null) {
-            return List.of(lumen, subData);
-        }
-        return lumen;
     }
 
     @Override

@@ -9,9 +9,6 @@
 package hellfirepvp.astralsorcery.common.integration.jei;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
-import hellfirepvp.astralsorcery.common.component.ArtifactComponent;
-import hellfirepvp.astralsorcery.common.component.ArtifactTypeComponent;
-import hellfirepvp.astralsorcery.common.component.LumenComponent;
 import hellfirepvp.astralsorcery.common.integration.jei.base.ASRecipeCategory;
 import hellfirepvp.astralsorcery.common.integration.jei.base.ComponentSubtypeInterpreter;
 import hellfirepvp.astralsorcery.common.integration.jei.base.StatefulCategory;
@@ -80,17 +77,20 @@ public class ASJeiPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
+        var constellations = RegistriesAS.REGISTRY_CONSTELLATIONS.get();
+        var artifactTypes = RegistriesAS.REGISTRY_ARTIFACT_TYPES.get();
         registration.registerSubtypeInterpreter(ItemsAS.CONSTELLATION_PAPER.asItem(),
-                new ComponentSubtypeInterpreter<>(DataComponentsAS.CONSTELLATION_PAPER, cmp -> cmp.getConstellation().orElse(null)));
+                new ComponentSubtypeInterpreter<>(DataComponentsAS.CONSTELLATION_PAPER,
+                        cmp -> cmp.getConstellation().map(constellations::getKey).orElse(null)));
         registration.registerSubtypeInterpreter(ItemsAS.ARTIFACT.asItem(),
-                new ComponentSubtypeInterpreter<>(DataComponentsAS.ARTIFACT, ArtifactComponent::artifactType));
+                new ComponentSubtypeInterpreter<>(DataComponentsAS.ARTIFACT, cmp -> artifactTypes.getKey(cmp.artifactType())));
         registration.registerSubtypeInterpreter(ItemsAS.ARTIFACT_SHARD.asItem(),
-                new ComponentSubtypeInterpreter<>(DataComponentsAS.ARTIFACT_TYPE, ArtifactTypeComponent::type));
+                new ComponentSubtypeInterpreter<>(DataComponentsAS.ARTIFACT_TYPE, cmp -> artifactTypes.getKey(cmp.type())));
 
         registration.registerSubtypeInterpreter(ItemsAS.LUMEN_CRYSTAL.asItem(),
-                new ComponentSubtypeInterpreter<>(DataComponentsAS.LUMEN, LumenComponent::lumen));
+                new ComponentSubtypeInterpreter<>(DataComponentsAS.LUMEN, cmp -> cmp.key().location()));
         registration.registerSubtypeInterpreter(ItemsAS.BLOCK_LUMEN_CRYSTAL_CLUSTER.asItem(),
-                new ComponentSubtypeInterpreter<>(DataComponentsAS.LUMEN, LumenComponent::lumen));
+                new ComponentSubtypeInterpreter<>(DataComponentsAS.LUMEN, cmp -> cmp.key().location()));
     }
 
     @Override

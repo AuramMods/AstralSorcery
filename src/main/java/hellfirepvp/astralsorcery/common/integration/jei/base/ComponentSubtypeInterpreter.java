@@ -8,11 +8,11 @@
 
 package hellfirepvp.astralsorcery.common.integration.jei.base;
 
-import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
-import mezz.jei.api.ingredients.subtypes.UidContext;
 import hellfirepvp.astralsorcery.common.component.StackDataType;
+import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -23,26 +23,21 @@ import java.util.function.Function;
  * Created by HellFirePvP
  * Date: 25.09.2026 / 19:16
  */
-public class ComponentSubtypeInterpreter<T> implements ISubtypeInterpreter<ItemStack> {
+public class ComponentSubtypeInterpreter<T> implements IIngredientSubtypeInterpreter<ItemStack> {
 
     private final StackDataType<T> componentType;
-    private final Function<T, ?> valueDataExtractor;
+    private final Function<T, ResourceLocation> subtypeId;
 
-    public ComponentSubtypeInterpreter(StackDataType<T> componentType, Function<T, ?> valueDataExtractor) {
+    public ComponentSubtypeInterpreter(StackDataType<T> componentType, Function<T, ResourceLocation> subtypeId) {
         this.componentType = componentType;
-        this.valueDataExtractor = valueDataExtractor;
+        this.subtypeId = subtypeId;
     }
 
-    @Nullable
     @Override
-    public Object getSubtypeData(ItemStack ingredient, UidContext context) {
+    public String apply(ItemStack ingredient, UidContext context) {
         T component = this.componentType.get(ingredient);
-        if (component == null) return null;
-        return this.valueDataExtractor.apply(component);
-    }
-
-    @Override
-    public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
-        return "";
+        if (component == null) return NONE;
+        ResourceLocation id = this.subtypeId.apply(component);
+        return id == null ? NONE : id.toString();
     }
 }

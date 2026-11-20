@@ -7,7 +7,8 @@ keeps HellFirePvP's attribution and the repository license.
 ## Build
 
 Use Java 17 and the checked-in Gradle 8.8 wrapper. ForgeGradle 6.0.54 uses the
-official Minecraft 1.20.1 mappings and Forge 47.4.28. ObserverLib is built from
+official Minecraft 1.20.1 mappings and Forge 47.4.10, the version pinned by
+Auram. ObserverLib is built from
 upstream revision `053aa0076f9e0f4948e6f99cd8195c0fd6d1ed59` with the tracked
 Forge patch.
 
@@ -31,6 +32,10 @@ compilation outputs. The restored Astral Sorcery jar matched the
 uncached jar entry by entry and started on the dedicated server. The
 ObserverLib jars matched byte for byte.
 
+The Auram release production build used Forge 47.4.10, JEI 15.20.0.129
+and Jade 11.13.2+forge. Its JEI subtype support uses the registry IDs
+shared by Auram's JEI version and newer JEI 15 versions.
+
 ## Content comparison
 
 The compared source registration IDs matched for 71 block declarations,
@@ -45,7 +50,7 @@ advancements use category-qualified IDs to preserve distinct rewards.
 
 ## Tested profiles
 
-All profiles used Astral Sorcery 2.0.3, Minecraft 1.20.1, Forge 47.4.28,
+The gameplay profiles used Astral Sorcery 2.0.3, Minecraft 1.20.1, Forge 47.4.28,
 Curios 5.14.1+1.20.1 and the pinned ObserverLib 1.8.0 build.
 
 | Profile | Additional installed mods | Verification |
