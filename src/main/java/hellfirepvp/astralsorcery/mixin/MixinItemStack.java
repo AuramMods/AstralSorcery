@@ -8,25 +8,33 @@
 
 package hellfirepvp.astralsorcery.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import hellfirepvp.astralsorcery.common.event.helper.EnchantmentModifierHelper;
 import hellfirepvp.astralsorcery.common.event.helper.VeiledItemStackHelper;
 import hellfirepvp.astralsorcery.common.item.base.ItemStackEquipmentReference;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
-import net.minecraft.world.item.component.TooltipProvider;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.common.extensions.IForgeItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -37,7 +45,7 @@ import java.util.UUID;
  * Date: 07.09.2026 / 10:00
  */
 @Mixin(ItemStack.class)
-public class MixinItemStack implements ItemStackEquipmentReference {
+public abstract class MixinItemStack implements ItemStackEquipmentReference, IForgeItemStack {
 
     @Unique
     @Nullable
@@ -86,7 +94,7 @@ public class MixinItemStack implements ItemStackEquipmentReference {
         }
     }
 
-    @Inject(method = "getHoverName", at = @At("HEAD"), cancellable = true, order = 800)
+    @Inject(method = "getHoverName", at = @At("HEAD"), cancellable = true)
     public void getVeiledHoverName(CallbackInfoReturnable<Component> cir) {
         ItemStack thisStack = MiscUtil.cast(this);
         ItemStack displayed = VeiledItemStackHelper.getDisplayedStack(thisStack);
@@ -95,11 +103,48 @@ public class MixinItemStack implements ItemStackEquipmentReference {
         }
     }
 
-    @ModifyVariable(method = "addToTooltip", at = @At(value = "STORE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"))
-    public TooltipProvider addEnchantmentTooltip(TooltipProvider value) {
-        if (value instanceof ItemEnchantments enchantments) {
-            return EnchantmentModifierHelper.addEnchantments(MiscUtil.cast(this), enchantments);
+    @Override
+    public int getEnchantmentLevel(Enchantment enchantment) {
+        ItemStack stack = MiscUtil.cast(this);
+        int level = stack.getItem().getEnchantmentLevel(stack, enchantment);
+        return EnchantmentModifierHelper.applyToLevel(stack, enchantment, level);
+    }
+
+    @Override
+    public Map<Enchantment, Integer> getAllEnchantments() {
+        ItemStack stack = MiscUtil.cast(this);
+        return EnchantmentModifierHelper.applyToLevels(stack, stack.getItem().getAllEnchantments(stack));
+    }
+
+    @WrapOperation(method = "getTooltipLines", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/item/ItemStack;appendEnchantmentNames(Ljava/util/List;Lnet/minecraft/nbt/ListTag;)V"))
+    private void showEffectiveEnchantments(List<Component> lines, ListTag tags, Operation<Void> original) {
+        ItemStack stack = MiscUtil.cast(this);
+        original.call(lines, this.astralSorcery$tooltipEnchantmentTags(stack, tags));
+    }
+
+    @Inject(method = "getTooltipLines", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/item/ItemStack;hasTag()Z"))
+    private void showEffectiveEnchantmentsWithoutTags(@Nullable Player player, TooltipFlag flag,
+                                                       CallbackInfoReturnable<List<Component>> cir,
+                                                       @Local(ordinal = 0) List<Component> lines) {
+        ItemStack stack = MiscUtil.cast(this);
+        if (!stack.hasTag()) {
+            ListTag tags = this.astralSorcery$tooltipEnchantmentTags(stack, new ListTag());
+            ItemStack.appendEnchantmentNames(lines, tags);
         }
-        return value;
+    }
+
+    @Unique
+    private ListTag astralSorcery$tooltipEnchantmentTags(ItemStack stack, ListTag originalTags) {
+        var originalLevels = EnchantmentHelper.deserializeEnchantments(originalTags);
+        var effectiveLevels = EnchantmentModifierHelper.applyToLevels(stack, originalLevels);
+        if (effectiveLevels.equals(originalLevels)) {
+            return originalTags;
+        }
+        ListTag tags = new ListTag();
+        effectiveLevels.forEach((enchantment, level) ->
+                tags.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(enchantment), level)));
+        return tags;
     }
 }

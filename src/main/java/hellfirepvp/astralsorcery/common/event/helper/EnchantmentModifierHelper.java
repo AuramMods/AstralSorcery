@@ -11,7 +11,6 @@ package hellfirepvp.astralsorcery.common.event.helper;
 import com.mojang.datafixers.util.Pair;
 import hellfirepvp.astralsorcery.common.Mods;
 import hellfirepvp.astralsorcery.common.component.EnchantmentModifierComponent;
-import hellfirepvp.astralsorcery.common.component.WeakPlayerReferenceComponent;
 import hellfirepvp.astralsorcery.common.enchantment.CombinedEnchantmentModifiers;
 import hellfirepvp.astralsorcery.common.event.DynamicEnchantmentEvent;
 import hellfirepvp.astralsorcery.common.integration.IntegrationCurios;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
@@ -38,11 +36,12 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LogicalSidedProvider;
-import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -60,7 +59,6 @@ public class EnchantmentModifierHelper {
 
     public static void attachListeners(IEventBus bus) {
         bus.addListener(EnchantmentModifierHelper::onPlayerTick);
-        bus.addListener(EnchantmentModifierHelper::onEnchantmentAdd);
     }
 
     private static void onPlayerTick(PlayerTickEvent event) {
@@ -74,45 +72,46 @@ public class EnchantmentModifierHelper {
         }
     }
 
-    private static void onEnchantmentAdd(GetEnchantmentLevelEvent event) {
-        ItemEnchantments.Mutable enchants = event.getEnchantments();
-        addEnchantments(enchants, event.getStack(), event::isTargetting);
+    public static int applyToLevel(ItemStack stack, Enchantment enchantment, int level) {
+        CombinedEnchantmentModifiers modifiers = getModifiersToApply(stack);
+        Holder<Enchantment> holder = BuiltInRegistries.ENCHANTMENT.wrapAsHolder(enchantment);
+        return applyToLevel(stack, holder, level, modifiers);
     }
 
-    public static ItemEnchantments addEnchantments(ItemStack hostStack, ItemEnchantments enchants) {
-        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(enchants);
-        addEnchantments(mutable, hostStack);
-        return mutable.toImmutable();
-    }
-
-    public static void addEnchantments(ItemEnchantments.Mutable enchants, ItemStack hostStack) {
-        addEnchantments(enchants, hostStack, ench -> true);
-    }
-
-    public static void addEnchantments(ItemEnchantments.Mutable enchants, ItemStack hostStack, Predicate<Holder<Enchantment>> filter) {
-        CombinedEnchantmentModifiers toAdd = getModifiersToApply(hostStack);
-
-        toAdd.getAddedToSpecific().forEach((ench, level) -> {
-            if (filter.test(ench) && hostStack.supportsEnchantment(ench)) {
-                enchants.set(ench, enchants.getLevel(ench) + level);
-            }
-        });
-        toAdd.getAddedToExistingSpecific().forEach((ench, level) -> {
-            if (filter.test(ench)) {
-                int existing = enchants.getLevel(ench);
-                if (existing > 0) {
-                    enchants.set(ench, existing + level);
-                }
-            }
-        });
-        if (toAdd.getAddedToAll() != 0) {
-            for (Holder<Enchantment> ench : enchants.keySet()) {
-                int existing = enchants.getLevel(ench);
-                if (existing > 0) {
-                    enchants.set(ench, existing + toAdd.getAddedToAll());
-                }
-            }
+    public static Map<Enchantment, Integer> applyToLevels(ItemStack stack, Map<Enchantment, Integer> levels) {
+        CombinedEnchantmentModifiers modifiers = getModifiersToApply(stack);
+        if (modifiers.getAddedToSpecific().isEmpty() && modifiers.getAddedToExistingSpecific().isEmpty()
+                && modifiers.getAddedToAll() == 0) {
+            return levels;
         }
+
+        Map<Enchantment, Integer> result = new LinkedHashMap<>(levels);
+        modifiers.getAddedToSpecific().keySet().forEach(holder -> result.putIfAbsent(holder.value(), 0));
+        result.replaceAll((enchantment, level) ->
+                applyToLevel(stack, BuiltInRegistries.ENCHANTMENT.wrapAsHolder(enchantment), level, modifiers));
+        result.values().removeIf(level -> level <= 0);
+        return result;
+    }
+
+    private static int applyToLevel(ItemStack stack, Holder<Enchantment> enchantment, int level,
+                                    CombinedEnchantmentModifiers modifiers) {
+        int added = modifiers.getAddedToSpecific().getOrDefault(enchantment, 0);
+        if (added != 0 && enchantment.value().canEnchant(stack)) {
+            level = adjustedLevel(level, added);
+        }
+
+        int addedToExisting = modifiers.getAddedToExistingSpecific().getOrDefault(enchantment, 0);
+        if (level > 0 && addedToExisting != 0) {
+            level = adjustedLevel(level, addedToExisting);
+        }
+        if (level > 0 && modifiers.getAddedToAll() != 0) {
+            level = adjustedLevel(level, modifiers.getAddedToAll());
+        }
+        return level;
+    }
+
+    private static int adjustedLevel(int level, int modifier) {
+        return (int) Math.max(0, Math.min(255, (long) level + modifier));
     }
 
     private static CombinedEnchantmentModifiers getModifiersToApply(ItemStack tool) {
@@ -136,7 +135,7 @@ public class EnchantmentModifierHelper {
         return getPlayerFromToolReference(heldTool).map(reference -> {
             Player player = reference.getFirst();
             ItemStack equipped = player.getItemBySlot(reference.getSecond());
-            if (ItemStack.isSameItemSameComponents(equipped, heldTool)) {
+            if (ItemStack.isSameItemSameTags(equipped, heldTool)) {
                 return player;
             }
             return null;
@@ -198,7 +197,7 @@ public class EnchantmentModifierHelper {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (id.equals(AIR_ID)) return false;
         try {
-            if (!stack.isEnchantable() || stack.getItem() instanceof BookItem) {
+            if (!stack.getItem().isEnchantable(stack) || stack.getItem() instanceof BookItem) {
                 return false;
             }
         } catch (Exception exc) {
