@@ -70,6 +70,10 @@ public final class EffectHandler {
     }
 
     public void displayDebug(CustomizeGuiOverlayEvent.DebugText event) {
+        if (!Minecraft.getInstance().options.renderDebug) {
+            return;
+        }
+
         int count = 0;
         for (List<EntityVisualFX> list : this.effects.values()) {
             count += list.size();
