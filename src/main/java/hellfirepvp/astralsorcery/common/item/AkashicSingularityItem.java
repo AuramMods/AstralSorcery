@@ -68,7 +68,7 @@ public class AkashicSingularityItem extends ItemCustom {
         Tuple<StoredItemsComponent, List<ItemStack>> decomposeResult = storedItems.decomposeStackCount(25);
         decomposeResult.getB().forEach(result -> {
             ItemUtil.dropItemNaturally(sLevel, player.position(), result).ifPresent(droppedItem -> {
-                droppedItem.setThrower(player);
+                droppedItem.setThrower(player.getUUID());
             });
         });
 

@@ -13,7 +13,7 @@ import hellfirepvp.astralsorcery.common.sound.CategorizedSoundEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.neoforged.neoforge.common.util.DeferredSoundType;
+import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -69,7 +69,7 @@ public class SoundsAS {
     public static final CategorizedSoundEvent CRYSTAL_HIT = register("crystal_hit", SoundSource.BLOCKS);
     public static final CategorizedSoundEvent CRYSTAL_PLACE = register("crystal_place", SoundSource.BLOCKS);
     public static final CategorizedSoundEvent CRYSTAL_STEP = register("crystal_step", SoundSource.BLOCKS);
-    public static final DeferredSoundType CRYSTAL_SOUND_TYPE = new DeferredSoundType(1F, 1F,
+    public static final ForgeSoundType CRYSTAL_SOUND_TYPE = new ForgeSoundType(1F, 1F,
             CRYSTAL_BREAK.sound(), CRYSTAL_STEP.sound(), CRYSTAL_PLACE.sound(), CRYSTAL_HIT.sound(), CRYSTAL_HIT.sound());
 
     private static CategorizedSoundEvent register(String name, SoundSource category) {

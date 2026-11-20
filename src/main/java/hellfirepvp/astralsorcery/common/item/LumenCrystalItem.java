@@ -43,7 +43,7 @@ public class LumenCrystalItem extends ItemCustom implements ItemDynamicColor {
     @Override
     public void fillCreativeTab(Consumer<ItemStack> tabItems) {
         RegistriesAS.REGISTRY_LUMEN.get().holders().forEach(lumenRef -> {
-            if (lumenRef.is(LumenAS.NONE)) return;
+            if (lumenRef.is(LumenAS.NONE.getKey())) return;
             tabItems.accept(getCrystal(lumenRef));
         });
     }

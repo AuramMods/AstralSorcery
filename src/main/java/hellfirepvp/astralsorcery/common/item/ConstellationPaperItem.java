@@ -76,8 +76,8 @@ public class ConstellationPaperItem extends ItemCustom implements ItemDynamicCol
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
 
         ConstellationPaperComponent cmp = DataComponentsAS.CONSTELLATION_PAPER.getOrDefault(stack, ConstellationPaperComponent.EMPTY);
         if (cmp.getConstellation().isEmpty()) {

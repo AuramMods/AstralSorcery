@@ -82,7 +82,7 @@ public class SwordParryHelper {
         Vector3 at = new Vector3(projectile).addY(projectile.getBbHeight() / 2F);
         ServerSoundHelper.playSoundAround(SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, sLevel, at, 0.8F, 1.4F);
 
-        int chargeTicks = active.getUseDuration(sPlayer) - sPlayer.getUseItemRemainingTicks();
+        int chargeTicks = active.getUseDuration() - sPlayer.getUseItemRemainingTicks();
         if (chargeTicks <= IridescentCrystalSwordItem.PARRY_WINDOW_TICKS && !empoweredCharges.contains(sPlayer.getUUID())) {
             empoweredCharges.add(EMPOWERED_TIMEOUT, sPlayer.getUUID());
 

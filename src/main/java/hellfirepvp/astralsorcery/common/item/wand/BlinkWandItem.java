@@ -46,6 +46,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -78,7 +79,7 @@ public class BlinkWandItem extends ItemCustom {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(getBlinkMode(stack).getDisplay().copy().withStyle(ChatFormatting.GOLD));
     }
 
@@ -107,7 +108,7 @@ public class BlinkWandItem extends ItemCustom {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+    public int getUseDuration(ItemStack stack) {
         return 72000;
     }
 
@@ -119,7 +120,7 @@ public class BlinkWandItem extends ItemCustom {
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         if (level.isClientSide()) {
-            float perc = 0.2F + Math.min(1F, Math.min(50, stack.getUseDuration(livingEntity) - remainingUseDuration) / 50F) * 0.8F;
+            float perc = 0.2F + Math.min(1F, Math.min(50, stack.getUseDuration() - remainingUseDuration) / 50F) * 0.8F;
             this.playParticles(stack, livingEntity, perc);
         }
     }
@@ -235,7 +236,7 @@ public class BlinkWandItem extends ItemCustom {
                 if (entity.isFallFlying()) multiplier *= 2F;
                 if (usesLumen) multiplier *= 1.5F;
 
-                float strength = 0.2F + Math.min(1F, Math.min(50, stack.getUseDuration(entity) - usageTimeLeft) / 50F) * multiplier;
+                float strength = 0.2F + Math.min(1F, Math.min(50, stack.getUseDuration() - usageTimeLeft) / 50F) * multiplier;
                 if (strength < 0.3F) return;
 
                 Vector3 motion = new Vector3(entity.getViewVector(1F)).normalize().multiply(strength * 3F);

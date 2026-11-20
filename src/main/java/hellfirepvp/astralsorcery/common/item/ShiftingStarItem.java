@@ -33,6 +33,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -58,12 +59,12 @@ public class ShiftingStarItem extends ItemCustom {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
 
         BaseConstellation cst = cstSupplier.get();
-        if (cst != null && context.level() != null) {
-            LogicalSide side = SidedHelper.getSide(context.level());
+        if (cst != null && level != null) {
+            LogicalSide side = SidedHelper.getSide(level);
             if (side.isClient()) {
                 PlayerProgress progress = ResearchManager.getClientProgress();
                 if (progress.hasDiscoveredConstellation(cst)) {
@@ -115,7 +116,7 @@ public class ShiftingStarItem extends ItemCustom {
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         if (level.isClientSide()) {
-            int totalDuration = this.getUseDuration(stack, livingEntity);
+            int totalDuration = this.getUseDuration(stack);
             this.playUseEffects(livingEntity, totalDuration - remainingUseDuration, totalDuration);
         }
     }
@@ -131,7 +132,7 @@ public class ShiftingStarItem extends ItemCustom {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+    public int getUseDuration(ItemStack stack) {
         return this.cstSupplier.get() == null ? 60 : 100;
     }
 

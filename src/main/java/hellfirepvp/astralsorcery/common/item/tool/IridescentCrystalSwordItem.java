@@ -107,13 +107,13 @@ public class IridescentCrystalSwordItem extends CrystalSwordItem {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+    public int getUseDuration(ItemStack stack) {
         return 72000;
     }
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        int chargeTicks = this.getUseDuration(stack, livingEntity) - remainingUseDuration;
+        int chargeTicks = this.getUseDuration(stack) - remainingUseDuration;
         if (level.isClientSide()) {
             this.playChargeParticles(livingEntity, Mth.clamp((float) chargeTicks / CHARGE_TICKS_FULL, 0F, 1F));
         } else if (chargeTicks == 1) {
@@ -132,7 +132,7 @@ public class IridescentCrystalSwordItem extends CrystalSwordItem {
         if (MiscUtil.isPlayerFake(sPlayer) || sPlayer.getCooldowns().isOnCooldown(this)) {
             return;
         }
-        int chargeTicks = this.getUseDuration(stack, livingEntity) - timeCharged;
+        int chargeTicks = this.getUseDuration(stack) - timeCharged;
         if (empowered || chargeTicks >= CHARGE_TICKS_FULL) {
             PlayerProgress progress = ResearchManager.getProgress(sPlayer, SidedHelper.getSide(sPlayer));
             this.playFullStrike(sPlayer, sLevel, progress.getAttunedConstellation());
@@ -172,7 +172,7 @@ public class IridescentCrystalSwordItem extends CrystalSwordItem {
 
         CelestialStrikeBeamEffect.of(origin.copy().subtract(0, sPlayer.getEyeHeight() / 3F, 0), at).sendToNearby(sLevel);
         CelestialStrike.play(sPlayer, sLevel, at, at, multiplier, allyHealing);
-        ServerSoundHelper.playSoundAround(SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, sLevel, at, 0.7F, 1.4F);
+        ServerSoundHelper.playSoundAround(SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, sLevel, at, 0.7F, 1.4F);
         this.applyAbilityCooldown(sPlayer, COOLDOWN_STRIKE);
     }
 
@@ -204,7 +204,7 @@ public class IridescentCrystalSwordItem extends CrystalSwordItem {
         }
 
         Vector3 center = new Vector3(sPlayer);
-        ServerSoundHelper.playSoundAround(SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, sLevel, center, 0.6F, 0.7F);
+        ServerSoundHelper.playSoundAround(SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, sLevel, center, 0.6F, 0.7F);
         SwordShockwaveEffect.at(center, SHOCKWAVE_RANGE).sendToNearby(sLevel, sPlayer.blockPosition());
     }
 
