@@ -28,16 +28,18 @@ import hellfirepvp.astralsorcery.common.item.wand.BlinkWandItem;
 import hellfirepvp.astralsorcery.common.item.wand.ExchangeWandItem;
 import hellfirepvp.astralsorcery.common.item.wand.GrapplingWandItem;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.SimpleTier;
+import net.minecraftforge.common.ForgeTier;
+import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -53,8 +55,9 @@ public class ItemsAS {
 
     public static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, AstralSorcery.MODID);
 
-    public static final Tier CRYSTAL_TOOL_TIER = new SimpleTier(BlockTags.INCORRECT_FOR_DIAMOND_TOOL,
-            741, 4F, 1F, 26, () -> Ingredient.EMPTY);
+    public static final Tier CRYSTAL_TOOL_TIER = TierSortingRegistry.registerTier(
+            new ForgeTier(3, 741, 4F, 1F, 26, null, () -> Ingredient.EMPTY),
+            AstralSorcery.key("crystal"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
 
     //------------------------------- ITEMS -------------------------------//
 

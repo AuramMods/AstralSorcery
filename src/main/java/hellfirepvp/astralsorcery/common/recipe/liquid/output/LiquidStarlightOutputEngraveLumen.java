@@ -19,7 +19,6 @@ import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.component.LumenComponent;
 import hellfirepvp.astralsorcery.common.crystal.CrystalProperty;
 import hellfirepvp.astralsorcery.common.event.CrystalPropertyEvent;
-import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
@@ -119,7 +118,6 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
                 MinecraftForge.EVENT_BUS.post(engraved);
 
                 DataComponentsAS.CRYSTAL_ATTRIBUTES.set(crystal, engraved.getResultComponent());
-                CrystalToolItem.updateModifiers(crystal);
             }
         }
 

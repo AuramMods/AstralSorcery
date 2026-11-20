@@ -42,9 +42,7 @@ public class IridescentCrystalAxeItem extends CrystalAxeItem {
             new DynamicAttributeModifier(MODIFIER_ID.toString(), PerksAS.AttributeTypes.BLOCK_REACH, ModifierType.ADDED_MULTIPLY, 0.2F);
 
     public IridescentCrystalAxeItem() {
-        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
-                .setNoRepair()
-                .attributes(axeAttributes()));
+        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties().setNoRepair());
         DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, new DynamicModifiersComponent(List.of(MINING_SPEED_MODIFIER)));
     }
 

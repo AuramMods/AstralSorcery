@@ -87,9 +87,7 @@ public class IridescentCrystalSwordItem extends CrystalSwordItem {
     private static final RandomSource rand = RandomSource.create();
 
     public IridescentCrystalSwordItem() {
-        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
-                .setNoRepair()
-                .attributes(swordAttributes()));
+        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties().setNoRepair());
         DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, new DynamicModifiersComponent(List.of(BASE_CRIT_MODIFIER)));
     }
 

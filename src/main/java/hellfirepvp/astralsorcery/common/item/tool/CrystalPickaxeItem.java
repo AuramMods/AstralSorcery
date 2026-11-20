@@ -10,12 +10,10 @@ package hellfirepvp.astralsorcery.common.item.tool;
 
 import hellfirepvp.astralsorcery.common.crystal.CrystalPropertyCalculator;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -28,17 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class CrystalPickaxeItem extends PickaxeItem implements CrystalToolItem {
 
     public CrystalPickaxeItem() {
-        this(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
-                .setNoRepair()
-                .attributes(pickaxeAttributes()));
+        this(ItemsAS.CRYSTAL_TOOL_TIER, new Properties().setNoRepair());
     }
 
     protected CrystalPickaxeItem(Tier tier, Properties properties) {
-        super(tier, properties);
-    }
-
-    protected static ItemAttributeModifiers pickaxeAttributes() {
-        return createAttributes(ItemsAS.CRYSTAL_TOOL_TIER, 1, -2.8F);
+        super(tier, 1, -2.8F, properties);
     }
 
     @Override
@@ -47,7 +39,8 @@ public class CrystalPickaxeItem extends PickaxeItem implements CrystalToolItem {
     }
 
     @Override
-    public void reApplyAttackModifiers(ItemStack stack) {
+    public float getCrystalAttackDamage(ItemStack stack) {
+        return 0F;
     }
 
     @Override
@@ -58,14 +51,6 @@ public class CrystalPickaxeItem extends PickaxeItem implements CrystalToolItem {
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         float speed = super.getDestroySpeed(stack, state);
-        Tool tool = stack.get(DataComponents.TOOL);
-        if (tool != null) {
-            for (Tool.Rule rule : tool.rules()) {
-                if (rule.speed().isPresent() && state.is(rule.blocks())) { //Testing if rule is effective.
-                    return CrystalPropertyCalculator.getToolSpeed(speed, stack, 1);
-                }
-            }
-        }
-        return speed;
+        return state.is(BlockTags.MINEABLE_WITH_PICKAXE) ? CrystalPropertyCalculator.getToolSpeed(speed, stack, 1) : speed;
     }
 }

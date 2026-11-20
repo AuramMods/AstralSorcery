@@ -13,7 +13,6 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -25,17 +24,11 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 public class CrystalSwordItem extends SwordItem implements CrystalToolItem {
 
     public CrystalSwordItem() {
-        this(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
-                .setNoRepair()
-                .attributes(swordAttributes()));
+        this(ItemsAS.CRYSTAL_TOOL_TIER, new Properties().setNoRepair());
     }
 
     protected CrystalSwordItem(Tier tier, Properties properties) {
-        super(tier, properties);
-    }
-
-    protected static ItemAttributeModifiers swordAttributes() {
-        return createAttributes(ItemsAS.CRYSTAL_TOOL_TIER, 3, -2.4F);
+        super(tier, 3, -2.4F, properties);
     }
 
     @Override

@@ -43,9 +43,7 @@ public class IridescentCrystalShovelItem extends CrystalShovelItem {
             new DynamicAttributeModifier(MODIFIER_ID.toString(), PerksAS.AttributeTypes.MINING_SIZE, ModifierType.ADDITION, 1F);
 
     public IridescentCrystalShovelItem() {
-        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
-                .setNoRepair()
-                .attributes(shovelAttributes()));
+        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties().setNoRepair());
         DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, new DynamicModifiersComponent(List.of(MINING_SIZE_MODIFIER)));
     }
 

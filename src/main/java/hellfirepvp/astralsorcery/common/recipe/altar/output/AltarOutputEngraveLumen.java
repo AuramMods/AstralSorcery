@@ -13,7 +13,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.crystal.CrystalProperty;
 import hellfirepvp.astralsorcery.common.event.CrystalPropertyEvent;
-import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
@@ -103,7 +102,6 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
                 MinecraftForge.EVENT_BUS.post(engraved);
 
                 DataComponentsAS.CRYSTAL_ATTRIBUTES.set(output, engraved.getResultComponent());
-                CrystalToolItem.updateModifiers(output);
             }
         }
         return output;

@@ -10,7 +10,6 @@ package hellfirepvp.astralsorcery.common.loot;
 
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.crystal.CrystalPropertyGenerator;
-import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.LootAS;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +47,6 @@ public class GenerateCrystalPropertiesFunction extends LootItemConditionalFuncti
                 DataComponentsAS.CRYSTAL_ATTRIBUTES.set(stack, attributes);
             }
         }
-        CrystalToolItem.updateModifiers(stack);
         return stack;
     }
 

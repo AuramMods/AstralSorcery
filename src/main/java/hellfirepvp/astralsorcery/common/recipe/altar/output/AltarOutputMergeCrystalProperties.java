@@ -11,7 +11,6 @@ package hellfirepvp.astralsorcery.common.recipe.altar.output;
 import com.mojang.serialization.MapCodec;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.event.CrystalPropertyEvent;
-import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.recipe.altar.AltarCraftingInput;
 import net.minecraft.core.HolderLookup;
@@ -56,7 +55,6 @@ public class AltarOutputMergeCrystalProperties extends AltarRecipeOutputModifier
         MinecraftForge.EVENT_BUS.post(merge);
 
         DataComponentsAS.CRYSTAL_ATTRIBUTES.set(output, merge.getResultComponent());
-        CrystalToolItem.updateModifiers(output);
         return output;
     }
 

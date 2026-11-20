@@ -10,12 +10,10 @@ package hellfirepvp.astralsorcery.common.item.tool;
 
 import hellfirepvp.astralsorcery.common.crystal.CrystalPropertyCalculator;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -28,17 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class CrystalAxeItem extends AxeItem implements CrystalToolItem {
 
     public CrystalAxeItem() {
-        this(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
-                .setNoRepair()
-                .attributes(axeAttributes()));
+        this(ItemsAS.CRYSTAL_TOOL_TIER, new Properties().setNoRepair());
     }
 
     protected CrystalAxeItem(Tier tier, Properties properties) {
-        super(tier, properties);
-    }
-
-    protected static ItemAttributeModifiers axeAttributes() {
-        return createAttributes(ItemsAS.CRYSTAL_TOOL_TIER, 5, -3F);
+        super(tier, 5, -3.0F, properties);
     }
 
     @Override
@@ -54,14 +46,6 @@ public class CrystalAxeItem extends AxeItem implements CrystalToolItem {
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         float speed = super.getDestroySpeed(stack, state);
-        Tool tool = stack.get(DataComponents.TOOL);
-        if (tool != null) {
-            for (Tool.Rule rule : tool.rules()) {
-                if (rule.speed().isPresent() && state.is(rule.blocks())) { //Testing if rule is effective.
-                    return CrystalPropertyCalculator.getToolSpeed(speed, stack, 1);
-                }
-            }
-        }
-        return speed;
+        return state.is(BlockTags.MINEABLE_WITH_AXE) ? CrystalPropertyCalculator.getToolSpeed(speed, stack, 1) : speed;
     }
 }

@@ -44,6 +44,7 @@ import hellfirepvp.astralsorcery.common.event.helper.EnchantmentModifierHelper;
 import hellfirepvp.astralsorcery.common.event.helper.InvulnerabilityHelper;
 import hellfirepvp.astralsorcery.common.event.helper.TemporaryFlightHelper;
 import hellfirepvp.astralsorcery.common.item.base.CreativeTabItem;
+import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataAS;
 import hellfirepvp.astralsorcery.common.lib.EntitiesAS;
 import hellfirepvp.astralsorcery.common.lib.FluidsAS;
@@ -175,6 +176,7 @@ public class CommonProxy {
         eventBus.addListener(this::onServerStarted);
         eventBus.addListener(this::onRegisterCommands);
         eventBus.addListener(this::onRegisterReloadListeners);
+        eventBus.addListener(CrystalToolItem::applyAttackModifiers);
 
         PlayerEventHandler.attachListeners(eventBus);
         TooltipEventHandler.attachListeners(eventBus);

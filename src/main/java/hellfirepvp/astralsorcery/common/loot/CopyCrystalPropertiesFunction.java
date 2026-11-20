@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.loot;
 
-import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.LootAS;
 import hellfirepvp.astralsorcery.common.tile.base.TileDataCrystalAttributeContainer;
@@ -49,7 +48,6 @@ public class CopyCrystalPropertiesFunction extends LootItemConditionalFunction {
                 }
             }
         }
-        CrystalToolItem.updateModifiers(stack);
         return stack;
     }
 

@@ -45,9 +45,7 @@ public class IridescentCrystalPickaxeItem extends CrystalPickaxeItem {
             new DynamicAttributeModifier(MODIFIER_ID.toString(), PerksAS.AttributeTypes.MINING_SIZE, ModifierType.ADDITION, 1F);
 
     public IridescentCrystalPickaxeItem() {
-        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties()
-                .setNoRepair()
-                .attributes(pickaxeAttributes()));
+        super(ItemsAS.CRYSTAL_TOOL_TIER, new Properties().setNoRepair());
         DataComponentsAS.DYNAMIC_MODIFIERS.setDefault(this, new DynamicModifiersComponent(List.of(MINING_SIZE_MODIFIER)));
     }
 
