@@ -45,11 +45,11 @@ public final class SidedEventBus {
     }
 
     public <T extends Event> void addListener(Class<T> eventType, Function<T, LogicalSide> sideExtractor, Consumer<T> consumer) {
-        this.decorated.addListener(eventType, this.wrapConsumer(sideExtractor, consumer));
+        this.addListener(EventPriority.NORMAL, false, eventType, sideExtractor, consumer);
     }
 
     public <T extends Event> void addListener(EventPriority priority, Class<T> eventType, Function<T, LogicalSide> sideExtractor, Consumer<T> consumer) {
-        this.decorated.addListener(priority, eventType, this.wrapConsumer(sideExtractor, consumer));
+        this.addListener(priority, false, eventType, sideExtractor, consumer);
     }
 
     public <T extends Event> void addListener(EventPriority priority, boolean receiveCanceled, Class<T> eventType, Function<T, LogicalSide> sideExtractor, Consumer<T> consumer) {
@@ -57,7 +57,7 @@ public final class SidedEventBus {
     }
 
     public <T extends Event> void addListener(boolean receiveCanceled, Class<T> eventType, Function<T, LogicalSide> sideExtractor, Consumer<T> consumer) {
-        this.decorated.addListener(receiveCanceled, eventType, this.wrapConsumer(sideExtractor, consumer));
+        this.addListener(EventPriority.NORMAL, receiveCanceled, eventType, sideExtractor, consumer);
     }
 
     private <T extends Event> Consumer<T> wrapConsumer(Function<T, LogicalSide> sideExtractor, Consumer<T> consumer) {

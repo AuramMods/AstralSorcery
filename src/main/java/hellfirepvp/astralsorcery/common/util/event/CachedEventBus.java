@@ -10,7 +10,9 @@ package hellfirepvp.astralsorcery.common.util.event;
 
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.GenericEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBusInvokeDispatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,20 +56,8 @@ public class CachedEventBus implements IEventBus {
     }
 
     @Override
-    public <T extends Event> void addListener(Class<T> eventType, Consumer<T> consumer) {
-        this.decorated.addListener(eventType, consumer);
-        this.registeredListeners.add(consumer);
-    }
-
-    @Override
     public <T extends Event> void addListener(EventPriority priority, Consumer<T> consumer) {
         this.decorated.addListener(priority, consumer);
-        this.registeredListeners.add(consumer);
-    }
-
-    @Override
-    public <T extends Event> void addListener(EventPriority priority, Class<T> eventType, Consumer<T> consumer) {
-        this.decorated.addListener(priority, eventType, consumer);
         this.registeredListeners.add(consumer);
     }
 
@@ -84,14 +74,29 @@ public class CachedEventBus implements IEventBus {
     }
 
     @Override
-    public <T extends Event> void addListener(boolean receiveCanceled, Consumer<T> consumer) {
-        this.decorated.addListener(receiveCanceled, consumer);
+    public <T extends GenericEvent<? extends F>, F> void addGenericListener(Class<F> filter, Consumer<T> consumer) {
+        this.decorated.addGenericListener(filter, consumer);
         this.registeredListeners.add(consumer);
     }
 
     @Override
-    public <T extends Event> void addListener(boolean receiveCanceled, Class<T> eventType, Consumer<T> consumer) {
-        this.decorated.addListener(receiveCanceled, eventType, consumer);
+    public <T extends GenericEvent<? extends F>, F> void addGenericListener(
+            Class<F> filter, EventPriority priority, Consumer<T> consumer) {
+        this.decorated.addGenericListener(filter, priority, consumer);
+        this.registeredListeners.add(consumer);
+    }
+
+    @Override
+    public <T extends GenericEvent<? extends F>, F> void addGenericListener(
+            Class<F> filter, EventPriority priority, boolean receiveCanceled, Consumer<T> consumer) {
+        this.decorated.addGenericListener(filter, priority, receiveCanceled, consumer);
+        this.registeredListeners.add(consumer);
+    }
+
+    @Override
+    public <T extends GenericEvent<? extends F>, F> void addGenericListener(
+            Class<F> filter, EventPriority priority, boolean receiveCanceled, Class<T> eventType, Consumer<T> consumer) {
+        this.decorated.addGenericListener(filter, priority, receiveCanceled, eventType, consumer);
         this.registeredListeners.add(consumer);
     }
 
@@ -102,13 +107,18 @@ public class CachedEventBus implements IEventBus {
     }
 
     @Override
-    public <T extends Event> T post(T event) {
+    public boolean post(Event event) {
         return this.decorated.post(event);
     }
 
     @Override
-    public <T extends Event> T post(EventPriority phase, T event) {
-        return this.decorated.post(phase, event);
+    public boolean post(Event event, IEventBusInvokeDispatcher dispatcher) {
+        return this.decorated.post(event, dispatcher);
+    }
+
+    @Override
+    public void shutdown() {
+        this.decorated.shutdown();
     }
 
     @Override
