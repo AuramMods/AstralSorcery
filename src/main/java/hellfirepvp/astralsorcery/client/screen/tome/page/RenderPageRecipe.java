@@ -44,6 +44,7 @@ import hellfirepvp.astralsorcery.common.util.data.IntRectangle;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -56,6 +57,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
@@ -132,7 +134,11 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
         if (recipeOpt.isEmpty()) {
             Component errorMsg = Component.translatable("tome.research.info.missing_recipe", this.recipeId)
                     .withStyle(ChatFormatting.RED);
-            graphics.drawString(Minecraft.getInstance().font, errorMsg, x, y, ColorWrapper.WHITE.getColor(), true);
+            Font font = Minecraft.getInstance().font;
+            for (FormattedCharSequence line : font.split(errorMsg, TomePage.DEFAULT_WIDTH)) {
+                graphics.drawString(font, line, x, y, ColorWrapper.WHITE.getColor(), true);
+                y += font.lineHeight + 1;
+            }
         }
         return recipeOpt;
     }

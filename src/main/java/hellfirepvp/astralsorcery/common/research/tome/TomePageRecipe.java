@@ -15,11 +15,6 @@ import hellfirepvp.astralsorcery.client.screen.tome.page.RenderPage;
 import hellfirepvp.astralsorcery.client.screen.tome.page.RenderPageRecipe;
 import hellfirepvp.astralsorcery.common.lib.types.TomePageTypesAS;
 import hellfirepvp.astralsorcery.common.research.ResearchNode;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import hellfirepvp.astralsorcery.common.util.RecipeFinder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
@@ -31,8 +26,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -77,16 +70,8 @@ public record TomePageRecipe(ResourceKey<RecipeType<?>> type, ResourceLocation r
     @Override
     @OnlyIn(Dist.CLIENT)
     public RenderPage createPage(@Nullable ResearchNode node, int page) {
-        return Optional.ofNullable(Minecraft.getInstance().getConnection())
-                .map(ClientPacketListener::getRecipeManager)
-                .flatMap(mgr -> {
-                    RecipeType<?> type = BuiltInRegistries.RECIPE_TYPE.get(this.type());
-                    if (type == null) return Optional.empty();
-                    return RecipeFinder.clientFinder().findRecipe(MiscUtil.cast(type), this.recipeId());
-                })
-                .flatMap(recipe -> {
-                    return RenderPageRecipe.getFactoryForType(this.type())
-                            .map(factory -> (RenderPage) factory.create(node, page, this.recipeId()));
-                }).orElseGet(() -> getNotFoundPage().createPage(node, page));
+        return RenderPageRecipe.getFactoryForType(this.type())
+                .<RenderPage>map(factory -> factory.create(node, page, this.recipeId()))
+                .orElseGet(() -> getNotFoundPage().createPage(node, page));
     }
 }

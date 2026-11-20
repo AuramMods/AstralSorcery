@@ -243,13 +243,13 @@ public class TomePagesScreen extends TomeScreen {
 
         if (this.currentDoublePageOffset == 0 && !(leftPage instanceof RenderPageConstellation)) {
             Font font = Minecraft.getInstance().font;
-            float offsetCenter = 20 + TomePage.DEFAULT_WIDTH / 2F;
             int width = font.width(this.title);
-            float offset = this.getScreenLeft() + offsetCenter - width / 2F;
+            float scale = Math.min(1.3F, TomePage.DEFAULT_WIDTH / (float) Math.max(1, width));
+            float offset = this.getScreenLeft() + 30 + (TomePage.DEFAULT_WIDTH - width * scale) / 2F;
 
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(offset, this.getScreenTop() + offsetY, 0);
-            guiGraphics.pose().scale(1.3F, 1.3F, 1F);
+            guiGraphics.pose().scale(scale, scale, 1F);
             guiGraphics.drawString(font, this.title, 0, 0, ColorsAS.TOME_TEXT_COLOR.getColor(), true);
             guiGraphics.pose().popPose();
 
