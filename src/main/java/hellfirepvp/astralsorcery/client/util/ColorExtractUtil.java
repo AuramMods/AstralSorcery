@@ -60,7 +60,7 @@ public class ColorExtractUtil {
         if (stack.isEmpty()) {
             return Optional.empty();
         }
-        FluidType fluid = stack.getFluidType();
+        FluidType fluid = stack.getFluid().getFluidType();
 
         if (!fluidColors.containsKey(fluid)) {
             TextureAtlasSprite tas = RenderSpriteUtil.getTexture(stack);

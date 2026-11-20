@@ -169,7 +169,7 @@ public class TileChalice extends TileEntityTick<TileChalice.Data> {
             if (acceptable <= 0) {
                 return false;
             }
-            FluidStack actual = wellHandler.drain(drainable.copyWithAmount(acceptable), IFluidHandler.FluidAction.EXECUTE);
+            FluidStack actual = wellHandler.drain(new FluidStack(drainable, acceptable), IFluidHandler.FluidAction.EXECUTE);
             if (actual.isEmpty()) {
                 continue;
             }

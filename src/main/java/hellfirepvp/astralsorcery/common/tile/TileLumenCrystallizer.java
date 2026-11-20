@@ -353,7 +353,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
         protected FluidTankViewFactory newFluidTank() {
             return FluidTankViewFactory.builder(1)
                     .tankCapacity(tank -> 2000)
-                    .inputFilter((tank, stack, existing) -> stack.is(FluidsAS.LIQUID_STARLIGHT.getFluidType()))
+                    .inputFilter((tank, stack, existing) -> stack.getFluid().getFluidType() == FluidsAS.LIQUID_STARLIGHT.getFluidType())
                     .extractFilter((tank, stack, existing) -> false)
                     .accessibleSides(Direction.DOWN);
         }

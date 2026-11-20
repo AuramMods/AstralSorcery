@@ -53,7 +53,7 @@ public class TileLumenCrystallizerRenderer implements BlockEntityRenderer<TileLu
         FluidStack contained = tank.getFluidInTank(0);
         if (contained.isEmpty()) return;
 
-        IClientFluidTypeExtensions ext = IClientFluidTypeExtensions.of(contained.getFluidType());
+        IClientFluidTypeExtensions ext = IClientFluidTypeExtensions.of(contained.getFluid());
         ColorWrapper color = ColorWrapper.transparent(ext.getTintColor(contained));
         RenderType rendertype = RenderType.entityTranslucent(InventoryMenu.BLOCK_ATLAS);
         TextureAtlasSprite tas = RenderSpriteUtil.getTexture(contained);

@@ -82,7 +82,7 @@ public class RenderEntityAltarFluidInput extends EntityRenderer<EntityAltarFluid
         UVFrame uv = new UVFrame(uOffset, vOffset, uPart, vPart);
 
         poseStack.pushPose();
-        poseStack.translate(0, entity.getDimensions(entity.getPose()).height() / 2, 0);
+        poseStack.translate(0, entity.getDimensions(entity.getPose()).height / 2, 0);
         poseStack.mulPose(Axis.XP.rotationDegrees((float) rotation.getX()));
         poseStack.mulPose(Axis.YP.rotationDegrees((float) rotation.getY()));
         poseStack.mulPose(Axis.ZP.rotationDegrees((float) rotation.getZ()));

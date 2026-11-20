@@ -37,7 +37,7 @@ public class RenderSpriteUtil {
     }
 
     public static TextureAtlasSprite getTexture(FluidStack stack) {
-        IClientFluidTypeExtensions ext = IClientFluidTypeExtensions.of(stack.getFluidType());
+        IClientFluidTypeExtensions ext = IClientFluidTypeExtensions.of(stack.getFluid());
         ResourceLocation stillTextureId = ext.getStillTexture(stack);
         if (stillTextureId == null) {
             stillTextureId = MissingTextureAtlasSprite.getLocation();
@@ -46,7 +46,7 @@ public class RenderSpriteUtil {
     }
 
     public static ColorWrapper getColorOverlay(FluidStack stack) {
-        IClientFluidTypeExtensions ext = IClientFluidTypeExtensions.of(stack.getFluidType());
+        IClientFluidTypeExtensions ext = IClientFluidTypeExtensions.of(stack.getFluid());
         return ColorWrapper.transparent(ext.getTintColor(stack));
     }
 }
