@@ -61,20 +61,32 @@
   "posY": -1.0,
   "renderItemStacks": [
     {
-      "count": 1,
-      "id": "astralsorcery:iridescent_crystal_sword"
+      "Count": 1,
+      "id": "astralsorcery:iridescent_crystal_sword",
+      "tag": {
+        "Damage": 0
+      }
     },
     {
-      "count": 1,
-      "id": "astralsorcery:iridescent_crystal_pickaxe"
+      "Count": 1,
+      "id": "astralsorcery:iridescent_crystal_pickaxe",
+      "tag": {
+        "Damage": 0
+      }
     },
     {
-      "count": 1,
-      "id": "astralsorcery:iridescent_crystal_axe"
+      "Count": 1,
+      "id": "astralsorcery:iridescent_crystal_axe",
+      "tag": {
+        "Damage": 0
+      }
     },
     {
-      "count": 1,
-      "id": "astralsorcery:iridescent_crystal_shovel"
+      "Count": 1,
+      "id": "astralsorcery:iridescent_crystal_shovel",
+      "tag": {
+        "Damage": 0
+      }
     }
   ],
   "tier": "luminance"

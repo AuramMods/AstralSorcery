@@ -7,10 +7,6 @@
         "amplifier": 1,
         "duration": 1000,
         "id": "minecraft:regeneration",
-        "neoforge:cures": [
-          "protected_by_totem",
-          "milk"
-        ],
         "show_icon": false
       },
       {
@@ -18,10 +14,6 @@
         "amplifier": 1,
         "duration": 1000,
         "id": "minecraft:saturation",
-        "neoforge:cures": [
-          "protected_by_totem",
-          "milk"
-        ],
         "show_icon": false
       }
     ],

@@ -31,13 +31,17 @@
   "posY": -5.0,
   "renderItemStacks": [
     {
-      "components": {
-        "astralsorcery:stored_player_progress": {
-          "creative": true
+      "Count": 1,
+      "id": "astralsorcery:knowledge_share",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:stored_player_progress": {
+            "value": {
+              "creative": 1
+            }
+          }
         }
-      },
-      "count": 1,
-      "id": "astralsorcery:knowledge_share"
+      }
     }
   ],
   "tier": "illumination"

@@ -28,60 +28,92 @@
   "posY": -5.0,
   "renderItemStacks": [
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:virel"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:virel"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:solyn"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:solyn"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:nullae"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:nullae"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:caldor"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:caldor"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:hyle"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:hyle"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:dynamis"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:dynamis"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:aion"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:aion"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:akasha"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:akasha"
+          }
+        }
+      }
     }
   ],
   "tier": "luminance"

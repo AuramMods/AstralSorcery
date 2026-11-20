@@ -6,10 +6,6 @@
         "ambient": true,
         "duration": 100,
         "id": "minecraft:invisibility",
-        "neoforge:cures": [
-          "protected_by_totem",
-          "milk"
-        ],
         "show_icon": false
       }
     ],

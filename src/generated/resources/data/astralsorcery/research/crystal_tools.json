@@ -45,20 +45,32 @@
   "posY": 0.0,
   "renderItemStacks": [
     {
-      "count": 1,
-      "id": "astralsorcery:crystal_pickaxe"
+      "Count": 1,
+      "id": "astralsorcery:crystal_pickaxe",
+      "tag": {
+        "Damage": 0
+      }
     },
     {
-      "count": 1,
-      "id": "astralsorcery:crystal_axe"
+      "Count": 1,
+      "id": "astralsorcery:crystal_axe",
+      "tag": {
+        "Damage": 0
+      }
     },
     {
-      "count": 1,
-      "id": "astralsorcery:crystal_shovel"
+      "Count": 1,
+      "id": "astralsorcery:crystal_shovel",
+      "tag": {
+        "Damage": 0
+      }
     },
     {
-      "count": 1,
-      "id": "astralsorcery:crystal_sword"
+      "Count": 1,
+      "id": "astralsorcery:crystal_sword",
+      "tag": {
+        "Damage": 0
+      }
     }
   ],
   "tier": "illumination"

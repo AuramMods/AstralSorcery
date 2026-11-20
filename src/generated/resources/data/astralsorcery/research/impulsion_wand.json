@@ -31,7 +31,7 @@
   "posY": -5.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:grappling_wand"
     }
   ],

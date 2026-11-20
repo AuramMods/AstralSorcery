@@ -60,31 +60,31 @@
   "posY": -3.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:marble_arch"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:marble_bricks"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:marble_chiseled"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:marble_engraved"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:marble_pillar"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:marble_raw"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:marble_runed"
     }
   ],

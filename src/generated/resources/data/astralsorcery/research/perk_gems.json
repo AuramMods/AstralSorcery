@@ -32,15 +32,15 @@
   "posY": 3.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:dynamism_gem_day"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:dynamism_gem_sky"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:dynamism_gem_night"
     }
   ],

@@ -52,27 +52,27 @@
   "posY": 2.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:infused_wood"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:infused_wood_arch"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:infused_wood_column"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:infused_wood_engraved"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:infused_wood_enriched"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:infused_wood_planks"
     }
   ],

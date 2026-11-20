@@ -6,10 +6,6 @@
         "ambient": true,
         "duration": 40,
         "id": "minecraft:levitation",
-        "neoforge:cures": [
-          "protected_by_totem",
-          "milk"
-        ],
         "show_icon": false
       }
     ],

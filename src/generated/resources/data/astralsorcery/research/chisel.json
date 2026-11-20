@@ -35,8 +35,11 @@
   "posY": -3.0,
   "renderItemStacks": [
     {
-      "count": 1,
-      "id": "astralsorcery:chisel"
+      "Count": 1,
+      "id": "astralsorcery:chisel",
+      "tag": {
+        "Damage": 0
+      }
     }
   ],
   "tier": "illumination"

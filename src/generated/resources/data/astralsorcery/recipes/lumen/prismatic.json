@@ -1,0 +1,64 @@
+{
+  "type": "astralsorcery:lumen_generation",
+  "attempt_starlight_consumption": 3.0,
+  "catalyst_shatter_multiplier": 2.0,
+  "input": [
+    {
+      "type": "astralsorcery:stack_data",
+      "expected": "astralsorcery:sidereal",
+      "ingredient": {
+        "item": "astralsorcery:artifact_shard"
+      },
+      "key": "astralsorcery:artifact_type"
+    },
+    {
+      "type": "astralsorcery:stack_data",
+      "expected": "astralsorcery:luminous",
+      "ingredient": {
+        "item": "astralsorcery:artifact_shard"
+      },
+      "key": "astralsorcery:artifact_type"
+    },
+    {
+      "type": "astralsorcery:stack_data",
+      "expected": "astralsorcery:chronal",
+      "ingredient": {
+        "item": "astralsorcery:artifact_shard"
+      },
+      "key": "astralsorcery:artifact_type"
+    },
+    {
+      "type": "astralsorcery:stack_data",
+      "expected": "astralsorcery:astriform",
+      "ingredient": {
+        "item": "astralsorcery:artifact_shard"
+      },
+      "key": "astralsorcery:artifact_type"
+    },
+    {
+      "type": "astralsorcery:stack_data",
+      "expected": "astralsorcery:axiomatic",
+      "ingredient": {
+        "item": "astralsorcery:artifact_shard"
+      },
+      "key": "astralsorcery:artifact_type"
+    },
+    {
+      "type": "astralsorcery:stack_data",
+      "expected": "astralsorcery:spectral",
+      "ingredient": {
+        "item": "astralsorcery:artifact_shard"
+      },
+      "key": "astralsorcery:artifact_type"
+    }
+  ],
+  "lumen_combination_inputs": {
+    "astralsorcery:aion": 3,
+    "astralsorcery:akasha": 3,
+    "astralsorcery:dynamis": 3,
+    "astralsorcery:hyle": 3
+  },
+  "produced_lumen": "astralsorcery:prismatic",
+  "produced_lumen_amount": 2,
+  "production_attempt_multiplier": 2.5
+}

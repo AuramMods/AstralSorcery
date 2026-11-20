@@ -29,11 +29,11 @@
   "posY": 1.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:aquamarine_shale"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:rock_crystal_ore"
     }
   ],

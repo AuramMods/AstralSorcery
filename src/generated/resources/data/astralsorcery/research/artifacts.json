@@ -41,124 +41,148 @@
   "posY": 1.0,
   "renderItemStacks": [
     {
-      "components": {
-        "astralsorcery:artifact": {
-          "type": "astralsorcery:sidereal",
-          "conditionCount": -1,
-          "conditions": [],
-          "failureEffects": [],
-          "lastPulseGameTick": -1,
-          "seed": -1,
-          "stability": 0,
-          "stats": {
-            "emptyTriggers": 0,
-            "partialTriggers": 0,
-            "pulses": 0
+      "Count": 1,
+      "id": "astralsorcery:artifact",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:artifact": {
+            "value": {
+              "type": "astralsorcery:sidereal",
+              "conditionCount": -1,
+              "conditions": [],
+              "failureEffects": [],
+              "lastPulseGameTick": -1,
+              "seed": -1,
+              "stability": 0,
+              "stats": {
+                "emptyTriggers": 0,
+                "partialTriggers": 0,
+                "pulses": 0
+              }
+            }
           }
         }
-      },
-      "count": 1,
-      "id": "astralsorcery:artifact"
+      }
     },
     {
-      "components": {
-        "astralsorcery:artifact": {
-          "type": "astralsorcery:luminous",
-          "conditionCount": -1,
-          "conditions": [],
-          "failureEffects": [],
-          "lastPulseGameTick": -1,
-          "seed": -1,
-          "stability": 0,
-          "stats": {
-            "emptyTriggers": 0,
-            "partialTriggers": 0,
-            "pulses": 0
+      "Count": 1,
+      "id": "astralsorcery:artifact",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:artifact": {
+            "value": {
+              "type": "astralsorcery:luminous",
+              "conditionCount": -1,
+              "conditions": [],
+              "failureEffects": [],
+              "lastPulseGameTick": -1,
+              "seed": -1,
+              "stability": 0,
+              "stats": {
+                "emptyTriggers": 0,
+                "partialTriggers": 0,
+                "pulses": 0
+              }
+            }
           }
         }
-      },
-      "count": 1,
-      "id": "astralsorcery:artifact"
+      }
     },
     {
-      "components": {
-        "astralsorcery:artifact": {
-          "type": "astralsorcery:chronal",
-          "conditionCount": -1,
-          "conditions": [],
-          "failureEffects": [],
-          "lastPulseGameTick": -1,
-          "seed": -1,
-          "stability": 0,
-          "stats": {
-            "emptyTriggers": 0,
-            "partialTriggers": 0,
-            "pulses": 0
+      "Count": 1,
+      "id": "astralsorcery:artifact",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:artifact": {
+            "value": {
+              "type": "astralsorcery:chronal",
+              "conditionCount": -1,
+              "conditions": [],
+              "failureEffects": [],
+              "lastPulseGameTick": -1,
+              "seed": -1,
+              "stability": 0,
+              "stats": {
+                "emptyTriggers": 0,
+                "partialTriggers": 0,
+                "pulses": 0
+              }
+            }
           }
         }
-      },
-      "count": 1,
-      "id": "astralsorcery:artifact"
+      }
     },
     {
-      "components": {
-        "astralsorcery:artifact": {
-          "type": "astralsorcery:astriform",
-          "conditionCount": -1,
-          "conditions": [],
-          "failureEffects": [],
-          "lastPulseGameTick": -1,
-          "seed": -1,
-          "stability": 0,
-          "stats": {
-            "emptyTriggers": 0,
-            "partialTriggers": 0,
-            "pulses": 0
+      "Count": 1,
+      "id": "astralsorcery:artifact",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:artifact": {
+            "value": {
+              "type": "astralsorcery:astriform",
+              "conditionCount": -1,
+              "conditions": [],
+              "failureEffects": [],
+              "lastPulseGameTick": -1,
+              "seed": -1,
+              "stability": 0,
+              "stats": {
+                "emptyTriggers": 0,
+                "partialTriggers": 0,
+                "pulses": 0
+              }
+            }
           }
         }
-      },
-      "count": 1,
-      "id": "astralsorcery:artifact"
+      }
     },
     {
-      "components": {
-        "astralsorcery:artifact": {
-          "type": "astralsorcery:axiomatic",
-          "conditionCount": -1,
-          "conditions": [],
-          "failureEffects": [],
-          "lastPulseGameTick": -1,
-          "seed": -1,
-          "stability": 0,
-          "stats": {
-            "emptyTriggers": 0,
-            "partialTriggers": 0,
-            "pulses": 0
+      "Count": 1,
+      "id": "astralsorcery:artifact",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:artifact": {
+            "value": {
+              "type": "astralsorcery:axiomatic",
+              "conditionCount": -1,
+              "conditions": [],
+              "failureEffects": [],
+              "lastPulseGameTick": -1,
+              "seed": -1,
+              "stability": 0,
+              "stats": {
+                "emptyTriggers": 0,
+                "partialTriggers": 0,
+                "pulses": 0
+              }
+            }
           }
         }
-      },
-      "count": 1,
-      "id": "astralsorcery:artifact"
+      }
     },
     {
-      "components": {
-        "astralsorcery:artifact": {
-          "type": "astralsorcery:spectral",
-          "conditionCount": -1,
-          "conditions": [],
-          "failureEffects": [],
-          "lastPulseGameTick": -1,
-          "seed": -1,
-          "stability": 0,
-          "stats": {
-            "emptyTriggers": 0,
-            "partialTriggers": 0,
-            "pulses": 0
+      "Count": 1,
+      "id": "astralsorcery:artifact",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:artifact": {
+            "value": {
+              "type": "astralsorcery:spectral",
+              "conditionCount": -1,
+              "conditions": [],
+              "failureEffects": [],
+              "lastPulseGameTick": -1,
+              "seed": -1,
+              "stability": 0,
+              "stats": {
+                "emptyTriggers": 0,
+                "partialTriggers": 0,
+                "pulses": 0
+              }
+            }
           }
         }
-      },
-      "count": 1,
-      "id": "astralsorcery:artifact"
+      }
     }
   ],
   "tier": "illumination"

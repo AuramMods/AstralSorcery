@@ -1,0 +1,22 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "astralsorcery:liquid_starlight/engrave_lumen_dynamis"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "astralsorcery:liquid_starlight/engrave_lumen_dynamis"
+    ]
+  },
+  "sends_telemetry_event": false
+}

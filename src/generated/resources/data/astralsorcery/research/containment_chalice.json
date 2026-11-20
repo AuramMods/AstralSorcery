@@ -33,7 +33,7 @@
   "posY": -1.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:chalice"
     }
   ],

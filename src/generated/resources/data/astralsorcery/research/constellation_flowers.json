@@ -32,23 +32,23 @@
   "posY": -4.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:hyacinth"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:iris"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:orchid"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:protea"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:thistle"
     }
   ],

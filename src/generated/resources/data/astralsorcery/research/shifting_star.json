@@ -27,7 +27,7 @@
   "posY": 2.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:shifting_star"
     }
   ],

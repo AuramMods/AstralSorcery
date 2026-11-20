@@ -49,15 +49,15 @@
   "posY": 1.0,
   "renderItemStacks": [
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:illumination_powder"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:nocturnal_powder"
     },
     {
-      "count": 1,
+      "Count": 1,
       "id": "astralsorcery:vivid_powder"
     }
   ],

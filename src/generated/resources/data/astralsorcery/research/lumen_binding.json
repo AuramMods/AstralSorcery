@@ -28,39 +28,59 @@
   "posY": -9.0,
   "renderItemStacks": [
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:aevitas"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:aevitas"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:armara"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:armara"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:discidia"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:discidia"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:evorsio"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:evorsio"
+          }
+        }
+      }
     },
     {
-      "components": {
-        "astralsorcery:lumen": "astralsorcery:vicio"
-      },
-      "count": 1,
-      "id": "astralsorcery:lumen_crystal"
+      "Count": 1,
+      "id": "astralsorcery:lumen_crystal",
+      "tag": {
+        "astralsorcery": {
+          "astralsorcery:lumen": {
+            "value": "astralsorcery:vicio"
+          }
+        }
+      }
     }
   ],
   "tier": "resonance"
