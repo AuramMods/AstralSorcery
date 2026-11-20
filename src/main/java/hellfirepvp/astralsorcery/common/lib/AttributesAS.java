@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -33,6 +34,14 @@ public final class AttributesAS {
     public static final RegistryObject<Attribute> STEP_HEIGHT = register("step_height", "generic.step_height", 0.6, 0, 10);
 
     private AttributesAS() {}
+
+    public static float getPlayerScale(Player player) {
+        var attributes = player.getAttributes();
+        // Dimensions can be queried during Entity construction, before LivingEntity creates the map.
+        if (attributes == null) return 1;
+        var scale = attributes.getInstance(SCALE.get());
+        return scale == null ? 1 : (float) scale.getValue();
+    }
 
     public static void register(IEventBus bus) {
         REGISTER.register(bus);
