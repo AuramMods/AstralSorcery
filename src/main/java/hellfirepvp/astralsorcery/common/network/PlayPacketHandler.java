@@ -11,9 +11,11 @@ package hellfirepvp.astralsorcery.common.network;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
@@ -119,19 +121,23 @@ public abstract class PlayPacketHandler<T> {
             if (this.forge.getDirection() == NetworkDirection.PLAY_TO_SERVER) {
                 return this.forge.getSender();
             }
-            return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> this::clientPlayer);
-        }
-
-        @Nullable
-        private Player clientPlayer() {
-            Minecraft minecraft = Minecraft.getInstance();
-            ClientPacketListener connection = minecraft.getConnection();
-            return connection != null && connection.getConnection() == this.forge.getNetworkManager()
-                    ? minecraft.player : null;
+            return DistExecutor.unsafeCallWhenOn(Dist.CLIENT,
+                    () -> () -> ClientConnection.player(this.forge.getNetworkManager()));
         }
 
         public void reply(Object packet) {
             this.channel.reply(packet, this.forge);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static final class ClientConnection {
+
+        @Nullable
+        private static Player player(Connection expectedConnection) {
+            Minecraft minecraft = Minecraft.getInstance();
+            ClientPacketListener listener = minecraft.getConnection();
+            return listener != null && listener.getConnection() == expectedConnection ? minecraft.player : null;
         }
     }
 }

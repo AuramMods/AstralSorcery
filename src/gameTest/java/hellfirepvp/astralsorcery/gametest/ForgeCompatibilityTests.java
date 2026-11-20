@@ -8,6 +8,7 @@ import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
+import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import io.netty.buffer.Unpooled;
@@ -28,6 +29,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +38,12 @@ import java.util.Set;
 public final class ForgeCompatibilityTests {
 
     private static final String TEMPLATE = "gametest/empty";
+
+    @GameTest(template = TEMPLATE)
+    public static void packetContextLoadsOnDedicatedServer(GameTestHelper test) throws IllegalAccessException {
+        MethodHandles.lookup().ensureInitialized(PlayPacketHandler.PacketContext.class);
+        test.succeed();
+    }
 
     @GameTest(template = TEMPLATE)
     public static void lumenStackPersistence(GameTestHelper test) {
