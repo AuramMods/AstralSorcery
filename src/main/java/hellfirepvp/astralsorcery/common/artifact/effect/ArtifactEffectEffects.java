@@ -14,9 +14,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.artifact.ArtifactEffect;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityArtifact;
 import hellfirepvp.astralsorcery.common.lib.types.ArtifactEffectTypesAS;
-import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.MobEffectDataCodec;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -25,14 +25,13 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -46,7 +45,7 @@ public class ArtifactEffectEffects extends ArtifactEffect {
     public static final MapCodec<ArtifactEffectEffects> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(ArtifactEffect::getId),
             Codec.INT.fieldOf("range").forGetter(ArtifactEffectEffects::getRange),
-            MobEffectInstance.CODEC.listOf().fieldOf("effects").forGetter(ArtifactEffectEffects::getEffects)
+            MobEffectDataCodec.CODEC.listOf().fieldOf("effects").forGetter(ArtifactEffectEffects::getEffects)
     ).apply(inst, ArtifactEffectEffects::new));
     public static final StreamCodec<FriendlyByteBuf, ArtifactEffectEffects> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.RESOURCE_LOCATION,
@@ -90,8 +89,7 @@ public class ArtifactEffectEffects extends ArtifactEffect {
             this.getEffects().forEach(effect -> entity.addEffect(new MobEffectInstance(effect)));
         });
 
-        PotionContents contents = new PotionContents(Optional.empty(), Optional.empty(), this.getEffects());
-        sLevel.levelEvent(2002, artifact.blockPosition(), contents.getColor());
+        sLevel.levelEvent(2002, artifact.blockPosition(), PotionUtils.getColor(this.getEffects()));
     }
 
     public static class Builder {
@@ -104,15 +102,15 @@ public class ArtifactEffectEffects extends ArtifactEffect {
             return this;
         }
 
-        public Builder addEffect(Holder<MobEffect> effect) {
+        public Builder addEffect(MobEffect effect) {
             return this.addEffect(new MobEffectInstance(effect, 5 * 20, 0, true, true, false));
         }
 
-        public Builder addEffect(Holder<MobEffect> effect, int duration) {
+        public Builder addEffect(MobEffect effect, int duration) {
             return this.addEffect(new MobEffectInstance(effect, duration, 0, true, true, false));
         }
 
-        public Builder addEffect(Holder<MobEffect> effect, int duration, int amplifier) {
+        public Builder addEffect(MobEffect effect, int duration, int amplifier) {
             return this.addEffect(new MobEffectInstance(effect, duration, amplifier, true, true, false));
         }
 

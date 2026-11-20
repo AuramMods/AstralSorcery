@@ -67,15 +67,7 @@ public final class ByteBufCodecs {
             StreamCodec.of((buffer, stack) -> stack.writeToPacket(buffer), FluidStack::readFromPacket);
     public static final StreamCodec<FriendlyByteBuf, Ingredient> INGREDIENT =
             StreamCodec.of((buffer, ingredient) -> ingredient.toNetwork(buffer), Ingredient::fromNetwork);
-    public static final StreamCodec<FriendlyByteBuf, MobEffectInstance> MOB_EFFECT_INSTANCE =
-            StreamCodec.of((buffer, effect) -> buffer.writeNbt(effect.save(new CompoundTag())), buffer -> {
-                CompoundTag tag = buffer.readNbt();
-                MobEffectInstance effect = tag == null ? null : MobEffectInstance.load(tag);
-                if (effect == null) {
-                    throw new DecoderException("Missing or unknown mob effect");
-                }
-                return effect;
-            });
+    public static final StreamCodec<FriendlyByteBuf, MobEffectInstance> MOB_EFFECT_INSTANCE = fromCodec(MobEffectDataCodec.CODEC);
 
     private ByteBufCodecs() {}
 
