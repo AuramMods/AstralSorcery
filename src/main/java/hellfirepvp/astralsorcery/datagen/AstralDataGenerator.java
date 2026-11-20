@@ -17,7 +17,6 @@ import hellfirepvp.astralsorcery.datagen.data.artifact.AstralArtifactConditionPr
 import hellfirepvp.astralsorcery.datagen.data.artifact.AstralArtifactEffectProvider;
 import hellfirepvp.astralsorcery.datagen.data.artifact.AstralArtifactPenaltyProvider;
 import hellfirepvp.astralsorcery.datagen.data.damage.AstralDamageTypeTagProvider;
-import hellfirepvp.astralsorcery.datagen.data.datamap.AstralDataMapProvider;
 import hellfirepvp.astralsorcery.datagen.data.loot.AstralGlobalLootModifierProvider;
 import hellfirepvp.astralsorcery.datagen.data.loot.AstralLootTableProvider;
 import hellfirepvp.astralsorcery.datagen.data.lumen.AstralLumenBindingDataProvider;
@@ -80,7 +79,6 @@ public class AstralDataGenerator {
             gen.addProvider(true, new AstralConstellationTagsProvider(output, lookupProvider, fileHelper));
             gen.addProvider(true, new AstralRecipeProvider(output, lookupProvider));
             gen.addProvider(true, new AstralResearchNodeProvider(output, lookupProvider));
-            gen.addProvider(true, new AstralDataMapProvider(output, lookupProvider));
             gen.addProvider(true, new AstralLootTableProvider(output));
             gen.addProvider(true, new AstralGlobalLootModifierProvider(output));
             gen.addProvider(true, new AstralArtifactConditionProvider(output, lookupProvider));

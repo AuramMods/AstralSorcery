@@ -36,6 +36,7 @@ import hellfirepvp.astralsorcery.common.perk.source.provider.lumen.LumenBindingS
 import hellfirepvp.astralsorcery.common.util.time.TimeStopController;
 import hellfirepvp.astralsorcery.common.visual.VisualEffectTypes;
 import hellfirepvp.astralsorcery.common.enchantment.EnchantmentAmuletGenerator;
+import hellfirepvp.astralsorcery.common.event.handler.FurnaceFuelHandler;
 import hellfirepvp.astralsorcery.common.event.handler.InteractEventHandler;
 import hellfirepvp.astralsorcery.common.event.handler.LootEventHandler;
 import hellfirepvp.astralsorcery.common.event.handler.PlayerEventHandler;
@@ -179,6 +180,7 @@ public class CommonProxy {
         TooltipEventHandler.attachListeners(eventBus);
         InteractEventHandler.attachListeners(eventBus);
         LootEventHandler.attachListeners(eventBus);
+        FurnaceFuelHandler.attachListeners(eventBus);
         InvulnerabilityHelper.attachListeners(eventBus);
         TemporaryFlightHelper.attachListeners(eventBus);
         DamageCancellingHelper.attachListeners(eventBus);
