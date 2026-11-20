@@ -17,6 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,7 @@ public class TileTickManipulationRegistry extends JsonDataRegistry<TileTickManip
 
         public boolean matches(BlockEntity entity) {
             return this.tileFilter().map(
-                    tag -> entity.getType().builtInRegistryHolder().is(tag),
+                    tag -> ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(tag).contains(entity.getType()),
                     classPart -> entity.getClass().getName().toLowerCase(Locale.ROOT).startsWith(classPart)
             );
         }
