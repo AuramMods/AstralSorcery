@@ -8,15 +8,12 @@
 
 package hellfirepvp.astralsorcery.common.advancement;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.lib.AdvancementsAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
@@ -28,30 +25,28 @@ import java.util.Optional;
  * Created by HellFirePvP
  * Date: 08.10.2026 / 09:28
  */
-public class ConstellationDiscoveryTrigger extends SimpleCriterionTrigger<ConstellationDiscoveryTrigger.Instance> {
+public class ConstellationDiscoveryTrigger extends AstralCriterionTrigger<ConstellationDiscoveryTrigger.Instance> {
+
+    public ConstellationDiscoveryTrigger() {
+        super("constellation_discovery", Instance.CODEC);
+    }
 
     public void trigger(ServerPlayer sPlayer, BaseConstellation discovered) {
-        this.trigger(sPlayer, inst -> inst.matches(discovered));
+        this.trigger(sPlayer, inst -> inst.value().matches(discovered));
     }
 
-    @Override
-    public Codec<Instance> codec() {
-        return Instance.CODEC;
-    }
+    public record Instance(Optional<BaseConstellation> constellation) {
 
-    public record Instance(Optional<ContextAwarePredicate> player, Optional<BaseConstellation> constellation) implements SimpleInstance {
-
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
+        public static final MapCodec<Instance> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("constellation").forGetter(Instance::constellation)
         ).apply(inst, Instance::new));
 
-        public static Criterion<Instance> discoverAny() {
-            return AdvancementsAS.CONSTELLATION_DISCOVERY.get().createCriterion(new Instance(Optional.empty(), Optional.empty()));
+        public static CriterionTriggerInstance discoverAny() {
+            return AdvancementsAS.CONSTELLATION_DISCOVERY.criterion(new Instance(Optional.empty()));
         }
 
-        public static Criterion<Instance> discover(BaseConstellation constellation) {
-            return AdvancementsAS.CONSTELLATION_DISCOVERY.get().createCriterion(new Instance(Optional.empty(), Optional.of(constellation)));
+        public static CriterionTriggerInstance discover(BaseConstellation constellation) {
+            return AdvancementsAS.CONSTELLATION_DISCOVERY.criterion(new Instance(Optional.of(constellation)));
         }
 
         public boolean matches(BaseConstellation discovered) {

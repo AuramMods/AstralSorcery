@@ -9,15 +9,11 @@
 package hellfirepvp.astralsorcery.common.advancement;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.AdvancementsAS;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.server.level.ServerPlayer;
-
-import java.util.Optional;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -26,26 +22,24 @@ import java.util.Optional;
  * Created by HellFirePvP
  * Date: 07.10.2026 / 23:29
  */
-public class PerkLevelTrigger extends SimpleCriterionTrigger<PerkLevelTrigger.Instance> {
+public class PerkLevelTrigger extends AstralCriterionTrigger<PerkLevelTrigger.Instance> {
+
+    public PerkLevelTrigger() {
+        super("perk_level", Instance.CODEC);
+    }
 
     public void trigger(ServerPlayer sPlayer, int levelReached) {
-        this.trigger(sPlayer, inst -> inst.levelNeeded() <= levelReached);
+        this.trigger(sPlayer, inst -> inst.value().levelNeeded() <= levelReached);
     }
 
-    @Override
-    public Codec<Instance> codec() {
-        return Instance.CODEC;
-    }
+    public record Instance(int levelNeeded) {
 
-    public record Instance(Optional<ContextAwarePredicate> player, int levelNeeded) implements SimpleInstance {
-
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
+        public static final MapCodec<Instance> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Codec.INT.fieldOf("levelNeeded").forGetter(Instance::levelNeeded)
         ).apply(inst, Instance::new));
 
-        public static Criterion<Instance> reachLevel(int levelNeeded) {
-            return AdvancementsAS.PERK_LEVEL.get().createCriterion(new Instance(Optional.empty(), levelNeeded));
+        public static CriterionTriggerInstance reachLevel(int levelNeeded) {
+            return AdvancementsAS.PERK_LEVEL.criterion(new Instance(levelNeeded));
         }
     }
 }

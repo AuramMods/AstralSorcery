@@ -8,14 +8,11 @@
 
 package hellfirepvp.astralsorcery.common.advancement;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.AdvancementsAS;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,34 +25,32 @@ import java.util.Optional;
  * Created by HellFirePvP
  * Date: 08.10.2026 / 09:33
  */
-public class GemSocketTrigger extends SimpleCriterionTrigger<GemSocketTrigger.Instance> {
+public class GemSocketTrigger extends AstralCriterionTrigger<GemSocketTrigger.Instance> {
+
+    public GemSocketTrigger() {
+        super("gem_socket", Instance.CODEC);
+    }
 
     public void trigger(ServerPlayer sPlayer, ItemStack socketedItem) {
-        this.trigger(sPlayer, inst -> inst.matches(socketedItem));
+        this.trigger(sPlayer, inst -> inst.value().matches(socketedItem));
     }
 
-    @Override
-    public Codec<Instance> codec() {
-        return Instance.CODEC;
-    }
+    public record Instance(Optional<ItemPredicate> item) {
 
-    public record Instance(Optional<ContextAwarePredicate> player, Optional<ItemPredicate> item) implements SimpleInstance {
-
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
-                ItemPredicate.CODEC.optionalFieldOf("item").forGetter(Instance::item)
+        public static final MapCodec<Instance> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                ITEM_PREDICATE_CODEC.optionalFieldOf("item").forGetter(Instance::item)
         ).apply(inst, Instance::new));
 
-        public static Criterion<Instance> socketAny() {
-            return AdvancementsAS.GEM_SOCKET.get().createCriterion(new Instance(Optional.empty(), Optional.empty()));
+        public static CriterionTriggerInstance socketAny() {
+            return AdvancementsAS.GEM_SOCKET.criterion(new Instance(Optional.empty()));
         }
 
-        public static Criterion<Instance> socket(ItemPredicate item) {
-            return AdvancementsAS.GEM_SOCKET.get().createCriterion(new Instance(Optional.empty(), Optional.of(item)));
+        public static CriterionTriggerInstance socket(ItemPredicate item) {
+            return AdvancementsAS.GEM_SOCKET.criterion(new Instance(Optional.of(item)));
         }
 
         public boolean matches(ItemStack socketedItem) {
-            return this.item.isEmpty() || this.item.get().test(socketedItem);
+            return this.item.isEmpty() || this.item.get().matches(socketedItem);
         }
     }
 }

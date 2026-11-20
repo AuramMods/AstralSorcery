@@ -8,7 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.lib;
 
-import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.advancement.ConstellationDiscoveryTrigger;
 import hellfirepvp.astralsorcery.common.advancement.FocalPointDiscoveryTrigger;
 import hellfirepvp.astralsorcery.common.advancement.GemSocketTrigger;
@@ -16,10 +15,8 @@ import hellfirepvp.astralsorcery.common.advancement.ItemAttunementTrigger;
 import hellfirepvp.astralsorcery.common.advancement.LumenDiscoveryTrigger;
 import hellfirepvp.astralsorcery.common.advancement.PerkLevelTrigger;
 import hellfirepvp.astralsorcery.common.advancement.PlayerAttunementTrigger;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.core.registries.Registries;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -30,27 +27,23 @@ import net.minecraftforge.registries.DeferredRegister;
  */
 public class AdvancementsAS {
 
-    public static final DeferredRegister<CriterionTrigger<?>> TRIGGER_REGISTER =
-            DeferredRegister.create(Registries.TRIGGER_TYPE, AstralSorcery.MODID);
+    public static final PerkLevelTrigger PERK_LEVEL = new PerkLevelTrigger();
+    public static final PlayerAttunementTrigger PLAYER_ATTUNEMENT = new PlayerAttunementTrigger();
+    public static final ItemAttunementTrigger ITEM_ATTUNEMENT = new ItemAttunementTrigger();
+    public static final ConstellationDiscoveryTrigger CONSTELLATION_DISCOVERY = new ConstellationDiscoveryTrigger();
+    public static final LumenDiscoveryTrigger LUMEN_DISCOVERY = new LumenDiscoveryTrigger();
+    public static final FocalPointDiscoveryTrigger FOCAL_POINT_DISCOVERY = new FocalPointDiscoveryTrigger();
+    public static final GemSocketTrigger GEM_SOCKET = new GemSocketTrigger();
 
-    public static final RegistryObject<PerkLevelTrigger> PERK_LEVEL =
-            TRIGGER_REGISTER.register("perk_level", PerkLevelTrigger::new);
-
-    public static final RegistryObject<PlayerAttunementTrigger> PLAYER_ATTUNEMENT =
-            TRIGGER_REGISTER.register("player_attunement", PlayerAttunementTrigger::new);
-
-    public static final RegistryObject<ItemAttunementTrigger> ITEM_ATTUNEMENT =
-            TRIGGER_REGISTER.register("item_attunement", ItemAttunementTrigger::new);
-
-    public static final RegistryObject<ConstellationDiscoveryTrigger> CONSTELLATION_DISCOVERY =
-            TRIGGER_REGISTER.register("constellation_discovery", ConstellationDiscoveryTrigger::new);
-
-    public static final RegistryObject<LumenDiscoveryTrigger> LUMEN_DISCOVERY =
-            TRIGGER_REGISTER.register("lumen_discovery", LumenDiscoveryTrigger::new);
-
-    public static final RegistryObject<FocalPointDiscoveryTrigger> FOCAL_POINT_DISCOVERY =
-            TRIGGER_REGISTER.register("focal_point_discovery", FocalPointDiscoveryTrigger::new);
-
-    public static final RegistryObject<GemSocketTrigger> GEM_SOCKET =
-            TRIGGER_REGISTER.register("gem_socket", GemSocketTrigger::new);
+    public static void register(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            CriteriaTriggers.register(PERK_LEVEL);
+            CriteriaTriggers.register(PLAYER_ATTUNEMENT);
+            CriteriaTriggers.register(ITEM_ATTUNEMENT);
+            CriteriaTriggers.register(CONSTELLATION_DISCOVERY);
+            CriteriaTriggers.register(LUMEN_DISCOVERY);
+            CriteriaTriggers.register(FOCAL_POINT_DISCOVERY);
+            CriteriaTriggers.register(GEM_SOCKET);
+        });
+    }
 }

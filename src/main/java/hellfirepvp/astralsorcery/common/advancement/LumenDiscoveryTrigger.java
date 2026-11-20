@@ -9,14 +9,12 @@
 package hellfirepvp.astralsorcery.common.advancement;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.AdvancementsAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
@@ -28,41 +26,38 @@ import java.util.Optional;
  * Created by HellFirePvP
  * Date: 08.10.2026 / 09:40
  */
-public class LumenDiscoveryTrigger extends SimpleCriterionTrigger<LumenDiscoveryTrigger.Instance> {
+public class LumenDiscoveryTrigger extends AstralCriterionTrigger<LumenDiscoveryTrigger.Instance> {
+
+    public LumenDiscoveryTrigger() {
+        super("lumen_discovery", Instance.CODEC);
+    }
 
     public void trigger(ServerPlayer sPlayer, Lumen discovered) {
-        this.trigger(sPlayer, inst -> inst.matches(discovered));
+        this.trigger(sPlayer, inst -> inst.value().matches(discovered));
     }
 
-    @Override
-    public Codec<Instance> codec() {
-        return Instance.CODEC;
-    }
+    public record Instance(Optional<Lumen> lumen,
+                           Optional<Boolean> elementary) {
 
-    public record Instance(Optional<ContextAwarePredicate> player,
-                           Optional<Lumen> lumen,
-                           Optional<Boolean> elementary) implements SimpleInstance {
-
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
+        public static final MapCodec<Instance> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 RegistriesAS.codec(RegistriesAS.KEY_LUMEN).optionalFieldOf("lumen").forGetter(Instance::lumen),
                 Codec.BOOL.optionalFieldOf("elementary").forGetter(Instance::elementary)
         ).apply(inst, Instance::new));
 
-        public static Criterion<Instance> discoverAny() {
-            return AdvancementsAS.LUMEN_DISCOVERY.get().createCriterion(new Instance(Optional.empty(), Optional.empty(), Optional.empty()));
+        public static CriterionTriggerInstance discoverAny() {
+            return AdvancementsAS.LUMEN_DISCOVERY.criterion(new Instance(Optional.empty(), Optional.empty()));
         }
 
-        public static Criterion<Instance> discover(Lumen lumen) {
-            return AdvancementsAS.LUMEN_DISCOVERY.get().createCriterion(new Instance(Optional.empty(), Optional.of(lumen), Optional.empty()));
+        public static CriterionTriggerInstance discover(Lumen lumen) {
+            return AdvancementsAS.LUMEN_DISCOVERY.criterion(new Instance(Optional.of(lumen), Optional.empty()));
         }
 
-        public static Criterion<Instance> discoverElementary() {
-            return AdvancementsAS.LUMEN_DISCOVERY.get().createCriterion(new Instance(Optional.empty(), Optional.empty(), Optional.of(true)));
+        public static CriterionTriggerInstance discoverElementary() {
+            return AdvancementsAS.LUMEN_DISCOVERY.criterion(new Instance(Optional.empty(), Optional.of(true)));
         }
 
-        public static Criterion<Instance> discoverNonElementary() {
-            return AdvancementsAS.LUMEN_DISCOVERY.get().createCriterion(new Instance(Optional.empty(), Optional.empty(), Optional.of(false)));
+        public static CriterionTriggerInstance discoverNonElementary() {
+            return AdvancementsAS.LUMEN_DISCOVERY.criterion(new Instance(Optional.empty(), Optional.of(false)));
         }
 
         public boolean matches(Lumen discovered) {

@@ -65,7 +65,7 @@ public class ResearchHelper {
                     MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, constellation));
                 }
                 MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoverConstellation(player, progress, constellation));
-                AdvancementsAS.CONSTELLATION_DISCOVERY.get().trigger(player, constellation);
+                AdvancementsAS.CONSTELLATION_DISCOVERY.trigger(player, constellation);
                 return true;
             }
             return false;
@@ -82,7 +82,7 @@ public class ResearchHelper {
                         MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizeConstellation(player, progress, c));
                     }
                     MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoverConstellation(player, progress, c));
-                    AdvancementsAS.CONSTELLATION_DISCOVERY.get().trigger(player, c);
+                    AdvancementsAS.CONSTELLATION_DISCOVERY.trigger(player, c);
                     discoveredAny = true;
                 }
             }
@@ -94,7 +94,7 @@ public class ResearchHelper {
         return withProgress(player, progress -> {
             if (constellation.is(TagsAS.Constellations.MAY_BE_FOCAL_POINT) && progress.memorizeFocalPoint(constellation)) {
                 MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizedFocalPoint(player, progress, constellation));
-                AdvancementsAS.FOCAL_POINT_DISCOVERY.get().trigger(player, constellation);
+                AdvancementsAS.FOCAL_POINT_DISCOVERY.trigger(player, constellation);
                 return true;
             }
             return false;
@@ -107,7 +107,7 @@ public class ResearchHelper {
             for (BaseConstellation c : constellations) {
                 if (c.is(TagsAS.Constellations.MAY_BE_FOCAL_POINT) && progress.memorizeFocalPoint(c)) {
                     MinecraftForge.EVENT_BUS.post(new ResearchEvent.MemorizedFocalPoint(player, progress, c));
-                    AdvancementsAS.FOCAL_POINT_DISCOVERY.get().trigger(player, c);
+                    AdvancementsAS.FOCAL_POINT_DISCOVERY.trigger(player, c);
                     memorizedAny = true;
                 }
             }
@@ -121,7 +121,7 @@ public class ResearchHelper {
             if (progress.discoverLumen(lumen)) {
                 discovered.add(lumen);
                 MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoveredLumen(player, progress, lumen));
-                AdvancementsAS.LUMEN_DISCOVERY.get().trigger(player, lumen);
+                AdvancementsAS.LUMEN_DISCOVERY.trigger(player, lumen);
                 return true;
             }
             return false;
@@ -135,7 +135,7 @@ public class ResearchHelper {
             for (Lumen l : lumen) {
                 if (progress.discoverLumen(l)) {
                     MinecraftForge.EVENT_BUS.post(new ResearchEvent.DiscoveredLumen(player, progress, l));
-                    AdvancementsAS.LUMEN_DISCOVERY.get().trigger(player, l);
+                    AdvancementsAS.LUMEN_DISCOVERY.trigger(player, l);
                     discovered.add(l);
                 }
             }
@@ -185,7 +185,7 @@ public class ResearchHelper {
             perkData.setExp(0);
             progress.setAttunedConstellation(constellation);
             MinecraftForge.EVENT_BUS.post(new ResearchEvent.AttunedConstellationSet(player, progress, prev));
-            AdvancementsAS.PLAYER_ATTUNEMENT.get().trigger(player, constellation);
+            AdvancementsAS.PLAYER_ATTUNEMENT.trigger(player, constellation);
 
             AttunePlayerProperty.getRootPerk(constellation, LogicalSide.SERVER).ifPresent(root -> {
                 doApplyPerk(progress, perkData, player, root, PerkAllocation.unlock());
@@ -264,7 +264,7 @@ public class ResearchHelper {
     public static boolean setPerkExp(ServerPlayer player, double exp) {
         return withProgress(player, progress -> {
             progress.getPerkData().setExp(exp);
-            AdvancementsAS.PERK_LEVEL.get().trigger(player, progress.getPerkData().getPerkLevel(player, LogicalSide.SERVER));
+            AdvancementsAS.PERK_LEVEL.trigger(player, progress.getPerkData().getPerkLevel(player, LogicalSide.SERVER));
             return true;
         });
     }
@@ -272,7 +272,7 @@ public class ResearchHelper {
     public static boolean addPerkExp(ServerPlayer player, double exp) {
         return withProgress(player, progress -> {
             progress.getPerkData().modifyExp(player, exp);
-            AdvancementsAS.PERK_LEVEL.get().trigger(player, progress.getPerkData().getPerkLevel(player, LogicalSide.SERVER));
+            AdvancementsAS.PERK_LEVEL.trigger(player, progress.getPerkData().getPerkLevel(player, LogicalSide.SERVER));
             return true;
         });
     }

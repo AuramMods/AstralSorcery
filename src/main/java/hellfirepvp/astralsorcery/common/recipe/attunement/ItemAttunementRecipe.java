@@ -177,7 +177,7 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
                     itemEntity.setItem(stack);
 
                     if (itemEntity.getOwner() instanceof ServerPlayer sPlayer) {
-                        AdvancementsAS.ITEM_ATTUNEMENT.get().trigger(sPlayer, cst, stack);
+                        AdvancementsAS.ITEM_ATTUNEMENT.trigger(sPlayer, cst, stack);
                     }
                 });
             });

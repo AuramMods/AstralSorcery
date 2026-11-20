@@ -223,7 +223,7 @@ public class GemSocketPerk extends AttributeModifierPerk<GemSocketPerk.Data> {
         if (updateData && ResearchHelper.updatePerkData(sPlayer, this, gemSocketData, newGemData)) {
             ItemStack socketed = newGemData.getGemStack();
             if (!socketed.isEmpty()) {
-                AdvancementsAS.GEM_SOCKET.get().trigger(sPlayer, socketed);
+                AdvancementsAS.GEM_SOCKET.trigger(sPlayer, socketed);
             }
         }
         return true;
