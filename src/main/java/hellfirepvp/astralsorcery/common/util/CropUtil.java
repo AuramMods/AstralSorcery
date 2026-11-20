@@ -10,7 +10,6 @@ package hellfirepvp.astralsorcery.common.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -20,8 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.event.EventHooks;
-import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,7 +60,7 @@ public class CropUtil {
 
         if (state.getBlock() instanceof BonemealableBlock) {
             if (!state.is(BlockTags.DIRT) &&
-                    !state.is(Blocks.SHORT_GRASS) &&
+                    !state.is(Blocks.GRASS) &&
                     !state.is(Blocks.TALL_GRASS) &&
                     !(state.getBlock() instanceof DoublePlantBlock)) {
                 return Optional.of(new BonemealablePlant(pos));
@@ -281,9 +279,13 @@ public class CropUtil {
             if (!(level instanceof ServerLevel sLevel)) return false;
             return this.getBonemealable(sLevel).map(bonemealableBlock -> {
                 BlockState state = level.getBlockState(this.getPos());
-                BonemealEvent event = EventHooks.fireBonemealEvent(null, sLevel, this.getPos(), state, new ItemStack(Items.BONE_MEAL));
-                if (event.isCanceled()) return event.isSuccessful();
-                if (!event.isValidBonemealTarget() || !bonemealableBlock.isBonemealSuccess(sLevel, rand, this.getPos(), state)) return false;
+                int result = ForgeEventFactory.onApplyBonemeal(MiscUtil.getAstralFakePlayer(sLevel), sLevel,
+                        this.getPos(), state, new ItemStack(Items.BONE_MEAL));
+                if (result != 0) return result > 0;
+                if (!bonemealableBlock.isValidBonemealTarget(sLevel, this.getPos(), state, false) ||
+                        !bonemealableBlock.isBonemealSuccess(sLevel, rand, this.getPos(), state)) {
+                    return false;
+                }
                 bonemealableBlock.performBonemeal(sLevel, rand, this.getPos(), state);
                 return true;
             }).orElse(false);
@@ -315,7 +317,7 @@ public class CropUtil {
 
         private Optional<BlockPos> tryFindFruit(Level level) {
             return this.getStem(level).map(stemBlock -> {
-                ResourceKey<Block> fruit = stemBlock.fruit;
+                StemGrownBlock fruit = stemBlock.fruit;
                 for (Direction dir : Direction.Plane.HORIZONTAL) {
                     BlockPos checkPos = this.getPos().relative(dir);
                     if (level.getBlockState(checkPos).is(fruit)) {
@@ -357,7 +359,7 @@ public class CropUtil {
 
         private Optional<BlockPos> tryFindFruit(Level level) {
             return this.getAttachedStemBlock(level).map(attachedStemBlock -> {
-                ResourceKey<Block> fruit = attachedStemBlock.fruit;
+                StemGrownBlock fruit = attachedStemBlock.fruit;
                 for (Direction dir : Direction.Plane.HORIZONTAL) {
                     BlockPos checkPos = this.getPos().relative(dir);
                     if (level.getBlockState(checkPos).is(fruit)) {
