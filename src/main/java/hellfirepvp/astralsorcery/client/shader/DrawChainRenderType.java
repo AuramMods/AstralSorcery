@@ -10,15 +10,12 @@ package hellfirepvp.astralsorcery.client.shader;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.MeshData;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexSorting;
 import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL30;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -31,16 +28,16 @@ import java.util.function.Supplier;
  */
 public class DrawChainRenderType extends RenderType {
 
-    private static final Map<String, DrawChainRenderType> WRAPPED_CACHE = new HashMap<>();
-
     protected final RenderType decorated;
     private final Supplier<RenderTarget> newTarget;
     private final Runnable preRender, postRender;
 
-    private int thisFrameTarget = 0;
+    private int previousFramebuffer;
+    private RenderTarget activeTarget;
 
-    protected DrawChainRenderType(RenderType decorated, Supplier<RenderTarget> newTarget, Runnable preRender, Runnable postRender) {
-        super(decorated.name, decorated.format, decorated.mode, decorated.bufferSize, decorated.affectsCrumbling, decorated.sortOnUpload, decorated.setupState, decorated.clearState);
+    protected DrawChainRenderType(String id, RenderType decorated, Supplier<RenderTarget> newTarget, Runnable preRender, Runnable postRender) {
+        super(id, decorated.format(), decorated.mode(), decorated.bufferSize(), decorated.affectsCrumbling(),
+                decorated.sortOnUpload, decorated::setupRenderState, decorated::clearRenderState);
         this.decorated = decorated;
         this.newTarget = newTarget;
         this.preRender = preRender;
@@ -56,57 +53,61 @@ public class DrawChainRenderType extends RenderType {
     }
 
     public static DrawChainRenderType wrap(String id, RenderType type, Supplier<RenderTarget> newTarget, Runnable preRender, Runnable postRender) {
-        String reference = String.format("%s_%s", id, type.name);
-        if (WRAPPED_CACHE.containsKey(reference)) return WRAPPED_CACHE.get(reference);
-
-        DrawChainRenderType drawType = new DrawChainRenderType(type, newTarget, preRender, postRender);
-        WRAPPED_CACHE.put(reference, drawType);
-        return drawType;
+        return new DrawChainRenderType(id, type, newTarget, preRender, postRender);
     }
 
     @Override
     public void setupRenderState() {
+        RenderTarget target = this.newTarget.get();
         this.decorated.setupRenderState();
 
         this.preRender.run();
-        this.thisFrameTarget = GlStateManager.getBoundFramebuffer();
-        this.newTarget.get().bindWrite(false);
+        this.previousFramebuffer = GlStateManager.getBoundFramebuffer();
+        target.bindWrite(false);
+        this.activeTarget = target;
     }
 
     @Override
     public void clearRenderState() {
-        this.newTarget.get().unbindWrite();
-        GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.thisFrameTarget);
-        this.postRender.run();
-        this.thisFrameTarget = 0;
-        this.decorated.clearRenderState();
+        this.activeTarget.unbindWrite();
+        this.activeTarget = null;
+        GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, this.previousFramebuffer);
+        try {
+            this.postRender.run();
+        } finally {
+            this.decorated.clearRenderState();
+        }
     }
 
     @Override
-    public void draw(MeshData meshData) {
-        this.setupRenderState();
-        BufferUploader.drawWithShader(meshData);
-        this.clearRenderState();
+    public void end(BufferBuilder builder, VertexSorting sorting) {
+        if (!builder.building()) {
+            return;
+        }
+        if (this.sortOnUpload) {
+            builder.setQuadSorting(sorting);
+        }
+        BufferBuilder.RenderedBuffer batch = builder.endOrDiscardIfEmpty();
+        if (batch == null) {
+            return;
+        }
+
+        try {
+            this.setupRenderState();
+        } catch (RuntimeException | Error failure) {
+            batch.release();
+            throw failure;
+        }
+        try {
+            BufferUploader.drawWithShader(batch);
+        } finally {
+            this.clearRenderState();
+        }
     }
 
     @Override
     public String toString() {
         return this.decorated.toString();
-    }
-
-    @Override
-    public int bufferSize() {
-        return this.decorated.bufferSize();
-    }
-
-    @Override
-    public VertexFormat format() {
-        return this.decorated.format();
-    }
-
-    @Override
-    public VertexFormat.Mode mode() {
-        return this.decorated.mode();
     }
 
     @Override
@@ -120,17 +121,7 @@ public class DrawChainRenderType extends RenderType {
     }
 
     @Override
-    public boolean affectsCrumbling() {
-        return this.decorated.affectsCrumbling();
-    }
-
-    @Override
     public boolean canConsolidateConsecutiveGeometry() {
         return this.decorated.canConsolidateConsecutiveGeometry();
-    }
-
-    @Override
-    public boolean sortOnUpload() {
-        return this.decorated.sortOnUpload();
     }
 }

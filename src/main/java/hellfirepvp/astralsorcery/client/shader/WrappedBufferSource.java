@@ -10,10 +10,8 @@ package hellfirepvp.astralsorcery.client.shader;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import hellfirepvp.astralsorcery.client.util.OwnedBufferBuilder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 
@@ -23,7 +21,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.SequencedMap;
 import java.util.function.Function;
 
 /**
@@ -35,51 +32,54 @@ import java.util.function.Function;
  */
 public class WrappedBufferSource extends MultiBufferSource.BufferSource {
 
-    //We gotta make our own buffers, cause relying on the base buffer isn't feasible if it's anything except raw vanilla
-    //for giga custom wrapped types with custom stuff. hoped to avoid it but here we are. not fun to be here.
     private static final int MAX_POOLED_BUFFERS = 4;
-    private static final Deque<ByteBufferBuilder> BUFFER_POOL = new ArrayDeque<>();
+    private static final Deque<OwnedBufferBuilder> BUFFER_POOL = new ArrayDeque<>();
 
-    private final MultiBufferSource wrapped;
-    private final Function<RenderType, RenderType> wrapper;
-    private final SequencedMap<RenderType, RenderType> wrappedTypes = new LinkedHashMap<>();
-    private final Map<RenderType, RenderBatch> batches = new HashMap<>();
+    private final MultiBufferSource baseSource;
+    private final Function<RenderType, RenderType> decorate;
+    private final Map<RenderType, RenderType> wrappedTypes = new HashMap<>();
+    private final Map<RenderType, OwnedBufferBuilder> batches = new LinkedHashMap<>();
 
-    public WrappedBufferSource(MultiBufferSource wrapped, Function<RenderType, RenderType> wrapper) {
-        super(null, null);
-        this.wrapped = wrapped;
-        this.wrapper = wrapper;
+    public WrappedBufferSource(MultiBufferSource baseSource, Function<RenderType, RenderType> decorate) {
+        super(null, Map.of());
+        this.baseSource = baseSource;
+        this.decorate = decorate;
     }
 
     @Override
     public VertexConsumer getBuffer(RenderType renderType) {
-        RenderType wrapped = this.wrappedTypes.computeIfAbsent(renderType, this.wrapper);
-
-        //cleanup old batch if not chainable
-        RenderBatch batch = this.batches.get(wrapped);
-        if (batch != null && !wrapped.canConsolidateConsecutiveGeometry()) {
-            this.batches.remove(wrapped);
-            batch.draw(wrapped);
-            batch = null;
+        RenderType wrapped = this.wrappedTypes.computeIfAbsent(renderType, this.decorate);
+        OwnedBufferBuilder builder = this.batches.get(renderType);
+        if (builder != null && !wrapped.canConsolidateConsecutiveGeometry()) {
+            this.drawWrapped(renderType);
+            builder = null;
         }
 
-        if (batch == null) {
-            if (this.wrapped instanceof BufferSource src) {
-                src.endLastBatch();
+        if (builder == null) {
+            if (this.baseSource instanceof BufferSource source) {
+                source.endLastBatch();
             }
-            batch = RenderBatch.of(wrapped);
-            this.batches.put(wrapped, batch);
+            builder = BUFFER_POOL.pollLast();
+            if (builder == null) {
+                builder = new OwnedBufferBuilder(wrapped.bufferSize());
+            }
+            builder.begin(wrapped.mode(), wrapped.format());
+            this.batches.put(renderType, builder);
         }
-        return batch.builder();
+        return builder;
     }
 
     public void end() {
-        Lists.reverse(new ArrayList<>(this.wrappedTypes.keySet())).forEach(this::drawWrapped);
+        try {
+            Lists.reverse(new ArrayList<>(this.batches.keySet())).forEach(this::drawWrapped);
+        } finally {
+            this.batches.values().forEach(OwnedBufferBuilder::close);
+            this.batches.clear();
+        }
     }
 
     @Override
     public void endLastBatch() {
-        //might as well draw all wrapped types we have
         this.end();
     }
 
@@ -94,48 +94,20 @@ public class WrappedBufferSource extends MultiBufferSource.BufferSource {
     }
 
     protected void drawWrapped(RenderType raw) {
-        RenderType chainType = this.wrappedTypes.remove(raw);
-        if (chainType == null) {
+        OwnedBufferBuilder builder = this.batches.remove(raw);
+        if (builder == null) {
             return;
         }
-        RenderBatch batch = this.batches.remove(chainType);
-        if (batch != null) {
-            batch.draw(chainType);
-        }
-    }
 
-    private static ByteBufferBuilder fetchBuffer(int initialSize) {
-        ByteBufferBuilder pooled = BUFFER_POOL.pollLast();
-        return pooled != null ? pooled : new ByteBufferBuilder(initialSize);
-    }
-
-    private static void closeBuffer(ByteBufferBuilder buffer) {
-        if (BUFFER_POOL.size() >= MAX_POOLED_BUFFERS) {
-            buffer.close();
-        } else {
-            BUFFER_POOL.addLast(buffer);
-        }
-    }
-
-    private record RenderBatch(ByteBufferBuilder buffer, BufferBuilder builder) {
-
-        private static RenderBatch of(RenderType rType) {
-            ByteBufferBuilder buffer = fetchBuffer(rType.bufferSize());
-            return new RenderBatch(buffer, new BufferBuilder(buffer, rType.mode(), rType.format()));
-        }
-
-        private void draw(RenderType rType) {
-            try {
-                MeshData mesh = this.builder.build();
-                if (mesh != null) {
-                    if (rType.sortOnUpload()) {
-                        mesh.sortQuads(this.buffer, RenderSystem.getVertexSorting());
-                    }
-                    rType.draw(mesh);
-                }
-            } finally {
-                this.buffer.discard();
-                closeBuffer(this.buffer);
+        try {
+            this.wrappedTypes.get(raw).end(builder, RenderSystem.getVertexSorting());
+        } finally {
+            if (builder.building() || BUFFER_POOL.size() >= MAX_POOLED_BUFFERS) {
+                builder.close();
+            } else {
+                builder.discard();
+                builder.unsetDefaultColor();
+                BUFFER_POOL.addLast(builder);
             }
         }
     }
