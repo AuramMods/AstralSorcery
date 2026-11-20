@@ -97,24 +97,26 @@ public class TileTreeBeacon extends TileEntityNetwork<ForwardingStarlightReceive
         TreeGrowUtil.addHandler(level, this.getBlockPos(), radius, (event, tree) -> {
             tree.simulateGrowTree(level, event.getRandom()).forEach(snapshot -> {
                 LevelAccessor evLevel = event.getLevel();
+                // These snapshots were taken after simulated growth, before restoring the original blocks.
+                BlockState grownState = snapshot.getReplacedBlock();
                 //Reset blocks we don't capture
-                if (!this.canCaptureBlock(evLevel, snapshot.getPos(), snapshot.getState())) {
-                    evLevel.setBlock(snapshot.getPos(), snapshot.getState(), Block.UPDATE_CLIENTS);
+                if (!this.canCaptureBlock(evLevel, snapshot.getPos(), grownState)) {
+                    evLevel.setBlock(snapshot.getPos(), grownState, Block.UPDATE_CLIENTS);
                     return;
                 }
                 evLevel.setBlock(snapshot.getPos(), BlocksAS.TRANSLUCENT_TREE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                 MiscUtil.getTileAt(evLevel, snapshot.getPos(), TileTranslucentTree.class, true).ifPresent(tile -> {
                     TileTranslucentTree.Data data = tile.getTileData();
-                    data.setStoredState(snapshot.getState());
+                    data.setStoredState(grownState);
                     data.setTreeBeaconPos(this.getBlockPos());
                     data.markForUpdate();
 
-                    this.getTileData().addTreeComponent(snapshot.getPos(), this.isLog(snapshot.getState()) ? CONFIG.logWeight.getAsInt() : 1);
+                    this.getTileData().addTreeComponent(snapshot.getPos(), this.isLog(grownState) ? CONFIG.logWeight.get() : 1);
                 });
 
                 //Revert if something went wrong
                 if (!MiscUtil.getTileExists(evLevel, snapshot.getPos(), TileTranslucentTree.class, true)) {
-                    evLevel.setBlock(snapshot.getPos(), snapshot.getState(), Block.UPDATE_CLIENTS);
+                    evLevel.setBlock(snapshot.getPos(), grownState, Block.UPDATE_CLIENTS);
                 }
             });
             return true;

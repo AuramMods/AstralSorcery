@@ -10,8 +10,8 @@ package hellfirepvp.astralsorcery.common.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -29,9 +29,10 @@ import net.minecraftforge.common.util.BlockSnapshot;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -56,9 +57,13 @@ public class BlockUtil {
 
     public static List<ItemStack> getDrops(ServerLevel sLevel, BlockState state, BlockPos pos, int fortuneLevel, ItemStack stack) {
         stack = stack.copy();
-        EnchantmentHelper.updateEnchantments(stack, mutable -> {
-            mutable.set(sLevel.registryAccess().holderOrThrow(Enchantments.FORTUNE), fortuneLevel);
-        });
+        var enchantments = EnchantmentHelper.getEnchantments(stack);
+        if (fortuneLevel > 0) {
+            enchantments.put(Enchantments.BLOCK_FORTUNE, Mth.clamp(fortuneLevel, 0, 255));
+        } else {
+            enchantments.remove(Enchantments.BLOCK_FORTUNE);
+        }
+        EnchantmentHelper.setEnchantments(enchantments, stack);
         try {
             return Block.getDrops(state, sLevel, pos, sLevel.getBlockEntity(pos), null, stack);
         } catch (Exception exc) {
@@ -88,48 +93,63 @@ public class BlockUtil {
         level.capturedBlockSnapshots.clear();
         level.captureBlockSnapshots = true;
 
-        ChangeResult<T> result = fn.get();
-        List<BlockSnapshot> capturedSnapshots = new ArrayList<>(level.capturedBlockSnapshots.size());
-        ResourceKey<Level> dimKey = level.dimension();
-        level.capturedBlockSnapshots.stream()
-                .map(BlockSnapshot::getPos)
-                .collect(Collectors.toSet())
-                .forEach(pos -> capturedSnapshots.add(BlockSnapshot.create(dimKey, level, pos)));
+        ChangeResult<T> result;
+        List<BlockSnapshot> mutations;
+        List<BlockSnapshot> capturedSnapshots;
+        Map<BlockPos, BlockSnapshot> initialStates = new LinkedHashMap<>();
+        try {
+            result = fn.get();
+            mutations = List.copyOf(level.capturedBlockSnapshots);
+            mutations.forEach(snapshot -> initialStates.putIfAbsent(snapshot.getPos(), snapshot));
+            capturedSnapshots = initialStates.keySet().stream()
+                    .map(pos -> BlockSnapshot.create(level.dimension(), level, pos))
+                    .toList();
+        } catch (RuntimeException | Error failure) {
+            try {
+                restoreWorldState(level, List.copyOf(level.capturedBlockSnapshots));
+            } catch (RuntimeException | Error restoreFailure) {
+                failure.addSuppressed(restoreFailure);
+            }
+            throw failure;
+        } finally {
+            level.captureBlockSnapshots = wasCapturingBlockStates;
+            level.capturedBlockSnapshots.clear();
+            level.capturedBlockSnapshots.addAll(previousCapturedStates);
+        }
 
         if (result.revert) {
-            restoreWorldState(level, wasCapturingBlockStates, previousCapturedStates);
+            restoreWorldState(level, mutations);
+        } else if (wasCapturingBlockStates) {
+            level.capturedBlockSnapshots.addAll(mutations);
         } else {
-            applyWorldState(level, wasCapturingBlockStates, previousCapturedStates);
+            initialStates.values().forEach(snapshot -> applyBlockChange(level, snapshot));
         }
         return new LevelChanges<>(capturedSnapshots, result.value);
     }
 
-    private static void applyWorldState(Level level, boolean wasCapturingBlockStates, List<BlockSnapshot> previousCapturedStates) {
-        List<BlockSnapshot> captured = List.copyOf(level.capturedBlockSnapshots);
-        level.captureBlockSnapshots = wasCapturingBlockStates;
-        level.capturedBlockSnapshots.clear();
-        level.capturedBlockSnapshots.addAll(previousCapturedStates);
+    private static void applyBlockChange(Level level, BlockSnapshot snapshot) {
+        BlockPos pos = snapshot.getPos();
+        BlockState previous = snapshot.getReplacedBlock();
+        BlockState current = level.getBlockState(pos);
+        if (previous == current) return;
 
-        captured.forEach(snapshot -> {
-            int flags = snapshot.getFlags();
-            BlockState previous = snapshot.getState();
-            BlockState newState = level.getBlockState(snapshot.getPos());
-
-            newState.onPlace(level, snapshot.getPos(), previous, false);
-            level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()), previous, newState, flags, Block.UPDATE_LIMIT);
-        });
+        current.onPlace(level, pos, previous, false);
+        level.markAndNotifyBlock(pos, level.getChunkAt(pos), previous, current, snapshot.getFlag(), Block.UPDATE_LIMIT);
     }
 
-    private static void restoreWorldState(Level level, boolean wasCapturingBlockStates, List<BlockSnapshot> previousCapturedStates) {
+    private static void restoreWorldState(Level level, List<BlockSnapshot> snapshots) {
+        boolean wasCapturingBlockStates = level.captureBlockSnapshots;
+        boolean wasRestoringBlockStates = level.restoringBlockSnapshots;
         level.captureBlockSnapshots = false;
-
         level.restoringBlockSnapshots = true;
-        level.capturedBlockSnapshots.forEach(snapshot -> snapshot.restore(Block.UPDATE_ALL));
-        level.capturedBlockSnapshots.clear();
-        level.restoringBlockSnapshots = false;
-
-        level.captureBlockSnapshots = wasCapturingBlockStates;
-        level.capturedBlockSnapshots.addAll(previousCapturedStates);
+        try {
+            for (int index = snapshots.size() - 1; index >= 0; index--) {
+                snapshots.get(index).restore(true, true);
+            }
+        } finally {
+            level.restoringBlockSnapshots = wasRestoringBlockStates;
+            level.captureBlockSnapshots = wasCapturingBlockStates;
+        }
     }
 
     public static class ChangeResult<T> {
