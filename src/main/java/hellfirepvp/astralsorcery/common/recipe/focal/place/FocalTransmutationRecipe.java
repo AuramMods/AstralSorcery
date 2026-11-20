@@ -128,14 +128,14 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
 
     public BlockState getOutputState(RandomSource rand) {
         return WeightedRandom.getRandomItem(rand, this.outputStates)
-                .map(WeightedEntry.Wrapper::data)
+                .map(WeightedEntry.Wrapper::getData)
                 .orElse(Blocks.AIR.defaultBlockState());
 
     }
 
     public ItemStack getOutputForDisplay(long tick) {
         List<ItemStack> applicable = this.outputStates.stream()
-                .map(WeightedEntry.Wrapper::data)
+                .map(WeightedEntry.Wrapper::getData)
                 .map(ItemUtil::createBlockStack)
                 .filter(stack -> !stack.isEmpty())
                 .toList();
@@ -144,7 +144,7 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
 
     public List<ItemStack> getOutputForDisplay() {
         return this.outputStates.stream()
-                .map(WeightedEntry.Wrapper::data)
+                .map(WeightedEntry.Wrapper::getData)
                 .map(ItemUtil::createBlockStack)
                 .filter(stack -> !stack.isEmpty())
                 .toList();

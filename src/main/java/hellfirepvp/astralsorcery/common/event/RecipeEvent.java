@@ -33,8 +33,8 @@ import hellfirepvp.astralsorcery.common.tile.TileLumenArray;
 import hellfirepvp.astralsorcery.common.tile.TileLumenCrystallizer;
 import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -68,7 +68,8 @@ public class RecipeEvent<T extends CustomRecipe<T, I>, I extends CustomRecipeInp
             return this.activeRecipe;
         }
 
-        public static class Start extends Altar implements ICancellableEvent {
+        @Cancelable
+        public static class Start extends Altar {
 
             public Start(RecipeHolder<AltarRecipe> recipe, ActiveAltarRecipe activeRecipe) {
                 super(recipe, activeRecipe);
@@ -101,7 +102,8 @@ public class RecipeEvent<T extends CustomRecipe<T, I>, I extends CustomRecipeInp
             return this.activeRecipe;
         }
 
-        public static class Start extends Attunement implements ICancellableEvent {
+        @Cancelable
+        public static class Start extends Attunement {
 
             public Start(AttunementRecipe<?> recipe, AttunementRecipe.Active<?, ?> activeRecipe) {
                 super(recipe, activeRecipe);
@@ -129,7 +131,8 @@ public class RecipeEvent<T extends CustomRecipe<T, I>, I extends CustomRecipeInp
             return this.activeRecipe;
         }
 
-        public static class Start extends FocalCombine implements ICancellableEvent {
+        @Cancelable
+        public static class Start extends FocalCombine {
 
             public Start(ActiveFocalCombineRecipe activeRecipe) {
                 super(activeRecipe.getRecipeHolder(), activeRecipe);
@@ -157,7 +160,8 @@ public class RecipeEvent<T extends CustomRecipe<T, I>, I extends CustomRecipeInp
             return this.activeRecipe;
         }
 
-        public static class Start extends FocalTransmutation implements ICancellableEvent {
+        @Cancelable
+        public static class Start extends FocalTransmutation {
 
             public Start(ActiveFocalTransmutationRecipe activeRecipe) {
                 super(activeRecipe.getRecipeHolder(), activeRecipe);
@@ -185,7 +189,8 @@ public class RecipeEvent<T extends CustomRecipe<T, I>, I extends CustomRecipeInp
             return this.activeRecipe;
         }
 
-        public static class Start extends Infusion implements ICancellableEvent {
+        @Cancelable
+        public static class Start extends Infusion {
 
             public Start(RecipeHolder<InfusionRecipe> recipe, ActiveInfusionRecipe activeRecipe) {
                 super(recipe, activeRecipe);
@@ -206,7 +211,8 @@ public class RecipeEvent<T extends CustomRecipe<T, I>, I extends CustomRecipeInp
             super(recipe);
         }
 
-        public static class Start extends LiquidStarlight implements ICancellableEvent {
+        @Cancelable
+        public static class Start extends LiquidStarlight {
 
             public Start(RecipeHolder<LiquidStarlightRecipe> recipe) {
                 super(recipe);

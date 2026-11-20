@@ -11,7 +11,6 @@ package hellfirepvp.astralsorcery.common.recipe.focal.place;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipeInput;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -60,6 +59,6 @@ public class FocalTransmutationCraftingInput extends CustomRecipeInput {
 
     @Override
     public boolean isEmpty() {
-        return this.state.is(BlockTags.AIR);
+        return this.state.isAir();
     }
 }

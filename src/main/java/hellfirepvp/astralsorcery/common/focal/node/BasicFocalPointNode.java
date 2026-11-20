@@ -66,7 +66,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.neoforged.neoforge.common.util.TriState;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -303,7 +302,7 @@ public class BasicFocalPointNode extends FocalPointNode {
 
     private void tickTransmutation(ServerLevel sLevel) {
         this.activeTransmutationPositions.removeIf(pos ->
-                ActiveTransmutationHandler.receiveStarlight(sLevel, pos, this.getConstellation(), 1F, false) != TriState.TRUE);
+                ActiveTransmutationHandler.receiveStarlight(sLevel, pos, this.getConstellation(), 1F, false) != ActiveTransmutationHandler.Result.IN_PROGRESS);
 
         if (sLevel.getGameTime() % 40 == 0) {
             int range = BiasedSuppliers.getLowest(5, () -> rand.nextInt(4) + 1).get();

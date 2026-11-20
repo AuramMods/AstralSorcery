@@ -19,7 +19,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.neoforged.neoforge.common.util.TriState;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,6 +33,12 @@ import java.util.Optional;
  * Date: 07.09.2026 / 10:00
  */
 public class ActiveTransmutationHandler {
+
+    public enum Result {
+        NO_PROGRESS,
+        IN_PROGRESS,
+        COMPLETED
+    }
 
     private static final Map<ResourceKey<Level>, Map<BlockPos, ActiveFocalTransmutationRecipe>> activeRecipes = new HashMap<>();
 
@@ -61,30 +66,29 @@ public class ActiveTransmutationHandler {
         }, Optional.empty());
     }
 
-    public static TriState receiveStarlight(ServerLevel level, BlockPos pos, StarlightTransmissionPacket packet) {
+    public static Result receiveStarlight(ServerLevel level, BlockPos pos, StarlightTransmissionPacket packet) {
         return receiveStarlight(level, pos, packet.constellation(), packet.amount(), true);
     }
 
-    // false -> no recipe/nothing happened, true -> success, state still valid, default -> success, no longer valid in the future though from this view
-    public static TriState receiveStarlight(ServerLevel level, BlockPos pos, BaseConstellation cst, float amount, boolean isFocused) {
+    public static Result receiveStarlight(ServerLevel level, BlockPos pos, BaseConstellation cst, float amount, boolean isFocused) {
         Optional<ActiveFocalTransmutationRecipe> activeRecipeOpt = getOrCreateActiveTransmutation(level, pos, cst, isFocused);
         if (activeRecipeOpt.isEmpty()) {
-            return TriState.FALSE;
+            return Result.NO_PROGRESS;
         }
         ActiveFocalTransmutationRecipe activeRecipe = activeRecipeOpt.get();
         return activeRecipe.match(level, isFocused).map(usedInput -> {
             if (!activeRecipe.tick(level.getGameTime(), 1F)) {
                 removeTransmutation(level, pos);
-                return TriState.FALSE;
+                return Result.NO_PROGRESS;
             }
             FocalPointTransmutationSparkle.at(activeRecipe.getTransmutationPos(), activeRecipe.getRecipe().getColor()).sendToNearby(level);
             if (activeRecipe.isFinished()) {
                 activeRecipe.finish(usedInput, level);
                 MinecraftForge.EVENT_BUS.post(new RecipeEvent.FocalTransmutation.End(activeRecipe));
                 removeTransmutation(level, pos);
-                return TriState.DEFAULT;
+                return Result.COMPLETED;
             }
-            return TriState.TRUE;
-        }).orElse(TriState.FALSE);
+            return Result.IN_PROGRESS;
+        }).orElse(Result.NO_PROGRESS);
     }
 }
