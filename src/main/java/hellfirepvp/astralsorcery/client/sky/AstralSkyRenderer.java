@@ -11,7 +11,6 @@ package hellfirepvp.astralsorcery.client.sky;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import hellfirepvp.astralsorcery.client.config.RenderingConfig;
@@ -136,7 +135,6 @@ public class AstralSkyRenderer {
         // Vanilla behavior end
 
         LevelSkyContext ctx = LevelSkyHandler.getContext(level).orElse(null);
-        Tesselator tesselator = Tesselator.getInstance();
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         if (AssetLibrary.isReloading() || player == null) {
@@ -167,7 +165,7 @@ public class AstralSkyRenderer {
         FogRenderer.levelFogColor();
         RenderSystem.depthMask(false);
         RenderSystem.setShaderColor(skyR, skyG, skyB, 1);
-        this.skyBuffer.drawWithShader(pose.last().pose(), projectionMatrix);
+        this.skyBuffer.drawWithShader(pose.last().pose(), projectionMatrix, GameRenderer.getPositionShader());
 
         // Sunrise/Sunset tint
         RenderSystem.enableBlend();
@@ -201,7 +199,7 @@ public class AstralSkyRenderer {
         if (horizonDiff < 0) {
             pose.pushPose();
             pose.translate(0, 12, 0);
-            this.horizonBuffer.drawWithShader(pose.last().pose(), projectionMatrix);
+            this.horizonBuffer.drawWithShader(pose.last().pose(), projectionMatrix, GameRenderer.getPositionShader());
             pose.popPose();
         }
 

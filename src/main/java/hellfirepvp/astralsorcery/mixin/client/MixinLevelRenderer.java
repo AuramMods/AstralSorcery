@@ -13,14 +13,12 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import hellfirepvp.astralsorcery.client.ClientProxy;
 import hellfirepvp.astralsorcery.client.helper.ClientLinkHelper;
 import hellfirepvp.astralsorcery.client.helper.FocalPointEffectHelper;
-import hellfirepvp.astralsorcery.client.helper.GatewayInterfaceRenderHelper;
 import hellfirepvp.astralsorcery.client.sky.AstralSkyRenderer;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
@@ -34,7 +32,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.client.ClientHooks;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -60,24 +58,24 @@ public abstract class MixinLevelRenderer {
     @Shadow private static void renderShape(PoseStack poseStack, VertexConsumer consumer, VoxelShape shape, double x, double y, double z, float red, float green, float blue, float alpha) {}
 
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
-    public void specialSkyRenderer(Matrix4f frustumMatrix, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
+    public void specialSkyRenderer(PoseStack pose, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
         AstralSkyRenderer renderer = AstralSkyRenderer.getInstance();
         if (this.level != null && renderer.shouldRenderSpecialSky(this.level)) {
-            renderer.renderSky(this.level, frustumMatrix, projectionMatrix, partialTick, camera, isFoggy, skyFogSetup);
+            renderer.renderSky(this.level, pose.last().pose(), projectionMatrix, partialTick, camera, isFoggy, skyFogSetup);
             ci.cancel();
         }
     }
 
     @Inject(method = "renderSky", at = @At("RETURN"))
-    public void skyConstellationOverlay(Matrix4f frustumMatrix, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
+    public void skyConstellationOverlay(PoseStack pose, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
         AstralSkyRenderer renderer = AstralSkyRenderer.getInstance();
         if (this.level != null && renderer.shouldRenderConstellationOverlay(this.level)) {
-            renderer.renderConstellationOverlay(this.level, frustumMatrix, partialTick, camera, isFoggy, skyFogSetup);
+            renderer.renderConstellationOverlay(this.level, pose.last().pose(), partialTick, camera, isFoggy, skyFogSetup);
         }
     }
 
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V"))
-    public void renderStellarFilamentCustomHitRender(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+    public void renderStellarFilamentCustomHitRender(PoseStack pose, float partialTick, long finishTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
         if (!renderBlockOutline) return;
         HitResult result = Minecraft.getInstance().hitResult;
         if (result instanceof BlockHitResult bhr && bhr.getType() == HitResult.Type.MISS && this.level != null) {
@@ -87,8 +85,7 @@ public abstract class MixinLevelRenderer {
                 if (FocalPointEffectHelper.isInFocalPointArea(bhr.getBlockPos())) {
                     BlockHitResult blockHit = new BlockHitResult(bhr.getLocation(), bhr.getDirection(), bhr.getBlockPos(), bhr.isInside());
                     MultiBufferSource.BufferSource buffers = this.renderBuffers.bufferSource();
-                    PoseStack pose = new PoseStack(); //During actual rendering, this is also just identity.
-                    if (!ClientHooks.onDrawHighlight(MiscUtil.cast(this), camera, blockHit, deltaTracker, pose, buffers)) {
+                    if (!ForgeHooksClient.onDrawHighlight(MiscUtil.cast(this), camera, blockHit, partialTick, pose, buffers)) {
                         if (this.level.getWorldBorder().isWithinBounds(bhr.getBlockPos())) {
                             BlockState placeable = BlocksAS.STELLAR_FILAMENT.get().defaultBlockState();
                             VertexConsumer buf = buffers.getBuffer(RenderType.lines());
@@ -112,10 +109,9 @@ public abstract class MixinLevelRenderer {
     }
 
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V"))
-    public void renderLinkSessionSourceOutline(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+    public void renderLinkSessionSourceOutline(PoseStack pose, float partialTick, long finishTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
         if (!renderBlockOutline || this.level == null) return;
         ClientLinkHelper.getActiveSession().ifPresent(session -> {
-            PoseStack pose = new PoseStack();
             MultiBufferSource.BufferSource buffers = this.renderBuffers.bufferSource();
             VertexConsumer buf = buffers.getBuffer(RenderType.lines());
             Vec3 cameraPos = camera.getPosition();
@@ -140,9 +136,7 @@ public abstract class MixinLevelRenderer {
                 if (entity == null) return;
                 VoxelShape shape = Shapes.create(entity.getBoundingBox());
                 renderShape(pose, buf, shape,
-                        entity.getX() - cameraPos.x(),
-                        entity.getY() - cameraPos.y(),
-                        entity.getZ() - cameraPos.z(),
+                        -cameraPos.x(), -cameraPos.y(), -cameraPos.z(),
                         color.getRed() / 255F,
                         color.getGreen() / 255F,
                         color.getBlue() / 255F,
