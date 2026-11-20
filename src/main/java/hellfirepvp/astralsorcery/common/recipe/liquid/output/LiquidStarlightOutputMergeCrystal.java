@@ -34,7 +34,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import org.checkerframework.checker.units.qual.N;
 
 import java.util.List;
 import java.util.Optional;

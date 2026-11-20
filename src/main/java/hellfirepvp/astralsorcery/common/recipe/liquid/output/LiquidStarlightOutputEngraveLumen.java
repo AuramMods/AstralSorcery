@@ -45,7 +45,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,7 +107,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
         if (cmp.getTotalTierCount() >= cmp.getProperties().maxTierCount()) return;
 
         RandomSource rand = RandomSource.create();
-        CrystalProperty prop = WeightedRandom.getRandomItem(rand, this.properties).map(WeightedEntry.Wrapper::data).orElse(null);
+        CrystalProperty prop = WeightedRandom.getRandomItem(rand, this.properties).map(WeightedEntry.Wrapper::getData).orElse(null);
         if (prop != null) {
             int tier = cmp.getAttributeTier(prop);
             if (tier < prop.getMaxTier()) {
@@ -134,7 +133,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
     public void playCraftingEffects(LiquidStarlightRecipe recipe, LiquidStarlightRecipeInput input, RandomSource rand, int craftingTick) {
         super.playCraftingEffects(recipe, input, rand, craftingTick);
 
-        Holder<Lumen> lumenRef = LumenAS.NONE;
+        Holder<Lumen> lumenRef = LumenAS.NONE.holder();
         for (ItemEntity other : input.getOtherEntities()) {
             Holder<Lumen> otherRef = DataComponentsAS.LUMEN.getOrDefault(other.getItem(), LumenComponent.EMPTY).lumen();
             if (!otherRef.is(LumenAS.NONE.getKey())) {
@@ -196,7 +195,7 @@ public class LiquidStarlightOutputEngraveLumen extends LiquidStarlightRecipeOutp
         }
 
         public Builder add(CrystalProperty property, Weight weight) {
-            this.properties.add(new WeightedEntry.Wrapper<>(property, weight));
+            this.properties.add(WeightedEntry.wrap(property, weight.asInt()));
             return this;
         }
 

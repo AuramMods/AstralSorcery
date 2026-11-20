@@ -79,7 +79,7 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
         ItemUtil.appendLore(output, Component.translatable("ingredient.astralsorcery.lumen_engraving.description").withStyle(ChatFormatting.RESET).withStyle(ChatFormatting.GRAY));
         for (WeightedEntry.Wrapper<CrystalProperty> property : this.getProperties()) {
             ItemUtil.appendLore(output, Component.translatable("ingredient.astralsorcery.lumen_engraving.description.element",
-                            property.data().getName(1, tick))
+                            property.getData().getName(1, tick))
                     .withStyle(ChatFormatting.GRAY));
         }
         return output;
@@ -91,7 +91,7 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
         if (cmp.getTotalTierCount() >= cmp.getProperties().maxTierCount()) return output;
 
         RandomSource rand = RandomSource.create();
-        CrystalProperty prop = WeightedRandom.getRandomItem(rand, this.getProperties()).map(WeightedEntry.Wrapper::data).orElse(null);
+        CrystalProperty prop = WeightedRandom.getRandomItem(rand, this.getProperties()).map(WeightedEntry.Wrapper::getData).orElse(null);
         if (prop != null) {
             int tier = cmp.getAttributeTier(prop);
             if (tier < prop.getMaxTier()) {
@@ -125,7 +125,7 @@ public class AltarOutputEngraveLumen extends AltarRecipeOutputModifier {
         }
 
         public Builder add(CrystalProperty property, Weight weight) {
-            this.properties.add(new WeightedEntry.Wrapper<>(property, weight));
+            this.properties.add(WeightedEntry.wrap(property, weight.asInt()));
             return this;
         }
 

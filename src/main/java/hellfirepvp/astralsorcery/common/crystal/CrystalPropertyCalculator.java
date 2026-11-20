@@ -8,24 +8,14 @@
 
 package hellfirepvp.astralsorcery.common.crystal;
 
-import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
-import hellfirepvp.astralsorcery.common.item.tool.CrystalAxeItem;
-import hellfirepvp.astralsorcery.common.item.tool.CrystalSwordItem;
-import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.CrystalPropertiesAS;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.event.ItemAttributeModifierEvent;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**

@@ -12,13 +12,11 @@ import com.google.common.collect.Lists;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.lib.CrystalPropertiesAS;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -43,9 +41,9 @@ public class CrystalPropertyGenerator {
         while (!availableProperties.isEmpty() && toGenerate > 0) {
             Optional<WeightedEntry.Wrapper<CrystalProperty>> randProperty = WeightedRandom.getRandomItem(rand, availableProperties);
             if (randProperty.isEmpty()) break;
-            WeightedEntry.Wrapper<CrystalProperty> property = randProperty.get();
-            int existing = component.getAttribute(property.data()).map(CrystalAttributesComponent.TieredAttribute::getTier).orElse(0);
-            component = component.setAttributeTier(property.data(), existing + 1);
+            CrystalProperty property = randProperty.get().getData();
+            int existing = component.getAttribute(property).map(CrystalAttributesComponent.TieredAttribute::getTier).orElse(0);
+            component = component.setAttributeTier(property, existing + 1);
             removeMaxProperties(component, availableProperties);
             toGenerate--;
         }
@@ -54,7 +52,7 @@ public class CrystalPropertyGenerator {
 
     private static void removeMaxProperties(CrystalAttributesComponent component, List<WeightedEntry.Wrapper<CrystalProperty>> properties) {
         properties.removeIf(weightedEntry -> {
-            CrystalProperty prop = weightedEntry.data();
+            CrystalProperty prop = weightedEntry.getData();
             return component.getAttribute(prop)
                     .map(tieredAttr -> tieredAttr.getTier() >= prop.getMaxTier())
                     .orElse(false);
@@ -63,9 +61,9 @@ public class CrystalPropertyGenerator {
 
     private static List<WeightedEntry.Wrapper<CrystalProperty>> getPropertiesToGenerate() {
         return Lists.newArrayList(
-                new WeightedEntry.Wrapper<>(CrystalPropertiesAS.SIZE.get(), Weight.of(4)),
-                new WeightedEntry.Wrapper<>(CrystalPropertiesAS.PURITY.get(), Weight.of(1)),
-                new WeightedEntry.Wrapper<>(CrystalPropertiesAS.CUT.get(), Weight.of(2))
+                WeightedEntry.wrap(CrystalPropertiesAS.SIZE.get(), 4),
+                WeightedEntry.wrap(CrystalPropertiesAS.PURITY.get(), 1),
+                WeightedEntry.wrap(CrystalPropertiesAS.CUT.get(), 2)
         );
     }
 
