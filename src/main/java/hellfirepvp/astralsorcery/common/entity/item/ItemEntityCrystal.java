@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.entity.item;
 
+import hellfirepvp.astralsorcery.common.item.ChiselItem;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.entity.ItemEntityChiselAttackable;
 import hellfirepvp.astralsorcery.common.event.CrystalPropertyEvent;
@@ -15,21 +16,16 @@ import hellfirepvp.astralsorcery.common.item.crystal.RockCrystalItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.neoforged.neoforge.event.EventHooks;
 
 import java.util.List;
 
@@ -76,15 +72,11 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
 
         boolean didSplit = false;
         if (random.nextFloat() < 0.5F) {
-            Holder<Enchantment> fortune = sPlayer.serverLevel().holderOrThrow(Enchantments.FORTUNE);
-            int fortuneLevel = EnchantmentHelper.getEnchantmentLevel(fortune, sPlayer);
+            int fortuneLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE, sPlayer);
             didSplit = this.splitCrystal(thisItem, crystalStack, thisAttributes, fortuneLevel);
         }
         if (didSplit || random.nextFloat() < 0.5F) {
-            chisel.hurtAndBreak(1, sPlayer.serverLevel(), sPlayer, (item) -> {
-                sPlayer.onEquippedItemBroken(item, EquipmentSlot.MAINHAND);
-                EventHooks.onPlayerDestroyItem(sPlayer, chisel, InteractionHand.MAIN_HAND);
-            });
+            ChiselItem.damageAfterUse(chisel, sPlayer, 1);
         }
     }
 
@@ -99,9 +91,9 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
             return false;
         }
         int lostModifiers = 0;
-        if (maxSplit > 1 && this.getRandom().nextFloat() < (0.9F / (fortuneLevel + 1))) {
+        if (maxSplit > 1 && this.random.nextFloat() < (0.9F / (fortuneLevel + 1))) {
             lostModifiers++;
-            if (maxSplit > 2 && this.getRandom().nextFloat() < (0.6F / (fortuneLevel + 1))) {
+            if (maxSplit > 2 && this.random.nextFloat() < (0.6F / (fortuneLevel + 1))) {
                 lostModifiers++;
             }
         }
@@ -111,7 +103,7 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
         CrystalAttributesComponent newAttributes = CrystalAttributesComponent.empty(props.generateCount(), props.maxTierCount());
 
         for (int i = 0; i < maxSplit; i++) {
-            CrystalAttributesComponent.TieredAttribute attr = MiscUtil.getRandomEntry(thisAttributes.getAttributes(), this.getRandom()).orElse(null);
+            CrystalAttributesComponent.TieredAttribute attr = MiscUtil.getRandomEntry(thisAttributes.getAttributes(), this.random).orElse(null);
             if (attr == null) {
                 break;
             }
@@ -134,7 +126,7 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
             return true;
         }
 
-        thisAttributes = results.getFirst();
+        thisAttributes = results.get(0);
 
         ItemStack thisStack = this.getItem();
         DataComponentsAS.CRYSTAL_ATTRIBUTES.set(thisStack, thisAttributes);

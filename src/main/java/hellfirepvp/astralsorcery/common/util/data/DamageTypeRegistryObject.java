@@ -9,14 +9,13 @@
 package hellfirepvp.astralsorcery.common.util.data;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
@@ -34,14 +33,10 @@ public record DamageTypeRegistryObject(ResourceKey<DamageType> id, Supplier<Dama
     }
 
     public DamageSource source(Level level) {
-        return source(level.damageSources());
+        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(this.id));
     }
 
-    public DamageSource source(DamageSources src) {
-        return src.source(this.id());
-    }
-
-    public void register(BootstrapContext<DamageType> context) {
+    public void register(BootstapContext<DamageType> context) {
         AstralSorcery.assertDataGeneration();
         context.register(this.id(), this.damageType().get());
     }

@@ -12,7 +12,6 @@ import hellfirepvp.astralsorcery.common.lib.DamageTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.util.level.DayTimeHelper;
 import hellfirepvp.astralsorcery.common.visual.type.CelestialStrikeEffect;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -20,7 +19,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.AABB;
@@ -53,7 +51,6 @@ public class CelestialStrike {
         }
 
         float dmg = (25F + DayTimeHelper.getCurrentDaytimeDistribution(sLevel) * 10F) * damageMultiplier;
-        Holder<Enchantment> fireAspect = sLevel.holderOrThrow(Enchantments.FIRE_ASPECT);
 
         for (LivingEntity living : targets) {
             if (isProtectedTarget(living)) {
@@ -80,7 +77,7 @@ public class CelestialStrike {
             } else {
                 DamageUtil.attackEntityFrom(living, DamageTypesAS.STELLAR, dmgDealt, attacker);
 
-                int fireAspectLevel = EnchantmentHelper.getEnchantmentLevel(fireAspect, attacker);
+                int fireAspectLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_ASPECT, attacker);
                 if (fireAspectLevel > 0 && !living.isOnFire()) {
                     living.setRemainingFireTicks(fireAspectLevel * 80);
                 }

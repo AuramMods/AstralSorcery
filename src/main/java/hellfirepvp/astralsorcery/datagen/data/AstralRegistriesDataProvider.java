@@ -16,7 +16,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -49,11 +49,11 @@ public class AstralRegistriesDataProvider {
         return BUILDER;
     }
 
-    private static void generateDamageTypes(BootstrapContext<DamageType> context) {
+    private static void generateDamageTypes(BootstapContext<DamageType> context) {
         DamageTypesAS.STELLAR.register(context);
     }
 
-    private static void generateEnchantments(BootstrapContext<Enchantment> context) {
+    private static void generateEnchantments(BootstapContext<Enchantment> context) {
         HolderGetter<Item> items = context.lookup(Registries.ITEM);
         HolderGetter<Enchantment> enchantments = context.lookup(Registries.ENCHANTMENT);
 

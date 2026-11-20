@@ -9,10 +9,13 @@
 package hellfirepvp.astralsorcery.common.item;
 
 import hellfirepvp.astralsorcery.common.item.base.ItemCustom;
-import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraftforge.event.ForgeEventFactory;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -34,7 +37,14 @@ public class ChiselItem extends ItemCustom {
     }
 
     @Override
-    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(Enchantments.UNBREAKING) || enchantment.is(Enchantments.FORTUNE);
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return enchantment == Enchantments.UNBREAKING || enchantment == Enchantments.BLOCK_FORTUNE;
+    }
+
+    public static void damageAfterUse(ItemStack chisel, ServerPlayer player, int amount) {
+        chisel.hurtAndBreak(amount, player, owner -> {
+            owner.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+            ForgeEventFactory.onPlayerDestroyItem(owner, chisel, InteractionHand.MAIN_HAND);
+        });
     }
 }

@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 public class DamageUtil {
 
     public static boolean attackEntity(Entity entity, DamageTypeRegistryObject src, float amount) {
-        return attackEntity(entity, src.source(entity.damageSources()), amount);
+        return attackEntity(entity, src.source(entity.level()), amount);
     }
 
     public static boolean attackEntity(Entity entity, DamageSource src, float amount) {
@@ -32,7 +32,7 @@ public class DamageUtil {
     }
 
     public static boolean attackEntityFrom(Entity entity, DamageTypeRegistryObject src, float amount, Entity newSource) {
-        return attackEntityFrom(entity, src.source(entity.damageSources()), amount, newSource);
+        return attackEntityFrom(entity, src.source(entity.level()), amount, newSource);
     }
 
     public static boolean attackEntityFrom(Entity entity, DamageSource src, float amount, Entity newSource) {

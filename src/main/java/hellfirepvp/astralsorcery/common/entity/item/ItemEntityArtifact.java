@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.entity.item;
 
+import hellfirepvp.astralsorcery.common.item.ChiselItem;
 import hellfirepvp.astralsorcery.common.artifact.*;
 import hellfirepvp.astralsorcery.common.artifact.condition.data.ArtifactConditionLoader;
 import hellfirepvp.astralsorcery.common.artifact.effect.data.ArtifactEffectLoader;
@@ -23,8 +24,6 @@ import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.ServerSoundHelper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -39,20 +38,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -371,8 +366,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
                     });
                 }
 
-                Holder<Enchantment> fortuneEnch = sPlayer.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE);
-                int fortune = chisel.getEnchantmentLevel(fortuneEnch);
+                int fortune = chisel.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
                 float breakChance = 0.4F;
                 breakChance -= Mth.clamp(fortune, 0, 10) * 0.03F;
                 if (random.nextFloat() < breakChance) {
@@ -382,10 +376,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
                 }
             }
             if (random.nextFloat() < 0.75F) {
-                chisel.hurtAndBreak(1 + random.nextInt(2), sPlayer.serverLevel(), sPlayer, (item) -> {
-                    sPlayer.onEquippedItemBroken(item, EquipmentSlot.MAINHAND);
-                    EventHooks.onPlayerDestroyItem(sPlayer, chisel, InteractionHand.MAIN_HAND);
-                });
+                ChiselItem.damageAfterUse(chisel, sPlayer, 1 + random.nextInt(2));
             }
         }
     }

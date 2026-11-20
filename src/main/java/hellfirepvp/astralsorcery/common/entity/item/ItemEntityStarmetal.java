@@ -8,24 +8,16 @@
 
 package hellfirepvp.astralsorcery.common.entity.item;
 
+import hellfirepvp.astralsorcery.common.item.ChiselItem;
 import hellfirepvp.astralsorcery.common.entity.ItemEntityChiselAttackable;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.EventHooks;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -57,8 +49,7 @@ public class ItemEntityStarmetal extends ItemEntityChiselAttackable {
         if (random.nextFloat() < 0.4F) {
             ItemUtil.dropItemNaturally(this.level(), this.getX(), this.getY(), this.getZ(), ItemsAS.STARDUST.toStack());
 
-            Holder<Enchantment> fortuneEnch = sPlayer.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE);
-            int fortune = chisel.getEnchantmentLevel(fortuneEnch);
+            int fortune = chisel.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
             float ingotBreakChance = 0.9F;
             ingotBreakChance -= Mth.clamp(fortune, 0, 10) * 0.07F;
             if (random.nextFloat() < ingotBreakChance) {
@@ -67,15 +58,9 @@ public class ItemEntityStarmetal extends ItemEntityChiselAttackable {
                 this.setItem(thisStack);
             }
 
-            chisel.hurtAndBreak(1, sPlayer.serverLevel(), sPlayer, (item) -> {
-                sPlayer.onEquippedItemBroken(item, EquipmentSlot.MAINHAND);
-                EventHooks.onPlayerDestroyItem(sPlayer, chisel, InteractionHand.MAIN_HAND);
-            });
+            ChiselItem.damageAfterUse(chisel, sPlayer, 1);
         } else if (random.nextFloat() < 0.6F) {
-            chisel.hurtAndBreak(1, sPlayer.serverLevel(), sPlayer, (item) -> {
-                sPlayer.onEquippedItemBroken(item, EquipmentSlot.MAINHAND);
-                EventHooks.onPlayerDestroyItem(sPlayer, chisel, InteractionHand.MAIN_HAND);
-            });
+            ChiselItem.damageAfterUse(chisel, sPlayer, 1);
         }
     }
 }
