@@ -24,7 +24,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -103,7 +103,7 @@ public class LiquidInteractionRecipeCategory extends ASRecipeCategory<LiquidInte
         List<FluidStack> variants = collectVariants(reactant);
         builder.addSlot(RecipeIngredientRole.INPUT, x, y)
                 .setFluidRenderer(reactant.amount(), false, 16, 16)
-                .addIngredients(NeoForgeTypes.FLUID_STACK, variants);
+                .addIngredients(ForgeTypes.FLUID_STACK, variants);
     }
 
     private static List<FluidStack> collectVariants(SizedFluidIngredient reactant) {
@@ -114,7 +114,7 @@ public class LiquidInteractionRecipeCategory extends ASRecipeCategory<LiquidInte
             if (sample.isEmpty() || !seen.add(sample.getFluid())) {
                 continue;
             }
-            variants.add(sample.copyWithAmount(reactant.amount()));
+            variants.add(sample);
         }
         return variants;
     }

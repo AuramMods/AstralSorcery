@@ -101,8 +101,7 @@ public class ASJeiPlugin implements IModPlugin {
                         .map(lumen -> LumenStack.of(lumen, LumenStack.FLASK_VALUE))
                         .toList(),
                 new LumenIngredientHelper(registration.getSubtypeManager()),
-                new LumenIngredientRenderer(LumenIngredientRenderer.Display.ICON),
-                LumenStack.CODEC);
+                new LumenIngredientRenderer(LumenIngredientRenderer.Display.ICON));
     }
 
     @Override

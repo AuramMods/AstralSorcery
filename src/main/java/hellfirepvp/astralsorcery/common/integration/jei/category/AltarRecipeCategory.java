@@ -32,7 +32,7 @@ import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -174,7 +174,7 @@ public class AltarRecipeCategory extends ASRecipeCategory<AltarRecipe> {
             } else if (ingredient instanceof FluidStack fluidStack) {
                 builder.addSlot(RecipeIngredientRole.INPUT, offsetX, offsetY)
                         .setFluidRenderer(1000, false, 16, 16)
-                        .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(fluidStack));
+                        .addIngredients(ForgeTypes.FLUID_STACK, List.of(fluidStack));
             }
         }
     }

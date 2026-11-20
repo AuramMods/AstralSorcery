@@ -9,14 +9,11 @@
 package hellfirepvp.astralsorcery.common.integration.jei.ingredient;
 
 import com.google.common.base.MoreObjects;
-import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.lumen.LumenStack;
-import mezz.jei.api.helpers.IColorHelper;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientType;
-import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.ingredients.subtypes.ISubtypeManager;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.core.Holder;
@@ -25,10 +22,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -76,8 +71,8 @@ public class LumenIngredientHelper implements IIngredientHelper<LumenStack> {
     }
 
     @Override
-    public Object getGroupingUid(LumenStack ingredient) {
-        return ingredient.getLumen();
+    public String getGroupingUid(LumenStack ingredient) {
+        return "lumen:" + this.getResourceLocation(ingredient);
     }
 
     @Override

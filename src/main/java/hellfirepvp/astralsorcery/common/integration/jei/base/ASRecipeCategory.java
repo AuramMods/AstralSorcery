@@ -17,9 +17,9 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
@@ -101,7 +101,7 @@ public abstract class ASRecipeCategory<T> implements IRecipeCategory<T> {
 
     public abstract List<T> provideRecipes(RecipeManager recipeManager, IRecipeRegistration register);
 
-    protected static <I extends RecipeInput, R extends Recipe<I>> List<R> provideRawRecipes(RecipeManager mgr, ResolvingRecipeTypeRegistryObject<R> type) {
+    protected static <C extends Container, R extends Recipe<C>> List<R> provideRawRecipes(RecipeManager mgr, ResolvingRecipeTypeRegistryObject<R> type) {
         return mgr.getAllRecipesFor(type.get());
     }
 }
