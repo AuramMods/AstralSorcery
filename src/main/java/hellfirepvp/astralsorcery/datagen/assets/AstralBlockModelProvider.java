@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.datagen.assets;
 
 import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
 import hellfirepvp.astralsorcery.datagen.assets.model.ColumnModelBuilder;
 import hellfirepvp.astralsorcery.datagen.assets.model.PillarModelBuilder;
@@ -40,6 +41,9 @@ public class AstralBlockModelProvider extends BlockModelProvider {
     @Override
     protected void registerModels() {
         this.registerModelTemplates();
+
+        var liquidStarlight = FluidsAS.LIQUID_STARLIGHT.getFluidBlock();
+        this.getBuilder(modelName(liquidStarlight)).texture("particle", blockTextureName(liquidStarlight).withSuffix("_still"));
 
         this.cubeBottomTop(modelName(MARBLE_ARCH), blockTextureName(MARBLE_ARCH), blockTextureName(MARBLE_RAW), blockTextureName(MARBLE_RAW));
         this.cubeAll(modelName(MARBLE_BRICKS), blockTextureName(MARBLE_BRICKS));
