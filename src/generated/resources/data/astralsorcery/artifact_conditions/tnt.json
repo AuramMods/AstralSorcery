@@ -7,7 +7,9 @@
       "min_inclusive": 3
     },
     "blockPredicate": {
-      "blocks": "minecraft:tnt"
+      "blocks": [
+        "minecraft:tnt"
+      ]
     },
     "id": "astralsorcery:tnt",
     "range": 6

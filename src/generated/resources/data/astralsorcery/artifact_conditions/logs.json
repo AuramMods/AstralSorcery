@@ -7,7 +7,7 @@
       "min_inclusive": 4
     },
     "blockPredicate": {
-      "blocks": "#minecraft:logs"
+      "tag": "minecraft:logs"
     },
     "id": "astralsorcery:logs",
     "range": 7

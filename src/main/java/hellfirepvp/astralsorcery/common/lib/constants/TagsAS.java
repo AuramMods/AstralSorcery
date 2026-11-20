@@ -85,6 +85,11 @@ public class TagsAS {
 
     public static class EntityTypes {
 
+        public static final TagKey<EntityType<?>> ZOMBIES =
+                TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("minecraft", "zombies"));
+        public static final TagKey<EntityType<?>> AQUATIC =
+                TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("minecraft", "aquatic"));
+
         public static final TagKey<EntityType<?>> CAPTURING_NOT_SUPPORTED =
                 TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("c", "capturing_not_supported"));
         public static final TagKey<EntityType<?>> TELEPORTING_NOT_SUPPORTED =
@@ -119,6 +124,8 @@ public class TagsAS {
     public static class DamageTypes {
 
         public static final TagKey<DamageType> IS_ELEMENTAL = damageTypeTag("is_elemental");
+        public static final TagKey<DamageType> IS_MAGIC =
+                TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("forge", "is_magic"));
 
     }
 

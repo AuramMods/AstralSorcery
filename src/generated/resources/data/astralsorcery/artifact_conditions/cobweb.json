@@ -7,7 +7,9 @@
       "min_inclusive": 3
     },
     "blockPredicate": {
-      "blocks": "minecraft:cobweb"
+      "blocks": [
+        "minecraft:cobweb"
+      ]
     },
     "id": "astralsorcery:cobweb",
     "range": 5

@@ -7,7 +7,7 @@
       "min_inclusive": 4
     },
     "blockPredicate": {
-      "blocks": "#minecraft:flowers"
+      "tag": "minecraft:flowers"
     },
     "id": "astralsorcery:flowers",
     "range": 7

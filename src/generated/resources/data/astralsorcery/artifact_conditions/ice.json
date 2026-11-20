@@ -7,7 +7,7 @@
       "min_inclusive": 2
     },
     "blockPredicate": {
-      "blocks": "#minecraft:ice"
+      "tag": "minecraft:ice"
     },
     "id": "astralsorcery:ice",
     "range": 6

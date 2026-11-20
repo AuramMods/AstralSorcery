@@ -14,7 +14,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +42,7 @@ public class AstralDamageTypeTagProvider extends DamageTypeTagsProvider {
                 .addOptional(STELLAR.idLocation());
         this.tag(DamageTypeTags.WITCH_RESISTANT_TO)
                 .addOptional(STELLAR.idLocation());
-        this.tag(Tags.DamageTypes.IS_MAGIC)
+        this.tag(TagsAS.DamageTypes.IS_MAGIC)
                 .addOptional(STELLAR.idLocation());
 
         this.tag(TagsAS.DamageTypes.IS_ELEMENTAL)

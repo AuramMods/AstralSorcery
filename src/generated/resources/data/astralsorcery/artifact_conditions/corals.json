@@ -7,7 +7,7 @@
       "min_inclusive": 2
     },
     "blockPredicate": {
-      "blocks": "#minecraft:coral_blocks"
+      "tag": "minecraft:coral_blocks"
     },
     "id": "astralsorcery:corals",
     "range": 7

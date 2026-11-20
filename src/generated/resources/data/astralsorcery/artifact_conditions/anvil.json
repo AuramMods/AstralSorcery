@@ -7,7 +7,7 @@
       "min_inclusive": 1
     },
     "blockPredicate": {
-      "blocks": "#minecraft:anvil"
+      "tag": "minecraft:anvil"
     },
     "id": "astralsorcery:anvil",
     "range": 5

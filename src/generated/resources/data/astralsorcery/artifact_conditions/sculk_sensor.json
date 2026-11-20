@@ -7,7 +7,9 @@
       "min_inclusive": 1
     },
     "blockPredicate": {
-      "blocks": "minecraft:sculk_sensor"
+      "blocks": [
+        "minecraft:sculk_sensor"
+      ]
     },
     "id": "astralsorcery:sculk_sensor",
     "range": 5

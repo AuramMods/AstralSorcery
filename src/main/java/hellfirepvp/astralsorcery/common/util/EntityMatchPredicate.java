@@ -14,6 +14,7 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.CriterionPredicateCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 
@@ -32,7 +33,7 @@ public class EntityMatchPredicate {
     public static final Codec<EntityMatchPredicate> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             UUIDUtil.CODEC.optionalFieldOf("ownerId").forGetter(EntityMatchPredicate::getOwnerId),
             Codec.BOOL.fieldOf("targetPlayers").forGetter(EntityMatchPredicate::doesTargetPlayers),
-            EntityPredicate.CODEC.fieldOf("entityPredicate").forGetter(EntityMatchPredicate::getEntityPredicate)
+            CriterionPredicateCodecs.ENTITY.fieldOf("entityPredicate").forGetter(EntityMatchPredicate::getEntityPredicate)
     ).apply(inst, EntityMatchPredicate::new));
     public static final StreamCodec<FriendlyByteBuf, EntityMatchPredicate> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.UUID_CODEC), EntityMatchPredicate::getOwnerId,

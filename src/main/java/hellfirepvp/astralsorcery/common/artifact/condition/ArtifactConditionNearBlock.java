@@ -22,6 +22,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
+import hellfirepvp.astralsorcery.common.util.codec.CriterionPredicateCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +42,7 @@ public class ArtifactConditionNearBlock extends ArtifactCondition {
 
     public static final MapCodec<ArtifactConditionNearBlock> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(ArtifactCondition::getId),
-            BlockPredicate.CODEC.fieldOf("blockPredicate").forGetter(ArtifactConditionNearBlock::getBlockPredicate),
+            CriterionPredicateCodecs.BLOCK.fieldOf("blockPredicate").forGetter(ArtifactConditionNearBlock::getBlockPredicate),
             IntRange.CODEC.fieldOf("blockCountNeeded").forGetter(ArtifactConditionNearBlock::getBlockCountNeeded),
             Codec.INT.fieldOf("range").forGetter(ArtifactConditionNearBlock::getRange),
             Codec.FLOAT.fieldOf("blockConsumptionChance").forGetter(ArtifactConditionNearBlock::getBlockConsumptionChance)
@@ -49,7 +50,7 @@ public class ArtifactConditionNearBlock extends ArtifactCondition {
     public static final StreamCodec<FriendlyByteBuf, ArtifactConditionNearBlock> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.RESOURCE_LOCATION,
             ArtifactCondition::getId,
-            BlockPredicate.STREAM_CODEC,
+            ByteBufCodecs.fromCodec(CriterionPredicateCodecs.BLOCK),
             ArtifactConditionNearBlock::getBlockPredicate,
             IntRange.STREAM_CODEC,
             ArtifactConditionNearBlock::getBlockCountNeeded,

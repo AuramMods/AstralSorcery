@@ -8,8 +8,7 @@
     },
     "blockPredicate": {
       "blocks": [
-        "minecraft:spawner",
-        "minecraft:trial_spawner"
+        "minecraft:spawner"
       ]
     },
     "id": "astralsorcery:spawner",

@@ -7,7 +7,9 @@
       "min_inclusive": 1
     },
     "blockPredicate": {
-      "blocks": "minecraft:cartography_table"
+      "blocks": [
+        "minecraft:cartography_table"
+      ]
     },
     "id": "astralsorcery:cartography_table",
     "range": 4

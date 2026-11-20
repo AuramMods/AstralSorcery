@@ -21,8 +21,9 @@ import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.Level;
+
+import java.util.Locale;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -33,10 +34,14 @@ import net.minecraft.world.level.Level;
  */
 public class ArtifactEffectExplode extends ArtifactEffect {
 
+    private static final Codec<Level.ExplosionInteraction> INTERACTION_CODEC = CodecUtil.stringifyCodec(
+            name -> Level.ExplosionInteraction.valueOf(name.toUpperCase(Locale.ROOT)),
+            interaction -> interaction.name().toLowerCase(Locale.ROOT));
+
     public static final MapCodec<ArtifactEffectExplode> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(ArtifactEffect::getId),
             Codec.INT.fieldOf("range").forGetter(ArtifactEffectExplode::getRange),
-            Level.ExplosionInteraction.CODEC.fieldOf("interaction").forGetter(ArtifactEffectExplode::getInteraction)
+            INTERACTION_CODEC.fieldOf("interaction").forGetter(ArtifactEffectExplode::getInteraction)
     ).apply(inst, ArtifactEffectExplode::new));
     public static final StreamCodec<FriendlyByteBuf, ArtifactEffectExplode> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.RESOURCE_LOCATION,

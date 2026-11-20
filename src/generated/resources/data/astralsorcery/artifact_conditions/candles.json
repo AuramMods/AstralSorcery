@@ -7,7 +7,7 @@
       "min_inclusive": 3
     },
     "blockPredicate": {
-      "blocks": "#minecraft:candles"
+      "tag": "minecraft:candles"
     },
     "id": "astralsorcery:candles",
     "range": 6

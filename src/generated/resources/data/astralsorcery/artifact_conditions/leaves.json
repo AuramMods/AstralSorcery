@@ -7,7 +7,7 @@
       "min_inclusive": 4
     },
     "blockPredicate": {
-      "blocks": "#minecraft:leaves"
+      "tag": "minecraft:leaves"
     },
     "id": "astralsorcery:leaves",
     "range": 7

@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.datagen.data.artifact;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.Mods;
 import hellfirepvp.astralsorcery.common.artifact.condition.data.ArtifactConditionProvider;
+import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import hellfirepvp.astralsorcery.common.util.data.IntRange;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -56,7 +57,7 @@ public class AstralArtifactConditionProvider extends ArtifactConditionProvider {
 
     private void registerBlockConditions() {
         this.newCondition("spawner")
-                .build(this.blocksNear(block().of(Blocks.SPAWNER, Blocks.TRIAL_SPAWNER))
+                .build(this.blocksNear(block().of(Blocks.SPAWNER))
                         .setRange(4).build());
         this.newCondition("observer")
                 .build(this.blocksNear(block().of(Blocks.OBSERVER))
@@ -119,13 +120,13 @@ public class AstralArtifactConditionProvider extends ArtifactConditionProvider {
 
     private void registerEntityConditions() {
         this.newCondition("zombies")
-                .build(this.entitiesNear(entityFilter().tag(EntityTypeTags.ZOMBIES), "zombies")
+                .build(this.entitiesNear(entityFilter().tag(TagsAS.EntityTypes.ZOMBIES), "zombies")
                         .setEntityCountNeeded(IntRange.of(2)).setRange(6).build());
         this.newCondition("skeletons")
                 .build(this.entitiesNear(entityFilter().tag(EntityTypeTags.SKELETONS), "skeletons")
                         .setEntityCountNeeded(IntRange.of(2)).setRange(8).build());
         this.newCondition("aquatic")
-                .build(this.entitiesNear(entityFilter().tag(EntityTypeTags.AQUATIC), "aquatic")
+                .build(this.entitiesNear(entityFilter().tag(TagsAS.EntityTypes.AQUATIC), "aquatic")
                         .setEntityCountNeeded(IntRange.of(2)).setRange(10).build());
         this.newCondition("raiders")
                 .build(this.entitiesNear(entityFilter().tag(EntityTypeTags.RAIDERS), "raiders")
