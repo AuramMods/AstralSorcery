@@ -15,6 +15,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.BlockTagsProvider;
@@ -45,7 +47,7 @@ public class AstralBlockTagsProvider extends BlockTagsProvider {
                 .addOptionalTag(new ResourceLocation("forge", "pumpkins/normal"))
                 .addOptionalTag(new ResourceLocation("c", "pumpkins/normal"));
 
-        this.tag(TagsAS.Blocks.MARBLE)
+        this.commonTag(TagsAS.Blocks.MARBLE)
                 .add(
                         BlocksAS.MARBLE_ARCH.get(),
                         BlocksAS.MARBLE_BRICKS.get(),
@@ -61,11 +63,16 @@ public class AstralBlockTagsProvider extends BlockTagsProvider {
                         BlocksAS.ROCK_CRYSTAL_ORE.get(),
                         BlocksAS.AQUAMARINE_SHALE.get()
                 );
-        this.tag(TagsAS.Blocks.ORES_STARMETAL)
+        this.commonTag(TagsAS.Blocks.ORES_STARMETAL)
                 .add(BlocksAS.STARMETAL_ORE.get());
         this.tag(Tags.Blocks.STORAGE_BLOCKS)
                 .addTag(TagsAS.Blocks.STORAGE_BLOCKS_RAW_STARMETAL);
-        this.tag(TagsAS.Blocks.STORAGE_BLOCKS_RAW_STARMETAL)
+        this.tag(cTag(Tags.Blocks.ORES))
+                .addTag(cTag(TagsAS.Blocks.ORES_STARMETAL))
+                .add(BlocksAS.ROCK_CRYSTAL_ORE.get(), BlocksAS.AQUAMARINE_SHALE.get());
+        this.tag(cTag(Tags.Blocks.STORAGE_BLOCKS))
+                .addTag(cTag(TagsAS.Blocks.STORAGE_BLOCKS_RAW_STARMETAL));
+        this.commonTag(TagsAS.Blocks.STORAGE_BLOCKS_RAW_STARMETAL)
                 .add(BlocksAS.RAW_STARMETAL_BLOCK.get());
         this.tag(TagsAS.Blocks.SOOTY_MARBLE)
                 .add(
@@ -156,6 +163,16 @@ public class AstralBlockTagsProvider extends BlockTagsProvider {
                         BlocksAS.ALTAR_LUMINANCE.get(),
                         BlocksAS.ALTAR_RADIANCE.get()
                 );
+    }
+
+    private IntrinsicTagAppender<Block> commonTag(TagKey<Block> tag) {
+        TagKey<Block> shared = cTag(tag);
+        this.tag(tag).addTag(shared);
+        return this.tag(shared);
+    }
+
+    static <T> TagKey<T> cTag(TagKey<T> tag) {
+        return TagKey.create(tag.registry(), ResourceLocation.fromNamespaceAndPath("c", tag.location().getPath()));
     }
 
     private void addMiningTags() {

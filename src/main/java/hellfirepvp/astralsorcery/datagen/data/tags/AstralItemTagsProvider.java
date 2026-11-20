@@ -15,12 +15,16 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
+
+import static hellfirepvp.astralsorcery.datagen.data.tags.AstralBlockTagsProvider.cTag;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -37,25 +41,16 @@ public class AstralItemTagsProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        copy(TagsAS.Blocks.ORES_STARMETAL, TagsAS.Items.ORES_STARMETAL);
-        copy(TagsAS.Blocks.STORAGE_BLOCKS_RAW_STARMETAL, TagsAS.Items.STORAGE_BLOCKS_RAW_STARMETAL);
+        copyCommonTag(TagsAS.Blocks.ORES_STARMETAL, TagsAS.Items.ORES_STARMETAL);
+        copyCommonTag(TagsAS.Blocks.STORAGE_BLOCKS_RAW_STARMETAL, TagsAS.Items.STORAGE_BLOCKS_RAW_STARMETAL);
         copy(TagsAS.Blocks.INFUSED_WOOD, TagsAS.Items.INFUSED_WOOD);
-        copy(TagsAS.Blocks.MARBLE, TagsAS.Items.MARBLE);
+        copyCommonTag(TagsAS.Blocks.MARBLE, TagsAS.Items.MARBLE);
         copy(TagsAS.Blocks.SOOTY_MARBLE, TagsAS.Items.SOOTY_MARBLE);
 
-        tag(Tags.Items.GEMS)
-                .addTag(TagsAS.Items.GEMS_AQUAMARINE);
-        tag(TagsAS.Items.GEMS_AQUAMARINE)
-                .add(ItemsAS.AQUAMARINE.asItem());
+        addCommonItem(Tags.Items.GEMS, TagsAS.Items.GEMS_AQUAMARINE, ItemsAS.AQUAMARINE.asItem());
 
-        tag(Tags.Items.INGOTS)
-                .addTag(TagsAS.Items.INGOTS_STARMETAL);
-        tag(TagsAS.Items.INGOTS_STARMETAL)
-                .add(ItemsAS.STARMETAL_INGOT.asItem());
-        tag(Tags.Items.RAW_MATERIALS)
-                .addTag(TagsAS.Items.RAW_MATERIALS_STARMETAL);
-        tag(TagsAS.Items.RAW_MATERIALS_STARMETAL)
-                .add(ItemsAS.RAW_STARMETAL.asItem());
+        addCommonItem(Tags.Items.INGOTS, TagsAS.Items.INGOTS_STARMETAL, ItemsAS.STARMETAL_INGOT.asItem());
+        addCommonItem(Tags.Items.RAW_MATERIALS, TagsAS.Items.RAW_MATERIALS_STARMETAL, ItemsAS.RAW_STARMETAL.asItem());
 
         tag(ItemTags.LECTERN_BOOKS)
                 .add(ItemsAS.TOME.asItem());
@@ -123,5 +118,19 @@ public class AstralItemTagsProvider extends ItemTagsProvider {
                 .add(ItemsAS.BLOCK_ORCHID.get())
                 .add(ItemsAS.BLOCK_PROTEA.get())
                 .add(ItemsAS.BLOCK_THISTLE.get());
+    }
+
+    private void copyCommonTag(TagKey<Block> blockTag, TagKey<Item> itemTag) {
+        TagKey<Item> shared = cTag(itemTag);
+        copy(cTag(blockTag), shared);
+        tag(itemTag).addTag(shared);
+    }
+
+    private void addCommonItem(TagKey<Item> parent, TagKey<Item> tag, Item item) {
+        TagKey<Item> shared = cTag(tag);
+        tag(parent).addTag(tag);
+        tag(tag).addTag(shared);
+        tag(cTag(parent)).addTag(shared);
+        tag(shared).add(item);
     }
 }
