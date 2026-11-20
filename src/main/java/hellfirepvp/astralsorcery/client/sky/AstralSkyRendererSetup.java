@@ -8,7 +8,10 @@
 
 package hellfirepvp.astralsorcery.client.sky;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 
@@ -23,29 +26,31 @@ public class AstralSkyRendererSetup {
 
     private static final RandomSource rand = RandomSource.create();
 
-    static MeshData generateSky() {
+    static BufferBuilder.RenderedBuffer generateSky() {
         return buildSkyMesh(16F);
     }
 
-    static MeshData generateSkyHorizon() {
+    static BufferBuilder.RenderedBuffer generateSkyHorizon() {
         return buildSkyMesh(-16F);
     }
 
-    private static MeshData buildSkyMesh(float offsetY) {
+    private static BufferBuilder.RenderedBuffer buildSkyMesh(float offsetY) {
         float f = Math.signum(offsetY) * 512.0F;
         float f1 = 512.0F;
-        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION);
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION);
         bufferbuilder.vertex(0.0F, offsetY, 0.0F).endVertex();
 
         for (int i = -180; i <= 180; i += 45) {
             bufferbuilder.vertex(f * Mth.cos((float)i * (float) (Math.PI / 180.0)), offsetY, f1 * Mth.sin((float)i * (float) (Math.PI / 180.0))).endVertex();
         }
 
-        return bufferbuilder.buildOrThrow();
+        return bufferbuilder.end();
     }
 
-    static MeshData generateStars(int amount, float sizeMultiplier) {
-        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+    static BufferBuilder.RenderedBuffer generateStars(int amount, float sizeMultiplier) {
+        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         for (int i = 0; i < amount; ++i) { //Amount of stars.
             float x = -1F + rand.nextFloat() * 2F;
@@ -101,6 +106,6 @@ public class AstralSkyRendererSetup {
             }
         }
 
-        return buffer.buildOrThrow();
+        return buffer.end();
     }
 }

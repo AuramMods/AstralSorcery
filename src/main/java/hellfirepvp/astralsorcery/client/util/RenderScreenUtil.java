@@ -32,8 +32,7 @@ public class RenderScreenUtil {
         RenderTarget transparencyTarget = ShaderProgramsAS.TRANSPARENCY_COLOR.getTransparencyTarget().orElseThrow();
         WrappedBufferSource chainBuffers = new WrappedBufferSource(graphics.bufferSource(),
                 renderType -> DrawChainRenderType.wrap("translucent_item_", renderType, transparencyTarget));
-        GuiGraphics wrappedGraphics = new GuiGraphics(Minecraft.getInstance(), chainBuffers);
-        wrappedGraphics.pose().mulPose(graphics.pose().last().pose());
+        GuiGraphics wrappedGraphics = RenderUtil.copy(graphics, chainBuffers);
         ShaderProgramsAS.TRANSPARENCY_COLOR.setColor(color);
 
         RenderUtil.withTarget(Minecraft.getInstance().getMainRenderTarget(), target -> {

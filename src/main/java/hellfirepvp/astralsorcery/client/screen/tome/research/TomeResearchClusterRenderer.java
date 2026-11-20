@@ -200,8 +200,7 @@ public class TomeResearchClusterRenderer {
                 renderType -> DrawChainRenderType.wrap("tome_overlay_", renderType, transparencyTarget));
         chainBuffers.endBatch();
         RenderUtil.safeCopyDepth(transparencyTarget, Minecraft.getInstance().getMainRenderTarget());
-        GuiGraphics wrappedGraphics = new GuiGraphics(Minecraft.getInstance(), chainBuffers);
-        wrappedGraphics.pose().mulPose(guiGraphics.pose().last().pose());
+        GuiGraphics wrappedGraphics = RenderUtil.copy(guiGraphics, chainBuffers);
 
         //Draw batched items with shader transparency
         for (ResearchNode node : this.nodes.values()) {

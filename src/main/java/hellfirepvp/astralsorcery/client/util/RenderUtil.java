@@ -36,7 +36,7 @@ public class RenderUtil {
 
     public static MultiBufferSource.BufferSource effectBufferSource() {
         if (effectBufferSource == null) {
-            effectBufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(0xC_0000));
+            effectBufferSource = MultiBufferSource.immediate(new BufferBuilder(0xC_0000));
         }
         return effectBufferSource;
     }
@@ -51,11 +51,21 @@ public class RenderUtil {
     public static <R> R draw(VertexFormat.Mode drawMode, VertexFormat format, Supplier<ShaderInstance> shader, Function<BufferBuilder, R> fn) {
         ShaderInstance prev = RenderSystem.getShader();
         RenderSystem.setShader(shader);
-        BufferBuilder buf = Tesselator.getInstance().begin(drawMode, format);
-        R result = fn.apply(buf);
-        finishDrawing(buf);
-        RenderSystem.setShader(() -> prev);
-        return result;
+        BufferBuilder buf = Tesselator.getInstance().getBuilder();
+        try {
+            buf.begin(drawMode, format);
+            try {
+                R result = fn.apply(buf);
+                finishDrawing(buf);
+                return result;
+            } finally {
+                if (buf.building()) {
+                    buf.end().release();
+                }
+            }
+        } finally {
+            RenderSystem.setShader(() -> prev);
+        }
     }
 
     public static void finishDrawing(BufferBuilder buf) {
@@ -64,9 +74,12 @@ public class RenderUtil {
 
     public static void finishDrawing(BufferBuilder buf, @Nullable RenderType type) {
         if (type != null) {
-            type.draw(buf.buildOrThrow());
-        } else {
-            BufferUploader.drawWithShader(buf.buildOrThrow());
+            type.end(buf, RenderSystem.getVertexSorting());
+            return;
+        }
+        BufferBuilder.RenderedBuffer batch = buf.endOrDiscardIfEmpty();
+        if (batch != null) {
+            BufferUploader.drawWithShader(batch);
         }
     }
 
@@ -89,8 +102,13 @@ public class RenderUtil {
     }
 
     public static GuiGraphics copy(GuiGraphics guiGraphics) {
-        GuiGraphics copy = new GuiGraphics(Minecraft.getInstance(), guiGraphics.bufferSource());
-        copy.pose().mulPose(guiGraphics.pose().last().pose());
+        return copy(guiGraphics, guiGraphics.bufferSource());
+    }
+
+    public static GuiGraphics copy(GuiGraphics guiGraphics, MultiBufferSource.BufferSource bufferSource) {
+        GuiGraphics copy = new GuiGraphics(Minecraft.getInstance(), bufferSource);
+        copy.pose().last().pose().set(guiGraphics.pose().last().pose());
+        copy.pose().last().normal().set(guiGraphics.pose().last().normal());
         return copy;
     }
 }

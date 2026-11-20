@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.client.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Matrix4f;
@@ -28,17 +28,22 @@ public class BatchedVertexBuffer {
     private VertexBuffer vbo = null;
     private boolean initialized = false;
 
-    public void initialize(Supplier<MeshData> batch) {
+    public void initialize(Supplier<BufferBuilder.RenderedBuffer> batch) {
         if (this.initialized) {
             return;
         }
 
         this.vbo = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.vbo.bind();
-        this.vbo.upload(batch.get());
-        VertexBuffer.unbind();
-
-        this.initialized = true;
+        try {
+            this.vbo.upload(batch.get());
+            this.initialized = true;
+        } finally {
+            VertexBuffer.unbind();
+            if (!this.initialized) {
+                this.close();
+            }
+        }
     }
 
     public void draw() {
@@ -62,7 +67,10 @@ public class BatchedVertexBuffer {
     }
 
     public void close() {
-        if (this.vbo != null) this.vbo.close();
+        if (this.vbo != null) {
+            this.vbo.close();
+            this.vbo = null;
+        }
         this.initialized = false;
     }
 }

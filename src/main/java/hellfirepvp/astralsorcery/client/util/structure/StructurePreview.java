@@ -52,8 +52,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.model.data.ModelData;
-import org.joml.Matrix4f;
-import org.joml.Matrix4fStack;
 import org.joml.Quaternionf;
 
 import java.util.*;
@@ -158,36 +156,36 @@ public class StructurePreview {
         int slice = sliceOpt.get();
 
         Quaternionf quaternionf = camera.rotation().conjugate(new Quaternionf());
-        Matrix4f frustumMatrix = new Matrix4f().rotation(quaternionf);
-
-        Matrix4fStack viewStack = RenderSystem.getModelViewStack();
-        viewStack.pushMatrix();
-        viewStack.mul(frustumMatrix);
+        PoseStack viewStack = RenderSystem.getModelViewStack();
+        viewStack.pushPose();
+        viewStack.mulPose(quaternionf);
         RenderSystem.applyModelViewMatrix();
 
-        PoseStack pose = new PoseStack();
-        Vec3 cameraPos = camera.getPosition();
-        int csX = (int) Math.floor(cameraPos.x());
-        int csY = (int) Math.floor(cameraPos.y());
-        int csZ = (int) Math.floor(cameraPos.z());
-        Vec3i offsetCamera = new Vec3i(csX, csY, csZ);
-        Vec3 partialCamera = cameraPos.subtract(csX, csY, csZ);
+        try {
+            PoseStack pose = new PoseStack();
+            Vec3 cameraPos = camera.getPosition();
+            int csX = (int) Math.floor(cameraPos.x());
+            int csY = (int) Math.floor(cameraPos.y());
+            int csZ = (int) Math.floor(cameraPos.z());
+            Vec3i offsetCamera = new Vec3i(csX, csY, csZ);
+            Vec3 partialCamera = cameraPos.subtract(csX, csY, csZ);
 
-        Level renderLevel = StructureDisplayLevel.empty(level.registryAccess());
-        MultiBufferSource.BufferSource drawBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderTarget transparencyTarget = ShaderProgramsAS.TRANSPARENCY_COLOR.getTransparencyTarget().orElseThrow();
+            Level renderLevel = StructureDisplayLevel.empty(level.registryAccess());
+            MultiBufferSource.BufferSource drawBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
+            RenderTarget transparencyTarget = ShaderProgramsAS.TRANSPARENCY_COLOR.getTransparencyTarget().orElseThrow();
 
-        WrappedBufferSource depthChainBuffers = new WrappedBufferSource(drawBuffer,
-                renderType -> DrawChainRenderType.wrap("structure_", renderType, ShaderProgramsAS.TRANSPARENCY_COLOR.getTransparencyTargetSupplier(),
-                        RenderSystem::disableDepthTest, RenderSystem::enableDepthTest));
+            WrappedBufferSource depthChainBuffers = new WrappedBufferSource(drawBuffer,
+                    renderType -> DrawChainRenderType.wrap("structure_", renderType, ShaderProgramsAS.TRANSPARENCY_COLOR.getTransparencyTargetSupplier(),
+                            RenderSystem::disableDepthTest, RenderSystem::enableDepthTest));
 
-        renderPreviewMatches(renderLevel, level, pose, slice, offsetCamera, partialCamera, player.blockPosition(),
-                transparencyTarget, depthChainBuffers, pTicks, true);
-        renderPreviewMatches(renderLevel, level, pose, slice, offsetCamera, partialCamera, player.blockPosition(),
-                transparencyTarget, depthChainBuffers, pTicks, false);
-
-        viewStack.popMatrix();
-        RenderSystem.applyModelViewMatrix();
+            renderPreviewMatches(renderLevel, level, pose, slice, offsetCamera, partialCamera, player.blockPosition(),
+                    transparencyTarget, depthChainBuffers, pTicks, true);
+            renderPreviewMatches(renderLevel, level, pose, slice, offsetCamera, partialCamera, player.blockPosition(),
+                    transparencyTarget, depthChainBuffers, pTicks, false);
+        } finally {
+            viewStack.popPose();
+            RenderSystem.applyModelViewMatrix();
+        }
     }
 
     private void renderPreviewMatches(Level renderLevel,

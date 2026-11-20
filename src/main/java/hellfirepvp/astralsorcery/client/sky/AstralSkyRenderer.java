@@ -121,7 +121,7 @@ public class AstralSkyRenderer {
         if (this.isSkyHidden(camera, isFoggy)) return;
 
         PoseStack pose = new PoseStack();
-        pose.mulPose(frustumMatrix);
+        pose.mulPoseMatrix(frustumMatrix);
 
         RenderSystem.depthMask(false);
         Blending.DEFAULT.apply();
@@ -147,7 +147,7 @@ public class AstralSkyRenderer {
         }
 
         PoseStack pose = new PoseStack();
-        pose.mulPose(frustumMatrix);
+        pose.mulPoseMatrix(frustumMatrix);
 
         // Calc skycolor - added: solar eclipse dimming
         Vec3 skyColor = level.getSkyColor(mc.gameRenderer.getMainCamera().getPosition(), partialTick);
