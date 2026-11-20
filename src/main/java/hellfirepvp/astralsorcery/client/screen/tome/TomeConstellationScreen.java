@@ -93,9 +93,6 @@ public class TomeConstellationScreen extends TomeScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
-
-    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.thisFrameConstellations.clear();
         this.renderTransparentBackground(guiGraphics);

@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static hellfirepvp.astralsorcery.client.screen.base.FixedSizeScreen.containsPoint;
+
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -173,7 +175,7 @@ public class TomeResearchViewRenderer extends TomeResearchPartRenderer implement
     public boolean mouseClick(double mouseX, double mouseY) {
         if (this.sizeHandler.getScalingFactor() > 6 &&
                 this.focusedTierRenderer != null &&
-                this.getRenderBoundingBox().containsPoint((int) Math.round(mouseX), (int) Math.round(mouseY))) {
+                containsPoint(this.getRenderBoundingBox(), (int) Math.round(mouseX), (int) Math.round(mouseY))) {
             return this.focusedTierRenderer.mouseClick(this.getParentScreen(), mouseX, mouseY);
         }
         //Instant-zoom in on double-click
@@ -223,7 +225,7 @@ public class TomeResearchViewRenderer extends TomeResearchPartRenderer implement
 
         if (this.sizeHandler.getScalingFactor() > 6 &&
                 this.focusedTierRenderer != null &&
-                this.getRenderBoundingBox().containsPoint(Math.round(mouseX), Math.round(mouseY))) {
+                containsPoint(this.getRenderBoundingBox(), Math.round(mouseX), Math.round(mouseY))) {
             this.focusedTierRenderer.drawHoverHighlight(guiGraphics, mouseX, mouseY);
         }
         pose.popPose();

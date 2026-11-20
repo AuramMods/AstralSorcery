@@ -81,7 +81,7 @@ public class TomeNavArrowElement extends AbstractWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY, int button) {
+    public void onClick(double mouseX, double mouseY) {
         this.onClick.run();
     }
 

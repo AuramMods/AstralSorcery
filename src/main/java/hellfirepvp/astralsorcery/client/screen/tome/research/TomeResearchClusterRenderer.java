@@ -306,7 +306,7 @@ public class TomeResearchClusterRenderer {
 
                 List<Component> tooltip = new ArrayList<>();
                 tooltip.add(node.getName());
-                if (Minecraft.getInstance().getDebugOverlay().showDebugScreen()) {
+                if (Minecraft.getInstance().options.renderDebug) {
                     tooltip.add(Component.empty());
                     tooltip.add(Component.translatable("screen.astralsorcery.element.research_debug.registry_name", node.getKey().toString())
                             .withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.ITALIC));

@@ -80,17 +80,11 @@ public class FakeSlotElement extends AbstractWidget {
                 boolean flag = this.clicked(mouseX, mouseY);
                 if (flag) {
                     this.playDownSound(Minecraft.getInstance().getSoundManager());
-                    this.onClick(mouseX, mouseY, button);
+                    this.onClick.accept(button);
                 }
             }
         }
         return false;
-    }
-
-    @Override
-    public void onClick(double mouseX, double mouseY, int button) {
-        super.onClick(mouseX, mouseY, button);
-        this.onClick.accept(button);
     }
 
     @Override

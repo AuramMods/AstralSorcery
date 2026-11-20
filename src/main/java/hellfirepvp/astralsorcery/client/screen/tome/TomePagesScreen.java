@@ -215,9 +215,6 @@ public class TomePagesScreen extends TomeScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
-
-    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderTransparentBackground(guiGraphics);
         this.pageLeft.visible = this.currentDoublePageOffset > 0;
@@ -353,13 +350,13 @@ public class TomePagesScreen extends TomeScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
+        if (super.mouseScrolled(mouseX, mouseY, scrollY)) {
             return true;
         }
 
         return this.propagateToPages(page -> {
-            if (page.propagateMouseScroll(mouseX, mouseY, scrollX, scrollY)) {
+            if (page.propagateMouseScroll(mouseX, mouseY, 0, scrollY)) {
                 return true;
             }
             return null;

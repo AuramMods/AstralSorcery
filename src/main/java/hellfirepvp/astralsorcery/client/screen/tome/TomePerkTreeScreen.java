@@ -337,8 +337,8 @@ public class TomePerkTreeScreen extends TomeScreen {
 
         int rawMenuX = Mth.floor(this.thisFrameSocketMenu.x() - this.screenLeft);
         int rawMenuY = Mth.floor(this.thisFrameSocketMenu.y() - this.screenTop);
-        if (!this.getScreenRectangle().containsPoint(rawMenuX, rawMenuY) ||
-                !this.getScreenRectangle().containsPoint(rawMenuX + Mth.floor(this.thisFrameSocketMenu.width()), rawMenuY + Mth.floor(this.thisFrameSocketMenu.height()))) {
+        if (!containsPoint(this.getScreenRectangle(), rawMenuX, rawMenuY) ||
+                !containsPoint(this.getScreenRectangle(), rawMenuX + Mth.floor(this.thisFrameSocketMenu.width()), rawMenuY + Mth.floor(this.thisFrameSocketMenu.height()))) {
             this.closeSocketMenu();
             return;
         }
@@ -409,7 +409,7 @@ public class TomePerkTreeScreen extends TomeScreen {
             }
         }
 
-        if (this.sealInventoryCount > 0 && this.sealSlot.getRectangle().containsPoint(mouseX, mouseY)) {
+        if (this.sealInventoryCount > 0 && containsPoint(this.sealSlot.getRectangle(), mouseX, mouseY)) {
             List<Component> tooltip = new ArrayList<>();
             tooltip.addAll(Screen.getTooltipFromItem(Minecraft.getInstance(), ItemsAS.PERK_SEAL.toStack(1)));
             tooltip.add(Component.empty());
@@ -422,7 +422,7 @@ public class TomePerkTreeScreen extends TomeScreen {
             return;
         }
 
-        if (this.nullifierInventoryCount > 0 && this.nullifierSlot.getRectangle().containsPoint(mouseX, mouseY)) {
+        if (this.nullifierInventoryCount > 0 && containsPoint(this.nullifierSlot.getRectangle(), mouseX, mouseY)) {
             List<Component> tooltip = new ArrayList<>();
             tooltip.addAll(Screen.getTooltipFromItem(Minecraft.getInstance(), ItemsAS.PERK_NULLIFIER.toStack(1)));
             tooltip.add(Component.empty());
@@ -473,7 +473,7 @@ public class TomePerkTreeScreen extends TomeScreen {
                 tooltip.add(modDescriptor.withStyle(ChatFormatting.BLUE).withStyle(ChatFormatting.ITALIC));
             });
 
-            if (Minecraft.getInstance().getDebugOverlay().showDebugScreen()) {
+            if (Minecraft.getInstance().options.renderDebug) {
                 tooltip.add(Component.empty());
                 tooltip.add(Component.literal(perk.getKey().toString()).withStyle(ChatFormatting.GRAY));
             }
@@ -765,9 +765,6 @@ public class TomePerkTreeScreen extends TomeScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
-
-    @Override
     protected void mouseDragTick(double mouseX, double mouseY, double mouseDiffX, double mouseDiffY, double mouseOffsetX, double mouseOffsetY) {
         super.mouseDragTick(mouseX, mouseY, mouseDiffX, mouseDiffY, mouseOffsetX, mouseOffsetY);
         if (!this.draggingSeal && !this.draggingNullifier) {
@@ -924,7 +921,7 @@ public class TomePerkTreeScreen extends TomeScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
         if (scrollY < 0) {
             this.sizeHandler.handleZoomOut();
             this.rescaleMouse();
@@ -966,7 +963,7 @@ public class TomePerkTreeScreen extends TomeScreen {
         int iMouseX = Mth.floor(mouseX);
         int iMouseY = Mth.floor(mouseY);
 
-        if (this.searchInput.getRectangle().containsPoint(iMouseX, iMouseY)) {
+        if (containsPoint(this.searchInput.getRectangle(), iMouseX, iMouseY)) {
             this.searchInput.setText("");
             return false;
         }
@@ -1023,7 +1020,7 @@ public class TomePerkTreeScreen extends TomeScreen {
     }
 
     private List<AbstractPerk<?>> getMouseOverPerks(double mouseX, double mouseY) {
-        if (!this.getScreenRectangle().containsPoint(Mth.floor(mouseX), Mth.floor(mouseY))) return List.of();
+        if (!containsPoint(this.getScreenRectangle(), Mth.floor(mouseX), Mth.floor(mouseY))) return List.of();
 
         List<AbstractPerk<?>> perks = new ArrayList<>();
         for (Map.Entry<AbstractPerk<?>, FloatRectangle> rctPerk : this.thisFramePerks.entrySet()) {

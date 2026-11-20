@@ -159,9 +159,6 @@ public class TomeResearchScreen extends TomeScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
-
-    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         boolean renderNavArrows = this.getViewType() == ViewType.SEARCH;
         this.researchSearchRenderer.setNavArrowVisibility(renderNavArrows, this.searchArrowLeft, this.searchArrowRight);
@@ -206,8 +203,8 @@ public class TomeResearchScreen extends TomeScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
+        if (super.mouseScrolled(mouseX, mouseY, scrollY)) {
             return true;
         }
         //Only vertical scrolling (for now?)

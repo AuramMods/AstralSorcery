@@ -338,9 +338,6 @@ public class TomeLumenScreen extends TomeScreen implements TomeStarParallaxLayer
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
-
-    @Override
     protected void mouseDragTick(double mouseX, double mouseY, double mouseDiffX, double mouseDiffY, double mouseOffsetX, double mouseOffsetY) {
         super.mouseDragTick(mouseX, mouseY, mouseDiffX, mouseDiffY, mouseOffsetX, mouseOffsetY);
         this.moveMouse((float) mouseDiffX, (float) mouseDiffY);
@@ -353,7 +350,7 @@ public class TomeLumenScreen extends TomeScreen implements TomeStarParallaxLayer
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollY) {
         if (scrollY < 0) {
             this.sizeHandler.handleZoomOut();
             this.rescaleMouse();

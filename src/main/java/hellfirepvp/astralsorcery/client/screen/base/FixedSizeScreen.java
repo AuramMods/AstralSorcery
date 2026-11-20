@@ -9,6 +9,7 @@
 package hellfirepvp.astralsorcery.client.screen.base;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -44,6 +45,18 @@ public class FixedSizeScreen extends Screen {
     protected void init() {
         super.init();
         this.updateScreenPosition();
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics graphics) {}
+
+    public void renderTransparentBackground(GuiGraphics graphics) {
+        graphics.fillGradient(0, 0, this.width, this.height, 0xC0101010, 0xD0101010);
+    }
+
+    public static boolean containsPoint(ScreenRectangle rectangle, int x, int y) {
+        return x >= rectangle.left() && x < rectangle.right() &&
+                y >= rectangle.top() && y < rectangle.bottom();
     }
 
     protected void updateScreenPosition() {

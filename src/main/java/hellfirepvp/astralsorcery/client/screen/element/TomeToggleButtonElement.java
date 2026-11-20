@@ -100,7 +100,7 @@ public class TomeToggleButtonElement extends AbstractWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY, int button) {
+    public void onClick(double mouseX, double mouseY) {
         this.toggle();
     }
 
