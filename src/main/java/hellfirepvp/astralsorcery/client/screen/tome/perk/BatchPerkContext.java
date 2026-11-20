@@ -8,14 +8,17 @@
 
 package hellfirepvp.astralsorcery.client.screen.tome.perk;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import hellfirepvp.astralsorcery.client.screen.tome.perk.render.PerkRenderType;
+import hellfirepvp.astralsorcery.client.util.OwnedBufferBuilder;
 import net.minecraft.client.renderer.RenderType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -30,58 +33,46 @@ public class BatchPerkContext {
     public static final int PRIORITY_FOREGROUND = 200;
     public static final int PRIORITY_OVERLAY    = 300;
 
-    private final Set<PerkRenderType> renderTypes = new TreeSet<>();
-    private final List<ByteBufferBuilder> openBuffers = new ArrayList<>();
-
-    private final ByteBufferBuilder sharedBuffer;
-    private final Map<PerkRenderType, ByteBufferBuilder> fixedBuffers = new HashMap<>();
-
-    private final Map<PerkRenderType, BufferBuilder> drawingBuffers = new HashMap<>();
+    private final Map<PerkRenderType, OwnedBufferBuilder> buffers = new TreeMap<>();
+    private boolean closed;
 
     private BatchPerkContext(Collection<PerkRenderType> renderTypes) {
-        this.renderTypes.addAll(renderTypes);
-
-        this.sharedBuffer = new ByteBufferBuilder(0x7_0000);
-        this.openBuffers.add(this.sharedBuffer);
-
-        for (PerkRenderType ort : this.renderTypes) {
-            if (this.fixedBuffers.containsKey(ort)) continue;
-
-            ByteBufferBuilder typeBuffer = new ByteBufferBuilder(0x7_0000);
-            this.openBuffers.add(typeBuffer);
-            this.fixedBuffers.put(ort, typeBuffer);
-        }
+        renderTypes.forEach(type -> this.buffers.put(type, null));
     }
 
     public VertexConsumer getBuffer(PerkRenderType type) {
-        if (this.openBuffers.isEmpty()) {
+        if (this.closed) {
             throw new IllegalStateException("Tried to get buffer from already closed BatchPerkContext!");
         }
-        if (this.drawingBuffers.containsKey(type)) {
-            return this.drawingBuffers.get(type);
+        OwnedBufferBuilder buffer = this.buffers.computeIfAbsent(type, ignored -> new OwnedBufferBuilder(0x7_0000));
+        if (!buffer.building()) {
+            RenderType renderType = type.renderType();
+            buffer.begin(renderType.mode(), renderType.format());
         }
-        ByteBufferBuilder builder = this.fixedBuffers.getOrDefault(type, this.sharedBuffer);
-        BufferBuilder drawingBuffer = new BufferBuilder(builder, type.renderType().mode(), type.renderType().format());
-        this.drawingBuffers.put(type, drawingBuffer);
-        return drawingBuffer;
+        return buffer;
     }
 
     public void draw() {
-        this.renderTypes.forEach(type -> {
-            if (this.drawingBuffers.containsKey(type)) {
-                BufferBuilder buf = this.drawingBuffers.get(type);
-                MeshData mesh = buf.build();
-                if (mesh != null) {
-                    type.renderType().draw(mesh);
+        this.buffers.forEach((type, buffer) -> {
+            if (buffer != null && buffer.building()) {
+                if (buffer.isCurrentBatchEmpty()) {
+                    buffer.endOrDiscardIfEmpty();
+                } else {
+                    type.renderType().end(buffer, RenderSystem.getVertexSorting());
                 }
+                buffer.unsetDefaultColor();
             }
         });
-        this.drawingBuffers.clear();
     }
 
     public void free() {
-        this.openBuffers.forEach(ByteBufferBuilder::close);
-        this.openBuffers.clear();
+        this.buffers.values().forEach(buffer -> {
+            if (buffer != null) {
+                buffer.close();
+            }
+        });
+        this.buffers.clear();
+        this.closed = true;
     }
 
     public static Builder builder() {
