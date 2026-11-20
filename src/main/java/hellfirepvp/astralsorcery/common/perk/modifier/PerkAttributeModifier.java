@@ -17,6 +17,7 @@ import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.MutableIdentity;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;

@@ -19,7 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
@@ -81,9 +80,8 @@ public class Lumen implements LumenLike {
     }
 
     public Optional<? extends Holder<Lumen>> getHolder() {
-        ResourceLocation lumenKey = RegistriesAS.REGISTRY_LUMEN.get().getKey(this);
-        if (lumenKey == null) return Optional.empty();
-        return RegistriesAS.REGISTRY_LUMEN.get().getHolder(lumenKey);
+        var registry = RegistriesAS.REGISTRY_LUMEN.get();
+        return registry.getResourceKey(this).flatMap(registry::getHolder);
     }
 
     public boolean maySee(Level level, PlayerProgress progress) {

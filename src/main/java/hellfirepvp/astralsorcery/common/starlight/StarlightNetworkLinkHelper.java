@@ -13,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.chunk.ChunkStatus;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -35,7 +35,7 @@ public class StarlightNetworkLinkHelper implements BlockChangeNotifier.Listener 
     @Override
     public void onChange(Level world, LevelChunk chunk, BlockPos pos, BlockState oldState, BlockState newState) {
         if (oldState == newState) return;
-        if (world.isClientSide() || !chunk.getPersistedStatus().isOrAfter(ChunkStatus.FULL)) {
+        if (world.isClientSide() || !chunk.getStatus().isOrAfter(ChunkStatus.FULL)) {
             return;
         }
 
