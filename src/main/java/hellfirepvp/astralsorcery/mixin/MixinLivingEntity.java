@@ -14,6 +14,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import hellfirepvp.astralsorcery.common.event.damage.IncomingDamageEvent;
+import hellfirepvp.astralsorcery.common.event.damage.ShieldCheckEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -45,6 +46,13 @@ public class MixinLivingEntity {
             at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;noActionTime:I", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
     private float astralsorcery$takeIncomingAmount(float amount, @Share("incomingDamage") LocalRef<IncomingDamageEvent> incomingDamage) {
         return incomingDamage.get().getAmount();
+    }
+
+    @WrapOperation(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isDamageSourceBlocked(Lnet/minecraft/world/damagesource/DamageSource;)Z"))
+    private boolean astralsorcery$allowPerkBlock(LivingEntity entity, DamageSource source, Operation<Boolean> original) {
+        var event = new ShieldCheckEvent(entity, source, original.call(entity, source));
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.isBlocked();
     }
 
     @WrapOperation(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;actuallyHurt(Lnet/minecraft/world/damagesource/DamageSource;F)V"))

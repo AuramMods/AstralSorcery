@@ -10,7 +10,6 @@ package hellfirepvp.astralsorcery.common.event.damage;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.function.Supplier;
 
@@ -36,9 +35,9 @@ public final class ForgeDamageHook {
         }
     }
 
-    public static void recordCancellation(LivingDamageEvent event, boolean canceled) {
+    public static void recordCancellation(LivingEntity entity, DamageSource source, boolean canceled) {
         Probe probe = ACTIVE.get();
-        if (probe != null && probe.entity == event.getEntity() && probe.source == event.getSource()) {
+        if (probe != null && probe.entity == entity && probe.source == source) {
             probe.canceled = canceled;
         }
     }

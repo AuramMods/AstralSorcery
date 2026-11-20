@@ -9,18 +9,17 @@
 package hellfirepvp.astralsorcery.common.perk.type;
 
 import hellfirepvp.astralsorcery.common.event.AttributeEvent;
+import hellfirepvp.astralsorcery.common.event.damage.ShieldCheckEvent;
 import hellfirepvp.astralsorcery.common.perk.PerkManager;
 import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
 import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent;
 
 import java.util.Random;
 
@@ -45,11 +44,11 @@ public class AttributeTypeBlockChance extends PerkAttributeType {
         eventBus.addListener(this::onBlockTest);
     }
 
-    private void onBlockTest(LivingShieldBlockEvent event) {
-        if (event.getBlocked()) return;
-        if (event.getDamageSource().is(DamageTypeTags.BYPASSES_SHIELD)) return;
-        if (event.getDamageSource().getDirectEntity() instanceof AbstractArrow arrow && arrow.getPierceLevel() > 0) return;
-        if (event.getDamageSource().getSourcePosition() == null) return;
+    private void onBlockTest(ShieldCheckEvent event) {
+        if (event.isBlocked()) return;
+        if (event.getSource().is(DamageTypeTags.BYPASSES_SHIELD)) return;
+        if (event.getSource().getDirectEntity() instanceof AbstractArrow arrow && arrow.getPierceLevel() > 0) return;
+        if (event.getSource().getSourcePosition() == null) return;
 
         if (!(event.getEntity() instanceof Player player)) return;
         LogicalSide side = SidedHelper.getSide(player);
