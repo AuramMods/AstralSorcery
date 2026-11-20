@@ -29,7 +29,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.client.event.ComputeFovModifierEvent;
-import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
 import java.util.Collections;
@@ -178,7 +177,7 @@ public class GatewayInterfaceInteractHelper {
     private static void onFovModifier(ComputeFovModifierEvent event) {
         GatewayInterfaceRenderHelper.getInstance().getCurrentUI().ifPresent(currentUI -> {
             if (focusTick < TELEPORT_FOCUS_WINDUP) return;
-            float focusZoomTick = focusTick - TELEPORT_FOCUS_WINDUP + Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+            float focusZoomTick = focusTick - TELEPORT_FOCUS_WINDUP + Minecraft.getInstance().getFrameTime();
             int frame = TELEPORT_TRIGGER - TELEPORT_FOCUS_WINDUP;
             float percZoom = 1F - (focusZoomTick / frame);
             percZoom = Mth.clamp(percZoom, 0F, 1F);

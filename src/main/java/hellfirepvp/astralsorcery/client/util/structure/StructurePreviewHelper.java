@@ -45,7 +45,7 @@ public class StructurePreviewHelper {
         if (currentPreview == null) return;
         Player player = Minecraft.getInstance().player;
         if (player != null && currentPreview.canRender(player.level(), player.blockPosition())) {
-            currentPreview.render(event.getCamera(), event.getPartialTick().getGameTimeDeltaPartialTick(false));
+            currentPreview.render(event.getCamera(), event.getPartialTick());
         }
     }
 

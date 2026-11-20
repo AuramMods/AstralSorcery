@@ -9,10 +9,10 @@
 package hellfirepvp.astralsorcery.client.util.camera;
 
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.minecraftforge.event.TickEvent.RenderTickEvent;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -65,10 +65,11 @@ public class CameraManager {
         }
     }
 
-    public void onRenderTick(RenderFrameEvent.Pre event) {
+    public void onRenderTick(RenderTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         if (Minecraft.getInstance().player == null) return;
         this.getActiveTransformer().ifPresent(transformer -> {
-            transformer.transformCameraView(event.getPartialTick().getGameTimeDeltaPartialTick(false));
+            transformer.transformCameraView(event.renderTickTime);
         });
     }
 

@@ -122,7 +122,7 @@ public class StoredLumenClientComponent implements ClientTooltipComponent {
         if (container.canAddEffects()) {
             this.createParticles(container);
         }
-        container.renderAll(guiGraphics, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+        container.renderAll(guiGraphics, Minecraft.getInstance().getFrameTime());
 
         int stepY = y;
         for (StoredLumenComponent.StoredLumen store : this.dataComponent.getLumenDisplay()) {

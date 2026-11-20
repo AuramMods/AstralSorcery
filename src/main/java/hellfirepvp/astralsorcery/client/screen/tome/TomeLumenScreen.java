@@ -161,7 +161,7 @@ public class TomeLumenScreen extends TomeScreen implements TomeStarParallaxLayer
         if (lumenConnections.isEmpty()) buildLumenConnections();
 
         var ct = ScreenEffectTicketManager.getInstance().refreshOrCreate(StaticIdentifierTicket.TOME_LUMEN_OVERVIEW);
-        ct.renderAll(guiGraphics, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+        ct.renderAll(guiGraphics, Minecraft.getInstance().getFrameTime());
 
         TextureAtlas atlas = Minecraft.getInstance().getModelManager().getAtlas(TexturesAS.ATLAS_LUMEN);
         float size = this.sizeHandler.getScaledNodeSize() * 2.2F;

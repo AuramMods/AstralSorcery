@@ -248,7 +248,7 @@ public class RenderAstrolabeOverlay {
         });
 
         guiGraphics.pose().translate(0, 0, -100);
-        ct.renderAll(guiGraphics, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+        ct.renderAll(guiGraphics, Minecraft.getInstance().getFrameTime());
         guiGraphics.pose().translate(0, 0, 100);
 
         guiGraphics.drawString(font, angleStr,
@@ -258,7 +258,7 @@ public class RenderAstrolabeOverlay {
     private static void renderDrawnLines(GuiGraphics guiGraphics) {
         if (drawnLines.isEmpty() && drawLineStart == null) return;
 
-        float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
+        float partialTick = Minecraft.getInstance().getDeltaFrameTime();
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) return;
         if (DayTimeHelper.isDay(level)) {
@@ -335,7 +335,7 @@ public class RenderAstrolabeOverlay {
     }
 
     private static FloatPoint getProjectedAngles(Player player, double pointX, double pointY, double screenWidth, double screenHeight) {
-        float pTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
+        float pTicks = Minecraft.getInstance().getDeltaFrameTime();
         Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
 
         AccessorGameRenderer gameRendererAccess = (AccessorGameRenderer) Minecraft.getInstance().gameRenderer;
@@ -523,7 +523,7 @@ public class RenderAstrolabeOverlay {
 
         if (player.isScoping() && player.getUseItem().is(ItemsAS.ASTROLABE.get())) {
             AstrolabeAngleComponent cmp = DataComponentsAS.ASTROLABE_ANGLE.getOrDefault(player.getUseItem(), AstrolabeAngleComponent.DEFAULT);
-            float adjustedAngle = cmp.angle() + (float) event.getScrollDeltaY();
+            float adjustedAngle = cmp.angle() + (float) event.getScrollDelta();
             DataComponentsAS.ASTROLABE_ANGLE.set(player.getUseItem(), new AstrolabeAngleComponent(adjustedAngle, cmp.matchesAll()));
             NetworkRegistry.sendToServer(PktAdjustAstrolabeAngle.adjustAngle(adjustedAngle));
             event.setCanceled(true);
