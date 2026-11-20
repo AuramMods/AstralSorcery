@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.client.tile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import hellfirepvp.astralsorcery.client.helper.TranslucentBlockRenderHelper;
 import hellfirepvp.astralsorcery.common.tile.TileTranslucentBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.world.item.DyeColor;
@@ -33,6 +34,7 @@ public class TileTranslucentBlockRenderer implements BlockEntityRenderer<TileTra
         DyeColor color = tile.getTileData().getDyeColor();
         if (color == null) color = DyeColor.WHITE;
 
-        TranslucentBlockRenderHelper.submitBlockState(color, toRender, poseStack);
+        TranslucentBlockRenderHelper.submitBlockState(color, toRender, tile.getBlockPos(),
+                Minecraft.getInstance().gameRenderer.getMainCamera().getPosition());
     }
 }

@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.client.tile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import hellfirepvp.astralsorcery.client.helper.TranslucentBlockRenderHelper;
 import hellfirepvp.astralsorcery.common.tile.TileTranslucentTree;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.world.item.DyeColor;
@@ -30,6 +31,7 @@ public class TileTranslucentTreeRenderer implements BlockEntityRenderer<TileTran
         BlockState toRender = tile.getTileData().getStoredState();
         if (toRender.isAir()) return;
 
-        TranslucentBlockRenderHelper.submitBlockState(DyeColor.WHITE, toRender, poseStack);
+        TranslucentBlockRenderHelper.submitBlockState(DyeColor.WHITE, toRender, tile.getBlockPos(),
+                Minecraft.getInstance().gameRenderer.getMainCamera().getPosition());
     }
 }

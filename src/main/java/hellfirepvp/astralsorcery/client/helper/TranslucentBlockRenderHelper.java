@@ -95,12 +95,5 @@ public class TranslucentBlockRenderHelper {
         colorFrameRenderables.computeIfAbsent(color, c -> new ArrayList<>()).add(new BlockRenderable(state, pose));
     }
 
-    public static void submitBlockState(DyeColor color, BlockState state, PoseStack pose) {
-        PoseStack copy = new PoseStack();
-        copy.last().pose().set(pose.last().pose());
-        copy.last().normal().set(pose.last().normal());
-        colorFrameRenderables.computeIfAbsent(color, c -> new ArrayList<>()).add(new BlockRenderable(state, copy));
-    }
-
     private record BlockRenderable(BlockState state, PoseStack pose) {}
 }
