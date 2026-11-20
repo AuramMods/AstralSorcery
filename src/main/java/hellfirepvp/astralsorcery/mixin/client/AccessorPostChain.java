@@ -10,7 +10,6 @@ package hellfirepvp.astralsorcery.mixin.client;
 
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.PostPass;
-import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -28,8 +27,5 @@ public interface AccessorPostChain {
 
     @Accessor
     List<PostPass> getPasses();
-
-    @Accessor
-    ResourceProvider getResourceProvider();
 
 }

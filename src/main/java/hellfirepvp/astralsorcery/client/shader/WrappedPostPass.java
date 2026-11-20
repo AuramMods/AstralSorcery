@@ -12,11 +12,15 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.client.renderer.PostPass;
-import net.minecraft.server.packs.resources.ResourceProvider;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -41,14 +45,14 @@ public class WrappedPostPass extends PostPass {
 
     private int depthDrawFn = GL11.GL_ALWAYS;
 
-    protected WrappedPostPass(ResourceProvider resourceProvider, EffectInstance effect, RenderTarget inTarget, RenderTarget outTarget, boolean useLinearFilter) throws IOException {
-        super(resourceProvider, effect.getName(), inTarget, outTarget, useLinearFilter);
-        effect.close();
+    protected WrappedPostPass(ResourceManager resources, String name, RenderTarget inTarget, RenderTarget outTarget) throws IOException {
+        super(resources, name, inTarget, outTarget);
     }
 
-    public static WrappedPostPass wrap(PostPass pass, ResourceProvider resourceProvider) throws IOException {
-        return new WrappedPostPass(resourceProvider, pass.getEffect(), pass.inTarget, pass.outTarget,
-                pass.getFilterMode() == GL11.GL_LINEAR);
+    public static WrappedPostPass wrap(PostPass pass, ResourceManager resources) throws IOException {
+        WrappedPostPass wrapped = new WrappedPostPass(resources, pass.getName(), pass.inTarget, pass.outTarget);
+        pass.close();
+        return wrapped;
     }
 
     @Override
@@ -93,12 +97,13 @@ public class WrappedPostPass extends PostPass {
         this.outTarget.clear(Minecraft.ON_OSX);
         this.outTarget.bindWrite(false);
         RenderSystem.depthFunc(this.depthDrawFn);
-        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         bufferbuilder.vertex(0.0F, 0.0F, 500.0F).endVertex();
         bufferbuilder.vertex(outWidth, 0.0F, 500.0F).endVertex();
         bufferbuilder.vertex(outWidth, outHeight, 500.0F).endVertex();
         bufferbuilder.vertex(0.0F, outHeight, 500.0F).endVertex();
-        BufferUploader.draw(bufferbuilder.buildOrThrow());
+        BufferUploader.draw(bufferbuilder.end());
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
         effect.clear();
         this.outTarget.unbindWrite();
