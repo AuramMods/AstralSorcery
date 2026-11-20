@@ -63,6 +63,7 @@ public final class ByteBufCodecs {
             StreamCodec.of(FriendlyByteBuf::writeComponent, FriendlyByteBuf::readComponent);
     public static final StreamCodec<FriendlyByteBuf, ItemStack> ITEM_STACK =
             StreamCodec.of((buffer, stack) -> buffer.writeItemStack(stack, false), FriendlyByteBuf::readItem);
+    public static final StreamCodec<FriendlyByteBuf, List<ItemStack>> ITEM_STACK_LIST = ITEM_STACK.apply(list());
     public static final StreamCodec<FriendlyByteBuf, FluidStack> FLUID_STACK =
             StreamCodec.of((buffer, stack) -> stack.writeToPacket(buffer), FluidStack::readFromPacket);
     public static final StreamCodec<FriendlyByteBuf, Ingredient> INGREDIENT =

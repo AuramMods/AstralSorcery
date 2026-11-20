@@ -60,7 +60,7 @@ public class FocalCombineRecipe extends CustomRecipe<FocalCombineRecipe, FocalCo
             FocalCombineRecipe::getColor,
             ByteBufCodecs.INGREDIENT.apply(ByteBufCodecs.list()),
             FocalCombineRecipe::getInputs,
-            ItemStack.LIST_STREAM_CODEC,
+            ByteBufCodecs.ITEM_STACK_LIST,
             FocalCombineRecipe::getOutputs,
             ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS)),
             FocalCombineRecipe::getRequiredConstellation,

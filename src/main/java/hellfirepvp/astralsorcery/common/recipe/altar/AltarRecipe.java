@@ -252,7 +252,7 @@ public class AltarRecipe extends CustomRecipe<AltarRecipe, AltarCraftingInput> {
     private static void write(FriendlyByteBuf buf, AltarRecipe recipe) {
         TileAltar.AltarType.STREAM_CODEC.encode(buf, recipe.getRequiredType());
         AltarRecipeGrid.STREAM_CODEC.encode(buf, recipe.getGrid());
-        ItemStack.LIST_STREAM_CODEC.encode(buf, recipe.getOutputs());
+        ByteBufCodecs.ITEM_STACK_LIST.encode(buf, recipe.getOutputs());
         ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS)).encode(buf, recipe.getFocusConstellation());
         ByteBufCodecs.FLOAT.encode(buf, recipe.getBaseFocusShatterChance());
         ByteBufCodecs.INT.encode(buf, recipe.getDuration());
@@ -269,7 +269,7 @@ public class AltarRecipe extends CustomRecipe<AltarRecipe, AltarCraftingInput> {
     private static AltarRecipe read(FriendlyByteBuf buf) {
         TileAltar.AltarType requiredType = TileAltar.AltarType.STREAM_CODEC.decode(buf);
         AltarRecipeGrid grid = AltarRecipeGrid.STREAM_CODEC.decode(buf);
-        List<ItemStack> outputs = ItemStack.LIST_STREAM_CODEC.decode(buf);
+        List<ItemStack> outputs = ByteBufCodecs.ITEM_STACK_LIST.decode(buf);
         Optional<BaseConstellation> focusConstellation = ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS)).decode(buf);
         float baseFocusShatterChance = ByteBufCodecs.FLOAT.decode(buf);
         int duration = ByteBufCodecs.INT.decode(buf);

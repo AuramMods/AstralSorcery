@@ -532,7 +532,7 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
                 type(MenuTypesAS.ALTAR_RADIANCE, ContainerAltarRadiance::new, ContainerAltarRadiance::new));
 
         public static final Codec<AltarType> CODEC = StringRepresentable.fromEnum(AltarType::values);
-        public static final StreamCodec<FriendlyByteBuf, AltarType> STREAM_CODEC = CodecUtil.enumStreamCodec(AltarType.class);
+        public static final StreamCodec<? super FriendlyByteBuf, AltarType> STREAM_CODEC = CodecUtil.enumStreamCodec(AltarType.class);
 
         private final ResearchTier requiredTier;
         private final ObserverRegistryObject requiredStructure;

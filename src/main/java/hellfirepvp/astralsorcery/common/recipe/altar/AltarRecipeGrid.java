@@ -19,13 +19,13 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -65,7 +65,7 @@ public class AltarRecipeGrid {
 
     public static AltarRecipeGrid create(Map<Character, IngredientBridge> ingredientKeys, List<String> pattern, List<String> relayPattern) {
         AltarRecipeGrid.GridData data = new AltarRecipeGrid.GridData(ingredientKeys, pattern, relayPattern);
-        return createGrid(data).getOrThrow();
+        return createGrid(data).getOrThrow(false, message -> { throw new IllegalArgumentException(message); });
     }
 
     private static DataResult<AltarRecipeGrid> createGrid(GridData data) {
@@ -147,11 +147,18 @@ public class AltarRecipeGrid {
         return true;
     }
 
+    private static Codec<List<String>> squarePattern(int size) {
+        Function<List<String>, DataResult<List<String>>> validateRows = rows -> rows.size() == size
+                ? DataResult.success(rows)
+                : DataResult.error(() -> "Expected " + size + " pattern rows, got " + rows.size());
+        return CodecUtil.stringSized(size, size).listOf().flatXmap(validateRows, validateRows);
+    }
+
     public record GridData(Map<Character, IngredientBridge> ingredientKeys, List<String> pattern, List<String> relayPattern) {
         public static final MapCodec<GridData> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Codec.unboundedMap(CharacterCodec.CODEC_NON_BLANK, IngredientBridge.CODEC.codec()).fieldOf("key").forGetter(GridData::ingredientKeys),
-                CodecUtil.stringSized(3, 3).listOf(3, 3).fieldOf("pattern").forGetter(GridData::pattern),
-                CodecUtil.stringSized(5, 5).listOf(5, 5).fieldOf("relay_pattern").forGetter(GridData::relayPattern)
+                squarePattern(3).fieldOf("pattern").forGetter(GridData::pattern),
+                squarePattern(5).fieldOf("relay_pattern").forGetter(GridData::relayPattern)
         ).apply(inst, GridData::new));
     }
 }
