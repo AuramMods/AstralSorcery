@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.render.RenderTypeBuilder;
 import hellfirepvp.astralsorcery.client.resource.*;
 import hellfirepvp.astralsorcery.client.util.Blending;
-import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 
 import static hellfirepvp.astralsorcery.client.lib.ShadersAS.POSITION_COLOR_TEX_ALPHA_BLOOM_SHADER;
@@ -147,7 +147,7 @@ public class RenderTypesAS {
                         .build());
         EFFECT_FX_COLOR_SPHERE = createType("effect_fx_color_sphere", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES, Short.MAX_VALUE + 1, false, true,
                 RenderTypeBuilder.builder()
-                        .shader(RenderStateShard.POSITION_COLOR_SHADER)
+                        .shader(GameRenderer::getPositionColorShader)
                         .blend(Blending.DEFAULT)
                         .disableTexture()
                         .particleShaderTarget()
@@ -211,21 +211,21 @@ public class RenderTypesAS {
     private static void initModelTypes() {
         MODEL_ATTUNEMENT_ALTAR = createType("model_attunement_altar", DefaultVertexFormat.NEW_ENTITY,
                 RenderTypeBuilder.builder()
-                        .shader(RenderStateShard.RENDERTYPE_ENTITY_SOLID_SHADER)
+                        .shader(GameRenderer::getRendertypeEntitySolidShader)
                         .texture(AssetLibrary.loadTexture(AssetLocation.BLOCKS, "attunement_altar", "entity_attunement_altar"))
                         .enableLighting()
                         .enableOverlay()
                         .build());
         MODEL_LENS_SOLID = createType("model_lens_solid", DefaultVertexFormat.NEW_ENTITY,
                 RenderTypeBuilder.builder()
-                        .shader(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                        .shader(GameRenderer::getRendertypeEntityCutoutShader)
                         .texture(AssetLibrary.loadTexture(AssetLocation.BLOCKS, "lens", "entity_lens"))
                         .enableLighting()
                         .enableOverlay()
                         .build());
         MODEL_LENS_GLASS = createType("model_lens_glass", DefaultVertexFormat.NEW_ENTITY,
                 RenderTypeBuilder.builder()
-                        .shader(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                        .shader(GameRenderer::getRendertypeEntityTranslucentShader)
                         .texture(AssetLibrary.loadTexture(AssetLocation.BLOCKS, "lens", "entity_lens_glass"))
                         .blend(Blending.DEFAULT)
                         .disableDepthMask()
@@ -234,7 +234,7 @@ public class RenderTypesAS {
                         .build());
         TER_CHALICE_LIQUID = createType("ter_chalice_liquid", DefaultVertexFormat.NEW_ENTITY,
                 RenderTypeBuilder.builder()
-                        .shader(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                        .shader(GameRenderer::getRendertypeEntityTranslucentShader)
                         .blockAtlasTexture()
                         .blend(Blending.DEFAULT)
                         .enableLighting()
@@ -259,7 +259,7 @@ public class RenderTypesAS {
                         .build());
         ENTITY_FLUID_INPUT_FLUID = createType("entity_fluid_input_fluid", DefaultVertexFormat.NEW_ENTITY, true,
                 RenderTypeBuilder.builder()
-                        .shader(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                        .shader(GameRenderer::getRendertypeEntityTranslucentShader)
                         .blockAtlasTexture()
                         .blend(Blending.DEFAULT)
                         .enableLighting()

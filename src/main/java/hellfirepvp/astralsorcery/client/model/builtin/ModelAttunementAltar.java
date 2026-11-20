@@ -58,13 +58,13 @@ public class ModelAttunementAltar extends CustomModel {
     }
 
     public void renderBase(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay) {
-        this.base.render(poseStack, buffer, packedLight, packedOverlay, 0xFFFFFFFF);
+        this.base.render(poseStack, buffer, packedLight, packedOverlay);
     }
 
     public void renderHoveringToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float offX, float offZ, float perc) {
         float distance = 0.9453125F;
         this.hovering.setPos(-2F + (16F * offX * distance), -16F, -2F + (16F * offZ * distance));
         this.setAngles(this.hovering, offZ * 0.39269908169872414F * perc, 0, offX * -0.39269908169872414F * perc);
-        this.hovering.render(poseStack, buffer, packedLight, packedOverlay, 0xFFFFFFFF);
+        this.hovering.render(poseStack, buffer, packedLight, packedOverlay);
     }
 }

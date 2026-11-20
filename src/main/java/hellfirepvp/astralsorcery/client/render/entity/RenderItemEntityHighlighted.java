@@ -19,11 +19,9 @@ import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -35,7 +33,6 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 public class RenderItemEntityHighlighted extends ItemEntityRenderer {
 
     private final ItemRenderer itemRenderer;
-    private final RandomSource random = RandomSource.create();
 
     public RenderItemEntityHighlighted(EntityRendererProvider.Context context) {
         super(context);
@@ -47,9 +44,8 @@ public class RenderItemEntityHighlighted extends ItemEntityRenderer {
         if (entity instanceof ItemEntityHighlighted highlighted && highlighted.hasColor()) {
             highlighted.getColor().ifPresent(color -> {
                 ItemStack stack = entity.getItem();
-                this.random.setSeed(getSeedForItemStack(stack));
                 BakedModel bakedmodel = this.itemRenderer.getModel(stack, entity.level(), null, entity.getId());
-                boolean shouldBob = IClientItemExtensions.of(stack).shouldBobAsEntity(stack);
+                boolean shouldBob = this.shouldBob();
                 float bobOffset = shouldBob ? Mth.sin(((float) entity.tickCount + partialTicks) / 10 + entity.bobOffs) * 0.1F + 0.1F : 0;
                 float modelOffset = bakedmodel.getTransforms().getTransform(ItemDisplayContext.GROUND).scale.y();
 

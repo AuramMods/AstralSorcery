@@ -8,10 +8,15 @@
 
 package hellfirepvp.astralsorcery.client.util;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.RandomSource;
 import org.joml.Quaternionf;
@@ -26,6 +31,14 @@ import org.joml.Vector3f;
  */
 public class RenderLightFanUtil {
 
+    private static final RenderType LIGHT_RAYS = RenderType.create(AstralSorcery.key("light_rays").toString(),
+            DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES, 1536, false, false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeLightningShader))
+                    .setWriteMaskState(new RenderStateShard.WriteMaskStateShard(true, false))
+                    .setTransparencyState(RenderStateShard.LIGHTNING_TRANSPARENCY)
+                    .createCompositeState(false));
+
     private static final float HALF_SQRT_3 = (float)(Math.sqrt(3.0) / 2.0);
 
     public static void renderLightFan(PoseStack poseStack, long seed, int tick, float pTicks, MultiBufferSource src, int color, float minScale, float scale, int count) {
@@ -33,7 +46,7 @@ public class RenderLightFanUtil {
         float effectTick = (tick + pTicks) / 200F;
 
         poseStack.pushPose();
-        renderFan(poseStack, rand, effectTick, src.getBuffer(RenderType.dragonRays()), color, minScale, scale, count);
+        renderFan(poseStack, rand, effectTick, src.getBuffer(LIGHT_RAYS), color, minScale, scale, count);
         poseStack.popPose();
 
         RenderUtil.finishDrawing(src);

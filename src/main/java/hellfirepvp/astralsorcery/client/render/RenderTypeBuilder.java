@@ -14,8 +14,11 @@ import hellfirepvp.astralsorcery.client.resource.AtlasTexture;
 import hellfirepvp.astralsorcery.client.util.Blending;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.util.function.Supplier;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -39,6 +42,10 @@ public class RenderTypeBuilder {
     public RenderTypeBuilder shader(RenderStateShard.ShaderStateShard shaderState) {
         this.builder.setShaderState(shaderState);
         return this;
+    }
+
+    public RenderTypeBuilder shader(Supplier<ShaderInstance> shader) {
+        return this.shader(new RenderStateShard.ShaderStateShard(shader));
     }
 
     public RenderTypeBuilder texture(AbstractRenderTexture texture) {
