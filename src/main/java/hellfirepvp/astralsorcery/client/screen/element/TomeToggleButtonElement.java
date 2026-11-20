@@ -87,7 +87,7 @@ public class TomeToggleButtonElement extends AbstractWidget {
         if (this.isHovered()) {
             DeferredTooltipUtil.drawTooltip(guiGraphics, graphics -> {
                 TooltipUtil.blueColor(() -> {
-                    Component cmp = Component.translatable("tome.research.info.structure.slice_view_toggle").withColor(ColorsAS.TOME_TEXT_COLOR.getColor());
+                    Component cmp = Component.translatable("tome.research.info.structure.slice_view_toggle").withStyle(style -> style.withColor(ColorsAS.TOME_TEXT_COLOR.getColor()));
                     graphics.renderTooltip(Minecraft.getInstance().font, cmp, mouseX, mouseY);
                     graphics.bufferSource().endBatch();
                 });

@@ -328,10 +328,10 @@ public class TomeLumenScreen extends TomeScreen implements TomeStarParallaxLayer
         if (this.hoveredLumen != null) {
             ColorWrapper color = this.hoveredLumen.getColor(ClientProxy.getClientTick());
             MutableComponent name = this.hoveredLumen.getHoverName().copy()
-                    .withColor(color.getColor());
+                    .withStyle(style -> style.withColor(color.getColor()));
 
-            color = color.darker();
-            TooltipUtil.changeColor(0xFF000011, 0xFF000011, color.getColor(), color.getColor(), () -> {
+            int borderColor = color.darker().getColor();
+            TooltipUtil.changeColor(0xFF000011, 0xFF000011, borderColor, borderColor, () -> {
                 guiGraphics.renderComponentTooltip(Minecraft.getInstance().font, List.of(name), mouseX, mouseY, ItemStack.EMPTY);
             });
         }

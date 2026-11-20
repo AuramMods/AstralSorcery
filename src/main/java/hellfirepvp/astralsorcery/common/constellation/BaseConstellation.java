@@ -77,7 +77,7 @@ public class BaseConstellation implements Comparable<BaseConstellation> {
     }
 
     public MutableComponent getColoredName() {
-        return this.getName().withColor(this.constellationColor.getColor());
+        return this.getName().withStyle(style -> style.withColor(this.constellationColor.getColor()));
     }
 
     public Tier getTier() {

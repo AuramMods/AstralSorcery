@@ -74,7 +74,9 @@ public class LumenDisplayPositionLoader implements ResourceManagerReloadListener
                         String posJson = IOUtils.toString(stream, StandardCharsets.UTF_8);
                         JsonObject obj = GSON.fromJson(posJson, JsonObject.class);
                         LumenDisplayPositionProvider.PositionFile file = LumenDisplayPositionProvider.PositionFile.CODEC.parse(JsonOps.INSTANCE, obj)
-                                .getOrThrow(str -> new JsonParseException("Invalid tome lumen display position file: " + str));
+                                .getOrThrow(false, str -> {
+                                    throw new JsonParseException("Invalid tome lumen display position file: " + str);
+                                });
                         if (file.replace()) {
                             this.positions.clear();
                         }

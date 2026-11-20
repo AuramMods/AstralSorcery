@@ -65,7 +65,13 @@ public class ComponentUtil {
 
     private static Style applyTag(String tagName, String colorArg, Style baseStyle) {
         return switch (tagName) {
-            case "color" -> baseStyle.withColor(TextColor.parseColor(colorArg).getOrThrow(IllegalArgumentException::new));
+            case "color" -> {
+                TextColor color = colorArg == null ? null : TextColor.parseColor(colorArg);
+                if (color == null) {
+                    throw new IllegalArgumentException("Invalid text color: " + colorArg);
+                }
+                yield baseStyle.withColor(color);
+            }
             case "bold" -> baseStyle.withBold(true);
             case "italic" -> baseStyle.withItalic(true);
             default -> baseStyle;

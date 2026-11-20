@@ -61,7 +61,7 @@ public class PerkCategory {
     }
 
     public MutableComponent getDisplayName() {
-        return this.name.copy().withColor(this.getColor().getColor());
+        return this.name.copy().withStyle(style -> style.withColor(this.getColor().getColor()));
     }
 
     public ColorWrapper getColor() {

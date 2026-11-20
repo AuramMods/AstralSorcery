@@ -376,7 +376,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
     public void renderLumen(int offsetX, int offsetY, Lumen lumen) {
         ColorWrapper color = lumen.getColor(ClientProxy.getClientTick());
         MutableComponent name = lumen.getHoverName().copy()
-                .withColor(color.getColor());
+                .withStyle(style -> style.withColor(color.getColor()));
         this.addHoverInfos(offsetX - 8, offsetY - 8, 32, 32, new TooltipInfo(name));
     }
 

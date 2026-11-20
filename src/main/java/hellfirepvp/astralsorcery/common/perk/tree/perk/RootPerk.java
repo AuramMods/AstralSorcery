@@ -104,7 +104,7 @@ public abstract class RootPerk<D extends AbstractPerk.Data> extends AttributeMod
     public MutableComponent getName(PlayerProgress progress, Player player) {
         MutableComponent name = super.getName(progress, player);
         if (progress.hasDiscoveredConstellation(this.getConstellation())) {
-            return name.withColor(this.getConstellation().getConstellationColor().getColor());
+            return name.withStyle(style -> style.withColor(this.getConstellation().getConstellationColor().getColor()));
         }
         return name;
     }

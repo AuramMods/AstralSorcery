@@ -62,11 +62,12 @@ public abstract class ConstellationPositionProvider implements DataProvider {
         this.registerPositions();
 
         PositionFile file = new PositionFile(this.replace, false, this.positions);
-        return DataProvider.saveStable(
-                output,
-                PositionFile.CODEC.encodeStart(JsonOps.INSTANCE, file).getOrThrow(),
-                createPath()
-        );
+        Path path = this.createPath();
+        var json = PositionFile.CODEC.encodeStart(JsonOps.INSTANCE, file)
+                .getOrThrow(false, error -> {
+                    throw new IllegalArgumentException("Cannot generate " + path + ": " + error);
+                });
+        return DataProvider.saveStable(output, json, path);
     }
 
     protected Path createPath() {

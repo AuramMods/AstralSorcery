@@ -206,7 +206,7 @@ public abstract class AbstractPerk<T extends AbstractPerk.Data> implements Modif
 
     public MutableComponent getName(PlayerProgress progress, Player player) {
         return Component.translatable(String.format("%s.name", this.getNameKey()))
-                .withColor(this.getCategory().getColor().getColor());
+                .withStyle(style -> style.withColor(this.getCategory().getColor().getColor()));
     }
 
     public List<String> getDescriptionIds() {

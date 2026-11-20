@@ -345,9 +345,9 @@ public class RenderPageAltar extends RenderPageRecipe<AltarRecipe> {
             IntRectangle rctLumen = new IntRectangle(offsetX, offsetY, 41, 8);
             ColorWrapper color = lumen.getLumen().getColor(ClientProxy.getClientTick());
             MutableComponent name = lumen.getLumen().getHoverName().copy()
-                    .withColor(color.getColor());
+                    .withStyle(style -> style.withColor(color.getColor()));
             if (!lumen.getLumen().maySee(level, prog)) {
-                name = Component.translatable("lumen.astralsorcery.type.unknown").withColor(color.getColor());
+                name = Component.translatable("lumen.astralsorcery.type.unknown").withStyle(style -> style.withColor(color.getColor()));
             }
 
             List<Component> tooltip = new ArrayList<>();

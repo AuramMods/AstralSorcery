@@ -88,7 +88,8 @@ public class ResearchMessageHelper {
                 discoveredCt.append(", ");
             }
 
-            MutableComponent lumenCmp = lumen.getName().copy().withColor(lumen.getColor(sPlayer.serverLevel().getGameTime()).getColor());
+            int color = lumen.getColor(sPlayer.serverLevel().getGameTime()).getColor();
+            MutableComponent lumenCmp = lumen.getName().copy().withStyle(style -> style.withColor(color));
             discoveredCt.append(lumenCmp);
             i++;
         }

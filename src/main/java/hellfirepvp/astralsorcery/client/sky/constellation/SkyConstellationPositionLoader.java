@@ -71,7 +71,9 @@ public class SkyConstellationPositionLoader implements ResourceManagerReloadList
                         String posJson = IOUtils.toString(stream, StandardCharsets.UTF_8);
                         JsonObject obj = GSON.fromJson(posJson, JsonObject.class);
                         ConstellationPositionProvider.PositionFile file = ConstellationPositionProvider.PositionFile.CODEC.parse(JsonOps.INSTANCE, obj)
-                                .getOrThrow(str -> new JsonParseException("Invalid Constellation position file: " + str));
+                                .getOrThrow(false, str -> {
+                                    throw new JsonParseException("Invalid Constellation position file: " + str);
+                                });
                         if (file.replace()) {
                             this.renderDebug = false;
                             this.positions.clear();
