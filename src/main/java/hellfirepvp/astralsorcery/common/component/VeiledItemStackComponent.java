@@ -76,11 +76,11 @@ public record VeiledItemStackComponent(ItemStack appearance, Optional<Long> expi
         VeiledItemStackComponent that = (VeiledItemStackComponent) o;
         return known == that.known &&
                 Objects.equals(expiryGameTick, that.expiryGameTick) &&
-                ItemStack.isSameItemSameComponents(appearance, that.appearance);
+                ItemStack.isSameItemSameTags(appearance, that.appearance);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ItemStack.hashItemAndComponents(appearance), expiryGameTick, known);
+        return Objects.hash(appearance.getItem(), appearance.getTag(), expiryGameTick, known);
     }
 }

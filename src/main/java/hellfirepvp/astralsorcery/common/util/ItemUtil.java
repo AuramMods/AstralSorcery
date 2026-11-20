@@ -95,7 +95,7 @@ public class ItemUtil {
     public static Map<Integer, ItemStack> findItemsInInventory(IItemHandler inv, ItemStack match, boolean strict) {
         Predicate<ItemStack> matchPredicate = strict
                 ? stack -> ItemStack.isSameItem(stack, match)
-                : stack -> ItemStack.isSameItemSameComponents(stack, match);
+                : stack -> ItemStack.isSameItemSameTags(stack, match);
         return findItemsInInventory(inv, matchPredicate);
     }
 
@@ -153,11 +153,11 @@ public class ItemUtil {
 
     public static Optional<ItemStack> swapItem(RegistryAccess registries, ItemStack existing, Item newItem) {
         ResourceLocation newStackId = registries.registryOrThrow(Registries.ITEM).getKey(newItem);
-        RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, registries);
         return ItemStack.CODEC.encodeStart(ops, existing).map(itemTag -> {
             if (itemTag instanceof CompoundTag tag) {
                 tag.putString("id", newStackId.toString());
-                return ItemStack.CODEC.parse(ops, tag).result().orElse(ItemStack.EMPTY);
+                return ItemStack.CODEC.parse(ops, tag.copy()).result().orElse(ItemStack.EMPTY);
             }
             return ItemStack.EMPTY;
         }).result();
