@@ -9,7 +9,7 @@
 package hellfirepvp.astralsorcery.client.resource;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import hellfirepvp.astralsorcery.client.lib.TexturesAS;
+import hellfirepvp.astralsorcery.AstralSorcery;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -24,7 +24,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 public class AtlasTexture extends AbstractRenderTexture.Full {
 
     private static final AtlasTexture BLOCK_ATLAS = new AtlasTexture(InventoryMenu.BLOCK_ATLAS);
-    private static final AtlasTexture LUMEN_ATLAS = new AtlasTexture(TexturesAS.ATLAS_LUMEN);
+    private static final AtlasTexture LUMEN_ATLAS = new AtlasTexture(AstralSorcery.key("textures/atlas/lumen.png"));
 
     private AtlasTexture(ResourceLocation atlasKey) {
         super(atlasKey);

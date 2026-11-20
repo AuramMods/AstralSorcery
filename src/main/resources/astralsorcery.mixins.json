@@ -36,6 +36,7 @@
         "client.MixinLevelRenderer",
         "client.MixinLivingEntityRendererScale",
         "client.MixinMinecraft",
+        "client.MixinModelManager",
         "client.MixinMouseHandler",
         "client.MixinParticleEngine",
         "client.MixinPlayerItemInHandLayer"

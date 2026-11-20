@@ -58,7 +58,7 @@ public class AstralDataGenerator {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
         if (event.includeClient()) {
-            gen.addProvider(true, new AstralCustomSpriteProvider(output, lookupProvider, fileHelper));
+            gen.addProvider(true, new AstralCustomSpriteProvider(output, fileHelper));
             gen.addProvider(true, new AstralBlockModelProvider(output, fileHelper));
             gen.addProvider(true, new AstralItemModelProvider(output, fileHelper));
             gen.addProvider(true, new AstralBlockStateProvider(output, fileHelper));

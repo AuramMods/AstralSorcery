@@ -8,11 +8,10 @@
 
 package hellfirepvp.astralsorcery.client.lib;
 
-import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.resource.AbstractRenderTexture;
 import hellfirepvp.astralsorcery.client.resource.AssetLocation;
+import hellfirepvp.astralsorcery.client.resource.AtlasTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.event.RegisterMaterialAtlasesEvent;
 
 import static hellfirepvp.astralsorcery.client.resource.AssetLibrary.loadTexture;
 
@@ -26,7 +25,7 @@ import static hellfirepvp.astralsorcery.client.resource.AssetLibrary.loadTexture
 public class TexturesAS {
 
     //Atlases
-    public static ResourceLocation ATLAS_LUMEN = AstralSorcery.key("textures/atlas/lumen.png");
+    public static final ResourceLocation ATLAS_LUMEN = AtlasTexture.getLumenAtlas().getKey();
 
     //Screen
     public static AbstractRenderTexture SCREEN_TOME_FRAME_FULL;
@@ -215,9 +214,5 @@ public class TexturesAS {
         SCREEN_EFFECT_PERK_SEAL             = loadTexture(AssetLocation.EFFECT, "perk", "seal");
         SCREEN_EFFECT_PERK_SEAL_BREAK       = loadTexture(AssetLocation.EFFECT, "perk", "seal_break");
         SCREEN_EFFECT_PERK_UNLOCK           = loadTexture(AssetLocation.EFFECT, "perk", "unlock");
-    }
-
-    public static void registerAtlases(RegisterMaterialAtlasesEvent event) {
-        event.register(ATLAS_LUMEN, AstralSorcery.key("lumen"));
     }
 }

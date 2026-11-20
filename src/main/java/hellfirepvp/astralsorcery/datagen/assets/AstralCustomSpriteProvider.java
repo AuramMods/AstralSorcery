@@ -10,13 +10,11 @@ package hellfirepvp.astralsorcery.datagen.assets;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.SpriteSourceProvider;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -27,12 +25,12 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AstralCustomSpriteProvider extends SpriteSourceProvider {
 
-    public AstralCustomSpriteProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, AstralSorcery.MODID, existingFileHelper);
+    public AstralCustomSpriteProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, existingFileHelper, AstralSorcery.MODID);
     }
 
     @Override
-    protected void gather() {
+    protected void addSources() {
         this.atlas(BLOCKS_ATLAS)
                 .addSource(new SingleFile(AstralSorcery.key("model/astrolabe_in_hand"), Optional.empty()));
     }

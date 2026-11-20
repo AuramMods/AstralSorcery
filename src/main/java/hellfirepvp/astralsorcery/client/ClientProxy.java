@@ -147,7 +147,6 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(this::onItemColorSetup);
         modEventBus.addListener(this::onBlockColorSetup);
         modEventBus.addListener(this::onClientSetup);
-        modEventBus.addListener(TexturesAS::registerAtlases);
         modEventBus.addListener(ShadersAS::registerShaders);
         modEventBus.addListener(CustomModelsAS::registerCustomModels);
         modEventBus.addListener(RenderersAS::registerTileEntityRenders);
