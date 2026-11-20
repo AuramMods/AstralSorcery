@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(Projectile.class)
 public class MixinProjectile {
 
-    @ModifyVariable(method = "getMovementToShoot", at = @At("HEAD"), ordinal = 1, argsOnly = true)
+    @ModifyVariable(method = "shoot(DDDFF)V", at = @At("HEAD"), ordinal = 1, argsOnly = true)
     public float modifyInaccuracy(float inaccuracy) {
         Projectile thisProjectile = MiscUtil.cast(this);
         ProjectileInaccuracyEvent event = new ProjectileInaccuracyEvent(thisProjectile, inaccuracy);

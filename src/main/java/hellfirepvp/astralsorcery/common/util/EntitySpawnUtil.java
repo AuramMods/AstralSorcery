@@ -21,8 +21,9 @@ import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
-import net.neoforged.neoforge.event.EventHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -75,11 +76,12 @@ public class EntitySpawnUtil {
 
         e.moveTo(posX, posY, posZ, sLevel.random.nextFloat() * 360F, 0F);
         if (e instanceof Mob mob) {
-            EventHooks.finalizeMobSpawn(mob, sLevel, sLevel.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
+            ForgeEventFactory.onFinalizeSpawn(mob, sLevel, sLevel.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null, null);
+            if (mob.isSpawnCancelled()) return null;
         }
 
         sLevel.addFreshEntityWithPassengers(e);
-        return e;
+        return e.isAddedToWorld() ? e : null;
     }
 
     public static <T extends Entity> boolean canEntityNaturallySpawnHere(ServerLevel sLevel,
@@ -108,7 +110,7 @@ public class EntitySpawnUtil {
             }
         }
         if (!SpawnConditionFlags.isSet(conditionFlags, SpawnConditionFlags.IGNORE_PLACEMENT_TYPES)) {
-            if (!SpawnPlacements.isSpawnPositionOk(type, sLevel, pos)) {
+            if (!NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), sLevel, pos, type)) {
                 return false;
             }
             if (!SpawnPlacements.checkSpawnRules(type, sLevel, spawnReason, pos, sLevel.random)) {
@@ -133,10 +135,10 @@ public class EntitySpawnUtil {
         if (e instanceof Mob mob) {
             MobSpawnEvent.PositionCheck check = new MobSpawnEvent.PositionCheck(mob, sLevel, spawnReason, null);
             MinecraftForge.EVENT_BUS.post(check);
-            if (check.getResult() == MobSpawnEvent.PositionCheck.Result.FAIL) {
+            if (check.getResult() == Result.DENY) {
                 return false;
             }
-            if (check.getResult() == MobSpawnEvent.PositionCheck.Result.DEFAULT) {
+            if (check.getResult() == Result.DEFAULT) {
                 if (!SpawnConditionFlags.isSet(conditionFlags, SpawnConditionFlags.IGNORE_ENTITY_SPAWN_PLACEMENT)) {
                     if (!mob.checkSpawnRules(sLevel, spawnReason)) {
                         return false;
@@ -168,7 +170,7 @@ public class EntitySpawnUtil {
         if (spawnOptions == null) {
             spawnOptions = gen.getMobsAt(sLevel.getBiome(pos), mgr, category, pos);
         }
-        return EventHooks.getPotentialSpawns(sLevel, category, pos, spawnOptions);
+        return ForgeEventFactory.getPotentialSpawns(sLevel, category, pos, spawnOptions);
     }
 
     public static class SpawnConditionFlags {

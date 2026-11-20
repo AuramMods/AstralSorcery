@@ -32,7 +32,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.EventHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +132,7 @@ public class ArtifactEffectEatFoodAura extends ArtifactEffect implements Continu
                     0.1, 0.1, 0.1, 0.05);
         }
 
-        ItemStack result = EventHooks.onItemUseFinish(player, foodCopy, 0, food.finishUsingItem(sLevel, player));
+        ItemStack result = ForgeEventFactory.onItemUseFinish(player, foodCopy, 0, food.finishUsingItem(sLevel, player));
         if (result != food) {
             inventory.setItem(foodSlot, result);
         }
