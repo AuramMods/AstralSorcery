@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.mixin;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import hellfirepvp.astralsorcery.common.perk.type.AttributeTypeMiningSize;
+import hellfirepvp.astralsorcery.common.util.BlockUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.time.TimeStopEntityHelper;
 import net.minecraft.core.BlockPos;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -34,6 +36,13 @@ public class MixinServerLevel {
     @WrapWithCondition(method = "tickNonPassenger", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
     private boolean astralsorcery$tickUnfrozenEntity(Entity entity) {
         return TimeStopEntityHelper.canTick(entity);
+    }
+
+    @Inject(method = "addFreshEntity", at = @At("HEAD"), cancellable = true)
+    private void deferCapturedDrop(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+        if (BlockUtil.deferDrop(MiscUtil.cast(this), entity)) {
+            cir.setReturnValue(true);
+        }
     }
 
     @Inject(method = "destroyBlockProgress", at = @At("RETURN"))

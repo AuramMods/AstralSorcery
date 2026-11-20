@@ -14,6 +14,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -42,6 +44,8 @@ import java.util.function.Supplier;
  * Date: 07.09.2026 / 10:00
  */
 public class BlockUtil {
+
+    private static final ThreadLocal<DeferredDrops> DEFERRED_DROPS = new ThreadLocal<>();
 
     public static List<ItemStack> getDrops(ServerLevel sLevel, BlockPos pos, int fortuneLevel) {
         return getDrops(sLevel, pos, fortuneLevel, new ItemStack(Items.STICK));
@@ -87,6 +91,39 @@ public class BlockUtil {
     }
 
     public static <T> LevelChanges<T> captureLevelChanges(Level level, Supplier<ChangeResult<T>> fn) {
+        DeferredDrops parent = DEFERRED_DROPS.get();
+        DeferredDrops drops = new DeferredDrops(level, parent);
+        DEFERRED_DROPS.set(drops);
+        LevelChanges<T> changes;
+        try {
+            changes = captureBlockSnapshots(level, fn, drops);
+        } finally {
+            if (parent == null) {
+                DEFERRED_DROPS.remove();
+            } else {
+                DEFERRED_DROPS.set(parent);
+            }
+        }
+        if (drops.committed) {
+            drops.entities.forEach(level::addFreshEntity);
+        }
+        return changes;
+    }
+
+    public static boolean deferDrop(ServerLevel level, Entity entity) {
+        if (!(entity instanceof ItemEntity || entity instanceof ExperienceOrb) || entity.isRemoved()) {
+            return false;
+        }
+        for (DeferredDrops drops = DEFERRED_DROPS.get(); drops != null; drops = drops.parent) {
+            if (drops.level == level) {
+                drops.entities.add(entity);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static <T> LevelChanges<T> captureBlockSnapshots(Level level, Supplier<ChangeResult<T>> fn, DeferredDrops drops) {
         boolean wasCapturingBlockStates = level.captureBlockSnapshots;
         List<BlockSnapshot> previousCapturedStates = new ArrayList<>(level.capturedBlockSnapshots);
 
@@ -124,6 +161,7 @@ public class BlockUtil {
         } else {
             initialStates.values().forEach(snapshot -> applyBlockChange(level, snapshot));
         }
+        drops.committed = !result.revert;
         return new LevelChanges<>(capturedSnapshots, result.value);
     }
 
@@ -149,6 +187,19 @@ public class BlockUtil {
         } finally {
             level.restoringBlockSnapshots = wasRestoringBlockStates;
             level.captureBlockSnapshots = wasCapturingBlockStates;
+        }
+    }
+
+    private static final class DeferredDrops {
+        private final Level level;
+        @Nullable
+        private final DeferredDrops parent;
+        private final List<Entity> entities = new ArrayList<>();
+        private boolean committed;
+
+        private DeferredDrops(Level level, @Nullable DeferredDrops parent) {
+            this.level = level;
+            this.parent = parent;
         }
     }
 
