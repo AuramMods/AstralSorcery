@@ -137,6 +137,6 @@ public class LiquidStarlightRecipeBuilder implements RecipeBuilder {
         );
         recipe.setGroup(this.group);
         recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, LiquidStarlightRecipe.CODEC,
-                id.withPrefix("recipes/"), advancementBuilder));
+                advancementBuilder));
     }
 }

@@ -114,6 +114,6 @@ public class FocalCombineRecipeBuilder implements RecipeBuilder {
         );
         recipe.setGroup(this.group);
         recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, FocalCombineRecipe.CODEC,
-                id.withPrefix("recipes/"), advancementBuilder));
+                advancementBuilder));
     }
 }

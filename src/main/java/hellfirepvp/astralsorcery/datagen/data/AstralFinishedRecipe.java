@@ -27,7 +27,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 
 public record AstralFinishedRecipe<R extends CustomRecipe<R, ?>>(
         ResourceLocation id, R recipe, MapCodec<R> codec,
-        ResourceLocation advancementId, Advancement.Builder advancement) implements FinishedRecipe {
+        Advancement.Builder advancement) implements FinishedRecipe {
 
     public AstralFinishedRecipe {
         recipe.setId(id);
@@ -67,6 +67,6 @@ public record AstralFinishedRecipe<R extends CustomRecipe<R, ?>>(
 
     @Override
     public ResourceLocation getAdvancementId() {
-        return this.advancementId;
+        return this.id.withPrefix("recipes/");
     }
 }

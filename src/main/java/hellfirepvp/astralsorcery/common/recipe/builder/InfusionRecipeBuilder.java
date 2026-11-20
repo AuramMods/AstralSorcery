@@ -118,6 +118,6 @@ public class InfusionRecipeBuilder implements RecipeBuilder {
         );
         recipe.setGroup(this.group);
         recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, InfusionRecipe.CODEC,
-                id.withPrefix("recipes/"), advancementBuilder));
+                advancementBuilder));
     }
 }

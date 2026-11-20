@@ -306,6 +306,6 @@ public class AltarRecipeBuilder implements RecipeBuilder {
                 this.outputModifiers);
         recipe.setGroup(this.group);
         recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, AltarRecipe.CODEC,
-                id.withPrefix("recipes/"), advancementBuilder));
+                advancementBuilder));
     }
 }

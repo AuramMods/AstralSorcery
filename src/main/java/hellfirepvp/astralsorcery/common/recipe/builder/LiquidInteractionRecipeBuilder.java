@@ -111,6 +111,6 @@ public class LiquidInteractionRecipeBuilder implements RecipeBuilder {
                 this.result);
         recipe.setGroup(this.group);
         recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, LiquidInteractionRecipe.CODEC,
-                id.withPrefix("recipes/"), advancementBuilder));
+                advancementBuilder));
     }
 }

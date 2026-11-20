@@ -150,6 +150,6 @@ public class FocalTransmutationRecipeBuilder implements RecipeBuilder {
         );
         recipe.setGroup(this.group);
         recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, FocalTransmutationRecipe.CODEC,
-                id.withPrefix("recipes/"), advancementBuilder));
+                advancementBuilder));
     }
 }
