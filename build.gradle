@@ -23,6 +23,7 @@ sourceSets {
 
 def gameDir = { String profile -> layout.projectDirectory.dir("run/${profile}").asFile }
 def integrationMods = providers.gradleProperty('integrationMods').map { it.toBoolean() }.orElse(false)
+def mixinRefmap = 'astralsorcery.refmap.json'
 
 minecraft {
     mappings channel: 'official', version: minecraft_version
@@ -66,8 +67,15 @@ minecraft {
 }
 
 mixin {
-    add sourceSets.main, 'astralsorcery.refmap.json'
+    add sourceSets.main, mixinRefmap
     config 'astralsorcery.mixins.json'
+}
+
+tasks.named('compileJava', JavaCompile).configure { compile ->
+    // MixinGradle writes these files outside the Java class output directory.
+    outputs.file(providers.provider { compile.ext.outTsrgFile }).withPropertyName('mixinMappings')
+    outputs.file(providers.provider { compile.ext.refMapFile }).withPropertyName('mixinGeneratedRefmap')
+    outputs.file(providers.provider { new File(compile.temporaryDir, mixinRefmap) }).withPropertyName('mixinJarRefmap')
 }
 
 repositories {
