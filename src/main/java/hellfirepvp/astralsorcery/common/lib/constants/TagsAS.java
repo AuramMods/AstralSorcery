@@ -43,6 +43,8 @@ public class TagsAS {
         public static final TagKey<Block> MARBLE = blockTagCommon("marbles");
         public static final TagKey<Block> SOOTY_MARBLE = blockTag("sooty_marbles");
 
+        public static final TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("c", "relocation_not_supported"));
+        public static final TagKey<Block> NORMAL_PUMPKINS = blockTag("normal_pumpkins");
         public static final TagKey<Block> VALID_TREE_BEACON_BLOCK = blockTag("valid_tree_beacon_block");
 
         public static final TagKey<Block> SIMULATED_NON_MOVEABLE = BlockTags.create(Mods.SIMULATED.key("non_movable"));

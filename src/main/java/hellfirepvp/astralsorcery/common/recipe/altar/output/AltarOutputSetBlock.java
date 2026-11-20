@@ -69,7 +69,7 @@ public class AltarOutputSetBlock extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutput(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries) {
-        this.blockStates.getRandom(this.rand).map(WeightedEntry.Wrapper::data).ifPresent(state -> {
+        this.blockStates.getRandom(this.rand).map(WeightedEntry.Wrapper::getData).ifPresent(state -> {
             if (input.getAltar().getLevel() instanceof ServerLevel sLevel) {
                 sLevel.setBlock(input.getAltar().getBlockPos(), state, Block.UPDATE_ALL);
             }
@@ -79,7 +79,7 @@ public class AltarOutputSetBlock extends AltarRecipeOutputModifier {
 
     @Override
     public ItemStack modifyOutputForDisplay(ItemStack output, AltarCraftingInput input, HolderLookup.Provider registries, long tick) {
-        return this.blockStates.getRandom(this.rand).map(WeightedEntry.Wrapper::data).map(ItemUtil::createBlockStack).orElse(output);
+        return this.blockStates.getRandom(this.rand).map(WeightedEntry.Wrapper::getData).map(ItemUtil::createBlockStack).orElse(output);
     }
 
     public static class Builder {

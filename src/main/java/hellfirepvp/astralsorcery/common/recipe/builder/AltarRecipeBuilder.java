@@ -20,6 +20,7 @@ import hellfirepvp.astralsorcery.common.recipe.altar.effect.AltarEffect;
 import hellfirepvp.astralsorcery.common.recipe.altar.output.AltarRecipeOutputModifier;
 import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import hellfirepvp.astralsorcery.common.util.NameUtil;
+import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -37,7 +38,6 @@ import hellfirepvp.astralsorcery.common.ingredient.AstralIngredient;
 import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 import net.minecraftforge.fluids.FluidStack;
 import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -102,12 +102,12 @@ public class AltarRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public AltarRecipeBuilder setRecipeId(RegistryObject<?> identifiable) {
-        return this.setRecipeId(identifiable.getKey().location());
+    public AltarRecipeBuilder setRecipeId(RegisteredItemLike<?> identifiable) {
+        return this.setRecipeId(identifiable.getId());
     }
 
-    public AltarRecipeBuilder setRecipeId(RegistryObject<?> identifiable, String suffix) {
-        return this.setRecipeId(NameUtil.suffixPath(identifiable.getKey().location(), suffix));
+    public AltarRecipeBuilder setRecipeId(RegisteredItemLike<?> identifiable, String suffix) {
+        return this.setRecipeId(NameUtil.suffixPath(identifiable.getId(), suffix));
     }
 
     public AltarRecipeBuilder setGridLines(String line0, String line1, String line2) {

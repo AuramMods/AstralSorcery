@@ -12,6 +12,7 @@ import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.ConstellationsAS;
 import hellfirepvp.astralsorcery.common.lib.constants.ColorsAS;
 import hellfirepvp.astralsorcery.common.recipe.builder.FocalTransmutationRecipeBuilder;
+import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -102,7 +103,7 @@ public abstract class FocalTransmutationRecipeProvider extends RecipeProvider {
                 .color(ColorsAS.DYE_LIGHT_GRAY)
                 .outputs(Blocks.CLAY, 1)
                 .inputDisplay(Items.SAND)
-                .input(BlockPredicate.matchesTag(Tags.Blocks.SANDS))
+                .input(BlockPredicate.matchesTag(Tags.Blocks.SAND))
                 .requiresFocusedStarlight()
                 .save(recipeOutput);
         FocalTransmutationRecipeBuilder.builder()
@@ -110,7 +111,7 @@ public abstract class FocalTransmutationRecipeProvider extends RecipeProvider {
                 .color(ColorsAS.DYE_YELLOW)
                 .outputs(Blocks.END_STONE, 1)
                 .inputDisplay(Items.SANDSTONE)
-                .input(BlockPredicate.matchesTag(Tags.Blocks.SANDSTONE_BLOCKS))
+                .input(BlockPredicate.matchesTag(Tags.Blocks.SANDSTONE))
                 .requiresFocusedStarlight()
                 .save(recipeOutput);
         FocalTransmutationRecipeBuilder.builder()
@@ -126,7 +127,7 @@ public abstract class FocalTransmutationRecipeProvider extends RecipeProvider {
                 .color(ColorsAS.DYE_WHITE)
                 .outputs(Blocks.CAKE, 1)
                 .inputDisplay(Items.PUMPKIN)
-                .input(BlockPredicate.matchesTag(Tags.Blocks.PUMPKINS_NORMAL))
+                .input(BlockPredicate.matchesTag(TagsAS.Blocks.NORMAL_PUMPKINS))
                 .requiresFocusedStarlight()
                 .save(recipeOutput);
     }

@@ -16,9 +16,7 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
-import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.recipe.builder.LumenCrystallizationRecipeBuilder;
-import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -66,7 +64,7 @@ public abstract class LumenCrystallizationRecipeProvider extends RecipeProvider 
                 .catalystShatterMultiplier(0F)
                 .save(recipeOutput);
 
-        LumenCrystallizationRecipeBuilder.builder(Ingredient.of(Tags.Items.STONES), LumenAS.EVORSIO.get())
+        LumenCrystallizationRecipeBuilder.builder(Ingredient.of(Tags.Items.STONE), LumenAS.EVORSIO.get())
                 .catalystShatterMultiplier(5F)
                 .save(recipeOutput);
         LumenCrystallizationRecipeBuilder.builder(lumenCrystal(LumenAS.EVORSIO), LumenAS.EVORSIO.get(), "_crystal")
@@ -147,7 +145,7 @@ public abstract class LumenCrystallizationRecipeProvider extends RecipeProvider 
                 .save(recipeOutput);
     }
     
-    private static Ingredient lumenCrystal(Holder<Lumen> type) {
+    private static Ingredient lumenCrystal(LumenAS.DeferredLumen<?> type) {
         return StackDataIngredient.of(DataComponentsAS.LUMEN, new LumenComponent(type), ItemsAS.LUMEN_CRYSTAL);
     }
 }

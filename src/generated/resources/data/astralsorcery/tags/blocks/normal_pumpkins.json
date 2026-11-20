@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:pumpkin",
+    {
+      "id": "#forge:pumpkins/normal",
+      "required": false
+    },
+    {
+      "id": "#c:pumpkins/normal",
+      "required": false
+    }
+  ]
+}

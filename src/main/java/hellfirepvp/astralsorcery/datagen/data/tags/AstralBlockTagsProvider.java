@@ -13,6 +13,7 @@ import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
@@ -38,6 +39,11 @@ public class AstralBlockTagsProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.addMiningTags();
+
+        this.tag(TagsAS.Blocks.NORMAL_PUMPKINS)
+                .add(Blocks.PUMPKIN)
+                .addOptionalTag(new ResourceLocation("forge", "pumpkins/normal"))
+                .addOptionalTag(new ResourceLocation("c", "pumpkins/normal"));
 
         this.tag(TagsAS.Blocks.MARBLE)
                 .add(
@@ -110,7 +116,7 @@ public class AstralBlockTagsProvider extends BlockTagsProvider {
                         Blocks.MUDDY_MANGROVE_ROOTS
                 );
 
-        this.tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED)
+        this.tag(TagsAS.Blocks.RELOCATION_NOT_SUPPORTED)
                 .add(
                         BlocksAS.LUMEN_ARRAY.get(),
                         BlocksAS.LUMEN_ALCHEMY_ARRAY.get(),

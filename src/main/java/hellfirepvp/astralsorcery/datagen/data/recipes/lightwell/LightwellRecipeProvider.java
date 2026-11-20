@@ -65,7 +65,7 @@ public abstract class LightwellRecipeProvider extends RecipeProvider {
                 .productionMultiplier(0.8F)
                 .shatterMultiplier(0.05F)
                 .save(recipeOutput);
-        LightwellRecipeBuilder.builder(Ingredient.of(Tags.Items.NETHERRACKS), Fluids.LAVA, "_netherrack")
+        LightwellRecipeBuilder.builder(Ingredient.of(Tags.Items.NETHERRACK), Fluids.LAVA, "_netherrack")
                 .color(ColorWrapper.opaque(0xFF350C))
                 .productionMultiplier(0.4F)
                 .shatterMultiplier(0.04F)

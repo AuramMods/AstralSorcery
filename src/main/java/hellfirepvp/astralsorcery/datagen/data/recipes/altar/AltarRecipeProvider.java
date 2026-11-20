@@ -23,7 +23,6 @@ import hellfirepvp.astralsorcery.common.recipe.builder.AltarRecipeBuilder;
 import hellfirepvp.astralsorcery.common.research.ResearchTier;
 import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -161,7 +160,7 @@ public abstract class AltarRecipeProvider extends RecipeProvider {
                 .addInput('P', ItemsAS.BLOCK_MARBLE_PILLAR)
                 .addInput('R', ItemsAS.BLOCK_MARBLE_RUNED)
                 .addOutputModifier(AltarOutputUpdateResearchTier.create(ResearchTier.RESONANCE))
-                .addOutputModifier(AltarOutputSetBlock.builder().add(BlocksAS.ALTAR_RESONANCE).build())
+                .addOutputModifier(AltarOutputSetBlock.builder().add(BlocksAS.ALTAR_RESONANCE.get()).build())
                 .save(recipeOutput);
         AltarRecipeBuilder.builder(TileAltar.AltarType.ILLUMINATION)
                 .setRecipeId(ItemsAS.ILLUMINATION_POWDER)
@@ -341,7 +340,7 @@ public abstract class AltarRecipeProvider extends RecipeProvider {
                 .addRequiredFluid(FluidsAS.LIQUID_STARLIGHT.stack(FluidType.BUCKET_VOLUME))
                 .addRequiredFluid(FluidsAS.LIQUID_STARLIGHT.stack(FluidType.BUCKET_VOLUME))
                 .addOutputModifier(AltarOutputUpdateResearchTier.create(ResearchTier.LUMINANCE))
-                .addOutputModifier(AltarOutputSetBlock.builder().add(BlocksAS.ALTAR_LUMINANCE).build())
+                .addOutputModifier(AltarOutputSetBlock.builder().add(BlocksAS.ALTAR_LUMINANCE.get()).build())
                 .save(recipeOutput);
         AltarRecipeBuilder.builder(TileAltar.AltarType.RESONANCE)
                 .setRecipeId(ItemsAS.BLOCK_TREE_BEACON)
@@ -824,7 +823,7 @@ public abstract class AltarRecipeProvider extends RecipeProvider {
                 .addFocusConstellation(ConstellationsAS.ARMARA.get())
                 .addRequiredStarlight(ConstellationsAS.ARMARA.get())
                 .addOutputModifier(AltarOutputUpdateResearchTier.create(ResearchTier.RADIANCE))
-                .addOutputModifier(AltarOutputSetBlock.builder().add(BlocksAS.ALTAR_RADIANCE).build())
+                .addOutputModifier(AltarOutputSetBlock.builder().add(BlocksAS.ALTAR_RADIANCE.get()).build())
                 .save(recipeOutput);
 
         AltarRecipeBuilder.builder(TileAltar.AltarType.LUMINANCE)
@@ -978,7 +977,7 @@ public abstract class AltarRecipeProvider extends RecipeProvider {
                 .addInput('T', ItemsAS.SHIFTING_STAR)
                 .addInput('S', ItemsAS.STARDUST)
                 .addInput('M', TagsAS.Items.INGOTS_STARMETAL)
-                .addInput('L', Tags.Items.LEATHERS)
+                .addInput('L', Tags.Items.LEATHER)
                 .addInput('O', Tags.Items.INGOTS_IRON)
                 .addRequiredAdditionalInput(1, ItemsAS.STARDUST)
                 .addRequiredAdditionalInput(1, ItemsAS.STARDUST)
@@ -1026,8 +1025,8 @@ public abstract class AltarRecipeProvider extends RecipeProvider {
                 .addInput('T', ItemsAS.SHIFTING_STAR)
                 .addInput('S', ItemsAS.STARDUST)
                 .addInput('M', TagsAS.Items.INGOTS_STARMETAL)
-                .addInput('L', Tags.Items.COBBLESTONES)
-                .addInput('O', Tags.Items.GUNPOWDERS)
+                .addInput('L', Tags.Items.COBBLESTONE)
+                .addInput('O', Tags.Items.GUNPOWDER)
                 .addRequiredAdditionalInput(1, ItemsAS.STARDUST)
                 .addRequiredAdditionalInput(1, ItemsAS.STARDUST)
                 .addRequiredAdditionalInput(1, ItemsAS.STARDUST)
@@ -1102,7 +1101,7 @@ public abstract class AltarRecipeProvider extends RecipeProvider {
                         "S   S"
                 )
                 .addInput('E', Items.ENDER_EYE)
-                .addInput('F', Tags.Items.STRINGS)
+                .addInput('F', Tags.Items.STRING)
                 .addInput('G', Tags.Items.INGOTS_GOLD)
                 .addInput('Z', ItemsAS.SHIFTING_STAR)
                 .addInput('S', ItemsAS.STARDUST)
