@@ -39,7 +39,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -89,16 +88,21 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
     }
 
     @Override
+    public boolean isValidInputForOutput(LiquidStarlightRecipeInput input, List<ItemEntity> otherValidInputs) {
+        LumenComponent lumen = DataComponentsAS.LUMEN.getOrDefault(input.getTriggerEntity().getItem(), LumenComponent.EMPTY);
+        if (!LumenAS.PRISMATIC.is(lumen.key())) return true;
+
+        ItemStack bindable = findBindableInput(otherValidInputs);
+        return !IsLumenBindableIngredient.INSTANCE.isPotionLumenBindable(bindable) || canBoostPotion(bindable);
+    }
+
+    @Override
     public void createOutput(LiquidStarlightRecipe recipe, LiquidStarlightRecipeInput input) {
         ItemEntity inputEntity = input.getTriggerEntity();
         Level level = inputEntity.level();
         LogicalSide side = SidedHelper.getSide(level);
 
-        ItemStack bindableInput = input.getOtherEntities().stream()
-                .map(ItemEntity::getItem)
-                .filter(IsLumenBindableIngredient.INSTANCE::test)
-                .findFirst()
-                .orElse(ItemStack.EMPTY);
+        ItemStack bindableInput = findBindableInput(input.getOtherEntities());
         if (bindableInput.isEmpty()) return;
 
         LumenComponent lumenComponent = DataComponentsAS.LUMEN.getOrDefault(inputEntity.getItem(), LumenComponent.EMPTY);
@@ -110,38 +114,23 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
 
             if (IsLumenBindableIngredient.INSTANCE.isPotionLumenBindable(output)) {
                 if (LumenAS.PRISMATIC.is(lumenComponent.key())) {
-                    FlagsComponent cmp = DataComponentsAS.FLAGS.getOrDefault(output, FlagsComponent.EMPTY);
-                    if (!cmp.isSet(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN)) {
-
-                        List<MobEffectInstance> effects = new ArrayList<>();
-                        for (MobEffectInstance effect : PotionUtils.getCustomEffects(output)) {
-                            effect = MobEffectUtil.newDuration(effect, Mth.ceil(effect.getDuration() * (1.2F + this.rand.nextFloat() * 0.5F)));
-                            effect = MobEffectUtil.newAmplifier(effect, effect.getAmplifier() + 1);
-                            effects.add(effect);
-                        }
-                        PotionUtils.setPotion(output, Potions.EMPTY);
-                        output.removeTagKey(PotionUtils.TAG_CUSTOM_POTION_EFFECTS);
-                        PotionUtils.setCustomEffects(output, effects);
-
-                        cmp = cmp.setFlag(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN);
-                        DataComponentsAS.FLAGS.set(output, cmp);
-                        DataComponentsAS.RARITY.set(output, EnumExtensions.RARITY_RELIC);
-                    }
+                    if (!canBoostPotion(output)) return;
+                    this.boostPotion(output);
                 } else {
-                    LumenBindingTypeLoader.getInstance().getBindingType(side, bindingKey).ifPresent(bindingType -> {
-                        bindingType.getPotionEffect().ifPresent(effect -> {
-                            PotionUtils.setPotion(output, Potions.EMPTY);
-                            CompoundTag tag = output.getOrCreateTag();
-                            ListTag effects = tag.getList(PotionUtils.TAG_CUSTOM_POTION_EFFECTS, Tag.TAG_COMPOUND);
-                            effects.add(effect.save(new CompoundTag()));
-                            tag.put(PotionUtils.TAG_CUSTOM_POTION_EFFECTS, effects);
-                            DataComponentsAS.RARITY.set(output, EnumExtensions.RARITY_RELIC);
+                    MobEffectInstance effect = LumenBindingTypeLoader.getInstance().getBindingType(side, bindingKey)
+                            .flatMap(LumenBindingType::getPotionEffect).orElse(null);
+                    if (effect == null) return;
 
-                            ItemUtil.dropItem(level, inputEntity.getX(), inputEntity.getY(), inputEntity.getZ(), output);
-                            recipe.consumeItemInputs(input);
-                        });
-                    });
+                    PotionUtils.setPotion(output, Potions.EMPTY);
+                    CompoundTag tag = output.getOrCreateTag();
+                    ListTag effects = tag.getList(PotionUtils.TAG_CUSTOM_POTION_EFFECTS, Tag.TAG_COMPOUND);
+                    effects.add(effect.save(new CompoundTag()));
+                    tag.put(PotionUtils.TAG_CUSTOM_POTION_EFFECTS, effects);
                 }
+
+                DataComponentsAS.RARITY.set(output, EnumExtensions.RARITY_RELIC);
+                ItemUtil.dropItem(level, inputEntity.getX(), inputEntity.getY(), inputEntity.getZ(), output);
+                recipe.consumeItemInputs(input);
                 return;
             }
 
@@ -167,6 +156,36 @@ public class LiquidStarlightOutputBindLumen extends LiquidStarlightRecipeOutputM
             ItemUtil.dropItemNaturally(level, inputEntity.getX(), inputEntity.getY(), inputEntity.getZ(), output);
             recipe.consumeItemInputs(input);
         });
+    }
+
+    private static ItemStack findBindableInput(List<ItemEntity> entities) {
+        return entities.stream()
+                .map(ItemEntity::getItem)
+                .filter(IsLumenBindableIngredient.INSTANCE::test)
+                .findFirst()
+                .orElse(ItemStack.EMPTY);
+    }
+
+    private static boolean canBoostPotion(ItemStack stack) {
+        FlagsComponent flags = DataComponentsAS.FLAGS.getOrDefault(stack, FlagsComponent.EMPTY);
+        return !flags.isSet(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN) && !PotionUtils.getCustomEffects(stack).isEmpty();
+    }
+
+    private void boostPotion(ItemStack output) {
+        List<MobEffectInstance> effects = new ArrayList<>();
+        for (MobEffectInstance effect : PotionUtils.getCustomEffects(output)) {
+            if (!effect.isInfiniteDuration()) {
+                int duration = (int) Math.ceil(effect.getDuration() * (1.2F + this.rand.nextFloat() * 0.5F));
+                effect = MobEffectUtil.newDuration(effect, duration);
+            }
+            effects.add(MobEffectUtil.newAmplifier(effect, effect.getAmplifier() + 1));
+        }
+        PotionUtils.setPotion(output, Potions.EMPTY);
+        output.removeTagKey(PotionUtils.TAG_CUSTOM_POTION_EFFECTS);
+        PotionUtils.setCustomEffects(output, effects);
+
+        FlagsComponent flags = DataComponentsAS.FLAGS.getOrDefault(output, FlagsComponent.EMPTY);
+        DataComponentsAS.FLAGS.set(output, flags.setFlag(FlagsComponent.Flag.HAS_PRISMATIC_LUMEN));
     }
 
     @Override
