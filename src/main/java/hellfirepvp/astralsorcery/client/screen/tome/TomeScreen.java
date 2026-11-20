@@ -29,6 +29,9 @@ import java.util.*;
 public abstract class TomeScreen extends FixedSizeScreen {
 
     public static final int NO_BOOKMARK = -1;
+    private static final int BOOKMARK_OVERLAP = 16;
+    private static final int EDGE_MARGIN = 4;
+    private static final int MIN_BOOKMARK_SPACE = 48;
     private static final SortedSet<BookmarkProvider> BOOKMARKS = new TreeSet<>();
 
     private final int thisBookmarkIndex;
@@ -43,16 +46,33 @@ public abstract class TomeScreen extends FixedSizeScreen {
         return super.addRenderableWidget(widget);
     }
 
+    @Override
+    protected void updateScreenPosition() {
+        super.updateScreenPosition();
+        if (this.width < this.screenWidth + 2 * EDGE_MARGIN) return;
+
+        int bookmarkWidth = BOOKMARKS.stream()
+                .filter(BookmarkProvider::canSee)
+                .mapToInt(TomeBookmarkElement::preferredWidth)
+                .max().orElse(0);
+        if (bookmarkWidth == 0) return;
+
+        int rightmostLeft = this.width - this.screenWidth + BOOKMARK_OVERLAP - bookmarkWidth - EDGE_MARGIN;
+        this.screenLeft = Math.min(this.screenLeft, Math.max(EDGE_MARGIN, rightmostLeft));
+    }
+
     protected void initBookmarks() {
         int bookmarkGap = 18;
 
-        int offsetX = this.screenLeft + this.screenWidth - 16;// - 17.25F;
-        int offsetY = this.screenTop  + 20;
+        int rightEdge = this.width - EDGE_MARGIN;
+        int offsetX = Math.max(0, Math.min(this.screenLeft + this.screenWidth - BOOKMARK_OVERLAP,
+                rightEdge - MIN_BOOKMARK_SPACE));
+        int offsetY = this.screenTop + 20;
 
         for (BookmarkProvider provider : BOOKMARKS) {
             if (!provider.canSee()) continue;
             boolean isSelected = this.thisBookmarkIndex != NO_BOOKMARK && this.thisBookmarkIndex == provider.getBookmarkIndex();
-            this.addRenderableWidget(new TomeBookmarkElement(offsetX, offsetY, isSelected, provider));
+            this.addRenderableWidget(new TomeBookmarkElement(offsetX, offsetY, rightEdge - offsetX, isSelected, provider));
             offsetY += bookmarkGap;
         }
     }

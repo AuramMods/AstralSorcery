@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.sounds.SoundManager;
@@ -34,18 +35,29 @@ import net.minecraft.client.sounds.SoundManager;
  */
 public class TomeBookmarkElement extends AbstractWidget {
 
+    private static final int TAIL_WIDTH = 30;
+    private static final int TEXT_PADDING = 2;
+    private static final String ELLIPSIS = "…";
+
     private final boolean selected;
     private final BookmarkProvider provider;
 
-    public TomeBookmarkElement(int x, int y, boolean selected, BookmarkProvider provider) {
-        super(x, y, bookmarkWidth(provider) + 30, 14, provider.getName());
+    public TomeBookmarkElement(int x, int y, int availableWidth, boolean selected, BookmarkProvider provider) {
+        super(x, y, Math.min(availableWidth, preferredWidth(provider)), 14, provider.getName());
         this.selected = selected;
         this.provider = provider;
+        if (Minecraft.getInstance().font.width(provider.getName()) > this.getWidth() - 2 * TEXT_PADDING) {
+            this.setTooltip(Tooltip.create(provider.getName()));
+        }
     }
 
-    private static int bookmarkWidth(BookmarkProvider provider) {
+    public static int preferredWidth(BookmarkProvider provider) {
+        return bookmarkBodyWidth(provider) + TAIL_WIDTH;
+    }
+
+    private static int bookmarkBodyWidth(BookmarkProvider provider) {
         Font font = Minecraft.getInstance().font;
-        return Math.max(font.width(provider.getName()) + 4, 40);
+        return Math.max(font.width(provider.getName()) + 2 * TEXT_PADDING, 40);
     }
 
     @Override
@@ -58,30 +70,43 @@ public class TomeBookmarkElement extends AbstractWidget {
         Blending.DEFAULT.apply();
         this.provider.getBookmarkTexture().bindTexture();
         RenderUtil.draw(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR, GameRenderer::getPositionTexShader, buf -> {
-            int neededWidth = bookmarkWidth(this.provider);
+            int bodyWidth = Math.min(bookmarkBodyWidth(this.provider), this.getWidth());
+            int leadingWidth = Math.min(20, bodyWidth);
             int offsetX = this.getX();
 
-            RenderQuadUtil.rect(buf, pose, offsetX, this.getY(), 20, 14)
-                    .tex(0F, v, 20F / 57F, 0.5F)
+            RenderQuadUtil.rect(buf, pose, offsetX, this.getY(), leadingWidth, 14)
+                    .tex(0F, v, leadingWidth / 57F, 0.5F)
                     .draw();
 
-            offsetX += 20;
-            neededWidth -= 20;
-            while (neededWidth > 0) {
-                RenderQuadUtil.rect(buf, pose, offsetX, this.getY(), 5, 14)
-                        .tex(21F / 57F, v, 5F / 57F, 0.5F)
+            offsetX += leadingWidth;
+            int remainingBody = bodyWidth - leadingWidth;
+            while (remainingBody > 0) {
+                int segmentWidth = Math.min(5, remainingBody);
+                RenderQuadUtil.rect(buf, pose, offsetX, this.getY(), segmentWidth, 14)
+                        .tex(21F / 57F, v, segmentWidth / 57F, 0.5F)
                         .draw();
-                offsetX += 5;
-                neededWidth -= 5;
+                offsetX += segmentWidth;
+                remainingBody -= segmentWidth;
             }
 
-            RenderQuadUtil.rect(buf, pose, offsetX, this.getY(), 30, 14)
-                    .tex(27F / 57F, v, 30F / 57F, 0.5F)
-                    .draw();
+            int tailWidth = this.getWidth() - bodyWidth;
+            if (tailWidth > 0) {
+                RenderQuadUtil.rect(buf, pose, offsetX, this.getY(), tailWidth, 14)
+                        .tex(27F / 57F, v, TAIL_WIDTH / 57F, 0.5F)
+                        .draw();
+            }
         });
         RenderSystem.disableBlend();
 
-        guiGraphics.drawString(font, this.provider.getName(), this.getX() + 2, this.getY() + 2, 0xDDDDDDDD);
+        int textX = this.getX() + TEXT_PADDING;
+        int textY = this.getY() + TEXT_PADDING;
+        int textWidth = this.getWidth() - 2 * TEXT_PADDING;
+        if (font.width(this.provider.getName()) > textWidth) {
+            String label = font.plainSubstrByWidth(this.provider.getName().getString(), textWidth - font.width(ELLIPSIS));
+            guiGraphics.drawString(font, label + ELLIPSIS, textX, textY, 0xDDDDDDDD);
+        } else {
+            guiGraphics.drawString(font, this.provider.getName(), textX, textY, 0xDDDDDDDD);
+        }
     }
 
     @Override
