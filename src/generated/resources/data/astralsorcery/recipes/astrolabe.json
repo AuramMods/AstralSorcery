@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "tag": "forge:gems/aquamarine"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "P": {
+      "tag": "forge:glass_panes"
+    },
+    "S": {
+      "item": "minecraft:spyglass"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "PAS",
+    "GGG"
+  ],
+  "result": {
+    "item": "astralsorcery:astrolabe"
+  },
+  "show_notification": true
+}

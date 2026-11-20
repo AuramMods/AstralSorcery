@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:gems/aquamarine"
+    },
+    "G": {
+      "tag": "forge:glass_panes"
+    }
+  },
+  "pattern": [
+    " A ",
+    "AGA",
+    " A "
+  ],
+  "result": {
+    "item": "astralsorcery:glass_lens"
+  },
+  "show_notification": true
+}

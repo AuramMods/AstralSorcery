@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "M": {
+      "item": "astralsorcery:marble_raw"
+    }
+  },
+  "pattern": [
+    "MM"
+  ],
+  "result": {
+    "count": 2,
+    "item": "astralsorcery:marble_arch"
+  },
+  "show_notification": true
+}
