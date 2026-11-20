@@ -21,20 +21,22 @@ import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.SidedHelper;
 import hellfirepvp.astralsorcery.common.util.event.SidedEventBus;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.common.ItemAbilities;
+import net.minecraftforge.common.TierSortingRegistry;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.LogicalSide;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -48,7 +50,6 @@ public class KeyPerkAllToolTypes extends KeyPerk {
     public static final MapCodec<KeyPerkAllToolTypes> CODEC = RecordCodecBuilder.mapCodec(inst -> perkModifierFields(inst).apply(inst, KeyPerkAllToolTypes::new));
     public static final PerkType<KeyPerkAllToolTypes> TYPE =
             PerkType.of(KeyPerkAllToolTypes.CODEC, PerkDataTypesAS.DEFAULT_DATA, KeyPerkAllToolTypes::new);
-    private static final Tool EMPTY = new Tool(List.of(), 1F, 1);
 
     private KeyPerkAllToolTypes(ResourceLocation key, float x, float y) {
         this(key, defaultNameKey(key), x, y, PerkCategory.MAJOR, Collections.emptySet(), Collections.emptySet(), Collections.emptySet());
@@ -75,9 +76,10 @@ public class KeyPerkAllToolTypes extends KeyPerk {
         LogicalSide side = this.getSide(event.getEntity());
         PlayerProgress progress = ResearchManager.getProgress(event.getEntity(), side);
         if (progress.getPerkData().hasPerkEffect(this)) {
-            wrapMineableStack(event.getEntity().getInventory().getSelected()).ifPresent(checkTool -> {
-                event.setCanHarvest(checkTool.isCorrectToolForDrops(event.getTargetBlock()));
-            });
+            ItemStack tool = event.getEntity().getInventory().getSelected();
+            if (canHarvestWithPerk(tool, event.getTargetBlock())) {
+                event.setCanHarvest(true);
+            }
         }
     }
 
@@ -86,35 +88,35 @@ public class KeyPerkAllToolTypes extends KeyPerk {
         LogicalSide side = SidedHelper.getSide(thisPlayer);
         PlayerProgress progress = ResearchManager.getProgress(thisPlayer, side);
         if (progress.getPerkData().hasPerkEffect(perk -> perk instanceof KeyPerkAllToolTypes)) {
-            wrapMineableStack(playerInv.getSelected()).ifPresent(checkTool -> {
-                float existingSpeed = returnOvr.getReturnValueF();
-                float newSpeed = checkTool.getDestroySpeed(state);
-                if (newSpeed > existingSpeed) {
-                    returnOvr.setReturnValue(newSpeed);
-                }
-            });
+            float existingSpeed = returnOvr.getReturnValueF();
+            float newSpeed = getMiningSpeedWithPerk(playerInv.getSelected(), state, existingSpeed);
+            if (newSpeed > existingSpeed) {
+                returnOvr.setReturnValue(newSpeed);
+            }
         }
     }
 
-    private static Optional<ItemStack> wrapMineableStack(ItemStack tool) {
-        if (tool.isEmpty()) return Optional.empty();
-        if (!tool.has(DataComponents.TOOL)) return Optional.empty();
-        if (!tool.canPerformAction(ItemAbilities.PICKAXE_DIG)) return Optional.empty();
+    private static boolean canHarvestWithPerk(ItemStack tool, BlockState state) {
+        return supportsExtendedMining(tool, state) &&
+                (tool.isCorrectToolForDrops(state) ||
+                        tool.getItem() instanceof TieredItem tiered && TierSortingRegistry.isCorrectTierForDrops(tiered.getTier(), state));
+    }
 
-        Tool toolCmp = tool.getOrDefault(DataComponents.TOOL, EMPTY);
-        float fastestSpeed = (float) toolCmp.rules().stream()
-                .filter(rule -> rule.speed().isPresent())
-                .mapToDouble(rule -> rule.speed().get())
-                .max().orElse(1.0D);
-        List<Tool.Rule> extendedRules = new ArrayList<>(toolCmp.rules());
-        extendedRules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, fastestSpeed));
-        extendedRules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_AXE, fastestSpeed));
-        extendedRules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, fastestSpeed));
-        extendedRules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, fastestSpeed));
-        Tool extendedTool = new Tool(extendedRules, toolCmp.defaultMiningSpeed(), toolCmp.damagePerBlock());
+    private static float getMiningSpeedWithPerk(ItemStack tool, BlockState state, float existingSpeed) {
+        if (existingSpeed > 1F || !supportsExtendedMining(tool, state)) {
+            return existingSpeed;
+        }
 
-        ItemStack checkStack = tool.copy();
-        checkStack.set(DataComponents.TOOL, extendedTool);
-        return Optional.of(checkStack);
+        float pickaxeSpeed = tool.getDestroySpeed(Blocks.STONE.defaultBlockState());
+        if (tool.getItem() instanceof TieredItem tiered) {
+            pickaxeSpeed = Math.max(pickaxeSpeed, tiered.getTier().getSpeed());
+        }
+        return Math.max(existingSpeed, pickaxeSpeed);
+    }
+
+    private static boolean supportsExtendedMining(ItemStack tool, BlockState state) {
+        return !tool.isEmpty() && tool.canPerformAction(ToolActions.PICKAXE_DIG) &&
+                (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_AXE) ||
+                        state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_HOE));
     }
 }
