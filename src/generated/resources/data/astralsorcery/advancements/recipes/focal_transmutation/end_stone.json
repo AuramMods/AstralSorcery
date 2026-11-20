@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "astralsorcery:cake"
+        "recipe": "astralsorcery:focal_transmutation/end_stone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,8 @@
   ],
   "rewards": {
     "recipes": [
-      "astralsorcery:cake"
+      "astralsorcery:focal_transmutation/end_stone"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

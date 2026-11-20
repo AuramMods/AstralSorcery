@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "astralsorcery:emerald_ore"
+        "recipe": "astralsorcery:focal_transmutation/iris"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,8 @@
   ],
   "rewards": {
     "recipes": [
-      "astralsorcery:emerald_ore"
+      "astralsorcery:focal_transmutation/iris"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

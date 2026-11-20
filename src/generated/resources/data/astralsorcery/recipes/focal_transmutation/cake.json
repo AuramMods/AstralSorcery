@@ -1,20 +1,23 @@
 {
   "type": "astralsorcery:focal_transmutation",
-  "color": -5376,
-  "duration": 400,
+  "color": -1,
+  "duration": 2400,
   "input_display_stacks": {
-    "item": "minecraft:sandstone"
+    "item": "minecraft:pumpkin"
   },
   "input_predicates": [
     {
       "type": "minecraft:matching_block_tag",
-      "tag": "c:sandstone/blocks"
+      "tag": "astralsorcery:normal_pumpkins"
     }
   ],
   "output_states": [
     {
       "data": {
-        "Name": "minecraft:end_stone"
+        "Name": "minecraft:cake",
+        "Properties": {
+          "bites": "0"
+        }
       },
       "weight": 1
     }

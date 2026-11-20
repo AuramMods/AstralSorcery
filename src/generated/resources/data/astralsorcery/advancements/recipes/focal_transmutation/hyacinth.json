@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "astralsorcery:end_stone"
+        "recipe": "astralsorcery:focal_transmutation/hyacinth"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,8 @@
   ],
   "rewards": {
     "recipes": [
-      "astralsorcery:end_stone"
+      "astralsorcery:focal_transmutation/hyacinth"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "astralsorcery:clay"
+        "recipe": "astralsorcery:focal_transmutation/protea"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,8 @@
   ],
   "rewards": {
     "recipes": [
-      "astralsorcery:clay"
+      "astralsorcery:focal_transmutation/protea"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

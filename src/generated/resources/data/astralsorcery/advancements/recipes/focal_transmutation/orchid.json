@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "astralsorcery:sea_lantern"
+        "recipe": "astralsorcery:focal_transmutation/orchid"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,8 @@
   ],
   "rewards": {
     "recipes": [
-      "astralsorcery:sea_lantern"
+      "astralsorcery:focal_transmutation/orchid"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
