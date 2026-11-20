@@ -44,6 +44,9 @@ public class TranslucentBlockRenderHelper {
     private static final Map<DyeColor, List<BlockRenderable>> colorFrameRenderables = new HashMap<>();
 
     public static void renderFrame(float pTicks) {
+        if (colorFrameRenderables.isEmpty()) {
+            return;
+        }
         MultiBufferSource.BufferSource drawBuffer = RenderUtil.effectBufferSource();
         BlockRenderDispatcher brd = Minecraft.getInstance().getBlockRenderer();
 
@@ -94,7 +97,8 @@ public class TranslucentBlockRenderHelper {
 
     public static void submitBlockState(DyeColor color, BlockState state, PoseStack pose) {
         PoseStack copy = new PoseStack();
-        copy.mulPose(pose.last().pose());
+        copy.last().pose().set(pose.last().pose());
+        copy.last().normal().set(pose.last().normal());
         colorFrameRenderables.computeIfAbsent(color, c -> new ArrayList<>()).add(new BlockRenderable(state, copy));
     }
 

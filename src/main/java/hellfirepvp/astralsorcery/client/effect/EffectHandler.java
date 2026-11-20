@@ -23,7 +23,6 @@ import hellfirepvp.observerlib.client.util.LightmapUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -47,7 +46,6 @@ import org.joml.Quaternionf;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -83,14 +81,14 @@ public final class EffectHandler {
         event.getLeft().add(ChatFormatting.BLUE + "[AstralSorcery]" + ChatFormatting.RESET + " > VFX Sources: " + this.sources.size());
     }
 
-    public void render(Camera renderInfo, @Nullable Frustum cameraFrustum, Predicate<ParticleRenderType> renderTypePredicate, float pTicks) {
+    public void render(Camera renderInfo, @Nullable Frustum cameraFrustum, boolean translucent, float pTicks) {
         if (AssetLibrary.isReloading()) {
             return;
         }
 
         MultiBufferSource.BufferSource drawBuffer = RenderUtil.effectBufferSource();
         for (EffectTemplate template : EffectTemplatesAS.ALL_EFFECT_TEMPLATES) {
-            if (!renderTypePredicate.test(template)) continue;
+            if (template.isTranslucent() != translucent) continue;
 
             List<EntityVisualFX> effects = this.effects.getOrDefault(template, Collections.emptyList()).stream()
                     .filter(e -> cameraFrustum == null || cameraFrustum.isVisible(e.getRenderBoundingBox()))

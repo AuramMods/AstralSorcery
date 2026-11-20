@@ -8,17 +8,13 @@
 
 package hellfirepvp.astralsorcery.client.effect;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.client.Camera;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureManager;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -28,7 +24,7 @@ import java.util.function.Function;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public class EffectTemplate<T extends EntityVisualFX> implements ParticleRenderType {
+public class EffectTemplate<T extends EntityVisualFX> {
 
     private static int counter = 0;
     private final int id;
@@ -64,13 +60,6 @@ public class EffectTemplate<T extends EntityVisualFX> implements ParticleRenderT
         drawBuffer.endBatch(drawType);
     }
 
-    @Override
-    @Nullable
-    public final BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
-        return null;
-    }
-
-    @Override
     public final boolean isTranslucent() {
         return this.isTranslucent;
     }
