@@ -20,7 +20,6 @@ import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -69,11 +68,16 @@ public class EntityIlluminationSpark extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {}
+    protected void defineSynchedData() {}
 
     @Override
-    public boolean canUsePortal(boolean allowPassengers) {
+    public boolean canChangeDimensions() {
         return false;
+    }
+
+    @Override
+    public boolean isOnPortalCooldown() {
+        return true;
     }
 
     @Override

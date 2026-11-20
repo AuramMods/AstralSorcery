@@ -39,7 +39,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -74,7 +74,7 @@ public class EntityFlare extends FlyingMob {
     public static AttributeSupplier.Builder createAttributes() {
         return FlyingMob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 1)
-                .add(Attributes.GRAVITY, 0);
+                .add(ForgeMod.ENTITY_GRAVITY.get(), 0);
     }
 
     public int getMaxEntityAge() {
@@ -134,7 +134,7 @@ public class EntityFlare extends FlyingMob {
                         level.isInWorldBounds(target) &&
                         Vector3.atCenter(target).distanceSquared(this) >= 25) {
                     ClipContext ctx = new ClipContext(Vec3.atCenterOf(this.blockPosition()), Vec3.atCenterOf(target),
-                            ClipContext.Block.VISUAL, ClipContext.Fluid.ANY, CollisionContext.empty());
+                            ClipContext.Block.VISUAL, ClipContext.Fluid.ANY, null);
                     if (RayTraceUtil.clip(level, ctx).getType() == HitResult.Type.MISS) {
                         ChunkUtil.executeWithChunk(level, target, () -> {
                             this.currentMoveTarget = Vector3.atCenter(target);

@@ -34,7 +34,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -66,6 +65,7 @@ public class EntityGrapplingHook extends ThrowableProjectile {
 
     public EntityGrapplingHook(EntityType<? extends ThrowableProjectile> entityType, Level level) {
         super(entityType, level);
+        this.noCulling = true;
     }
 
     public EntityGrapplingHook(LivingEntity shooter, Level level) {
@@ -74,6 +74,7 @@ public class EntityGrapplingHook extends ThrowableProjectile {
 
     protected EntityGrapplingHook(EntityType<? extends ThrowableProjectile> entityType, LivingEntity shooter, Level level) {
         super(entityType, shooter, level);
+        this.noCulling = true;
         this.shoot(Vector3.directionFromYawPitch(shooter.getYRot(), shooter.getXRot()), 1.5F);
         this.setOwner(shooter);
         ServerSoundHelper.playSoundAround(SoundsAS.GRAPPLING_WAND_CAST, level, this.position().add(this.getDeltaMovement()), 0.5F,
@@ -85,9 +86,9 @@ public class EntityGrapplingHook extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(PULLING, false);
-        builder.define(PULLING_ENTITY, -1);
+    protected void defineSynchedData() {
+        this.entityData.define(PULLING, false);
+        this.entityData.define(PULLING_ENTITY, -1);
     }
 
     public void setPulling(boolean pull, @Nullable LivingEntity hit) {
@@ -246,8 +247,8 @@ public class EntityGrapplingHook extends ThrowableProjectile {
     }
 
     @Override
-    protected double getDefaultGravity() {
-        return this.isPulling() ? 0 : super.getDefaultGravity();
+    protected float getGravity() {
+        return this.isPulling() ? 0F : super.getGravity();
     }
 
     @Override
@@ -258,11 +259,6 @@ public class EntityGrapplingHook extends ThrowableProjectile {
         }
         dst = dst * 64.0D;
         return distance < dst * dst;
-    }
-
-    @Override
-    public AABB getBoundingBoxForCulling() {
-        return AABB.INFINITE;
     }
 
     @OnlyIn(Dist.CLIENT)

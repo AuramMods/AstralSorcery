@@ -80,13 +80,18 @@ public class EntityNocturnalSpark extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(SPAWNING, false);
+    protected void defineSynchedData() {
+        this.entityData.define(SPAWNING, false);
     }
 
     @Override
-    public boolean canUsePortal(boolean allowPassengers) {
+    public boolean canChangeDimensions() {
         return false;
+    }
+
+    @Override
+    public boolean isOnPortalCooldown() {
+        return true;
     }
 
     public void setSpawning() {
