@@ -32,7 +32,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import net.neoforged.neoforge.common.CommonHooks;
 import net.minecraftforge.event.level.BlockEvent;
 import hellfirepvp.astralsorcery.common.network.NetworkRegistry;
 
@@ -89,7 +88,7 @@ public class AttributeTypeMiningSize extends PerkAttributeType {
         int miningSize = Mth.floor(size);
         if (miningSize <= 0) return;
 
-        HitResult hitTrace = sPlayer.pick(sPlayer.blockInteractionRange(), 0F, false);
+        HitResult hitTrace = sPlayer.pick(sPlayer.getBlockReach(), 0F, false);
         if (!(hitTrace instanceof BlockHitResult blockHit)) return;
         if (!blockHit.getBlockPos().equals(center)) return; //We uh... hit something else? huh. wtf did the client send?
 

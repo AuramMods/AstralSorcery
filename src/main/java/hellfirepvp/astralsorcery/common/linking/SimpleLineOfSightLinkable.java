@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public interface SimpleLineOfSightLinkable extends BlockLinkable {
     default boolean hasLineOfSight(Level level, BlockPos to) {
         ClipContext ctx = new ClipContext(this.getLinkablePos().getCenter(), to.getCenter(),
                 ClipContext.Block.VISUAL, ClipContext.Fluid.WATER,
-                CollisionContext.empty());
+                null);
         return RayTraceUtil.clip(level, ctx, Set.of(this.getLinkablePos(), to)).getType() == HitResult.Type.MISS;
     }
 

@@ -20,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -178,7 +177,7 @@ public class LumenRequestHelper {
             return this.connectState.computeIfAbsent(pair, p -> {
                 ClipContext ctx = new ClipContext(from.getCenter(), to.getLineOfSightPos(),
                         ClipContext.Block.VISUAL, ClipContext.Fluid.WATER,
-                        CollisionContext.empty());
+                        null);
                 return RayTraceUtil.clip(level, ctx, Set.of(from, to.getPos())).getType() == HitResult.Type.MISS;
             });
         }

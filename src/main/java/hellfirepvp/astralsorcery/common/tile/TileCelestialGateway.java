@@ -120,7 +120,7 @@ public class TileCelestialGateway extends TileEntityTick<TileCelestialGateway.Da
             return;
         }
 
-        float eyeHeight = camera.getDimensions(Pose.STANDING).eyeHeight();
+        float eyeHeight = camera.getEyeHeight(Pose.STANDING);
         Vector3 effectPos = Vector3.atBottomCenter(this).addY(eyeHeight);
         double dst = new Vector3(camera).distance(effectPos);
         float cutoff = 4.5F;

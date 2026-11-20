@@ -62,7 +62,7 @@ public class FocalPointEffectHelper {
         if (player.getMainHandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get()) || player.getOffhandItem().is(ItemsAS.BLOCK_STELLAR_FILAMENT.get())) {
             Entity tracingEntity = Minecraft.getInstance().getCameraEntity();
             if (tracingEntity != null) {
-                ClipContext ctx = RayTraceUtil.getEntityViewContext(tracingEntity, player.blockInteractionRange());
+                ClipContext ctx = RayTraceUtil.getEntityViewContext(tracingEntity, player.getBlockReach());
                 HitResult filteredResult = RayTraceUtil.clipPerPosition(tracingEntity.level(), ctx, isInFocalPointArea());
 
                 if (defaultResult.getType() == HitResult.Type.MISS) {
@@ -91,9 +91,9 @@ public class FocalPointEffectHelper {
         if (player == null) return pos -> false;
 
         int boxSize = FocusCrystalFilamentObserver.OBSERVED_AREA_RADIUS * 2 + 1;
-        ClipContext ctx = RayTraceUtil.getEntityViewContext(tracingEntity, player.blockInteractionRange());
+        ClipContext ctx = RayTraceUtil.getEntityViewContext(tracingEntity, player.getBlockReach());
         List<AABB> clipBoxes = SyncDataManager.getInstance().getClientData(SyncDataTypesAS.FOCAL_POINT)
-                .getNearbyFocusedNodes(player.level(), new Vector3(player), player.blockInteractionRange() + 6)
+                .getNearbyFocusedNodes(player.level(), new Vector3(player), player.getBlockReach() + 6)
                 .stream()
                 .map(node -> AABB.ofSize(node.getFocalPosition().get().getCenter(), boxSize, boxSize, boxSize))
                 .toList();

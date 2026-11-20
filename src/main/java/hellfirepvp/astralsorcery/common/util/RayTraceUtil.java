@@ -21,8 +21,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -39,7 +40,7 @@ import java.util.function.Predicate;
 public class RayTraceUtil {
 
     public static ClipContext getEntityViewContext(Entity entity, double distance) {
-        float pTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+        float pTicks = entity.level().isClientSide() ? ClientFrameTime.get() : 1F;
         return getEntityViewContext(entity, distance, pTicks, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
     }
 
@@ -55,7 +56,7 @@ public class RayTraceUtil {
     }
 
     public static BlockHitResult clip(BlockGetter level, Vec3 from, Vec3 to, ClipContext.Block blockCheck, ClipContext.Fluid fluidCheck) {
-        return clip(level, new ClipContext(from, to, blockCheck, fluidCheck, CollisionContext.empty()));
+        return clip(level, new ClipContext(from, to, blockCheck, fluidCheck, null));
     }
 
     public static BlockHitResult clip(BlockGetter level, ClipContext ct) {
@@ -63,7 +64,7 @@ public class RayTraceUtil {
     }
 
     public static BlockHitResult clip(BlockGetter level, Vec3 from, Vec3 to, Set<BlockPos> excluded) {
-        ClipContext ctx = new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty());
+        ClipContext ctx = new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null);
         if (excluded.isEmpty()) return level.clip(ctx);
         return new LevelClipHelper(level, excluded).clip(ctx);
     }
@@ -83,7 +84,8 @@ public class RayTraceUtil {
             Vec3 from = context.getFrom();
             Vec3 to = context.getTo();
             if (stopFn.test(pos)) {
-                return BlockHitResult.miss(Vec3.atCenterOf(pos), Direction.getNearest(from.subtract(to)), pos);
+                Vec3 direction = from.subtract(to);
+                return BlockHitResult.miss(Vec3.atCenterOf(pos), Direction.getNearest(direction.x, direction.y, direction.z), pos);
             }
             BlockState state = clipLevel.getBlockState(pos);
             FluidState fluidState = clipLevel.getFluidState(pos);
@@ -97,8 +99,15 @@ public class RayTraceUtil {
             return dstBlock <= dstFluid ? blockResult : fluidResult;
         }, failedCtx -> {
             Vec3 direction = failedCtx.getFrom().subtract(failedCtx.getTo());
-            return BlockHitResult.miss(failedCtx.getTo(), Direction.getNearest(direction), BlockPos.containing(failedCtx.getTo()));
+            return BlockHitResult.miss(failedCtx.getTo(), Direction.getNearest(direction.x, direction.y, direction.z), BlockPos.containing(failedCtx.getTo()));
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static final class ClientFrameTime {
+        private static float get() {
+            return Minecraft.getInstance().getFrameTime();
+        }
     }
 
     private record LevelClipHelper(BlockGetter decorated, Set<BlockPos> excluded) implements BlockGetter {
