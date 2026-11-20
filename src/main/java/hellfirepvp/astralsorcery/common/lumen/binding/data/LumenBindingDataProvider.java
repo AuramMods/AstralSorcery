@@ -69,6 +69,10 @@ public abstract class LumenBindingDataProvider implements DataProvider {
         return this.newBindingType(reference.getKey().location());
     }
 
+    protected LumenBindingTypeBuilder newBindingType(LumenAS.DeferredLumen<?> reference) {
+        return this.newBindingType(reference.getId());
+    }
+
     BuiltBindingType build(ResourceLocation id, LumenBindingType bindingType) {
         BuiltBindingType built = new BuiltBindingType(id, bindingType);
         this.registeredBindingTypes.add(built);

@@ -447,11 +447,11 @@ public class AstralResearchNodeProvider extends ResearchNodeDataProvider {
                 .build(registrar);
 
         List<ItemStack> lumenCrystals = new ArrayList<>();
-        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.AEVITAS));
-        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.ARMARA));
-        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.DISCIDIA));
-        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.EVORSIO));
-        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.VICIO));
+        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.AEVITAS.holder()));
+        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.ARMARA.holder()));
+        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.DISCIDIA.holder()));
+        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.EVORSIO.holder()));
+        lumenCrystals.add(LumenCrystalItem.getCrystal(LumenAS.VICIO.holder()));
         ResearchNode lumenBinding = ResearchNodeBuilder.create(AstralSorcery.key("lumen_binding"), ResearchTier.RESONANCE, 1, -9)
                 .addDisplayItem(lumenCrystals)
                 .addPage(new TomePageText(text("lumen_binding", 0)))
@@ -559,14 +559,14 @@ public class AstralResearchNodeProvider extends ResearchNodeDataProvider {
                 .build(registrar);
 
         List<ItemStack> lumenComplexCrystals = new ArrayList<>();
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.VIREL));
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.SOLYN));
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.NULLAE));
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.CALDOR));
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.HYLE));
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.DYNAMIS));
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.AION));
-        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.AKASHA));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.VIREL.holder()));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.SOLYN.holder()));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.NULLAE.holder()));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.CALDOR.holder()));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.HYLE.holder()));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.DYNAMIS.holder()));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.AION.holder()));
+        lumenComplexCrystals.add(LumenCrystalItem.getCrystal(LumenAS.AKASHA.holder()));
         ResearchNode complexLumen = ResearchNodeBuilder.create(AstralSorcery.key("complex_lumen"), ResearchTier.LUMINANCE, -2, -5)
                 .addDisplayItem(lumenComplexCrystals)
                 .addPage(new TomePageText(text("complex_lumen", 0)))
