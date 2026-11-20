@@ -30,7 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
-import net.neoforged.neoforge.server.command.CommandUtils;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -206,7 +205,8 @@ public class CommandResearch {
 
     @Nullable
     private static BaseConstellation getConstellation(CommandContext<CommandSourceStack> ctx) {
-        ResourceKey<BaseConstellation> cstKey = CommandUtils.getResourceKey(ctx, "constellation", RegistriesAS.KEY_CONSTELLATIONS).orElseThrow();
+        ResourceKey<?> argument = ctx.getArgument("constellation", ResourceKey.class);
+        ResourceKey<BaseConstellation> cstKey = argument.cast(RegistriesAS.KEY_CONSTELLATIONS).orElseThrow();
         BaseConstellation cst = RegistriesAS.REGISTRY_CONSTELLATIONS.get().get(cstKey);
         if (cst == null) {
             ctx.getSource().sendFailure(Component.literal("Unknown constellation " + cstKey.location())

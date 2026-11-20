@@ -253,11 +253,10 @@ public class MiscUtil {
             return true;
         }
         try {
-            player.connection.getConnection().getRemoteAddress().toString();
+            return player.connection.getRemoteAddress() == null;
         } catch (Exception exc) {
             return true;
         }
-        return false;
     }
 
     public static ServerPlayer getAstralFakePlayer(ServerLevel sLevel) {
