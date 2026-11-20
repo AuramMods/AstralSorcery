@@ -18,6 +18,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -79,6 +80,15 @@ public class TagsAS {
         public static final TagKey<Item> BOW_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/bow"));
 
         public static final TagKey<Item> CURIOS_NECKLACE = ItemTags.create(Mods.CURIOS.key("necklace"));
+
+    }
+
+    public static class EntityTypes {
+
+        public static final TagKey<EntityType<?>> CAPTURING_NOT_SUPPORTED =
+                TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("c", "capturing_not_supported"));
+        public static final TagKey<EntityType<?>> TELEPORTING_NOT_SUPPORTED =
+                TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("c", "teleporting_not_supported"));
 
     }
 

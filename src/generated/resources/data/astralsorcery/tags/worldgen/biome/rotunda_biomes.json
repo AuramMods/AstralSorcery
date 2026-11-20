@@ -1,5 +1,9 @@
 {
   "values": [
-    "#c:is_mountain/peak"
+    "#forge:is_peak",
+    {
+      "id": "#c:is_mountain/peak",
+      "required": false
+    }
   ]
 }

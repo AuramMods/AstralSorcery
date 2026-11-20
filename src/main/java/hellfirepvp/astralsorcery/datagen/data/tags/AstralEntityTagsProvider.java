@@ -10,10 +10,10 @@ package hellfirepvp.astralsorcery.datagen.data.tags;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.lib.EntitiesAS;
+import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,13 +34,13 @@ public class AstralEntityTagsProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED)
+        tag(TagsAS.EntityTypes.CAPTURING_NOT_SUPPORTED)
                 .add(EntitiesAS.FLARE.get())
                 .add(EntitiesAS.ILLUMINATION_SPARK.get())
                 .add(EntitiesAS.NOCTURNAL_SPARK.get())
                 .add(EntitiesAS.VIVID_SPARK.get());
 
-        tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)
+        tag(TagsAS.EntityTypes.TELEPORTING_NOT_SUPPORTED)
                 .add(EntitiesAS.FLARE.get())
                 .add(EntitiesAS.ILLUMINATION_SPARK.get())
                 .add(EntitiesAS.NOCTURNAL_SPARK.get())

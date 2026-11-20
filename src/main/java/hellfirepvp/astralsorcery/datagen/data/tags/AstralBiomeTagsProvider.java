@@ -14,6 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.Tags;
@@ -38,20 +39,41 @@ public class AstralBiomeTagsProvider extends TagsProvider<Biome> {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(TagsAS.Biomes.FOCAL_POINT_BIOMES)
-                .addTag(Tags.Biomes.IS_OVERWORLD);
+                .addTag(BiomeTags.IS_OVERWORLD)
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "is_overworld"))
+                .addOptionalTag(common("is_overworld"));
         this.tag(TagsAS.Biomes.OBLITERATION_BIOMES)
-                .addTag(Tags.Biomes.IS_OVERWORLD)
-                .addTag(Tags.Biomes.IS_END);
+                .addTag(BiomeTags.IS_OVERWORLD)
+                .addTag(BiomeTags.IS_END)
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "is_overworld"))
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "is_end"))
+                .addOptionalTag(common("is_overworld"))
+                .addOptionalTag(common("is_end"));
         this.tag(TagsAS.Biomes.DIG_SITE_BIOMES)
-                .addTag(Tags.Biomes.IS_FOREST)
+                .addTag(BiomeTags.IS_FOREST)
+                .addTag(BiomeTags.IS_MOUNTAIN)
                 .addTag(Tags.Biomes.IS_MOUNTAIN)
-                .addTag(Tags.Biomes.IS_SAVANNA)
-                .addTag(Tags.Biomes.IS_DESERT);
+                .addTag(BiomeTags.IS_SAVANNA)
+                .addTag(Tags.Biomes.IS_DESERT)
+                .addOptionalTag(common("is_forest"))
+                .addOptionalTag(common("is_mountain"))
+                .addOptionalTag(common("is_mountain/peak"))
+                .addOptionalTag(common("is_mountain/slope"))
+                .addOptionalTag(common("is_savanna"))
+                .addOptionalTag(common("is_desert"));
         this.tag(TagsAS.Biomes.MOON_DIAL_BIOMES)
-                .addTag(Tags.Biomes.IS_DESERT);
+                .addTag(Tags.Biomes.IS_DESERT)
+                .addOptionalTag(common("is_desert"));
         this.tag(TagsAS.Biomes.COLUMN_BIOMES)
-                .addTag(Tags.Biomes.IS_OVERWORLD);
+                .addTag(BiomeTags.IS_OVERWORLD)
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "is_overworld"))
+                .addOptionalTag(common("is_overworld"));
         this.tag(TagsAS.Biomes.ROTUNDA_BIOMES)
-                .addTag(Tags.Biomes.IS_MOUNTAIN_PEAK);
+                .addTag(Tags.Biomes.IS_PEAK)
+                .addOptionalTag(common("is_mountain/peak"));
+    }
+
+    private static ResourceLocation common(String path) {
+        return ResourceLocation.fromNamespaceAndPath("c", path);
     }
 }
