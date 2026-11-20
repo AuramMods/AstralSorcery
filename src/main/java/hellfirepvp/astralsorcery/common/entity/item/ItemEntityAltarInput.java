@@ -28,7 +28,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -99,12 +101,17 @@ public class ItemEntityAltarInput extends ItemEntityHighlighted {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
+    protected float getEyeHeight(Pose pose, EntityDimensions dimensions) {
+        return dimensions.height * 0.85F;
+    }
 
-        builder.define(ALTAR, BlockPos.ZERO);
-        builder.define(TARGET, new Vector3());
-        builder.define(INPUT_REFERENCE, ActiveAltarRecipe.AdditionalInput.EMPTY);
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+
+        this.entityData.define(ALTAR, BlockPos.ZERO);
+        this.entityData.define(TARGET, new Vector3());
+        this.entityData.define(INPUT_REFERENCE, ActiveAltarRecipe.AdditionalInput.EMPTY);
     }
 
     public BlockPos getAltarPos() {
@@ -137,8 +144,8 @@ public class ItemEntityAltarInput extends ItemEntityHighlighted {
     }
 
     @Override
-    protected double getDefaultGravity() {
-        return this.hasValidAltarReference() ? 0 : super.getDefaultGravity();
+    public boolean isNoGravity() {
+        return super.isNoGravity() || this.hasValidAltarReference();
     }
 
     @Override

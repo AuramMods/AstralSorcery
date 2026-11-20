@@ -97,10 +97,10 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(FORCED_MOVE_POS, BlockPos.ZERO);
-        builder.define(FORCED_MOVE_SPEED, 0F);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(FORCED_MOVE_POS, BlockPos.ZERO);
+        this.entityData.define(FORCED_MOVE_SPEED, 0F);
     }
 
     public void resetForcedMovePos() {
@@ -211,7 +211,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
         if (this.hasForcedMovePos() &&
                 this.blockPosition().equals(this.getForcedMovePos()) &&
                 Vector3.atCenter(this.getForcedMovePos()).distance(this) < 0.8F &&
-                this.level().noBlockCollision(this, this.getBoundingBox().deflate(1.0E-7))) {
+                !this.level().getBlockCollisions(this, this.getBoundingBox().deflate(1.0E-7)).iterator().hasNext()) {
             this.resetForcedMovePos();
         }
 

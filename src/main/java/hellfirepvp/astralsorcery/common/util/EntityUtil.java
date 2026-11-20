@@ -26,7 +26,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.common.MinecraftForge;
-import net.neoforged.neoforge.event.EventHooks;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -96,7 +95,8 @@ public class EntityUtil {
     }
 
     public static boolean canEntityFit(Level level, EntityType<?> type, BlockPos pos) {
-        return level.noBlockCollision(null, type.getSpawnAABB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5));
+        var bounds = type.getAABB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        return !level.getBlockCollisions(null, bounds).iterator().hasNext();
     }
 
     public static <T extends Entity> T transferEntity(T entity, Vector3 targetPos) {

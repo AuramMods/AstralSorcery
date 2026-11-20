@@ -241,13 +241,13 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
                     int count = group.stream().mapToInt(itemEntity -> itemEntity.getItem().getCount()).sum();
                     if (count < ingredient.count()) continue;
 
-                    ItemEntityAltarInput inputEntity = ItemEntityReplacement.replace(EntitiesAS.ITEM_ALTAR_INPUT.get(), group.getFirst());
+                    ItemEntityAltarInput inputEntity = ItemEntityReplacement.replace(EntitiesAS.ITEM_ALTAR_INPUT.get(), group.get(0));
                     inputEntity.setUUID(UUID.randomUUID());
                     inputEntity.setDeltaMovement(Vec3.ZERO);
                     inputEntity.setUnlimitedLifetime();
                     level.addFreshEntity(inputEntity);
 
-                    ItemStack mergedOut = group.getFirst().getItem();
+                    ItemStack mergedOut = group.get(0).getItem();
                     mergedOut = mergedOut.copyWithCount(0);
                     for (ItemEntity entity : group) {
                         ItemStack stack = entity.getItem();
@@ -287,7 +287,7 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
                         !captured.isAlive() ||
                         captured.isRemoved() ||
                         !(captured instanceof EntityAltarFluidInput fluidInput) ||
-                        !FluidStack.isSameFluidSameComponents(fluid, fluidInput.getFluid())) {
+                        !fluid.isFluidEqual(fluidInput.getFluid())) {
                     input.capturedEntityUUID = null;
                 } else {
                     fluidInput.refreshReference(altar.getBlockPos(), input, fluid);
@@ -310,11 +310,11 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
                 FluidStack drawn = this.drawnFluid.getOrDefault(fluidIndex, FluidStack.EMPTY);
 
                 int amtRequired = Math.min(250, fluid.getAmount() - drawn.getAmount());
-                FluidStack requested = fluid.copyWithAmount(amtRequired);
+                FluidStack requested = new FluidStack(fluid, amtRequired);
                 input.fluidDrawInstance.update(level, altarPos, requested);
                 if (input.fluidDrawInstance.consumeLiquid(level, altarPos, requested, true)) {
                     input.fluidDrawInstance.consumeLiquid(level, altarPos, requested, false);
-                    this.drawnFluid.put(fluidIndex, requested.copyWithAmount(drawn.getAmount() + requested.getAmount()));
+                    this.drawnFluid.put(fluidIndex, new FluidStack(requested, drawn.getAmount() + requested.getAmount()));
                 }
             }
         }
@@ -407,7 +407,7 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
             if (!(captured instanceof EntityAltarFluidInput fluidInput) ||
                     !captured.isAlive() ||
                     captured.isRemoved() ||
-                    !FluidStack.isSameFluidSameComponents(required, fluidInput.getFluid())) {
+                    !required.isFluidEqual(fluidInput.getFluid())) {
                 valid = false;
                 break;
             }
@@ -585,7 +585,7 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
             }
 
             FluidStack fluid = fluidEntity.getFluid();
-            if (fluid.isEmpty() || !FluidStack.isSameFluidSameComponents(required, fluid)) {
+            if (fluid.isEmpty() || !required.isFluidEqual(fluid)) {
                 validInputs = false;
                 continue;
             }
@@ -652,7 +652,7 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
                 if (amtSearch <= 0) {
                     return;
                 }
-                input.fluidDrawInstance.update(level, centerPos, drawnFluid.copyWithAmount(amtSearch));
+                input.fluidDrawInstance.update(level, centerPos, new FluidStack(drawnFluid, amtSearch));
                 input.fluidDrawInstance.playLiquidDrawEffect(level, () -> new Vector3(entity), drawnFluid, 0.1F, 0.14F);
             });
         });
@@ -775,7 +775,7 @@ public class ActiveAltarRecipe extends ActiveRecipe<AltarRecipe> {
                         .map(recipe -> recipe.getRequiredFluid().get(this.getInputIndex()))
                         .orElse(FluidStack.EMPTY);
                 if (requiredFluid.isEmpty()) return false;
-                return FluidStack.isSameFluidSameComponents(requiredFluid, fluidEntity.getFluid());
+                return requiredFluid.isFluidEqual(fluidEntity.getFluid());
             }
         }
 

@@ -37,7 +37,6 @@ public class EntitiesAS {
             ENTITY_REGISTER.register("item_highlighted", () ->
                     EntityType.Builder.of(ItemEntityHighlighted.factoryHighlighted(), MobCategory.MISC)
                             .sized(0.5F, 0.5F)
-                            .eyeHeight(0.25F)
                             .clientTrackingRange(8)
                             .setShouldReceiveVelocityUpdates(true)
                             .updateInterval(10)
@@ -46,7 +45,6 @@ public class EntitiesAS {
             ENTITY_REGISTER.register("item_starmetal", () ->
                     EntityType.Builder.of(ItemEntityStarmetal.factory(), MobCategory.MISC)
                             .sized(0.5F, 0.5F)
-                            .eyeHeight(0.25F)
                             .clientTrackingRange(8)
                             .setShouldReceiveVelocityUpdates(true)
                             .updateInterval(10)
@@ -55,7 +53,6 @@ public class EntitiesAS {
             ENTITY_REGISTER.register("item_crystal", () ->
                     EntityType.Builder.of(ItemEntityCrystal.factory(), MobCategory.MISC)
                             .sized(0.5F, 0.5F)
-                            .eyeHeight(0.25F)
                             .clientTrackingRange(8)
                             .setShouldReceiveVelocityUpdates(true)
                             .updateInterval(10)
@@ -64,7 +61,6 @@ public class EntitiesAS {
             ENTITY_REGISTER.register("item_artifact", () ->
                     EntityType.Builder.of(ItemEntityArtifact.factory(), MobCategory.MISC)
                             .sized(0.5F, 0.5F)
-                            .eyeHeight(0.25F)
                             .clientTrackingRange(8)
                             .setShouldReceiveVelocityUpdates(true)
                             .updateInterval(10)
@@ -73,7 +69,6 @@ public class EntitiesAS {
             ENTITY_REGISTER.register("item_altar_input", () ->
                     EntityType.Builder.of(ItemEntityAltarInput.factory(), MobCategory.MISC)
                             .sized(0.25F, 0.25F)
-                            .eyeHeight(0.2125F)
                             .clientTrackingRange(6)
                             .setShouldReceiveVelocityUpdates(true)
                             .updateInterval(2)
@@ -82,7 +77,6 @@ public class EntitiesAS {
             ENTITY_REGISTER.register("fluid_altar_input", () ->
                     EntityType.Builder.of(EntityAltarFluidInput.factory(), MobCategory.MISC)
                             .sized(0.25F, 0.25F)
-                            .eyeHeight(0.2125F)
                             .clientTrackingRange(6)
                             .fireImmune()
                             .setShouldReceiveVelocityUpdates(true)

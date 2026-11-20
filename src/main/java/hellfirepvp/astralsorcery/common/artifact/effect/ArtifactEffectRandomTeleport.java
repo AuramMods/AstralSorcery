@@ -75,8 +75,8 @@ public class ArtifactEffectRandomTeleport extends ArtifactEffect {
             float dist = this.getDistance().getRandom(rand);
             Vector3 dir = Vector3.random(rand).normalize().multiply(dist);
             BlockPos candidate = artifact.blockPosition().offset(dir.toBlockPos());
-            AABB atCandidate = artifact.getBoundingBox().deflate(1.0E-7).move(dir.toBlockPos().getBottomCenter().add(0, 0.05F, 0));
-            if (sLevel.isInWorldBounds(candidate) && sLevel.noBlockCollision(artifact, atCandidate)) {
+            AABB atCandidate = artifact.getBoundingBox().deflate(1.0E-7).move(Vec3.atBottomCenterOf(dir.toBlockPos()).add(0, 0.05F, 0));
+            if (sLevel.isInWorldBounds(candidate) && !sLevel.getBlockCollisions(artifact, atCandidate).iterator().hasNext()) {
                 target = candidate;
             }
         } while (target == null && attempts-- > 0);

@@ -28,7 +28,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -89,11 +91,16 @@ public class EntityAltarFluidInput extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(ALTAR, BlockPos.ZERO);
-        builder.define(TARGET, new Vector3());
-        builder.define(INPUT_REFERENCE, ActiveAltarRecipe.AdditionalInput.EMPTY);
-        builder.define(FLUID, FluidStack.EMPTY);
+    protected float getEyeHeight(Pose pose, EntityDimensions dimensions) {
+        return dimensions.height * 0.85F;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        this.entityData.define(ALTAR, BlockPos.ZERO);
+        this.entityData.define(TARGET, new Vector3());
+        this.entityData.define(INPUT_REFERENCE, ActiveAltarRecipe.AdditionalInput.EMPTY);
+        this.entityData.define(FLUID, FluidStack.EMPTY);
     }
 
     public BlockPos getAltarPos() {
@@ -137,13 +144,13 @@ public class EntityAltarFluidInput extends ThrowableProjectile {
         Component component = this.getCustomName();
         if (component != null) return component;
         FluidStack fluid = this.getFluid();
-        if (!fluid.isEmpty()) return fluid.getHoverName();
+        if (!fluid.isEmpty()) return fluid.getDisplayName();
         return super.getName();
     }
 
     @Override
-    protected double getDefaultGravity() {
-        return this.hasValidAltarReference() ? 0 : super.getDefaultGravity();
+    protected float getGravity() {
+        return this.hasValidAltarReference() ? 0 : super.getGravity();
     }
 
     @Override
