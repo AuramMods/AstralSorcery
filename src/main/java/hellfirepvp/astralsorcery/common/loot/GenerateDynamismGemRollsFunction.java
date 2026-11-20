@@ -8,8 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.loot;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.component.DynamicModifiersComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.LootAS;
@@ -20,8 +18,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-import java.util.List;
-
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -31,10 +27,10 @@ import java.util.List;
  */
 public class GenerateDynamismGemRollsFunction extends LootItemConditionalFunction {
 
-    public static final MapCodec<GenerateDynamismGemRollsFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
-            commonFields(inst).apply(inst, GenerateDynamismGemRollsFunction::new));
+    public static final LootItemConditionalFunction.Serializer<GenerateDynamismGemRollsFunction> SERIALIZER =
+            LootSerializers.conditional(GenerateDynamismGemRollsFunction::new);
 
-    protected GenerateDynamismGemRollsFunction(List<LootItemCondition> predicates) {
+    protected GenerateDynamismGemRollsFunction(LootItemCondition[] predicates) {
         super(predicates);
     }
 
@@ -51,7 +47,7 @@ public class GenerateDynamismGemRollsFunction extends LootItemConditionalFunctio
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
+    public LootItemFunctionType getType() {
         return LootAS.GENERATE_DYNAMISM_GEM_ROLLS_FUNCTION.get();
     }
 }

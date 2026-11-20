@@ -8,8 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.loot;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.component.ArtifactComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.LootAS;
@@ -20,8 +18,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-import java.util.List;
-
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -31,10 +27,10 @@ import java.util.List;
  */
 public class GenerateRandomArtifactFunction extends LootItemConditionalFunction {
 
-    public static final MapCodec<GenerateRandomArtifactFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
-            commonFields(inst).apply(inst, GenerateRandomArtifactFunction::new));
+    public static final LootItemConditionalFunction.Serializer<GenerateRandomArtifactFunction> SERIALIZER =
+            LootSerializers.conditional(GenerateRandomArtifactFunction::new);
 
-    protected GenerateRandomArtifactFunction(List<LootItemCondition> predicates) {
+    protected GenerateRandomArtifactFunction(LootItemCondition[] predicates) {
         super(predicates);
     }
 
@@ -51,7 +47,7 @@ public class GenerateRandomArtifactFunction extends LootItemConditionalFunction 
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
+    public LootItemFunctionType getType() {
         return LootAS.GENERATE_RANDOM_ARTIFACT_FUNCTION.get();
     }
 }

@@ -20,11 +20,9 @@ import hellfirepvp.astralsorcery.common.loot.condition.PlayerNearbyCondition;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -57,8 +55,6 @@ public class AstralBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        HolderLookup.RegistryLookup<Enchantment> enchantments = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
-
         this.dropSelf(BlocksAS.MARBLE_ARCH);
         this.dropSelf(BlocksAS.MARBLE_BRICKS);
         this.dropSelf(BlocksAS.MARBLE_CHISELED);
@@ -92,7 +88,7 @@ public class AstralBlockLootTableProvider extends BlockLootSubProvider {
                     LootItem.lootTableItem(ItemsAS.AQUAMARINE)
                             .apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 3)))
                             .apply(LinearLuckFunction.luckAndEnchantments(List.of(
-                                    enchantments.getOrThrow(Enchantments.FORTUNE)
+                                    Enchantments.BLOCK_FORTUNE
                             )))
                             .apply(ApplyExplosionDecay.explosionDecay())
             );
@@ -114,8 +110,8 @@ public class AstralBlockLootTableProvider extends BlockLootSubProvider {
                     LootItem.lootTableItem(Items.GLOWSTONE_DUST)
                             .apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 5)))
                             .apply(LinearLuckFunction.luckAndEnchantments(List.of(
-                                    enchantments.getOrThrow(Enchantments.FORTUNE),
-                                    enchantments.getOrThrow(Enchantments.LOOTING)
+                                    Enchantments.BLOCK_FORTUNE,
+                                    Enchantments.MOB_LOOTING
                             )))
                             .apply(ApplyExplosionDecay.explosionDecay()));
         });

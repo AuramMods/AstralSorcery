@@ -8,8 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.loot;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.LootAS;
 import hellfirepvp.astralsorcery.common.tile.base.TileDataConstellationContainer;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntitySynchronized;
@@ -20,8 +18,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-import java.util.List;
-
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -31,10 +27,10 @@ import java.util.List;
  */
 public class CopyConstellationFunction extends LootItemConditionalFunction {
 
-    public static final MapCodec<CopyConstellationFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
-            commonFields(inst).apply(inst, CopyConstellationFunction::new));
+    public static final LootItemConditionalFunction.Serializer<CopyConstellationFunction> SERIALIZER =
+            LootSerializers.conditional(CopyConstellationFunction::new);
 
-    protected CopyConstellationFunction(List<LootItemCondition> predicates) {
+    protected CopyConstellationFunction(LootItemCondition[] predicates) {
         super(predicates);
     }
 
@@ -57,7 +53,7 @@ public class CopyConstellationFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
+    public LootItemFunctionType getType() {
         return LootAS.COPY_CONSTELLATION_FUNCTION.get();
     }
 }

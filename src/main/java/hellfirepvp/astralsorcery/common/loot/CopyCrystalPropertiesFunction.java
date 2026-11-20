@@ -8,8 +8,6 @@
 
 package hellfirepvp.astralsorcery.common.loot;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.item.tool.CrystalToolItem;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.LootAS;
@@ -22,8 +20,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-import java.util.List;
-
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -33,10 +29,10 @@ import java.util.List;
  */
 public class CopyCrystalPropertiesFunction extends LootItemConditionalFunction {
 
-    public static final MapCodec<CopyCrystalPropertiesFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
-            commonFields(inst).apply(inst, CopyCrystalPropertiesFunction::new));
+    public static final LootItemConditionalFunction.Serializer<CopyCrystalPropertiesFunction> SERIALIZER =
+            LootSerializers.conditional(CopyCrystalPropertiesFunction::new);
 
-    protected CopyCrystalPropertiesFunction(List<LootItemCondition> predicates) {
+    protected CopyCrystalPropertiesFunction(LootItemCondition[] predicates) {
         super(predicates);
     }
 
@@ -58,7 +54,7 @@ public class CopyCrystalPropertiesFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
+    public LootItemFunctionType getType() {
         return LootAS.COPY_CRYSTAL_PROPERTIES_FUNCTION.get();
     }
 }

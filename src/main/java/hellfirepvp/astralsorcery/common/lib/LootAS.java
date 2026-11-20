@@ -34,35 +34,35 @@ import java.util.function.Supplier;
  */
 public class LootAS {
 
-    public static final DeferredRegister<LootItemFunctionType<?>> LOOT_FUNCTION_REGISTER =
+    public static final DeferredRegister<LootItemFunctionType> LOOT_FUNCTION_REGISTER =
             DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, AstralSorcery.MODID);
     public static final DeferredRegister<LootItemConditionType> LOOT_CONDITION_REGISTER =
             DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, AstralSorcery.MODID);
     public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_FUNCTION_REGISTER =
             DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, AstralSorcery.MODID);
 
-    public static final RegistryObject<LootItemFunctionType<LinearLuckFunction>> LINEAR_LUCK_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("linear_luck", () -> new LootItemFunctionType<>(LinearLuckFunction.CODEC));
-    public static final RegistryObject<LootItemFunctionType<GenerateCrystalPropertiesFunction>> GENERATE_CRYSTAL_PROPERTIES_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("generate_crystal_properties", () -> new LootItemFunctionType<>(GenerateCrystalPropertiesFunction.CODEC));
-    public static final RegistryObject<LootItemFunctionType<CopyCrystalPropertiesFunction>> COPY_CRYSTAL_PROPERTIES_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("copy_crystal_properties", () -> new LootItemFunctionType<>(CopyCrystalPropertiesFunction.CODEC));
-    public static final RegistryObject<LootItemFunctionType<CopyConstellationFunction>> COPY_CONSTELLATION_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("copy_constellation", () -> new LootItemFunctionType<>(CopyConstellationFunction.CODEC));
-    public static final RegistryObject<LootItemFunctionType<CopyLumenFunction>> COPY_LUMEN_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("copy_lumen", () -> new LootItemFunctionType<>(CopyLumenFunction.CODEC));
-    public static final RegistryObject<LootItemFunctionType<GenerateRandomArtifactFunction>> GENERATE_RANDOM_ARTIFACT_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("generate_random_artifact", () -> new LootItemFunctionType<>(GenerateRandomArtifactFunction.CODEC));
-    public static final RegistryObject<LootItemFunctionType<GenerateRandomArtifactTypeFunction>> GENERATE_RANDOM_ARTIFACT_TYPE_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("generate_random_artifact_type", () -> new LootItemFunctionType<>(GenerateRandomArtifactTypeFunction.CODEC));
-    public static final RegistryObject<LootItemFunctionType<GenerateDynamismGemRollsFunction>> GENERATE_DYNAMISM_GEM_ROLLS_FUNCTION =
-            LOOT_FUNCTION_REGISTER.register("generate_dynamism_gem_rolls", () -> new LootItemFunctionType<>(GenerateDynamismGemRollsFunction.CODEC));
+    public static final RegistryObject<LootItemFunctionType> LINEAR_LUCK_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("linear_luck", () -> new LootItemFunctionType(LinearLuckFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> GENERATE_CRYSTAL_PROPERTIES_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("generate_crystal_properties", () -> new LootItemFunctionType(GenerateCrystalPropertiesFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> COPY_CRYSTAL_PROPERTIES_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("copy_crystal_properties", () -> new LootItemFunctionType(CopyCrystalPropertiesFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> COPY_CONSTELLATION_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("copy_constellation", () -> new LootItemFunctionType(CopyConstellationFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> COPY_LUMEN_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("copy_lumen", () -> new LootItemFunctionType(CopyLumenFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> GENERATE_RANDOM_ARTIFACT_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("generate_random_artifact", () -> new LootItemFunctionType(GenerateRandomArtifactFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> GENERATE_RANDOM_ARTIFACT_TYPE_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("generate_random_artifact_type", () -> new LootItemFunctionType(GenerateRandomArtifactTypeFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> GENERATE_DYNAMISM_GEM_ROLLS_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("generate_dynamism_gem_rolls", () -> new LootItemFunctionType(GenerateDynamismGemRollsFunction.SERIALIZER));
 
 
     public static final RegistryObject<LootItemConditionType> PLAYER_NEARBY_CONDITION =
-            LOOT_CONDITION_REGISTER.register("player_nearby", () -> new LootItemConditionType(PlayerNearbyCondition.CODEC));
+            LOOT_CONDITION_REGISTER.register("player_nearby", () -> new LootItemConditionType(LootSerializers.fields(PlayerNearbyCondition.CODEC)));
     public static final RegistryObject<LootItemConditionType> LOCKABLE_TILE_ENTITY_CONDITION =
-            LOOT_CONDITION_REGISTER.register("lockable_tile_entity", () -> new LootItemConditionType(LockableTileEntityCondition.CODEC));
+            LOOT_CONDITION_REGISTER.register("lockable_tile_entity", () -> new LootItemConditionType(LootSerializers.fields(LockableTileEntityCondition.CODEC)));
 
     public static final Supplier<Codec<TeleportDropsFunction>> GLOBAL_TELEPORT_DROPS_FUNCTION =
             GLOBAL_LOOT_FUNCTION_REGISTER.register("teleport_drops", () -> TeleportDropsFunction.CODEC);
