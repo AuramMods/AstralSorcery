@@ -10,7 +10,7 @@ package hellfirepvp.astralsorcery.common.item.dust;
 
 import hellfirepvp.astralsorcery.common.item.base.CreativeTabItem;
 import hellfirepvp.astralsorcery.common.item.base.ItemCustom;
-import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

@@ -11,6 +11,7 @@ package hellfirepvp.astralsorcery.common.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -89,6 +91,24 @@ public class BlockUtil {
 
     public static boolean isLiquidBlock(BlockState state) {
         return state.getBlock() instanceof LiquidBlock;
+    }
+
+    public static boolean setBlockWithPlacementEvent(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, Direction face) {
+        // Resolve this event before the caller spends items or plays the placement sound.
+        // Keep the snapshots owned by a surrounding ItemStack.useOn separate.
+        boolean wasCapturing = level.captureBlockSnapshots;
+        level.captureBlockSnapshots = false;
+        try {
+            return captureLevelChanges(level, () -> {
+                BlockSnapshot replaced = BlockSnapshot.create(level.dimension(), level, pos);
+                if (!level.setBlockAndUpdate(pos, state) || ForgeEventFactory.onBlockPlace(player, replaced, face)) {
+                    return ChangeResult.revert(false);
+                }
+                return ChangeResult.apply(true);
+            }).value();
+        } finally {
+            level.captureBlockSnapshots = wasCapturing;
+        }
     }
 
     public static <T> LevelChanges<T> captureLevelChanges(Level level, Supplier<ChangeResult<T>> fn) {

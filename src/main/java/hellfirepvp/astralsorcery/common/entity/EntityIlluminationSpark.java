@@ -30,8 +30,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.neoforged.neoforge.event.EventHooks;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -139,13 +137,14 @@ public class EntityIlluminationSpark extends ThrowableProjectile {
         }
 
         if (sLevel.isInWorldBounds(placePos) && sLevel.getWorldBorder().isWithinBounds(placePos)) {
+            var flare = BlocksAS.FLARE_LIGHT.get().defaultBlockState();
             if (this.getOwner() instanceof ServerPlayer sPlayer) {
-                if (!sPlayer.mayInteract(sLevel, placePos) || EventHooks.onBlockPlace(sPlayer, BlockSnapshot.create(sLevel.dimension(), sLevel, placePos), result.getDirection())) {
-                    this.remove(RemovalReason.KILLED);
-                    return;
+                if (sPlayer.mayInteract(sLevel, placePos)) {
+                    BlockUtil.setBlockWithPlacementEvent(sLevel, sPlayer, placePos, flare, result.getDirection());
                 }
+            } else {
+                sLevel.setBlockAndUpdate(placePos, flare);
             }
-            sLevel.setBlockAndUpdate(placePos, BlocksAS.FLARE_LIGHT.get().defaultBlockState());
         }
         this.remove(RemovalReason.KILLED);
     }

@@ -35,8 +35,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.neoforged.neoforge.event.EventHooks;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -83,17 +81,19 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
             return InteractionResult.SUCCESS;
         }
 
-        if (sPlayer.mayUseItemAt(placePos, dir, stack) && !EventHooks.onBlockPlace(sPlayer, BlockSnapshot.create(sLevel.dimension(), sLevel, placePos), dir)) {
-            if (sLevel.getBlockState(placePos).equals(flareState)) {
-                if (sLevel.setBlockAndUpdate(placePos, Blocks.AIR.defaultBlockState())) {
-                    ServerSoundHelper.playSoundAround(SoundsAS.ILLUMINATION_WAND_LIGHT, sLevel, placePos, 0.6F, 1F);
-                }
-            } else if (flareState.canSurvive(sLevel, placePos) && sLevel.isUnobstructed(flareState, placePos, CollisionContext.of(sPlayer))) {
-                if (sLevel.setBlockAndUpdate(placePos, flareState)) {
-                    //TODO lumen cost
-                    ServerSoundHelper.playSoundAround(SoundsAS.ILLUMINATION_WAND_LIGHT, sLevel, placePos, 0.6F, 1F);
-                }
-            }
+        if (!sPlayer.mayUseItemAt(placePos, dir, stack)) {
+            return InteractionResult.SUCCESS;
+        }
+        BlockState replacement;
+        if (sLevel.getBlockState(placePos).equals(flareState)) {
+            replacement = Blocks.AIR.defaultBlockState();
+        } else if (flareState.canSurvive(sLevel, placePos) && sLevel.isUnobstructed(flareState, placePos, CollisionContext.of(sPlayer))) {
+            replacement = flareState;
+        } else {
+            return InteractionResult.SUCCESS;
+        }
+        if (BlockUtil.setBlockWithPlacementEvent(sLevel, sPlayer, placePos, replacement, dir)) {
+            ServerSoundHelper.playSoundAround(SoundsAS.ILLUMINATION_WAND_LIGHT, sLevel, placePos, 0.6F, 1F);
         }
 
         return InteractionResult.SUCCESS;

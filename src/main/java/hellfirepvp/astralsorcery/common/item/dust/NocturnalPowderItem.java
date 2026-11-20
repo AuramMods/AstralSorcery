@@ -11,7 +11,7 @@ package hellfirepvp.astralsorcery.common.item.dust;
 import hellfirepvp.astralsorcery.common.entity.EntityNocturnalSpark;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -34,14 +34,14 @@ public class NocturnalPowderItem extends UsableDustItem {
 
     @Override
     public boolean dispenseItem(BlockSource dispenser) {
-        if (!dispenser.state().hasProperty(DirectionalBlock.FACING)) {
+        if (!dispenser.getBlockState().hasProperty(DirectionalBlock.FACING)) {
             return false;
         }
-        Direction dir = dispenser.state().getValue(DirectionalBlock.FACING);
-        Vec3 at = dispenser.center().add(Vec3.atLowerCornerOf(dir.getNormal()));
-        EntityNocturnalSpark spark = new EntityNocturnalSpark(at.x(), at.y(), at.z(), dispenser.level());
+        Direction dir = dispenser.getBlockState().getValue(DirectionalBlock.FACING);
+        Vec3 at = dispenser.getPos().getCenter().add(Vec3.atLowerCornerOf(dir.getNormal()));
+        EntityNocturnalSpark spark = new EntityNocturnalSpark(at.x(), at.y(), at.z(), dispenser.getLevel());
         spark.shoot(dir.getStepX(), dir.getStepY() + 0.1F, dir.getStepZ(), 0.7F, 0F);
-        return dispenser.level().addFreshEntity(spark);
+        return dispenser.getLevel().addFreshEntity(spark);
     }
 
     @Override
