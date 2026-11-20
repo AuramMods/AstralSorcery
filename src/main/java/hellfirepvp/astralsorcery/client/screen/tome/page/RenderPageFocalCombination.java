@@ -71,7 +71,7 @@ public class RenderPageFocalCombination extends RenderPageRecipe<FocalCombineRec
             int midX = x + TomePage.DEFAULT_WIDTH / 2;
             int resultY = y + 18 + 60 / 2;
             List<ItemStack> results = recipe.getOutputs();
-            ItemStack mainResult = results.isEmpty() ? ItemStack.EMPTY : results.getFirst();
+            ItemStack mainResult = results.isEmpty() ? ItemStack.EMPTY : results.get(0);
             this.renderOutput(guiGraphics, midX - 8, resultY - 8, 16, 16, mainResult);
 
             List<ItemStack> remainingResults = results.size() <= 1 ? List.of() : results.subList(1, results.size());

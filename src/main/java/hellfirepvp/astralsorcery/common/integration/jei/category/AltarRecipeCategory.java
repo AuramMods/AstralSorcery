@@ -202,7 +202,7 @@ public class AltarRecipeCategory extends ASRecipeCategory<AltarRecipe> {
         if (outputs.isEmpty()) return;
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 65, 18)
-                .addItemStack(outputs.getFirst());
+                .addItemStack(outputs.get(0));
 
         outputs = outputs.subList(1, outputs.size());
         for (int i = 0; i < outputs.size(); i++) {

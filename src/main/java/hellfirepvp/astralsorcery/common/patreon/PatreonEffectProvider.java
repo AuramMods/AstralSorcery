@@ -23,6 +23,6 @@ public interface PatreonEffectProvider<T extends PatreonEffect> {
     T buildEffect(UUID playerUUID, List<String> parameters) throws Exception;
 
     default UUID getEffectUUID(List<String> parameters) throws Exception {
-        return UUID.fromString(parameters.getFirst());
+        return UUID.fromString(parameters.iterator().next());
     }
 }

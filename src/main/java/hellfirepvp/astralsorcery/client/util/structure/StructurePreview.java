@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.client.util.structure;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -213,7 +214,7 @@ public class StructurePreview {
 
             List<BlockPos> offsets = new ArrayList<>(this.states.keySet());
             offsets.sort(Comparator.comparing(pos -> pos.offset(this.center).distSqr(playerPos)));
-            offsets.reversed().forEach(relative -> {
+            Lists.reverse(offsets).forEach(relative -> {
                 if (relative.getY() != renderSlice) return;
 
                 BlockState expected = this.states.get(relative);

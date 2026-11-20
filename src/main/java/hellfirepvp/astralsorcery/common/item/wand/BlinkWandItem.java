@@ -180,7 +180,7 @@ public class BlinkWandItem extends ItemCustom {
 
         List<Vector3> line = VectorUtil.iteratePoints(origin, new Vector3(target), 0.2F);
         if (line.isEmpty()) return;
-        Vector3 last = line.getLast();
+        Vector3 last = line.get(line.size() - 1);
 
         line.forEach(point -> {
             if (point == last || rand.nextInt(5) == 0) {

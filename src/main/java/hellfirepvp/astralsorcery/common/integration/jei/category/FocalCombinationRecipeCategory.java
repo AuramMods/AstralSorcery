@@ -80,7 +80,7 @@ public class FocalCombinationRecipeCategory extends ASRecipeCategory<FocalCombin
         if (inputs.size() == 1) {
             builder.addSlot(RecipeIngredientRole.INPUT, offsetX + 18, offsetY + 18)
                     .setStandardSlotBackground()
-                    .addIngredients(inputs.getFirst());
+                    .addIngredients(inputs.get(0));
         } else if (inputs.size() <= 4) {
             offsetX += 9;
             offsetY += 9;

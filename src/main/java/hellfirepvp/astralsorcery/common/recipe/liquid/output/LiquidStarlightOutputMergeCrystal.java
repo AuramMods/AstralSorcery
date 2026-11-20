@@ -75,7 +75,7 @@ public class LiquidStarlightOutputMergeCrystal extends LiquidStarlightRecipeOutp
 
         RandomSource rand = RandomSource.create();
         ItemEntity crystal = input.getTriggerEntity();
-        ItemEntity otherCrystal = input.getOtherEntities().getFirst();
+        ItemEntity otherCrystal = input.getOtherEntities().get(0);
 
         CrystalAttributesComponent cmpCrystal = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(crystal.getItem(), CrystalAttributesComponent.defaultEmpty());
         CrystalAttributesComponent cmpOther = DataComponentsAS.CRYSTAL_ATTRIBUTES.getOrDefault(otherCrystal.getItem(), CrystalAttributesComponent.defaultEmpty());

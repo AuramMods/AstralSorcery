@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.client.shader;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -73,7 +74,7 @@ public class WrappedBufferSource extends MultiBufferSource.BufferSource {
     }
 
     public void end() {
-        new ArrayList<>(this.wrappedTypes.reversed().keySet()).forEach(this::drawWrapped);
+        Lists.reverse(new ArrayList<>(this.wrappedTypes.keySet())).forEach(this::drawWrapped);
     }
 
     @Override

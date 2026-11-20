@@ -160,7 +160,7 @@ public class RenderPageAltar extends RenderPageRecipe<AltarRecipe> {
 
         AltarCraftingInput displayInput = recipe.createInputForDisplay(ClientProxy.getClientTick());
         List<ItemStack> outputs = recipe.getOutputsForDisplay(displayInput, registries, ClientProxy.getClientTick());
-        ItemStack mainOutput = outputs.isEmpty() ? ItemStack.EMPTY : outputs.getFirst();
+        ItemStack mainOutput = outputs.isEmpty() ? ItemStack.EMPTY : outputs.get(0);
         this.renderOutput(guiGraphics, midX - 8, y + 18 + 60 / 2 - 8, 16, 16, mainOutput);
 
         List<ItemStack> remainingResults = outputs.size() <= 1 ? List.of() : outputs.subList(1, Math.min(outputs.size(), 5));

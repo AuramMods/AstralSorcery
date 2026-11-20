@@ -76,7 +76,7 @@ public class LumenGenerationRecipeCategory extends ASRecipeCategory<LumenGenerat
         if (!inputs.isEmpty()) {
             if (inputs.size() == 1) {
                 builder.addSlot(RecipeIngredientRole.INPUT, offsetX + 18, offsetY + 18)
-                        .addIngredient(LumenIngredientType.INSTANCE, LumenStack.of(inputs.getFirst(), LumenStack.FLASK_VALUE));
+                        .addIngredient(LumenIngredientType.INSTANCE, LumenStack.of(inputs.get(0), LumenStack.FLASK_VALUE));
             } else {
                 for (int i = 0; i < inputs.size(); i++) {
                     int x = offsetX + (i % 2) * 18;

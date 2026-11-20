@@ -97,12 +97,13 @@ public class TransparencyChain extends WrappedPostChain {
         }
 
         this.getWrapped().map(chain -> (AccessorPostChain) chain).ifPresent(chain -> {
-            PostPass inPass = chain.getPasses().getFirst();
+            var passes = chain.getPasses();
+            PostPass inPass = passes.iterator().next();
             AccessorPostPass inPassAccess = MiscUtil.cast(inPass);
             this.redirectInput = inPass.inTarget;
             inPassAccess.setInTarget(newTarget);
 
-            PostPass outPass = chain.getPasses().getLast();
+            PostPass outPass = passes.get(passes.size() - 1);
             AccessorPostPass outPassAccess = MiscUtil.cast(outPass);
             this.redirectTarget = outPass.outTarget;
             outPassAccess.setOutTarget(newTarget);
@@ -111,11 +112,12 @@ public class TransparencyChain extends WrappedPostChain {
 
     private void revertRedirect() {
         this.getWrapped().map(chain -> (AccessorPostChain) chain).ifPresent(chain -> {
-            AccessorPostPass inPass = MiscUtil.cast(chain.getPasses().getFirst());
+            var passes = chain.getPasses();
+            AccessorPostPass inPass = MiscUtil.cast(passes.iterator().next());
             inPass.setInTarget(this.redirectInput);
             this.redirectInput = null;
 
-            AccessorPostPass outPass = MiscUtil.cast(chain.getPasses().getLast());
+            AccessorPostPass outPass = MiscUtil.cast(passes.get(passes.size() - 1));
             outPass.setOutTarget(this.redirectTarget);
             this.redirectTarget = null;
         });

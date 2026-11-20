@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.client.screen.tome.page;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -147,7 +148,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
     public void renderHoverTooltips(GuiGraphics graphics, float mouseX, float mouseY) {
         graphics.pose().pushPose();
         graphics.pose().translate(0, 0, 400);
-        this.thisFrameHovers.reversed().entrySet().stream()
+        Lists.reverse(new ArrayList<>(this.thisFrameHovers.entrySet())).stream()
                 .filter(entry -> entry.getKey().contains(mouseX, mouseY))
                 .findFirst()
                 .map(Map.Entry::getValue)
@@ -459,7 +460,7 @@ public abstract class RenderPageRecipe<T extends Recipe<?>> extends RenderPage {
                 // God i wish there was some way to ACTUALLY find out what an ingredient does and form it into human-readable words
                 // or literally anything to display it in some concise way. It's incredbile that it's so extremely generic in its classes and stuff
                 // but impossible to tell what it actaully expects from the user what's configured in a DATAPACK.
-                Fluid fluid = fluids.getFirst();
+                Fluid fluid = fluids.get(0);
 
                 Component countCmp;
                 int neededCount = ingredient.amount();

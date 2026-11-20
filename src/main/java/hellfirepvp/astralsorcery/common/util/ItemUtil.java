@@ -172,7 +172,7 @@ public class ItemUtil {
         for (ItemEntity entity : nonEmpty) {
             boolean added = false;
             for (List<ItemEntity> group : groups) {
-                if (ItemEntity.areMergable(group.getFirst().getItem(), entity.getItem())) {
+                if (ItemEntity.areMergable(group.get(0).getItem(), entity.getItem())) {
                     group.add(entity);
                     added = true;
                     break;

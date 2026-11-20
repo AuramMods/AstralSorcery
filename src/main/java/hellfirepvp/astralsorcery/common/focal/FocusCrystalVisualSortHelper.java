@@ -32,7 +32,7 @@ public class FocusCrystalVisualSortHelper {
             return Double.compare(angleA, angleB);
         });
         if (!positions.isEmpty()) {
-            positions.addLast(positions.getFirst());
+            positions.add(positions.get(0));
         }
         return positions;
     }
