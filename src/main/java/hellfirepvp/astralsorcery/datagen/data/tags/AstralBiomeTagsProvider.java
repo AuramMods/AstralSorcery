@@ -39,6 +39,14 @@ public class AstralBiomeTagsProvider extends TagsProvider<Biome> {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        this.tag(TagsAS.Biomes.FOREST).addTag(BiomeTags.IS_FOREST);
+        this.tag(TagsAS.Biomes.MOUNTAIN)
+                .addTag(BiomeTags.IS_MOUNTAIN)
+                .addTag(Tags.Biomes.IS_MOUNTAIN)
+                .addOptionalTag(common("is_mountain/peak"))
+                .addOptionalTag(common("is_mountain/slope"));
+        this.tag(TagsAS.Biomes.SAVANNA).addTag(BiomeTags.IS_SAVANNA);
+        this.tag(TagsAS.Biomes.DESERT).addTag(Tags.Biomes.IS_DESERT);
         this.tag(TagsAS.Biomes.SNOWY)
                 .add(Biomes.SNOWY_BEACH)
                 .add(Biomes.SNOWY_PLAINS)
@@ -61,20 +69,12 @@ public class AstralBiomeTagsProvider extends TagsProvider<Biome> {
                 .addOptionalTag(common("is_overworld"))
                 .addOptionalTag(common("is_end"));
         this.tag(TagsAS.Biomes.DIG_SITE_BIOMES)
-                .addTag(BiomeTags.IS_FOREST)
-                .addTag(BiomeTags.IS_MOUNTAIN)
-                .addTag(Tags.Biomes.IS_MOUNTAIN)
-                .addTag(BiomeTags.IS_SAVANNA)
-                .addTag(Tags.Biomes.IS_DESERT)
-                .addOptionalTag(common("is_forest"))
-                .addOptionalTag(common("is_mountain"))
-                .addOptionalTag(common("is_mountain/peak"))
-                .addOptionalTag(common("is_mountain/slope"))
-                .addOptionalTag(common("is_savanna"))
-                .addOptionalTag(common("is_desert"));
+                .addTag(TagsAS.Biomes.FOREST)
+                .addTag(TagsAS.Biomes.MOUNTAIN)
+                .addTag(TagsAS.Biomes.SAVANNA)
+                .addTag(TagsAS.Biomes.DESERT);
         this.tag(TagsAS.Biomes.MOON_DIAL_BIOMES)
-                .addTag(Tags.Biomes.IS_DESERT)
-                .addOptionalTag(common("is_desert"));
+                .addTag(TagsAS.Biomes.DESERT);
         this.tag(TagsAS.Biomes.COLUMN_BIOMES)
                 .addTag(BiomeTags.IS_OVERWORLD)
                 .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "is_overworld"))

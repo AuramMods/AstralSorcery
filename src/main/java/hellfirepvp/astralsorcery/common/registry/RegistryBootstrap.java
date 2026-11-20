@@ -48,6 +48,7 @@ public class RegistryBootstrap {
         WorldGenAS.FEATURE_REGISTER.register(modLifecycleBus);
         WorldGenAS.PLACEMENT_REGISTER.register(modLifecycleBus);
         WorldGenAS.STRUCTURE_REGISTER.register(modLifecycleBus);
+        WorldGenAS.STRUCTURE_PIECE_REGISTER.register(modLifecycleBus);
         WorldGenAS.STRUCTURE_PROCESSOR_REGISTER.register(modLifecycleBus);
 
         // ------------------ CUSTOM ------------------- //

@@ -1,33 +1,8 @@
 {
   "values": [
-    "#minecraft:is_forest",
-    "#minecraft:is_mountain",
-    "#forge:is_mountain",
-    "#minecraft:is_savanna",
-    "#forge:is_desert",
-    {
-      "id": "#c:is_forest",
-      "required": false
-    },
-    {
-      "id": "#c:is_mountain",
-      "required": false
-    },
-    {
-      "id": "#c:is_mountain/peak",
-      "required": false
-    },
-    {
-      "id": "#c:is_mountain/slope",
-      "required": false
-    },
-    {
-      "id": "#c:is_savanna",
-      "required": false
-    },
-    {
-      "id": "#c:is_desert",
-      "required": false
-    }
+    "#c:is_forest",
+    "#c:is_mountain",
+    "#c:is_savanna",
+    "#c:is_desert"
   ]
 }

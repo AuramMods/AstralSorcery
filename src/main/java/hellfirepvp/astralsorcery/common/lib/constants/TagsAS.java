@@ -101,7 +101,11 @@ public class TagsAS {
 
     public static class Biomes {
 
-        public static final TagKey<Biome> SNOWY = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("c", "is_snowy"));
+        public static final TagKey<Biome> SNOWY = commonBiomeTag("is_snowy");
+        public static final TagKey<Biome> FOREST = commonBiomeTag("is_forest");
+        public static final TagKey<Biome> MOUNTAIN = commonBiomeTag("is_mountain");
+        public static final TagKey<Biome> SAVANNA = commonBiomeTag("is_savanna");
+        public static final TagKey<Biome> DESERT = commonBiomeTag("is_desert");
 
         public static final TagKey<Biome> FOCAL_POINT_BIOMES = TagKey.create(Registries.BIOME, AstralSorcery.key("focal_point_biomes"));
         public static final TagKey<Biome> OBLITERATION_BIOMES = TagKey.create(Registries.BIOME, AstralSorcery.key("obliteration_biomes"));
@@ -139,6 +143,10 @@ public class TagsAS {
 
     private static TagKey<Item> itemTag(String name) {
         return ItemTags.create(AstralSorcery.key(name));
+    }
+
+    private static TagKey<Biome> commonBiomeTag(String name) {
+        return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("c", name));
     }
 
     private static TagKey<DamageType> damageTypeTag(String name) {

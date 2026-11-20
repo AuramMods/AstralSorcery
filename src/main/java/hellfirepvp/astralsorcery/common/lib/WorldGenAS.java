@@ -12,6 +12,7 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.worldgen.feature.RockCrystalOreFeature;
 import hellfirepvp.astralsorcery.common.worldgen.feature.RockCrystalOreFeatureConfiguration;
 import hellfirepvp.astralsorcery.common.worldgen.placement.RiverbedPlacement;
+import hellfirepvp.astralsorcery.common.worldgen.structure.IgnoreWaterloggingPoolPiece;
 import hellfirepvp.astralsorcery.common.worldgen.structure.TemplateStructure;
 import hellfirepvp.astralsorcery.common.worldgen.structure.processor.FlareLightColorizationProcessor;
 import hellfirepvp.astralsorcery.common.worldgen.structure.processor.FlareLightExtinguishProcessor;
@@ -21,6 +22,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -40,6 +42,8 @@ public class WorldGenAS {
             DeferredRegister.create(Registries.PLACEMENT_MODIFIER_TYPE, AstralSorcery.MODID);
     public static final DeferredRegister<StructureType<?>> STRUCTURE_REGISTER =
             DeferredRegister.create(Registries.STRUCTURE_TYPE, AstralSorcery.MODID);
+    public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECE_REGISTER =
+            DeferredRegister.create(Registries.STRUCTURE_PIECE, AstralSorcery.MODID);
     public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_REGISTER =
             DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, AstralSorcery.MODID);
 
@@ -50,15 +54,18 @@ public class WorldGenAS {
             PLACEMENT_REGISTER.register("riverbed_placement", () -> () -> RiverbedPlacement.CODEC.codec());
 
     public static final RegistryObject<StructureType<TemplateStructure>> TEMPLATE_STRUCTURE =
-            STRUCTURE_REGISTER.register("template_structure", () -> () -> TemplateStructure.CODEC);
+            STRUCTURE_REGISTER.register("template_structure", () -> () -> TemplateStructure.CODEC.codec());
+
+    public static final RegistryObject<StructurePieceType> IGNORE_WATERLOGGING_POOL_PIECE =
+            STRUCTURE_PIECE_REGISTER.register("ignore_waterlogging_pool_piece", () -> IgnoreWaterloggingPoolPiece::new);
 
     public static final RegistryObject<StructureProcessorType<FocalPointRegisterProcessor>> FOCAL_POINT_REGISTER_PROCESSOR =
-            STRUCTURE_PROCESSOR_REGISTER.register("focal_point_register_processor", () -> () -> FocalPointRegisterProcessor.CODEC);
+            STRUCTURE_PROCESSOR_REGISTER.register("focal_point_register_processor", () -> () -> FocalPointRegisterProcessor.CODEC.codec());
     public static final RegistryObject<StructureProcessorType<StructureMarkerProcessor>> STRUCTURE_MARKER_PROCESSOR =
-            STRUCTURE_PROCESSOR_REGISTER.register("structure_marker_processor", () -> () -> StructureMarkerProcessor.CODEC);
+            STRUCTURE_PROCESSOR_REGISTER.register("structure_marker_processor", () -> () -> StructureMarkerProcessor.CODEC.codec());
     public static final RegistryObject<StructureProcessorType<FlareLightExtinguishProcessor>> FLARE_LIGHT_EXTINGUISH_PROCESSOR =
-            STRUCTURE_PROCESSOR_REGISTER.register("flare_light_extinguish_processor", () -> () -> FlareLightExtinguishProcessor.CODEC);
+            STRUCTURE_PROCESSOR_REGISTER.register("flare_light_extinguish_processor", () -> () -> FlareLightExtinguishProcessor.CODEC.codec());
     public static final RegistryObject<StructureProcessorType<FlareLightColorizationProcessor>> FLARE_LIGHT_COLORIZATION_PROCESSOR =
-            STRUCTURE_PROCESSOR_REGISTER.register("flare_light_colorization_processor", () -> () -> FlareLightColorizationProcessor.CODEC);
+            STRUCTURE_PROCESSOR_REGISTER.register("flare_light_colorization_processor", () -> () -> FlareLightColorizationProcessor.CODEC.codec());
 
 }

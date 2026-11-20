@@ -15,6 +15,7 @@ import hellfirepvp.astralsorcery.common.lib.WorldGenAS;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.block.Rotation;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 
 import java.util.Optional;
 
@@ -144,15 +144,14 @@ public class TemplateStructure extends Structure {
             BoundingBox structureBox = this.expand(
                     poolElement.getBoundingBox(context.structureTemplateManager(), origin, rotation), context.heightAccessor());
 
-            builder.addPiece(new PoolElementStructurePiece(
-                    context.structureTemplateManager(),
-                    poolElement,
-                    origin,
-                    poolElement.getGroundLevelDelta() - this.getVerticalOffset(),
-                    rotation,
-                    structureBox,
-                    this.getLiquidSettings()
-            ));
+            int groundLevelDelta = poolElement.getGroundLevelDelta() - this.getVerticalOffset();
+            if (this.getLiquidSettings() == LiquidSettings.IGNORE_WATERLOGGING) {
+                builder.addPiece(new IgnoreWaterloggingPoolPiece(context.structureTemplateManager(), poolElement, origin,
+                        groundLevelDelta, rotation, structureBox));
+            } else {
+                builder.addPiece(new PoolElementStructurePiece(context.structureTemplateManager(), poolElement, origin,
+                        groundLevelDelta, rotation, structureBox));
+            }
         }));
     }
 
@@ -174,5 +173,24 @@ public class TemplateStructure extends Structure {
     @Override
     public StructureType<?> type() {
         return WorldGenAS.TEMPLATE_STRUCTURE.get();
+    }
+
+    public enum LiquidSettings implements StringRepresentable {
+
+        APPLY_WATERLOGGING("apply_waterlogging"),
+        IGNORE_WATERLOGGING("ignore_waterlogging");
+
+        public static final Codec<LiquidSettings> CODEC = StringRepresentable.fromEnum(LiquidSettings::values);
+
+        private final String name;
+
+        LiquidSettings(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
     }
 }

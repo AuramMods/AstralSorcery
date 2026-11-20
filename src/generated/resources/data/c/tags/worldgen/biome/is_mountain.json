@@ -1,0 +1,14 @@
+{
+  "values": [
+    "#minecraft:is_mountain",
+    "#forge:is_mountain",
+    {
+      "id": "#c:is_mountain/peak",
+      "required": false
+    },
+    {
+      "id": "#c:is_mountain/slope",
+      "required": false
+    }
+  ]
+}

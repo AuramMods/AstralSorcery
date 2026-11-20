@@ -17,8 +17,9 @@ import hellfirepvp.astralsorcery.common.worldgen.structure.marker.*;
 import hellfirepvp.astralsorcery.common.worldgen.structure.processor.FlareLightColorizationProcessor;
 import hellfirepvp.astralsorcery.common.worldgen.structure.processor.FlareLightExtinguishProcessor;
 import hellfirepvp.astralsorcery.common.worldgen.structure.processor.FocalPointRegisterProcessor;
+import hellfirepvp.astralsorcery.common.worldgen.structure.TemplateStructure.LiquidSettings;
 import net.minecraft.core.HolderSet;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -27,9 +28,7 @@ import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
-import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,21 +88,21 @@ public class AstralStructureProvider {
                 .verticalOffset(-2)
                 .requiredClearance(6)
                 .marker("dig_sand", MarkerReplacementBiome.builder()
-                        .add(Tags.Biomes.IS_MOUNTAIN, MarkerReplacementRandom.builder()
+                        .add(TagsAS.Biomes.MOUNTAIN, MarkerReplacementRandom.builder()
                                 .entry(1, MarkerReplacementLootContainer.suspiciousGravel(LootTablesAS.DIG_SITE_ARCHAEOLOGY))
                                 .entry(3, MarkerReplacementBlock.of(Blocks.GRAVEL))
                                 .build())
-                        .add(Tags.Biomes.IS_FOREST, MarkerReplacementRandom.builder()
+                        .add(TagsAS.Biomes.FOREST, MarkerReplacementRandom.builder()
                                 .entry(1, MarkerReplacementLootContainer.suspiciousGravel(LootTablesAS.DIG_SITE_ARCHAEOLOGY))
                                 .entry(2, MarkerReplacementBlock.of(Blocks.GRAVEL))
                                 .entry(1, MarkerReplacementBlock.of(Blocks.DIRT))
                                 .build())
-                        .add(Tags.Biomes.IS_SAVANNA, MarkerReplacementRandom.builder()
+                        .add(TagsAS.Biomes.SAVANNA, MarkerReplacementRandom.builder()
                                 .entry(1, MarkerReplacementLootContainer.suspiciousSand(LootTablesAS.DIG_SITE_ARCHAEOLOGY))
                                 .entry(2, MarkerReplacementBlock.of(Blocks.SAND))
                                 .entry(1, MarkerReplacementBlock.of(Blocks.DIRT))
                                 .build())
-                        .add(Tags.Biomes.IS_DESERT, MarkerReplacementRandom.builder()
+                        .add(TagsAS.Biomes.DESERT, MarkerReplacementRandom.builder()
                                 .entry(1, MarkerReplacementLootContainer.suspiciousSand(LootTablesAS.DIG_SITE_ARCHAEOLOGY))
                                 .entry(3, MarkerReplacementBlock.of(Blocks.SAND))
                                 .build())
@@ -154,19 +153,19 @@ public class AstralStructureProvider {
         return definition;
     }
 
-    public static void generateStructures(BootstrapContext<Structure> context) {
+    public static void generateStructures(BootstapContext<Structure> context) {
         ALL.forEach(definition -> definition.registerStructure(context));
     }
 
-    public static void generateStructureSets(BootstrapContext<StructureSet> context) {
+    public static void generateStructureSets(BootstapContext<StructureSet> context) {
         ALL.forEach(definition -> definition.registerStructureSet(context));
     }
 
-    public static void generateStructurePools(BootstrapContext<StructureTemplatePool> context) {
+    public static void generateStructurePools(BootstapContext<StructureTemplatePool> context) {
         ALL.forEach(definition -> definition.registerTemplatePool(context));
     }
 
-    public static void generateStructureProcessorLists(BootstrapContext<StructureProcessorList> context) {
+    public static void generateStructureProcessorLists(BootstapContext<StructureProcessorList> context) {
         ALL.forEach(definition -> definition.registerProcessorList(context));
     }
 }

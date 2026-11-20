@@ -13,10 +13,11 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.worldgen.structure.TemplateStructure;
 import hellfirepvp.astralsorcery.common.worldgen.structure.marker.StructureMarkerReplacement;
 import hellfirepvp.astralsorcery.common.worldgen.structure.processor.StructureMarkerProcessor;
+import hellfirepvp.astralsorcery.common.worldgen.structure.TemplateStructure.LiquidSettings;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +33,6 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 
@@ -75,7 +75,7 @@ public class StructureDefinition {
     private final boolean groundRequired;
 
     private final StructureMarkerProcessor markerProcessor;
-    private final Function<BootstrapContext<StructureProcessorList>, List<StructureProcessor>> additionalProcessors;
+    private final Function<BootstapContext<StructureProcessorList>, List<StructureProcessor>> additionalProcessors;
 
     private StructureDefinition(Builder builder) {
         this.structureKeys = builder.structureKeys;
@@ -128,15 +128,12 @@ public class StructureDefinition {
         return this.processorListKey;
     }
 
-    public void registerStructure(BootstrapContext<Structure> context) {
+    public void registerStructure(BootstapContext<Structure> context) {
         HolderSet<Biome> biomeSet = context.lookup(Registries.BIOME).getOrThrow(this.biomes);
 
         this.getStructureKeys().forEach((structure, weight) -> {
             context.register(structure, new TemplateStructure(
-                    new Structure.StructureSettings.Builder(biomeSet)
-                            .generationStep(this.generationStep)
-                            .terrainAdapation(this.terrainAdjustment)
-                            .build(),
+                    new Structure.StructureSettings(biomeSet, Map.of(), this.generationStep, this.terrainAdjustment),
                     context.lookup(Registries.TEMPLATE_POOL).getOrThrow(this.getTemplatePoolKey()),
                     this.heightmap,
                     this.verticalOffset,
@@ -151,7 +148,7 @@ public class StructureDefinition {
         });
     }
 
-    public void registerStructureSet(BootstrapContext<StructureSet> context) {
+    public void registerStructureSet(BootstapContext<StructureSet> context) {
         List<StructureSet.StructureSelectionEntry> entries = new ArrayList<>();
 
         this.getStructureKeys().forEach((structure, weight) -> {
@@ -165,7 +162,7 @@ public class StructureDefinition {
                 new RandomSpreadStructurePlacement(this.spacing, this.separation, this.spreadType, this.salt)));
     }
 
-    public void registerTemplatePool(BootstrapContext<StructureTemplatePool> context) {
+    public void registerTemplatePool(BootstapContext<StructureTemplatePool> context) {
         Holder<StructureProcessorList> processors = context.lookup(Registries.PROCESSOR_LIST).getOrThrow(this.getProcessorListKey());
 
         List<Pair<Function<StructureTemplatePool.Projection, ? extends StructurePoolElement>, Integer>> elements = new ArrayList<>();
@@ -180,7 +177,7 @@ public class StructureDefinition {
         ));
     }
 
-    public void registerProcessorList(BootstrapContext<StructureProcessorList> context) {
+    public void registerProcessorList(BootstapContext<StructureProcessorList> context) {
         List<StructureProcessor> processors = new ArrayList<>();
         processors.add(this.markerProcessor);
         processors.addAll(this.additionalProcessors.apply(context));
@@ -217,7 +214,7 @@ public class StructureDefinition {
         private LiquidSettings liquidSettings = LiquidSettings.APPLY_WATERLOGGING;
         private boolean groundRequired = false;
 
-        private Function<BootstrapContext<StructureProcessorList>, List<StructureProcessor>> additionalProcessors = context -> List.of();
+        private Function<BootstapContext<StructureProcessorList>, List<StructureProcessor>> additionalProcessors = context -> List.of();
 
         private Builder(String name) {
             this.name = name;
@@ -337,7 +334,7 @@ public class StructureDefinition {
             return this;
         }
 
-        public Builder processors(Function<BootstrapContext<StructureProcessorList>, List<StructureProcessor>> additionalProcessors) {
+        public Builder processors(Function<BootstapContext<StructureProcessorList>, List<StructureProcessor>> additionalProcessors) {
             this.additionalProcessors = additionalProcessors;
             return this;
         }
