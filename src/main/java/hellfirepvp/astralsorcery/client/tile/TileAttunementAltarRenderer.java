@@ -19,7 +19,6 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.AABB;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -34,11 +33,6 @@ public class TileAttunementAltarRenderer implements BlockEntityRenderer<TileAttu
 
     public TileAttunementAltarRenderer(EntityModelSet modelSet) {
         this.model = ModelAttunementAltar.bake(modelSet);
-    }
-
-    @Override
-    public AABB getRenderBoundingBox(TileAttunementAltar blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(1, 2, 1);
     }
 
     @Override

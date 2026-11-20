@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.block;
 
+import hellfirepvp.astralsorcery.client.lib.ClientExtensionsAS;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -33,6 +34,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
+
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -46,6 +50,12 @@ public class FlareLightBlock extends Block {
     private static final VoxelShape SHAPE = Block.box(6, 6, 6, 10, 10, 10);
 
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
+        consumer.accept(ClientExtensionsAS.NO_BLOCK_PARTICLES);
+    }
 
     public FlareLightBlock(Properties properties) {
         super(properties);

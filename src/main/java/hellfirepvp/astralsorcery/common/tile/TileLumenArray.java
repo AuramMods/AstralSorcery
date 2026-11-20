@@ -66,6 +66,7 @@ import net.minecraft.world.item.ItemStack;
 import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -88,6 +89,11 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
     private long lastSearchGameTime = 0L;
     private LumenGenerationRecipe activeRecipe = null;
     private final Map<Lumen, LumenRequestChain> activeRequestChains = new HashMap<>();
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.getBlockPos()).inflate(1, 2, 1);
+    }
 
     public TileLumenArray(BlockPos pos, BlockState blockState) {
         this(TileEntitiesAS.LUMEN_ARRAY, pos, blockState);

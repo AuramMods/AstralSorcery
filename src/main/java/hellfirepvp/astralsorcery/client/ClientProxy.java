@@ -151,7 +151,6 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(CustomModelsAS::registerCustomModels);
         modEventBus.addListener(RenderersAS::registerTileEntityRenders);
         modEventBus.addListener(ModelLayersAS::registerModelLayers);
-        modEventBus.addListener(ClientExtensionsAS::registerExtensions);
         modEventBus.addListener(RenderLumenDisplayOverlay::registerOverlays);
         modEventBus.addListener(RenderPerkExperienceOverlay::registerOverlays);
 

@@ -77,6 +77,11 @@ public class TileStarlightFocusCrystal extends TileEntityNetwork<FocusCrystalSou
 
     private final List<ClientObject<FXOrbitalSource>> orbitals = new ArrayList<>();
 
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.getBlockPos()).inflate(1, 5, 1);
+    }
+
     public TileStarlightFocusCrystal(BlockPos pos, BlockState blockState) {
         this(TileEntitiesAS.STARLIGHT_FOCUS_CRYSTAL, pos, blockState);
     }

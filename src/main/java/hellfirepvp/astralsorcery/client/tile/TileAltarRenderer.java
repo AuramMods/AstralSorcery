@@ -18,7 +18,6 @@ import hellfirepvp.astralsorcery.common.util.level.DayTimeHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.AABB;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -52,9 +51,4 @@ public class TileAltarRenderer implements BlockEntityRenderer<TileAltar> {
         });
     }
 
-    @Override
-    public AABB getRenderBoundingBox(TileAltar blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity)
-                .inflate(4, 1, 4);
-    }
 }

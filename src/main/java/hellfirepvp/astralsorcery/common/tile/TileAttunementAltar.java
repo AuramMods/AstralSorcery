@@ -47,6 +47,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -78,6 +79,11 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
     public int activationTick = 0;
     public int prevActivationTick = 0;
     public boolean animate = false, tesrLocked = true;
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.getBlockPos()).inflate(1, 2, 1);
+    }
 
     public TileAttunementAltar(BlockPos pos, BlockState blockState) {
         super(TileEntitiesAS.ATTUNEMENT_ALTAR, pos, blockState);

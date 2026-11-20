@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
+import hellfirepvp.astralsorcery.client.lib.ClientExtensionsAS;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -38,6 +39,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
+
+import java.util.function.Consumer;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -47,6 +51,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Date: 07.09.2026 / 10:00
  */
 public class TranslucentBlock extends BaseTileBlock<TileTranslucentBlock> {
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
+        consumer.accept(ClientExtensionsAS.NO_BLOCK_PARTICLES);
+    }
 
     public TranslucentBlock(Properties properties) {
         super(properties, TileEntitiesAS.TRANSLUCENT_BLOCK);

@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.model.data.ModelData;
 
 /**
@@ -35,11 +34,6 @@ import net.minecraftforge.client.model.data.ModelData;
  * Date: 07.09.2026 / 10:00
  */
 public class TileStarlightFocusCrystalRenderer implements BlockEntityRenderer<TileStarlightFocusCrystal> {
-
-    @Override
-    public AABB getRenderBoundingBox(TileStarlightFocusCrystal blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(1, 5, 1);
-    }
 
     @Override
     public void render(TileStarlightFocusCrystal focusCrystal, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {

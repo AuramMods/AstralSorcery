@@ -24,7 +24,6 @@ import hellfirepvp.observerlib.client.util.LightmapUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -42,11 +41,6 @@ public class TileChaliceRenderer implements BlockEntityRenderer<TileChalice> {
     private static final float CENTER_Y = 1.4F;
 
     public TileChaliceRenderer() {}
-
-    @Override
-    public AABB getRenderBoundingBox(TileChalice blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(0, 1, 0);
-    }
 
     @Override
     public void render(TileChalice tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {

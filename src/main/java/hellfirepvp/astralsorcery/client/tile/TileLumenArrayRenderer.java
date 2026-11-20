@@ -34,7 +34,6 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -51,11 +50,6 @@ public class TileLumenArrayRenderer implements BlockEntityRenderer<TileLumenArra
 
     public TileLumenArrayRenderer(ItemRenderer itemRenderer)  {
         this.itemRenderer = itemRenderer;
-    }
-
-    @Override
-    public AABB getRenderBoundingBox(TileLumenArray blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(1, 2, 1);
     }
 
     @Override

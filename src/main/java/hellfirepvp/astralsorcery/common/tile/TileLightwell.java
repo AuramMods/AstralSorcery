@@ -51,6 +51,7 @@ import net.minecraft.world.item.ItemStack;
 import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -70,6 +71,11 @@ import java.util.Optional;
 public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiverNode, TileLightwell.Data> implements ForwardingStarlightReceiverNode.ReceiverTile {
 
     private LightwellRecipe activeRecipe = null;
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.getBlockPos()).inflate(0, 1, 0);
+    }
 
     public TileLightwell(BlockPos pos, BlockState blockState) {
         this(TileEntitiesAS.LIGHTWELL, pos, blockState);

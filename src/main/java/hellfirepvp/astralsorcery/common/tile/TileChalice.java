@@ -41,6 +41,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -77,6 +78,11 @@ public class TileChalice extends TileEntityTick<TileChalice.Data> {
     private Vector3 rotation = new Vector3();
     private Vector3 prevRotation = new Vector3();
     private Vector3 rotationVec;
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.getBlockPos()).inflate(0, 1, 0);
+    }
 
     public TileChalice(BlockPos pos, BlockState state) {
         this(TileEntitiesAS.CHALICE, pos, state);

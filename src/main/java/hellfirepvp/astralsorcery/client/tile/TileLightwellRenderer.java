@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -41,11 +40,6 @@ public class TileLightwellRenderer implements BlockEntityRenderer<TileLightwell>
 
     public TileLightwellRenderer(ItemRenderer itemRenderer)  {
         this.itemRenderer = itemRenderer;
-    }
-
-    @Override
-    public AABB getRenderBoundingBox(TileLightwell blockEntity) {
-        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity).inflate(0, 1, 0);
     }
 
     @Override
