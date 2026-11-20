@@ -15,6 +15,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -85,6 +86,20 @@ public class AstralItemTagsProvider extends ItemTagsProvider {
 
         tag(TagsAS.Items.CURIOS_NECKLACE)
                 .add(ItemsAS.ENCHANTMENT_AMULET.asItem());
+
+        tag(TagsAS.Items.SHARP_WEAPON_ENCHANTABLE)
+                .addTag(ItemTags.SWORDS)
+                .addTag(ItemTags.AXES);
+        tag(TagsAS.Items.WEAPON_ENCHANTABLE)
+                .addTag(TagsAS.Items.SHARP_WEAPON_ENCHANTABLE);
+        tag(TagsAS.Items.MINING_ENCHANTABLE)
+                .addTag(ItemTags.AXES)
+                .addTag(ItemTags.PICKAXES)
+                .addTag(ItemTags.SHOVELS)
+                .addTag(ItemTags.HOES)
+                .add(Items.SHEARS);
+        tag(TagsAS.Items.BOW_ENCHANTABLE)
+                .addTag(Tags.Items.TOOLS_BOWS);
 
         tag(ItemTags.AXES)
                 .add(ItemsAS.CRYSTAL_AXE.asItem())

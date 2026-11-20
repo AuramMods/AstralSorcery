@@ -13,10 +13,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
 import hellfirepvp.astralsorcery.common.component.StoredLumenComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
+import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.util.RandomMobEffectInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -26,8 +26,7 @@ import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
-import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
+import net.minecraftforge.common.IExtensibleEnum;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ import java.util.function.Predicate;
 public class LumenBindingType {
 
     public static final Codec<LumenBindingType> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            Codec.unboundedMap(StringRepresentable.fromEnum(SlotType::values), LumenBinding.CODEC).fieldOf("slot_bindings").forGetter(type -> type.slotBindings),
+            Codec.unboundedMap(SlotType.CODEC, LumenBinding.CODEC).fieldOf("slot_bindings").forGetter(type -> type.slotBindings),
             RandomMobEffectInstance.CODEC.optionalFieldOf("potion_effect").forGetter(type -> Optional.ofNullable(type.potionEffect))
     ).apply(inst, LumenBindingType::new));
 
@@ -100,9 +99,12 @@ public class LumenBindingType {
         CHESTPLATE(armorEquipment(EquipmentSlot.CHEST), wearing(EquipmentSlot.CHEST), Items.IRON_CHESTPLATE),
         LEGGINGS(armorEquipment(EquipmentSlot.LEGS), wearing(EquipmentSlot.LEGS), Items.IRON_LEGGINGS),
         BOOTS(armorEquipment(EquipmentSlot.FEET), wearing(EquipmentSlot.FEET), Items.IRON_BOOTS),
-        MELEE_WEAPON(stack -> stack.is(ItemTags.WEAPON_ENCHANTABLE), wearing(EquipmentSlot.MAINHAND), Items.IRON_SWORD),
-        RANGED_WEAPON(stack -> stack.is(ItemTags.BOW_ENCHANTABLE), wearing(EquipmentSlot.MAINHAND), Items.BOW),
-        TOOL(stack -> stack.is(ItemTags.MINING_ENCHANTABLE), wearing(EquipmentSlot.MAINHAND), Items.IRON_PICKAXE);
+        MELEE_WEAPON(stack -> stack.is(TagsAS.Items.WEAPON_ENCHANTABLE), wearing(EquipmentSlot.MAINHAND), Items.IRON_SWORD),
+        RANGED_WEAPON(stack -> stack.is(TagsAS.Items.BOW_ENCHANTABLE), wearing(EquipmentSlot.MAINHAND), Items.BOW),
+        TOOL(stack -> stack.is(TagsAS.Items.MINING_ENCHANTABLE), wearing(EquipmentSlot.MAINHAND), Items.IRON_PICKAXE);
+
+        private static final Codec<SlotType> CODEC = IExtensibleEnum.createCodecForExtensibleEnum(SlotType::values,
+                SlotType::bySerializedName);
 
         private final Predicate<ItemStack> stackPredicate;
         private final Function<LivingEntity, ItemStack> stackGetter;
@@ -150,8 +152,17 @@ public class LumenBindingType {
             return this.name().toLowerCase(Locale.ROOT);
         }
 
-        public static ExtensionInfo getExtensionInfo() {
-            return ExtensionInfo.nonExtended(SlotType.class);
+        @Nullable
+        private static SlotType bySerializedName(String name) {
+            for (SlotType type : values()) {
+                if (type.getSerializedName().equals(name)) return type;
+            }
+            return null;
+        }
+
+        public static SlotType create(String name, Predicate<ItemStack> stackPredicate,
+                                      Function<LivingEntity, ItemStack> stackGetter, ItemStack displayStack) {
+            throw new IllegalStateException("Lumen binding slot enum not extended");
         }
     }
 }

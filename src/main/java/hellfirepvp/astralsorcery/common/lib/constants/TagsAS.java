@@ -70,6 +70,11 @@ public class TagsAS {
         public static final TagKey<Item> FUNCTIONAL_ATTUNEABLE_ITEM = itemTag("functional_attuneable_item");
         public static final TagKey<Item> FUNCTIONAL_PERKTREE_SOCKETABLE_ITEM = itemTag("functional_perktree_socketable_item");
 
+        public static final TagKey<Item> SHARP_WEAPON_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/sharp_weapon"));
+        public static final TagKey<Item> WEAPON_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/weapon"));
+        public static final TagKey<Item> MINING_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/mining"));
+        public static final TagKey<Item> BOW_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/bow"));
+
         public static final TagKey<Item> CURIOS_NECKLACE = ItemTags.create(Mods.CURIOS.key("necklace"));
 
     }
