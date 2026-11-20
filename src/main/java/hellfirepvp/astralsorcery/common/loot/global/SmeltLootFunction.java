@@ -8,13 +8,12 @@
 
 package hellfirepvp.astralsorcery.common.loot.global;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.LootUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.RecipeFinder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -23,10 +22,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -34,7 +30,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
-import net.neoforged.neoforge.event.EventHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.stream.Collectors;
 
@@ -47,9 +43,8 @@ import java.util.stream.Collectors;
  */
 public class SmeltLootFunction extends LootModifier {
 
-    public static final MapCodec<SmeltLootFunction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            IGlobalLootModifier.LOOT_CONDITIONS_CODEC.fieldOf("conditions").forGetter(glm -> glm.conditions)
-    ).apply(instance, SmeltLootFunction::new));
+    public static final Codec<SmeltLootFunction> CODEC =
+            RecordCodecBuilder.create(instance -> codecStart(instance).apply(instance, SmeltLootFunction::new));
 
     protected SmeltLootFunction(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -76,19 +71,17 @@ public class SmeltLootFunction extends LootModifier {
                         if (context.hasParam(LootContextParams.THIS_ENTITY)) {
                             Entity e = context.getParam(LootContextParams.THIS_ENTITY);
                             if (e instanceof Player player) {
-                                EventHooks.firePlayerSmeltedEvent(player, result);
+                                ForgeEventFactory.firePlayerSmeltedEvent(player, result);
                             }
                         }
 
                         ItemStack tool = context.getParam(LootContextParams.TOOL);
                         if (!tool.isEmpty() && !(result.getItem() instanceof BlockItem)) {
-                            Holder<Enchantment> silkTouch = level.holderOrThrow(Enchantments.SILK_TOUCH);
-                            int silkTouchLevel = tool.getEnchantmentLevel(silkTouch);
+                            int silkTouchLevel = tool.getEnchantmentLevel(Enchantments.SILK_TOUCH);
                             if (silkTouchLevel <= 0) {
 
                                 int extraCount = 0;
-                                Holder<Enchantment> fortune = level.holderOrThrow(Enchantments.FORTUNE);
-                                int fortuneLevel = tool.getEnchantmentLevel(fortune);
+                                int fortuneLevel = tool.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
                                 if (fortuneLevel > 0) {
                                     extraCount = Math.max(context.getRandom().nextInt(fortuneLevel + 2) - 1, 0);
                                     result.setCount(result.getCount() * (extraCount + 1));
@@ -114,7 +107,7 @@ public class SmeltLootFunction extends LootModifier {
     }
 
     @Override
-    public MapCodec<? extends IGlobalLootModifier> codec() {
+    public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
     }
 }

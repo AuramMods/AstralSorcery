@@ -9,20 +9,12 @@
 package hellfirepvp.astralsorcery.datagen.data;
 
 import hellfirepvp.astralsorcery.common.lib.DamageTypesAS;
-import hellfirepvp.astralsorcery.common.lib.EnchantmentsAS;
 import hellfirepvp.astralsorcery.datagen.data.world.AstralWorldGenProvider;
 import hellfirepvp.astralsorcery.datagen.data.world.structure.AstralStructureProvider;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -36,7 +28,6 @@ public class AstralRegistriesDataProvider {
 
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Registries.DAMAGE_TYPE, AstralRegistriesDataProvider::generateDamageTypes)
-            .add(Registries.ENCHANTMENT, AstralRegistriesDataProvider::generateEnchantments)
             .add(Registries.CONFIGURED_FEATURE, AstralWorldGenProvider::generateConfiguredFeatures)
             .add(Registries.PLACED_FEATURE, AstralWorldGenProvider::generatePlacedFeatures)
             .add(ForgeRegistries.Keys.BIOME_MODIFIERS, AstralWorldGenProvider::generateBiomeModifiers)
@@ -51,21 +42,5 @@ public class AstralRegistriesDataProvider {
 
     private static void generateDamageTypes(BootstapContext<DamageType> context) {
         DamageTypesAS.STELLAR.register(context);
-    }
-
-    private static void generateEnchantments(BootstapContext<Enchantment> context) {
-        HolderGetter<Item> items = context.lookup(Registries.ITEM);
-        HolderGetter<Enchantment> enchantments = context.lookup(Registries.ENCHANTMENT);
-
-        HolderSet<Enchantment> silkTouchSet = HolderSet.direct(enchantments.getOrThrow(Enchantments.SILK_TOUCH));
-        EnchantmentsAS.SCORCHING_HEAT.register(context, Enchantment.enchantment(Enchantment.definition(
-                items.getOrThrow(ItemTags.MINING_LOOT_ENCHANTABLE),
-                1,
-                1,
-                Enchantment.dynamicCost(30, 10),
-                Enchantment.dynamicCost(60, 10),
-                10,
-                EquipmentSlotGroup.MAINHAND
-        )).exclusiveWith(silkTouchSet));
     }
 }

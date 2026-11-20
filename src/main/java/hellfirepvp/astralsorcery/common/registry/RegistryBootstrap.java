@@ -32,6 +32,7 @@ public class RegistryBootstrap {
         AttributesAS.register(modLifecycleBus);
         TileEntitiesAS.TILE_REGISTER.register(modLifecycleBus);
         MobEffectsAS.MOB_EFFECT_REGISTER.register(modLifecycleBus);
+        EnchantmentsAS.ENCHANTMENT_REGISTER.register(modLifecycleBus);
         CreativeTabsAS.CREATIVE_TAB_REGISTER.register(modLifecycleBus);
         LootAS.LOOT_FUNCTION_REGISTER.register(modLifecycleBus);
         LootAS.LOOT_CONDITION_REGISTER.register(modLifecycleBus);

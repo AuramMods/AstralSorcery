@@ -72,6 +72,7 @@ public class TagsAS {
 
         public static final TagKey<Item> SHARP_WEAPON_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/sharp_weapon"));
         public static final TagKey<Item> WEAPON_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/weapon"));
+        public static final TagKey<Item> MINING_LOOT_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/mining_loot"));
         public static final TagKey<Item> MINING_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/mining"));
         public static final TagKey<Item> BOW_ENCHANTABLE = ItemTags.create(new ResourceLocation("minecraft", "enchantable/bow"));
 

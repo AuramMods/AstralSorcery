@@ -8,7 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.lib;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.loot.*;
 import hellfirepvp.astralsorcery.common.loot.condition.LockableTileEntityCondition;
@@ -38,7 +38,7 @@ public class LootAS {
             DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, AstralSorcery.MODID);
     public static final DeferredRegister<LootItemConditionType> LOOT_CONDITION_REGISTER =
             DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, AstralSorcery.MODID);
-    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> GLOBAL_LOOT_FUNCTION_REGISTER =
+    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_FUNCTION_REGISTER =
             DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, AstralSorcery.MODID);
 
     public static final RegistryObject<LootItemFunctionType<LinearLuckFunction>> LINEAR_LUCK_FUNCTION =
@@ -64,8 +64,8 @@ public class LootAS {
     public static final RegistryObject<LootItemConditionType> LOCKABLE_TILE_ENTITY_CONDITION =
             LOOT_CONDITION_REGISTER.register("lockable_tile_entity", () -> new LootItemConditionType(LockableTileEntityCondition.CODEC));
 
-    public static final Supplier<MapCodec<TeleportDropsFunction>> GLOBAL_TELEPORT_DROPS_FUNCTION =
+    public static final Supplier<Codec<TeleportDropsFunction>> GLOBAL_TELEPORT_DROPS_FUNCTION =
             GLOBAL_LOOT_FUNCTION_REGISTER.register("teleport_drops", () -> TeleportDropsFunction.CODEC);
-    public static final Supplier<MapCodec<SmeltLootFunction>> GLOBAL_SMELT_LOOT_FUNCTION =
+    public static final Supplier<Codec<SmeltLootFunction>> GLOBAL_SMELT_LOOT_FUNCTION =
             GLOBAL_LOOT_FUNCTION_REGISTER.register("smelt_loot", () -> SmeltLootFunction.CODEC);
 }

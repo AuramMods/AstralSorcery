@@ -8,10 +8,9 @@
 
 package hellfirepvp.astralsorcery.common.loot.global;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.perk.tree.perk.key.KeyPerkTeleportDrops;
-import hellfirepvp.astralsorcery.common.research.PlayerProgress;
 import hellfirepvp.astralsorcery.common.research.ResearchManager;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
@@ -39,9 +38,8 @@ import net.minecraftforge.common.loot.LootModifier;
  */
 public class TeleportDropsFunction extends LootModifier {
 
-    public static final MapCodec<TeleportDropsFunction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            IGlobalLootModifier.LOOT_CONDITIONS_CODEC.fieldOf("conditions").forGetter(glm -> glm.conditions)
-    ).apply(instance, TeleportDropsFunction::new));
+    public static final Codec<TeleportDropsFunction> CODEC =
+            RecordCodecBuilder.create(instance -> codecStart(instance).apply(instance, TeleportDropsFunction::new));
 
     protected TeleportDropsFunction(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -55,8 +53,8 @@ public class TeleportDropsFunction extends LootModifier {
     public ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         Player player = MiscUtil.firstNonNull(
                 () -> this.getLootingPlayer(context, LootContextParams.LAST_DAMAGE_PLAYER),
-                () -> this.getLootingPlayer(context, LootContextParams.ATTACKING_ENTITY),
-                () -> this.getLootingPlayer(context, LootContextParams.DIRECT_ATTACKING_ENTITY),
+                () -> this.getLootingPlayer(context, LootContextParams.KILLER_ENTITY),
+                () -> this.getLootingPlayer(context, LootContextParams.DIRECT_KILLER_ENTITY),
                 () -> this.getLootingPlayer(context, LootContextParams.THIS_ENTITY)
         ).orElse(null);
 
@@ -86,7 +84,7 @@ public class TeleportDropsFunction extends LootModifier {
     }
 
     @Override
-    public MapCodec<? extends IGlobalLootModifier> codec() {
+    public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
     }
 }

@@ -4,16 +4,14 @@
     {
       "condition": "minecraft:match_tool",
       "predicate": {
-        "predicates": {
-          "minecraft:enchantments": [
-            {
-              "enchantments": "astralsorcery:scorching_heat",
-              "levels": {
-                "min": 1
-              }
+        "enchantments": [
+          {
+            "enchantment": "astralsorcery:scorching_heat",
+            "levels": {
+              "min": 1
             }
-          ]
-        }
+          }
+        ]
       }
     }
   ]

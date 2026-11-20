@@ -1,9 +1,6 @@
 {
   "values": [
-    "#minecraft:axes",
-    "#minecraft:pickaxes",
-    "#minecraft:shovels",
-    "#minecraft:hoes",
+    "#minecraft:enchantable/mining_loot",
     "minecraft:shears"
   ]
 }

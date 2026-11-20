@@ -9,23 +9,17 @@
 package hellfirepvp.astralsorcery.common.lib;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
-import hellfirepvp.astralsorcery.common.util.data.EnchantmentRegistryObject;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
+import hellfirepvp.astralsorcery.common.enchantment.ScorchingHeatEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-/**
- * This class is part of the Astral Sorcery Mod
- * The complete source code for this mod can be found on GitHub.
- * Class: EnchantmentsAS
- * Created by HellFirePvP
- * Date: 07.09.2026 / 10:00
- */
 public class EnchantmentsAS {
 
-    public static final EnchantmentRegistryObject SCORCHING_HEAT = key("scorching_heat");
+    public static final DeferredRegister<Enchantment> ENCHANTMENT_REGISTER =
+            DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, AstralSorcery.MODID);
 
-    private static EnchantmentRegistryObject key(String name) {
-        return new EnchantmentRegistryObject(ResourceKey.create(Registries.ENCHANTMENT, AstralSorcery.key(name)));
-    }
+    public static final RegistryObject<Enchantment> SCORCHING_HEAT =
+            ENCHANTMENT_REGISTER.register("scorching_heat", ScorchingHeatEnchantment::new);
 }

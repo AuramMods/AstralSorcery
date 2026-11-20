@@ -92,11 +92,13 @@ public class AstralItemTagsProvider extends ItemTagsProvider {
                 .addTag(ItemTags.AXES);
         tag(TagsAS.Items.WEAPON_ENCHANTABLE)
                 .addTag(TagsAS.Items.SHARP_WEAPON_ENCHANTABLE);
-        tag(TagsAS.Items.MINING_ENCHANTABLE)
+        tag(TagsAS.Items.MINING_LOOT_ENCHANTABLE)
                 .addTag(ItemTags.AXES)
                 .addTag(ItemTags.PICKAXES)
                 .addTag(ItemTags.SHOVELS)
-                .addTag(ItemTags.HOES)
+                .addTag(ItemTags.HOES);
+        tag(TagsAS.Items.MINING_ENCHANTABLE)
+                .addTag(TagsAS.Items.MINING_LOOT_ENCHANTABLE)
                 .add(Items.SHEARS);
         tag(TagsAS.Items.BOW_ENCHANTABLE)
                 .addTag(Tags.Items.TOOLS_BOWS);
