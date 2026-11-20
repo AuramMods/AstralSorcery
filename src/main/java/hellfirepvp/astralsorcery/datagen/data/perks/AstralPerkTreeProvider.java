@@ -22,7 +22,7 @@ import hellfirepvp.astralsorcery.common.perk.type.base.ModifierType;
 import hellfirepvp.astralsorcery.common.research.ResearchTier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -53,10 +53,10 @@ public class AstralPerkTreeProvider extends PerkDataProvider {
 
     @Override
     public void registerPerks(HolderLookup.Provider registries, Consumer<BuiltPerk> registrar) {
-        var enchLookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
-        Holder<Enchantment> fortune = enchLookup.getOrThrow(Enchantments.FORTUNE);
-        Holder<Enchantment> unbreaking = enchLookup.getOrThrow(Enchantments.UNBREAKING);
-        Holder<Enchantment> infinity = enchLookup.getOrThrow(Enchantments.INFINITY);
+        var enchantments = BuiltInRegistries.ENCHANTMENT;
+        Holder<Enchantment> fortune = enchantments.wrapAsHolder(Enchantments.BLOCK_FORTUNE);
+        Holder<Enchantment> unbreaking = enchantments.wrapAsHolder(Enchantments.UNBREAKING);
+        Holder<Enchantment> infinity = enchantments.wrapAsHolder(Enchantments.INFINITY_ARROWS);
 
 // Paste inside AstralPerkTreeProvider.registerPerks(Registrar registrar)
 

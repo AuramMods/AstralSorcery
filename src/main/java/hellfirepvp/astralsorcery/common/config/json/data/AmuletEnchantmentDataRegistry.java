@@ -12,21 +12,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.config.json.JsonDataRegistry;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
-import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -46,12 +38,9 @@ public class AmuletEnchantmentDataRegistry extends JsonDataRegistry<AmuletEnchan
         return INSTANCE;
     }
 
-    public Optional<Holder<Enchantment>> getRandomEnchantment(HolderLookup.Provider registries) {
-        HolderLookup.RegistryLookup<Enchantment> enchRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
+    public Optional<Holder<Enchantment>> getRandomEnchantment() {
         List<ResolvedEntry> entries = this.getLoadedValues().stream()
-                .map(entry -> entry.resolve(enchRegistry))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(entry -> entry.resolve().stream())
                 .toList();
         return MiscUtil.getWeightedRandomEntry(entries, rand, ResolvedEntry::weight).map(ResolvedEntry::enchantment);
     }
@@ -63,12 +52,10 @@ public class AmuletEnchantmentDataRegistry extends JsonDataRegistry<AmuletEnchan
 
     @Override
     public List<Entry> getDefaultValues() {
-        MinecraftServer srv = ServerLifecycleHooks.getCurrentServer();
-        Registry<Enchantment> registry = srv.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-        return registry.holders().map(holder -> {
-            if (holder.is(EnchantmentTags.CURSE)) return null;
-            return new Entry(holder.key(), holder.value().definition().weight());
-        }).filter(Objects::nonNull).toList();
+        return BuiltInRegistries.ENCHANTMENT.holders()
+                .filter(holder -> !holder.value().isCurse())
+                .map(holder -> new Entry(holder.key(), holder.value().getRarity().getWeight()))
+                .toList();
     }
 
     public record Entry(ResourceKey<Enchantment> enchantment, int weight) {
@@ -78,8 +65,8 @@ public class AmuletEnchantmentDataRegistry extends JsonDataRegistry<AmuletEnchan
                 Codec.INT.fieldOf("weight").forGetter(Entry::weight)
         ).apply(inst, Entry::new));
 
-        private Optional<ResolvedEntry> resolve(HolderLookup.RegistryLookup<Enchantment> registry) {
-            return registry.get(this.enchantment).map(ref -> new ResolvedEntry(ref, this.weight));
+        private Optional<ResolvedEntry> resolve() {
+            return BuiltInRegistries.ENCHANTMENT.getHolder(this.enchantment).map(ref -> new ResolvedEntry(ref, this.weight));
         }
     }
 

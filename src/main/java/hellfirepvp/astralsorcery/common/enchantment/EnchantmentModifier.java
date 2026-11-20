@@ -14,13 +14,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
-import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public final class EnchantmentModifier {
 
     public static final Codec<EnchantmentModifier> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             CodecUtil.enumCodec(Type.class).fieldOf("type").forGetter(EnchantmentModifier::getType),
-            RegistryFixedCodec.create(Registries.ENCHANTMENT).optionalFieldOf("enchantment").forGetter(EnchantmentModifier::getEnchantment),
+            BuiltInRegistries.ENCHANTMENT.holderByNameCodec().optionalFieldOf("enchantment").forGetter(EnchantmentModifier::getEnchantment),
             Codec.INT.fieldOf("modifier").forGetter(EnchantmentModifier::getModifier)
     ).apply(inst, EnchantmentModifier::new));
 
@@ -102,9 +102,8 @@ public final class EnchantmentModifier {
     public MutableComponent getDisplay() {
         String typeStr = this.getType().getDisplayFormat();
         MutableComponent levelCmp = Component.translatable(this.getModifierChangeDisplay());
-        MutableComponent enchName = this.getEnchantment().map(Holder::value).map(ench -> {
-            return Component.empty().append(ench.description());
-        }).orElse(Component.empty());
+        MutableComponent enchName = this.getEnchantment().map(Holder::value)
+                .map(Enchantment::getDescriptionId).map(Component::translatable).orElseGet(Component::empty);
 
         return Component.translatable(typeStr, String.valueOf(this.getModifier()), levelCmp, enchName)
                 .withStyle(ChatFormatting.BLUE);

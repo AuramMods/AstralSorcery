@@ -193,7 +193,7 @@ public class MiscUtil {
         List<WeightedEntry.Wrapper<T>> entries = list.stream()
                 .map(e -> WeightedEntry.wrap(e, getWeightFunction.apply(e)))
                 .toList();
-        return WeightedRandom.getRandomItem(rand, entries).map(WeightedEntry.Wrapper::data);
+        return WeightedRandom.getRandomItem(rand, entries).map(WeightedEntry.Wrapper::getData);
     }
 
     public static boolean canSeeSky(Level level, BlockPos pos, boolean loadChunk, boolean defaultValue) {

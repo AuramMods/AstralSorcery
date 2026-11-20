@@ -46,7 +46,7 @@ public class EnchantmentAmuletItem extends ItemCustom implements ItemDynamicColo
                 this.generateAmuletColor(stack);
             }
             if (DataComponentsAS.ENCHANTMENT_MODIFIERS.getOrDefault(stack, EnchantmentModifierComponent.EMPTY).isEmpty()) {
-                DataComponentsAS.ENCHANTMENT_MODIFIERS.set(stack, EnchantmentAmuletGenerator.generateModifiers(level.registryAccess()));
+                DataComponentsAS.ENCHANTMENT_MODIFIERS.set(stack, EnchantmentAmuletGenerator.generateModifiers());
             }
         }
     }

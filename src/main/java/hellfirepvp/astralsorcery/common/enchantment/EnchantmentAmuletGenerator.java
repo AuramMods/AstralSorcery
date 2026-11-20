@@ -11,10 +11,7 @@ package hellfirepvp.astralsorcery.common.enchantment;
 import hellfirepvp.astralsorcery.common.component.EnchantmentModifierComponent;
 import hellfirepvp.astralsorcery.common.config.ConfigEntry;
 import hellfirepvp.astralsorcery.common.config.json.data.AmuletEnchantmentDataRegistry;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
@@ -39,7 +36,7 @@ public class EnchantmentAmuletGenerator {
     private static ForgeConfigSpec.DoubleValue chanceToAll;
     private static ForgeConfigSpec.DoubleValue chanceToNonExisting;
 
-    public static EnchantmentModifierComponent generateModifiers(HolderLookup.Provider registries) {
+    public static EnchantmentModifierComponent generateModifiers() {
         List<EnchantmentModifier> modifiers = new ArrayList<>();
 
         while (mayGetAdditionalRoll(modifiers)) {
@@ -47,7 +44,7 @@ public class EnchantmentAmuletGenerator {
             if (newType == null) break;
             int lvl = getRollLevel();
             if (newType.hasEnchantment()) {
-                AmuletEnchantmentDataRegistry.getInstance().getRandomEnchantment(registries).ifPresent(ench -> {
+                AmuletEnchantmentDataRegistry.getInstance().getRandomEnchantment().ifPresent(ench -> {
                     modifiers.add(EnchantmentModifier.addEnchantmentLevel(newType, ench, lvl));
                 });
             } else {
@@ -59,10 +56,10 @@ public class EnchantmentAmuletGenerator {
     }
 
     @Nullable
-    public static EnchantmentModifier generateAnyModifier(HolderLookup.Provider registries) {
+    public static EnchantmentModifier generateAnyModifier() {
         EnchantmentModifier.Type newType = getAnyRollType();
         if (newType.hasEnchantment()) {
-            return AmuletEnchantmentDataRegistry.getInstance().getRandomEnchantment(registries).map(ench -> {
+            return AmuletEnchantmentDataRegistry.getInstance().getRandomEnchantment().map(ench -> {
                 return EnchantmentModifier.addEnchantmentLevel(newType, ench, getRollLevel());
             }).orElse(null);
         } else {
