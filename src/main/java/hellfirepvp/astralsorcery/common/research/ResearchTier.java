@@ -13,17 +13,13 @@ import com.mojang.serialization.Codec;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.resource.AssetLocation;
 import hellfirepvp.astralsorcery.client.resource.query.TextureQuery;
-import hellfirepvp.astralsorcery.common.research.data.ResearchNodeLoader;
 import hellfirepvp.astralsorcery.common.util.data.IntRectangle;
 import net.minecraft.Util;
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -42,7 +38,7 @@ public enum ResearchTier implements StringRepresentable {
     RADIANCE(5, -3);
 
     public static final Codec<ResearchTier> CODEC = StringRepresentable.fromEnum(ResearchTier::values);
-    public static final StreamCodec<FriendlyByteBuf, ResearchTier> STREAM_CODEC = CodecUtil.enumStreamCodec(ResearchTier.class);
+    public static final StreamCodec<ByteBuf, ResearchTier> STREAM_CODEC = CodecUtil.enumStreamCodec(ResearchTier.class);
 
     private final String descriptionId;
     private final TextureQuery cloudTexture;

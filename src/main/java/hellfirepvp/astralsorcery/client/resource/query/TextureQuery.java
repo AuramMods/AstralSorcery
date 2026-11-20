@@ -71,12 +71,12 @@ public class TextureQuery {
 
     private static TextureQuery read(FriendlyByteBuf buf) {
         AssetLocation location = buf.readEnum(AssetLocation.class);
-        String[] path = buf.readArray(String[]::new, FriendlyByteBuf::readUtf);
+        List<String> path = buf.readList(FriendlyByteBuf::readUtf);
         return new TextureQuery(location, path);
     }
 
     private static void write(FriendlyByteBuf buf, TextureQuery textureQuery) {
         buf.writeEnum(textureQuery.location);
-        buf.writeArray(textureQuery.path, FriendlyByteBuf::writeUtf);
+        buf.writeCollection(textureQuery.getPath(), FriendlyByteBuf::writeUtf);
     }
 }
