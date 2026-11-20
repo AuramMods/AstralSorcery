@@ -49,6 +49,8 @@ public class LootAS {
             LOOT_FUNCTION_REGISTER.register("copy_crystal_properties", () -> new LootItemFunctionType(CopyCrystalPropertiesFunction.SERIALIZER));
     public static final RegistryObject<LootItemFunctionType> COPY_CONSTELLATION_FUNCTION =
             LOOT_FUNCTION_REGISTER.register("copy_constellation", () -> new LootItemFunctionType(CopyConstellationFunction.SERIALIZER));
+    public static final RegistryObject<LootItemFunctionType> COPY_DYE_COLOR_FUNCTION =
+            LOOT_FUNCTION_REGISTER.register("copy_dye_color", () -> new LootItemFunctionType(CopyDyeColorFunction.SERIALIZER));
     public static final RegistryObject<LootItemFunctionType> COPY_LUMEN_FUNCTION =
             LOOT_FUNCTION_REGISTER.register("copy_lumen", () -> new LootItemFunctionType(CopyLumenFunction.SERIALIZER));
     public static final RegistryObject<LootItemFunctionType> GENERATE_RANDOM_ARTIFACT_FUNCTION =

@@ -81,7 +81,7 @@ public class AstralDataGenerator {
             gen.addProvider(true, new AstralRecipeProvider(output, lookupProvider));
             gen.addProvider(true, new AstralResearchNodeProvider(output, lookupProvider));
             gen.addProvider(true, new AstralDataMapProvider(output, lookupProvider));
-            gen.addProvider(true, new AstralLootTableProvider(output, lookupProvider));
+            gen.addProvider(true, new AstralLootTableProvider(output));
             gen.addProvider(true, new AstralGlobalLootModifierProvider(output));
             gen.addProvider(true, new AstralArtifactConditionProvider(output, lookupProvider));
             gen.addProvider(true, new AstralArtifactEffectProvider(output, lookupProvider));

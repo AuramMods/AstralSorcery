@@ -13,34 +13,38 @@
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {
-                    "predicates": {
-                      "minecraft:enchantments": [
-                        {
-                          "enchantments": "minecraft:silk_touch",
-                          "levels": {
-                            "min": 1
-                          }
-                        }
-                      ]
-                    }
+                    "items": [
+                      "minecraft:shears"
+                    ]
                   }
                 }
               ],
-              "name": "astralsorcery:starmetal_ore"
+              "name": "astralsorcery:glimmer_amaranth"
             },
             {
               "type": "minecraft:item",
               "functions": [
                 {
-                  "enchantment": "minecraft:fortune",
-                  "formula": "minecraft:ore_drops",
-                  "function": "minecraft:apply_bonus"
+                  "add": false,
+                  "count": {
+                    "type": "minecraft:uniform",
+                    "max": 5.0,
+                    "min": 1.0
+                  },
+                  "function": "minecraft:set_count"
+                },
+                {
+                  "enchantments": [
+                    "minecraft:fortune",
+                    "minecraft:looting"
+                  ],
+                  "function": "astralsorcery:linear_luck"
                 },
                 {
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "astralsorcery:raw_starmetal"
+              "name": "minecraft:glowstone_dust"
             }
           ]
         }
@@ -48,5 +52,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "astralsorcery:blocks/starmetal_ore"
+  "random_sequence": "astralsorcery:blocks/glimmer_amaranth"
 }

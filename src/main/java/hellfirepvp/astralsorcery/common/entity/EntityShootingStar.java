@@ -33,6 +33,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -279,11 +280,12 @@ public class EntityShootingStar extends ThrowableProjectile {
         Vector3 at = new Vector3(vec);
         ShootingStarExplosion.at(at, this.getSeededColor()).sendToNearby(sLevel);
 
-        LootTable table = sLevel.getServer().reloadableRegistries().getLootTable(LootTablesAS.SHOOTING_STAR);
+        LootTable table = sLevel.getServer().getLootData().getLootTable(LootTablesAS.SHOOTING_STAR);
+        Player nearbyPlayer = sLevel.getNearestPlayer(this, -1);
         LootParams ctx = new LootParams.Builder(sLevel)
-                .withParameter(LootContextParams.THIS_ENTITY, this)
+                .withParameter(LootContextParams.THIS_ENTITY, nearbyPlayer == null ? this : nearbyPlayer)
                 .withParameter(LootContextParams.ORIGIN, this.position())
-                .create(LootContextParamSets.EMPTY);
+                .create(LootContextParamSets.SELECTOR);
         table.getRandomItems(ctx).forEach(stack -> {
             ItemUtil.dropItemNaturally(sLevel, at.getX(), at.getY(), at.getZ(), stack);
         });

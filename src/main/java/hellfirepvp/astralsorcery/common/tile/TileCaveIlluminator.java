@@ -15,21 +15,18 @@ import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
 import hellfirepvp.astralsorcery.client.lib.EffectTemplatesAS;
 import hellfirepvp.astralsorcery.common.block.FlareLightBlock;
-import hellfirepvp.astralsorcery.common.component.ColorComponent;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
-import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
 import hellfirepvp.astralsorcery.common.lib.constants.ColorsAS;
+import hellfirepvp.astralsorcery.common.tile.base.TileDataDyeColor;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityTick;
 import hellfirepvp.astralsorcery.common.util.ChunkUtil;
-import hellfirepvp.astralsorcery.common.util.ColorReference;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
@@ -228,30 +225,11 @@ public class TileCaveIlluminator extends TileEntityTick<TileCaveIlluminator.Data
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
-        super.applyImplicitComponents(componentInput);
-
-        ColorComponent colorCmp = componentInput.get(DataComponentsAS.COLOR);
-        if (colorCmp != null) {
-            colorCmp.reference().asDyeColor().ifPresent(dyeColor -> {
-                this.getTileData().setColor(dyeColor);
-            });
-        }
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-
-        components.set(DataComponentsAS.COLOR, new ColorComponent(ColorReference.Dye.of(this.getTileData().getColor())));
-    }
-
-    @Override
     public Codec<Data> dataCodec() {
         return Data.CODEC;
     }
 
-    public static class Data extends TileEntityTick.Data {
+    public static class Data extends TileEntityTick.Data implements TileDataDyeColor {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> illuminatorFields(inst).apply(inst, Data::new));
 
@@ -287,6 +265,7 @@ public class TileCaveIlluminator extends TileEntityTick<TileCaveIlluminator.Data
             this.playerPlaced = playerPlaced;
         }
 
+        @Override
         public DyeColor getColor() {
             return this.color;
         }

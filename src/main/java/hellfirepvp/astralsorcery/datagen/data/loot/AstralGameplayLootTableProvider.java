@@ -13,14 +13,11 @@ import hellfirepvp.astralsorcery.common.lib.LootTablesAS;
 import hellfirepvp.astralsorcery.common.loot.GenerateCrystalPropertiesFunction;
 import hellfirepvp.astralsorcery.common.loot.GenerateRandomArtifactFunction;
 import hellfirepvp.astralsorcery.common.loot.condition.PlayerNearbyCondition;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.loot.LootTableSubProvider;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
@@ -34,10 +31,11 @@ import java.util.function.BiConsumer;
  * Created by HellFirePvP
  * Date: 07.09.2026 / 10:00
  */
-public record AstralGameplayLootTableProvider(HolderLookup.Provider registries) implements LootTableSubProvider {
+final class AstralGameplayLootTableProvider {
 
-    @Override
-    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
+    private AstralGameplayLootTableProvider() {}
+
+    static void generateShootingStar(BiConsumer<ResourceLocation, LootTable.Builder> output) {
         output.accept(LootTablesAS.SHOOTING_STAR, LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .setRolls(UniformGenerator.between(1F, 1F))
@@ -55,7 +53,9 @@ public record AstralGameplayLootTableProvider(HolderLookup.Provider registries) 
                         .add(LootItem.lootTableItem(Items.DIAMOND).setWeight(3))
                         .add(LootItem.lootTableItem(Items.GLOWSTONE_DUST).setWeight(3))
                         .add(LootItem.lootTableItem(ItemsAS.AQUAMARINE).setWeight(4))));
+    }
 
+    static void generateShrineChests(BiConsumer<ResourceLocation, LootTable.Builder> output) {
         output.accept(LootTablesAS.SHRINE_CHEST_SMALL, LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .setRolls(UniformGenerator.between(3, 5))
@@ -98,7 +98,9 @@ public record AstralGameplayLootTableProvider(HolderLookup.Provider registries) 
                         .add(LootItem.lootTableItem(Items.EMERALD).setWeight(1))
                         .add(LootItem.lootTableItem(Items.ENDER_PEARL).setWeight(1))
                 ));
+    }
 
+    static void generateDigSite(BiConsumer<ResourceLocation, LootTable.Builder> output) {
         output.accept(LootTablesAS.DIG_SITE_ARCHAEOLOGY, LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))

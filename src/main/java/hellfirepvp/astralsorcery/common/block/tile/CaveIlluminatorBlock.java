@@ -39,6 +39,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -78,10 +80,16 @@ public class CaveIlluminatorBlock extends BaseTickTileBlock<TileCaveIlluminator>
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (!level.isClientSide() && placer instanceof Player) {
+        if (!level.isClientSide()) {
             MiscUtil.getTileAt(level, pos, TileCaveIlluminator.class, true).ifPresent(tile -> {
-                tile.getTileData().setPlayerPlaced(true);
-                tile.getTileData().markForUpdate();
+                var data = tile.getTileData();
+                if (placer instanceof Player) {
+                    data.setPlayerPlaced(true);
+                }
+                Optional.ofNullable(DataComponentsAS.COLOR.get(stack))
+                        .flatMap(color -> color.reference().asDyeColor())
+                        .ifPresent(data::setColor);
+                data.markForUpdate();
             });
         }
     }

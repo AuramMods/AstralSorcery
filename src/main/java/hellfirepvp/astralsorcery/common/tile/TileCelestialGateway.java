@@ -19,14 +19,13 @@ import hellfirepvp.astralsorcery.client.effect.function.FXRefreshFunction;
 import hellfirepvp.astralsorcery.client.effect.vfx.VFXColorSphere;
 import hellfirepvp.astralsorcery.client.helper.GatewayInterfaceRenderHelper;
 import hellfirepvp.astralsorcery.client.lib.EffectTemplatesAS;
-import hellfirepvp.astralsorcery.common.component.ColorComponent;
 import hellfirepvp.astralsorcery.common.lib.*;
 import hellfirepvp.astralsorcery.common.lib.constants.ColorsAS;
 import hellfirepvp.astralsorcery.common.lumen.capability.LumenStackList;
+import hellfirepvp.astralsorcery.common.tile.base.TileDataDyeColor;
 import hellfirepvp.astralsorcery.common.tile.base.TileDataOwned;
 import hellfirepvp.astralsorcery.common.tile.base.TileEntityTick;
 import hellfirepvp.astralsorcery.common.util.ClientObject;
-import hellfirepvp.astralsorcery.common.util.ColorReference;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.VectorUtil;
 import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
@@ -37,8 +36,6 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import hellfirepvp.astralsorcery.common.util.codec.ComponentSerialization;
 import net.minecraft.server.level.ServerLevel;
@@ -241,36 +238,6 @@ public class TileCelestialGateway extends TileEntityTick<TileCelestialGateway.Da
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
-        super.applyImplicitComponents(componentInput);
-
-        Component customName = componentInput.get(DataComponents.CUSTOM_NAME);
-        if (customName != null) {
-            this.getTileData().setCustomName(customName);
-        }
-        ColorComponent colorCmp = componentInput.get(DataComponentsAS.COLOR);
-        if (colorCmp != null) {
-            colorCmp.reference().asDyeColor().ifPresent(dyeColor -> {
-                this.getTileData().setColor(dyeColor);
-            });
-        }
-
-        this.getTileData().markForUpdate();
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-
-        if (this.hasCustomName()) {
-            components.set(DataComponents.CUSTOM_NAME, this.getCustomName());
-        }
-        if (this.getTileData().getColor() != null) {
-            components.set(DataComponentsAS.COLOR, new ColorComponent(ColorReference.Dye.of(this.getTileData().getColor())));
-        }
-    }
-
-    @Override
     public Component getName() {
         return ObjectUtils.firstNonNull(this.getCustomName(), BlocksAS.CELESTIAL_GATEWAY.get().getName());
     }
@@ -295,7 +262,7 @@ public class TileCelestialGateway extends TileEntityTick<TileCelestialGateway.Da
         }
     }
 
-    public static class Data extends TileEntityTick.Data implements TileDataOwned.Lockable {
+    public static class Data extends TileEntityTick.Data implements TileDataOwned.Lockable, TileDataDyeColor {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> gatewayFields(inst).apply(inst, Data::new));
 
@@ -327,6 +294,7 @@ public class TileCelestialGateway extends TileEntityTick<TileCelestialGateway.Da
             this.color = color;
         }
 
+        @Override
         public DyeColor getColor() {
             return this.color;
         }

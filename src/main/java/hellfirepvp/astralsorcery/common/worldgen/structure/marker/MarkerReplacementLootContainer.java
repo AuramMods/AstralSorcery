@@ -10,21 +10,19 @@ package hellfirepvp.astralsorcery.common.worldgen.structure.marker;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.lib.types.StructureMarkerReplacementTypesAS;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BrushableBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraft.world.level.storage.loot.LootTable;
 
 import javax.annotation.Nullable;
 
@@ -39,30 +37,30 @@ public class MarkerReplacementLootContainer extends StructureMarkerReplacement {
 
     public static final Type<MarkerReplacementLootContainer> TYPE = new Type<>(RecordCodecBuilder.mapCodec(inst -> inst.group(
             BlockStateProvider.CODEC.optionalFieldOf("block", BlockStateProvider.simple(Blocks.CHEST)).forGetter(MarkerReplacementLootContainer::getBlockProvider),
-            ResourceKey.codec(Registries.LOOT_TABLE).fieldOf("loot_table").forGetter(MarkerReplacementLootContainer::getLootTable)
+            ResourceLocation.CODEC.fieldOf("loot_table").forGetter(MarkerReplacementLootContainer::getLootTable)
     ).apply(inst, MarkerReplacementLootContainer::new)));
 
     private final BlockStateProvider blockProvider;
-    private final ResourceKey<LootTable> lootTable;
+    private final ResourceLocation lootTable;
 
-    public MarkerReplacementLootContainer(BlockStateProvider blockProvider, ResourceKey<LootTable> lootTable) {
+    public MarkerReplacementLootContainer(BlockStateProvider blockProvider, ResourceLocation lootTable) {
         this.blockProvider = blockProvider;
         this.lootTable = lootTable;
     }
 
-    public static MarkerReplacementLootContainer chest(ResourceKey<LootTable> lootTable) {
+    public static MarkerReplacementLootContainer chest(ResourceLocation lootTable) {
         return of(Blocks.CHEST, lootTable);
     }
 
-    public static MarkerReplacementLootContainer suspiciousGravel(ResourceKey<LootTable> lootTable) {
+    public static MarkerReplacementLootContainer suspiciousGravel(ResourceLocation lootTable) {
         return of(Blocks.SUSPICIOUS_GRAVEL, lootTable);
     }
 
-    public static MarkerReplacementLootContainer suspiciousSand(ResourceKey<LootTable> lootTable) {
+    public static MarkerReplacementLootContainer suspiciousSand(ResourceLocation lootTable) {
         return of(Blocks.SUSPICIOUS_SAND, lootTable);
     }
 
-    public static MarkerReplacementLootContainer of(Block block, ResourceKey<LootTable> lootTable) {
+    public static MarkerReplacementLootContainer of(Block block, ResourceLocation lootTable) {
         return new MarkerReplacementLootContainer(BlockStateProvider.simple(block), lootTable);
     }
 
@@ -70,7 +68,7 @@ public class MarkerReplacementLootContainer extends StructureMarkerReplacement {
         return this.blockProvider;
     }
 
-    public ResourceKey<LootTable> getLootTable() {
+    public ResourceLocation getLootTable() {
         return this.lootTable;
     }
 
@@ -83,9 +81,9 @@ public class MarkerReplacementLootContainer extends StructureMarkerReplacement {
     public StructureTemplate.StructureBlockInfo replace(LevelReader level, StructureTemplate.StructureBlockInfo marker, RandomSource rand) {
         BlockState state = this.getBlockProvider().getState(rand, marker.pos());
         BlockEntity tile = this.createContainer(state, marker);
-        if (tile instanceof RandomizableContainer || tile instanceof BrushableBlockEntity) {
+        if (tile instanceof RandomizableContainerBlockEntity || tile instanceof BrushableBlockEntity) {
             CompoundTag tag = new CompoundTag();
-            tag.putString(RandomizableContainer.LOOT_TABLE_TAG, this.getLootTable().location().toString());
+            tag.putString(RandomizableContainerBlockEntity.LOOT_TABLE_TAG, this.getLootTable().toString());
             return new StructureTemplate.StructureBlockInfo(marker.pos(), state, tag);
         }
 

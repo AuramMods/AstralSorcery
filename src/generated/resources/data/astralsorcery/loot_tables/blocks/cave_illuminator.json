@@ -2,11 +2,7 @@
   "type": "minecraft:block",
   "functions": [
     {
-      "function": "minecraft:copy_components",
-      "include": [
-        "astralsorcery:color"
-      ],
-      "source": "block_entity"
+      "function": "astralsorcery:copy_dye_color"
     }
   ],
   "pools": [

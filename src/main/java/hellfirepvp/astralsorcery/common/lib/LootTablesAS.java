@@ -9,9 +9,7 @@
 package hellfirepvp.astralsorcery.common.lib;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -22,13 +20,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
  */
 public class LootTablesAS {
 
-    public static final ResourceKey<LootTable> SHOOTING_STAR = key("gameplay/shooting_star");
-    public static final ResourceKey<LootTable> SHRINE_CHEST_SMALL = key("gameplay/shrine_chest_small");
-    public static final ResourceKey<LootTable> SHRINE_CHEST = key("gameplay/shrine_chest");
-    public static final ResourceKey<LootTable> DIG_SITE_ARCHAEOLOGY = key("gameplay/dig_site_archaeology");
-
-    private static ResourceKey<LootTable> key(String name) {
-        return ResourceKey.create(Registries.LOOT_TABLE, AstralSorcery.key(name));
-    }
+    public static final ResourceLocation SHOOTING_STAR = AstralSorcery.key("gameplay/shooting_star");
+    public static final ResourceLocation SHRINE_CHEST_SMALL = AstralSorcery.key("gameplay/shrine_chest_small");
+    public static final ResourceLocation SHRINE_CHEST = AstralSorcery.key("gameplay/shrine_chest");
+    public static final ResourceLocation DIG_SITE_ARCHAEOLOGY = AstralSorcery.key("gameplay/dig_site_archaeology");
 
 }

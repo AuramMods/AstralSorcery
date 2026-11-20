@@ -12,14 +12,11 @@ import hellfirepvp.astralsorcery.common.util.data.RegisteredItemLike;
 import hellfirepvp.astralsorcery.common.block.tile.CelestialCrystalClusterBlock;
 import hellfirepvp.astralsorcery.common.block.tile.GemCrystalClusterBlock;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
-import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.loot.*;
 import hellfirepvp.astralsorcery.common.loot.condition.LockableTileEntityCondition;
 import hellfirepvp.astralsorcery.common.loot.condition.PlayerNearbyCondition;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
@@ -29,7 +26,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
-import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -49,8 +46,8 @@ import java.util.stream.Collectors;
  */
 public class AstralBlockLootTableProvider extends BlockLootSubProvider {
 
-    protected AstralBlockLootTableProvider(HolderLookup.Provider registries) {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
+    protected AstralBlockLootTableProvider() {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
     }
 
     @Override
@@ -226,9 +223,8 @@ public class AstralBlockLootTableProvider extends BlockLootSubProvider {
                                 LootPool.lootPool()
                                         .setRolls(ConstantValue.exactly(1.0F))
                                         .add(LootItem.lootTableItem(BlocksAS.CELESTIAL_GATEWAY.get())
-                                                .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
-                                                        .include(DataComponents.CUSTOM_NAME)
-                                                        .include(DataComponentsAS.COLOR.get())))
+                                                .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+                                                .apply(CopyDyeColorFunction.copyColor()))
                                         .add(LootItem.lootTableItem(ItemsAS.AQUAMARINE.get())
                                                 .when(LockableTileEntityCondition.lockable()))
                         )
@@ -251,8 +247,7 @@ public class AstralBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(BlocksAS.STELLAR_FILAMENT);
         this.add(BlocksAS.CAVE_ILLUMINATOR.get(),
                 this.createSingleItemTable(BlocksAS.CAVE_ILLUMINATOR)
-                        .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
-                                .include(DataComponentsAS.COLOR.get())));
+                        .apply(CopyDyeColorFunction.copyColor()));
     }
 
     private void dropSelf(RegisteredItemLike<? extends Block> deferredBlock) {

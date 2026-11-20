@@ -8,16 +8,12 @@
 
 package hellfirepvp.astralsorcery.datagen.data.loot;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -28,10 +24,12 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AstralLootTableProvider extends LootTableProvider {
 
-    public AstralLootTableProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+    public AstralLootTableProvider(PackOutput output) {
         super(output, Set.of(), List.of(
                 new SubProviderEntry(AstralBlockLootTableProvider::new, LootContextParamSets.BLOCK),
-                new SubProviderEntry(AstralGameplayLootTableProvider::new, LootContextParamSets.EMPTY)
-        ), registries);
+                new SubProviderEntry(() -> AstralGameplayLootTableProvider::generateShootingStar, LootContextParamSets.SELECTOR),
+                new SubProviderEntry(() -> AstralGameplayLootTableProvider::generateShrineChests, LootContextParamSets.CHEST),
+                new SubProviderEntry(() -> AstralGameplayLootTableProvider::generateDigSite, LootContextParamSets.ARCHAEOLOGY)
+        ));
     }
 }

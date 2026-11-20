@@ -19,7 +19,6 @@ import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -95,7 +94,7 @@ public class CelestialGatewayBlock extends BaseTickTileBlock<TileCelestialGatewa
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (placer instanceof ServerPlayer sPlayer) {
+        if (!level.isClientSide()) {
             MiscUtil.getTileAt(level, pos, TileCelestialGateway.class, true).ifPresent(tile -> {
                 if (stack.hasCustomHoverName()) {
                     tile.getTileData().setCustomName(stack.getHoverName());

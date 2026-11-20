@@ -13,12 +13,11 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_components",
-              "include": [
-                "minecraft:custom_name",
-                "astralsorcery:color"
-              ],
+              "function": "minecraft:copy_name",
               "source": "block_entity"
+            },
+            {
+              "function": "astralsorcery:copy_dye_color"
             }
           ],
           "name": "astralsorcery:celestial_gateway"
