@@ -9,7 +9,6 @@
 package hellfirepvp.astralsorcery.client.shader;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.mixin.client.AccessorPostChain;
 import hellfirepvp.astralsorcery.mixin.client.AccessorPostPass;
@@ -35,8 +34,7 @@ public class TransparencyChain extends WrappedPostChain {
     private RenderTarget transparencyTarget;
     private WrappedPostPass blitPass;
 
-    private RenderTarget redirectInput = null;
-    private RenderTarget redirectTarget = null;
+    private boolean redirected;
 
     public TransparencyChain(ResourceLocation chainKey) {
         super(chainKey);
@@ -48,10 +46,18 @@ public class TransparencyChain extends WrappedPostChain {
         this.transparencyTarget = this.getTarget("transparency").orElse(null);
 
         AccessorPostChain chainAccess = this.getWrapped().map(chain -> (AccessorPostChain) chain).orElseThrow();
-        int lastPass = chainAccess.getPasses().size() - 1;
-        this.blitPass = WrappedPostPass.wrap(chainAccess.getPasses().get(lastPass), Minecraft.getInstance().getResourceManager());
+        var passes = chainAccess.getPasses();
+        PostPass inputPass = passes.get(0);
+        AccessorPostPass inputAccess = (AccessorPostPass) inputPass;
+        int depthSampler = inputAccess.getAuxNames().indexOf("DiffuseDepthSampler");
+        if (depthSampler >= 0) {
+            inputAccess.getAuxAssets().set(depthSampler, () -> inputPass.inTarget.getDepthTextureId());
+        }
+
+        int lastPass = passes.size() - 1;
+        this.blitPass = WrappedPostPass.wrap(passes.get(lastPass), Minecraft.getInstance().getResourceManager());
         this.blitPass.setDepthDrawFunction(GL11.GL_LEQUAL);
-        chainAccess.getPasses().set(lastPass, this.blitPass);
+        passes.set(lastPass, this.blitPass);
     }
 
     public Optional<RenderTarget> getTransparencyTarget() {
@@ -59,7 +65,7 @@ public class TransparencyChain extends WrappedPostChain {
     }
 
     public Supplier<RenderTarget> getTransparencyTargetSupplier() {
-        return this.getTransparencyTarget()::orElseThrow;
+        return () -> this.getTransparencyTarget().orElseThrow();
     }
 
     public Optional<WrappedPostPass> getBlitPass() {
@@ -67,7 +73,6 @@ public class TransparencyChain extends WrappedPostChain {
     }
 
     public void setColor(ColorWrapper color) {
-        //There's only 1 pass in this shader chain, so it'll always be the first pass we find
         this.getWrapped().map(chain -> (AccessorPostChain) chain)
                 .flatMap(chain -> chain.getPasses().stream().findFirst().map(PostPass::getEffect))
                 .ifPresent(effect -> {
@@ -85,41 +90,28 @@ public class TransparencyChain extends WrappedPostChain {
 
     public void redirect(RenderTarget newTarget, Consumer<PostChain> redirectedFn) {
         this.getWrapped().ifPresent(chain -> {
-            this.setupRedirect(newTarget);
-            redirectedFn.accept(chain);
-            this.revertRedirect();
-        });
-    }
+            if (this.redirected) {
+                throw new IllegalStateException("Chain already redirected!");
+            }
 
-    private void setupRedirect(RenderTarget newTarget) {
-        if (this.redirectTarget != null) {
-            throw new IllegalStateException("Chain already redirected!");
-        }
+            var passes = ((AccessorPostChain) chain).getPasses();
+            PostPass inputPass = passes.get(0);
+            PostPass outputPass = passes.get(passes.size() - 1);
+            RenderTarget previousInput = inputPass.inTarget;
+            RenderTarget previousOutput = outputPass.outTarget;
+            AccessorPostPass inputAccess = (AccessorPostPass) inputPass;
+            AccessorPostPass outputAccess = (AccessorPostPass) outputPass;
 
-        this.getWrapped().map(chain -> (AccessorPostChain) chain).ifPresent(chain -> {
-            var passes = chain.getPasses();
-            PostPass inPass = passes.iterator().next();
-            AccessorPostPass inPassAccess = MiscUtil.cast(inPass);
-            this.redirectInput = inPass.inTarget;
-            inPassAccess.setInTarget(newTarget);
-
-            PostPass outPass = passes.get(passes.size() - 1);
-            AccessorPostPass outPassAccess = MiscUtil.cast(outPass);
-            this.redirectTarget = outPass.outTarget;
-            outPassAccess.setOutTarget(newTarget);
-        });
-    }
-
-    private void revertRedirect() {
-        this.getWrapped().map(chain -> (AccessorPostChain) chain).ifPresent(chain -> {
-            var passes = chain.getPasses();
-            AccessorPostPass inPass = MiscUtil.cast(passes.iterator().next());
-            inPass.setInTarget(this.redirectInput);
-            this.redirectInput = null;
-
-            AccessorPostPass outPass = MiscUtil.cast(passes.get(passes.size() - 1));
-            outPass.setOutTarget(this.redirectTarget);
-            this.redirectTarget = null;
+            this.redirected = true;
+            try {
+                inputAccess.setInTarget(newTarget);
+                outputAccess.setOutTarget(newTarget);
+                redirectedFn.accept(chain);
+            } finally {
+                inputAccess.setInTarget(previousInput);
+                outputAccess.setOutTarget(previousOutput);
+                this.redirected = false;
+            }
         });
     }
 }
