@@ -17,6 +17,7 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,16 @@ public class AstralBiomeTagsProvider extends TagsProvider<Biome> {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        this.tag(TagsAS.Biomes.SNOWY)
+                .add(Biomes.SNOWY_BEACH)
+                .add(Biomes.SNOWY_PLAINS)
+                .add(Biomes.ICE_SPIKES)
+                .add(Biomes.SNOWY_TAIGA)
+                .add(Biomes.GROVE)
+                .add(Biomes.SNOWY_SLOPES)
+                .add(Biomes.JAGGED_PEAKS)
+                .add(Biomes.FROZEN_PEAKS);
+
         this.tag(TagsAS.Biomes.FOCAL_POINT_BIOMES)
                 .addTag(BiomeTags.IS_OVERWORLD)
                 .addOptionalTag(ResourceLocation.fromNamespaceAndPath("forge", "is_overworld"))

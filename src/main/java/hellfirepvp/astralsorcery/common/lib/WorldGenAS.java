@@ -47,7 +47,7 @@ public class WorldGenAS {
             FEATURE_REGISTER.register("rock_crystal_ore", () -> new RockCrystalOreFeature(RockCrystalOreFeatureConfiguration.CODEC));
 
     public static final RegistryObject<PlacementModifierType<RiverbedPlacement>> RIVERBED_PLACEMENT =
-            PLACEMENT_REGISTER.register("riverbed_placement", () -> () -> RiverbedPlacement.CODEC);
+            PLACEMENT_REGISTER.register("riverbed_placement", () -> () -> RiverbedPlacement.CODEC.codec());
 
     public static final RegistryObject<StructureType<TemplateStructure>> TEMPLATE_STRUCTURE =
             STRUCTURE_REGISTER.register("template_structure", () -> () -> TemplateStructure.CODEC);

@@ -11,22 +11,18 @@ package hellfirepvp.astralsorcery.datagen.data.world;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.WorldGenAS;
+import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import hellfirepvp.astralsorcery.common.worldgen.feature.RockCrystalOreFeatureConfiguration;
 import hellfirepvp.astralsorcery.common.worldgen.placement.RiverbedPlacement;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.random.Weight;
-import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.valueproviders.BiasedToBottomInt;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.biome.Biome;
@@ -40,16 +36,11 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.world.BiomeModifier;
-import net.neoforged.neoforge.common.world.BiomeModifiers;
+import net.minecraftforge.common.world.ForgeBiomeModifiers;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -77,7 +68,7 @@ public class AstralWorldGenProvider {
     public static final ResourceKey<BiomeModifier> GLIMMER_AMARANTH_FLOWERS_BIOME_MODIFIER = biomeModifier("generate_glimmer_amaranth_flowers");
 
     //Set up the feature to begin with & its configuration
-    public static void generateConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+    public static void generateConfiguredFeatures(BootstapContext<ConfiguredFeature<?, ?>> context) {
         context.register(MARBLE_ORE, new ConfiguredFeature<>(Feature.ORE,
                 new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), BlocksAS.MARBLE_RAW.get().defaultBlockState(), 26)));
         context.register(ROCK_CRYSTAL_ORE, new ConfiguredFeature<>(WorldGenAS.ROCK_CRYSTAL_ORE.get(),
@@ -91,7 +82,7 @@ public class AstralWorldGenProvider {
     }
     //Pair the configured feature with placement rules
 
-    public static void generatePlacedFeatures(BootstrapContext<PlacedFeature> context) {
+    public static void generatePlacedFeatures(BootstapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> features = context.lookup(Registries.CONFIGURED_FEATURE);
 
         context.register(PLACED_MARBLE_ORE, new PlacedFeature(features.getOrThrow(MARBLE_ORE),
@@ -122,28 +113,28 @@ public class AstralWorldGenProvider {
     }
 
     //Actually add the placed features to biomes to generate
-    public static void generateBiomeModifiers(BootstrapContext<BiomeModifier> context) {
+    public static void generateBiomeModifiers(BootstapContext<BiomeModifier> context) {
         HolderGetter<PlacedFeature> features = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
         HolderSet<Biome> inOverworldBiomes = biomes.getOrThrow(BiomeTags.IS_OVERWORLD);
-        HolderSet<Biome> inSnowyBiomes = biomes.getOrThrow(Tags.Biomes.IS_SNOWY);
+        HolderSet<Biome> inSnowyBiomes = biomes.getOrThrow(TagsAS.Biomes.SNOWY);
 
-        context.register(MARBLE_ORE_BIOME_MODIFIER, new BiomeModifiers.AddFeaturesBiomeModifier(
+        context.register(MARBLE_ORE_BIOME_MODIFIER, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
                 inOverworldBiomes,
                 HolderSet.direct(features.getOrThrow(PLACED_MARBLE_ORE)),
                 GenerationStep.Decoration.UNDERGROUND_ORES
         ));
-        context.register(ROCK_CRYSTAL_ORE_BIOME_MODIFIER, new BiomeModifiers.AddFeaturesBiomeModifier(
+        context.register(ROCK_CRYSTAL_ORE_BIOME_MODIFIER, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
                 inOverworldBiomes,
                 HolderSet.direct(features.getOrThrow(PLACED_ROCK_CRYSTAL_ORE)),
                 GenerationStep.Decoration.UNDERGROUND_ORES
         ));
-        context.register(AQUAMARINE_SHALE_ORE_BIOME_MODIFIER, new BiomeModifiers.AddFeaturesBiomeModifier(
+        context.register(AQUAMARINE_SHALE_ORE_BIOME_MODIFIER, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
                 inOverworldBiomes,
                 HolderSet.direct(features.getOrThrow(PLACED_AQUAMARINE_SHALE_ORE)),
                 GenerationStep.Decoration.UNDERGROUND_ORES
         ));
-        context.register(GLIMMER_AMARANTH_FLOWERS_BIOME_MODIFIER, new BiomeModifiers.AddFeaturesBiomeModifier(
+        context.register(GLIMMER_AMARANTH_FLOWERS_BIOME_MODIFIER, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
                 inSnowyBiomes,
                 HolderSet.direct(features.getOrThrow(PLACED_GLIMMER_AMARANTH_FLOWERS)),
                 GenerationStep.Decoration.VEGETAL_DECORATION

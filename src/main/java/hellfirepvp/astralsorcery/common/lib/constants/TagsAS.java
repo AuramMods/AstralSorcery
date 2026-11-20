@@ -101,6 +101,8 @@ public class TagsAS {
 
     public static class Biomes {
 
+        public static final TagKey<Biome> SNOWY = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath("c", "is_snowy"));
+
         public static final TagKey<Biome> FOCAL_POINT_BIOMES = TagKey.create(Registries.BIOME, AstralSorcery.key("focal_point_biomes"));
         public static final TagKey<Biome> OBLITERATION_BIOMES = TagKey.create(Registries.BIOME, AstralSorcery.key("obliteration_biomes"));
         public static final TagKey<Biome> DIG_SITE_BIOMES = TagKey.create(Registries.BIOME, AstralSorcery.key("dig_site_biomes"));

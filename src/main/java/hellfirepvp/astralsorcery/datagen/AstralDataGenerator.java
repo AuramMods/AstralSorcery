@@ -31,11 +31,13 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -50,11 +52,6 @@ public class AstralDataGenerator {
 
     @SubscribeEvent
     public static void gather(GatherDataEvent event) {
-        if (!AstralSorcery.isDoingDataGeneration()) {
-            return;
-        }
-        event.createDatapackRegistryObjects(AstralRegistriesDataProvider.getRegistryBuilder());
-
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
@@ -70,6 +67,8 @@ public class AstralDataGenerator {
             gen.addProvider(true, new AstralSoundsProvider(output, fileHelper));
         }
         if (event.includeServer()) {
+            gen.addProvider(true, new DatapackBuiltinEntriesProvider(output, lookupProvider,
+                    AstralRegistriesDataProvider.getRegistryBuilder(), Set.of(AstralSorcery.MODID)));
             AstralBlockTagsProvider blockTags = new AstralBlockTagsProvider(output, lookupProvider, fileHelper);
             gen.addProvider(true, blockTags);
             gen.addProvider(true, new AstralItemTagsProvider(output, lookupProvider, blockTags.contentsGetter(), fileHelper));
