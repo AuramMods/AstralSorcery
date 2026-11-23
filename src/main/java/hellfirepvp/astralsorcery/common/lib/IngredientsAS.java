@@ -33,13 +33,18 @@ public final class IngredientsAS {
             serializer("has_stored_lumen", HasStoredLumenIngredient.CODEC);
     public static final AstralIngredientSerializer<StackDataIngredient<?>> STACK_DATA =
             serializer("stack_data", StackDataIngredient.CODEC);
+    public static final AstralIngredientSerializer<LumenTagIngredient> LUMEN_TAG =
+            serializer("lumen_tag", LumenTagIngredient.CODEC);
+    public static final AstralIngredientSerializer<CrystalPropertyTagIngredient> CRYSTAL_PROPERTY_TAG =
+            serializer("crystal_property_tag", CrystalPropertyTagIngredient.CODEC);
 
     private IngredientsAS() {}
 
     public static void register(RegisterEvent event) {
         if (event.getRegistryKey().equals(Registries.RECIPE_SERIALIZER)) {
             for (AstralIngredientSerializer<?> serializer : List.of(
-                    INGREDIENT_BRIDGE, IS_ENCHANTED, IS_STABLE_ARTIFACT, IS_FLAG_SET, LUMEN_BINDABLE, STORED_LUMEN, STACK_DATA)) {
+                    INGREDIENT_BRIDGE, IS_ENCHANTED, IS_STABLE_ARTIFACT, IS_FLAG_SET, LUMEN_BINDABLE, STORED_LUMEN,
+                    STACK_DATA, LUMEN_TAG, CRYSTAL_PROPERTY_TAG)) {
                 CraftingHelper.register(serializer.id(), serializer);
             }
         }

@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.recipe.builder;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
+import hellfirepvp.astralsorcery.common.ingredient.ConstellationIngredient;
 import hellfirepvp.astralsorcery.common.recipe.focal.drop.FocalCombineRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
@@ -110,7 +111,7 @@ public class FocalCombineRecipeBuilder implements RecipeBuilder {
                 this.color,
                 this.inputs,
                 this.outputs,
-                Optional.ofNullable(this.requiredConstellation)
+                Optional.ofNullable(this.requiredConstellation).map(ConstellationIngredient::of)
         );
         recipe.setGroup(this.group);
         recipeOutput.accept(new AstralFinishedRecipe<>(recipeId, recipe, FocalCombineRecipe.CODEC,

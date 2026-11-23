@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.tile;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -78,12 +79,14 @@ public class TileCelestialCrystalCluster extends TileEntityNetwork<ForwardingSta
     }
 
     private void tryGrow(Level level, float chanceMultiplier) {
+        var rule = ProcessingRules.get(level, ProcessingRules.Operation.CELESTIAL_CLUSTER_GROWTH);
+        if (!rule.enabled() || rule.rateMultiplier() == 0) return;
         float chance = 20 * 60 * 15;
 
         if (level.getBlockState(this.getBlockPos().below()).is(BlocksAS.STARMETAL_ORE.get())) {
             chance /= 2;
 
-            if (rand.nextInt(20 * 60 * 20) == 0) {
+            if (rule.roll(rand, 20 * 60 * 20)) {
                 level.setBlockAndUpdate(this.getBlockPos().below(), Blocks.IRON_ORE.defaultBlockState());
             }
         }
@@ -98,7 +101,7 @@ public class TileCelestialCrystalCluster extends TileEntityNetwork<ForwardingSta
     public void grow(Level level, int chance) {
         int stage = this.getGrowth();
         if (stage < 4) {
-            if (rand.nextInt(Math.max(chance, 1)) == 0) {
+            if (ProcessingRules.get(level, ProcessingRules.Operation.CELESTIAL_CLUSTER_GROWTH).roll(rand, chance)) {
                 this.setGrowth(level, stage + 1);
             }
         }

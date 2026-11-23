@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.entity.item;
 
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.item.ChiselItem;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.entity.ItemEntityChiselAttackable;
@@ -60,6 +61,11 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
     }
 
     @Override
+    protected ProcessingRules.Operation chiselOperation() {
+        return ProcessingRules.Operation.CHISEL_CRYSTAL;
+    }
+
+    @Override
     public void onAttack(ServerPlayer sPlayer, ItemStack chisel) {
         ItemStack crystalStack = this.getItem();
         if (!(crystalStack.getItem() instanceof RockCrystalItem thisItem)) {
@@ -71,7 +77,7 @@ public class ItemEntityCrystal extends ItemEntityChiselAttackable {
         }
 
         boolean didSplit = false;
-        if (random.nextFloat() < 0.5F) {
+        if (random.nextFloat() < ProcessingRules.get(this.level(), this.chiselOperation()).chance(0.5F)) {
             int fortuneLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE, sPlayer);
             didSplit = this.splitCrystal(thisItem, crystalStack, thisAttributes, fortuneLevel);
         }

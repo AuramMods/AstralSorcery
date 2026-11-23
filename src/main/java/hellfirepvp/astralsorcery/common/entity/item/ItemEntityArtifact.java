@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.entity.item;
 
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.item.ChiselItem;
 import hellfirepvp.astralsorcery.common.artifact.*;
 import hellfirepvp.astralsorcery.common.artifact.condition.data.ArtifactConditionLoader;
@@ -357,9 +358,14 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
     }
 
     @Override
+    protected ProcessingRules.Operation chiselOperation() {
+        return ProcessingRules.Operation.CHISEL_ARTIFACT;
+    }
+
+    @Override
     public void onAttack(ServerPlayer sPlayer, ItemStack chisel) {
         if (chisel.is(ItemsAS.CHISEL.get())) {
-            if (random.nextFloat() < 0.4F) {
+            if (random.nextFloat() < ProcessingRules.get(this.level(), this.chiselOperation()).chance(0.4F)) {
                 if (this.getItem().getItem() instanceof ArtifactItem artifact) {
                     artifact.createShard(this.getItem()).ifPresent(shard -> {
                         ItemUtil.dropItemNaturally(this.level(), this.getX(), this.getY(), this.getZ(), shard);

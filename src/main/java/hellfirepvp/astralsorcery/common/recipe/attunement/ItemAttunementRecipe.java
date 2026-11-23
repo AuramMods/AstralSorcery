@@ -25,6 +25,7 @@ import hellfirepvp.astralsorcery.client.sound.PlayableSoundInstance;
 import hellfirepvp.astralsorcery.common.component.AttunedConstellationComponent;
 import hellfirepvp.astralsorcery.common.component.ConstellationPaperComponent;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.item.base.AttuneableItem;
 import hellfirepvp.astralsorcery.common.lib.AdvancementsAS;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
@@ -95,7 +96,8 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
     }
 
     public static Optional<ItemEntity> findEligibleItem(TileAttunementAltar altar) {
-        return altar.getTileData().getActiveConstellation().flatMap(cst -> {
+        var rule = ProcessingRules.get(altar.getLevel(), ProcessingRules.Operation.ITEM_ATTUNEMENT);
+        return altar.getTileData().getActiveConstellation().filter(rule::allows).flatMap(cst -> {
             AABB searchBox = BOX.move(altar.getBlockPos().above());
 
             Vector3 altarVec = Vector3.atCenter(altar).addY(1);
@@ -108,13 +110,12 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
     }
 
     public static boolean isEligibleItem(ItemEntity entity) {
-        if (entity.isAlive() && entity.getItem().is(TagsAS.Items.FUNCTIONAL_ATTUNEABLE_ITEM)) {
-            ItemStack stack = entity.getItem();
-
-            ConstellationPaperComponent cmp = DataComponentsAS.ATTUNED_CONSTELLATION.getOrDefault(stack, AttunedConstellationComponent.EMPTY);
-            return cmp.getConstellation().isEmpty();
-        }
-        return false;
+        var rule = ProcessingRules.get(entity.level(), ProcessingRules.Operation.ITEM_ATTUNEMENT);
+        ItemStack stack = entity.getItem();
+        if (!entity.isAlive() || stack.isEmpty() || !rule.allows(stack)
+                || rule.input() == null && !stack.is(TagsAS.Items.FUNCTIONAL_ATTUNEABLE_ITEM)) return false;
+        ConstellationPaperComponent cmp = DataComponentsAS.ATTUNED_CONSTELLATION.getOrDefault(stack, AttunedConstellationComponent.EMPTY);
+        return cmp.getConstellation().isEmpty();
     }
 
     public static class Active extends AttunementRecipe.Active<ItemAttunementRecipe, ItemAttunementRecipe.Active> {
@@ -146,7 +147,8 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
         public boolean matches(TileAttunementAltar altar) {
             if (!super.matches(altar)) return false;
 
-            return this.getEntity(altar.getLevel()).map(ItemAttunementRecipe::isEligibleItem).orElse(false);
+            return ProcessingRules.get(altar.getLevel(), ProcessingRules.Operation.ITEM_ATTUNEMENT).allows(this.getConstellation())
+                    && this.getEntity(altar.getLevel()).map(ItemAttunementRecipe::isEligibleItem).orElse(false);
         }
 
         @Override
@@ -164,8 +166,11 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
             altar.getTileData().getActiveConstellation().ifPresent(cst -> {
                 this.getEntity(altar.getLevel()).ifPresent(itemEntity -> {
                     ItemStack stack = itemEntity.getItem();
+                    ItemStack output = ProcessingRules.get(altar.getLevel(), ProcessingRules.Operation.ITEM_ATTUNEMENT).output();
 
-                    if (stack.getItem() instanceof AttuneableItem aItem) {
+                    if (!output.isEmpty()) {
+                        stack = output.copyWithCount(stack.getCount());
+                    } else if (stack.getItem() instanceof AttuneableItem aItem) {
                         ItemStack newStack = ItemUtil.swapItem(altar.getLevel().registryAccess(), stack, aItem.getAttunedItem()).orElse(ItemStack.EMPTY);
                         if (!newStack.isEmpty()) {
                             stack = newStack;

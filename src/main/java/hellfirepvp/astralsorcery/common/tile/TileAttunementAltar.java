@@ -114,12 +114,15 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
             this.searchActiveRecipe();
         } else {
             this.getTileData().getActiveRecipe().ifPresent(active -> {
-                active.tick(LogicalSide.SERVER, this);
                 if (!active.matches(this)) {
+                    active.stopCrafting(this);
                     this.getTileData().setActiveRecipe(null);
                     this.getTileData().markForUpdate();
-                } else if (active.isFinished(this)) {
-                    this.finishActiveRecipe();
+                } else {
+                    active.tick(LogicalSide.SERVER, this);
+                    if (active.isFinished(this)) {
+                        this.finishActiveRecipe();
+                    }
                 }
             });
         }
@@ -143,10 +146,12 @@ public class TileAttunementAltar extends TileEntityTick<TileAttunementAltar.Data
     }
 
     public void finishActiveRecipe() {
+        if (this.getLevel() == null || this.getLevel().isClientSide()) return;
         this.getTileData().getActiveRecipe().ifPresent(active -> {
-            active.finishRecipe(this);
+            boolean completed = active.matches(this);
+            if (completed) active.finishRecipe(this);
             active.stopCrafting(this);
-            MinecraftForge.EVENT_BUS.post(new RecipeEvent.Attunement.End(active.getRecipe(), active));
+            if (completed) MinecraftForge.EVENT_BUS.post(new RecipeEvent.Attunement.End(active.getRecipe(), active));
 
             this.getTileData().setActiveRecipe(null);
             this.getTileData().markForUpdate();

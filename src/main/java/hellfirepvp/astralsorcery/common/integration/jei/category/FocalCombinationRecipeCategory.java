@@ -109,18 +109,18 @@ public class FocalCombinationRecipeCategory extends ASRecipeCategory<FocalCombin
 
     @Override
     public void draw(FocalCombineRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        if (recipe.getRequiredConstellation().isPresent()) {
+        if (recipe.getConstellationIngredient().isPresent()) {
             this.infoIcon.draw(guiGraphics, INFO_ICON.x(), INFO_ICON.y());
         }
     }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, FocalCombineRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        if (recipe.getRequiredConstellation().isPresent()) {
+        if (recipe.getConstellationIngredient().isPresent()) {
             if (INFO_ICON.contains(mouseX, mouseY)) {
                 List<Component> tTip = new ArrayList<>();
-                recipe.getRequiredConstellation().ifPresent(cst -> {
-                    tTip.add(Component.translatable("jei.astralsorcery.info.focal_transmutation.specific_constellation", cst.getColoredName()));
+                recipe.getConstellationIngredient().ifPresent(ingredient -> {
+                    tTip.add(Component.translatable("jei.astralsorcery.info.focal_transmutation.specific_constellation", ingredient.displayName()));
                 });
                 tooltip.addAll(tTip);
             }

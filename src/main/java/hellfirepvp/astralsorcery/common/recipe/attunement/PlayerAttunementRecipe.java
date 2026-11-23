@@ -26,6 +26,7 @@ import hellfirepvp.astralsorcery.client.util.camera.CameraTransformerPlayerFocus
 import hellfirepvp.astralsorcery.client.util.camera.RevertableCameraTransformer;
 import hellfirepvp.astralsorcery.client.util.camera.path.CameraPathBuilder;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.constellation.property.AttunePlayerProperty;
 import hellfirepvp.astralsorcery.common.event.helper.InvulnerabilityHelper;
 import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
@@ -96,7 +97,9 @@ public class PlayerAttunementRecipe extends AttunementRecipe<PlayerAttunementRec
 
     public static Optional<ServerPlayer> findEligiblePlayer(TileAttunementAltar altar) {
         BaseConstellation cst = altar.getTileData().getActiveConstellation().orElse(null);
-        if (cst == null) return Optional.empty();
+        if (cst == null || !ProcessingRules.get(altar.getLevel(), ProcessingRules.Operation.PLAYER_ATTUNEMENT).allows(cst)) {
+            return Optional.empty();
+        }
         return AttunePlayerProperty.getRootPerk(cst, LogicalSide.SERVER)
                 .map(root -> {
                     Vector3 tileVec = Vector3.atCenter(altar).addY(0.5);
@@ -150,7 +153,8 @@ public class PlayerAttunementRecipe extends AttunementRecipe<PlayerAttunementRec
 
         @Override
         public boolean matches(TileAttunementAltar altar) {
-            if (!super.matches(altar)) {
+            if (!super.matches(altar)
+                    || !ProcessingRules.get(altar.getLevel(), ProcessingRules.Operation.PLAYER_ATTUNEMENT).allows(this.getConstellation())) {
                 return false;
             }
             Player player = altar.getLevel().getPlayerByUUID(this.playerUUID);

@@ -12,6 +12,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -100,6 +101,8 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
     }
 
     private void doCraftingCycle(ServerLevel level) {
+        var rule = ProcessingRules.get(level, ProcessingRules.Operation.LUMEN_CLUSTER_GROWTH);
+        if (!rule.enabled() || rule.rateMultiplier() == 0) return;
         ItemStack catalyst = this.getTileData().getInventory().getStackInSlot(0);
         if (catalyst.isEmpty() && level.isEmptyBlock(this.getBlockPos().above())) {
             this.activeRecipe = null;
@@ -193,7 +196,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
 
         if (storedLumen >= lumenToProvide) {
             if (above.isAir()) {
-                if (this.rand.nextInt(20 * 60) == 0) {
+                if (rule.roll(this.rand, 20 * 60)) {
                     BlockState toSet = BlocksAS.LUMEN_CRYSTAL_CLUSTER.get().defaultBlockState();
                     level.setBlock(this.getBlockPos().above(), toSet, Block.UPDATE_ALL);
                     MiscUtil.getTileAt(level, this.getBlockPos().above(), TileLumenCrystalCluster.class, true).ifPresent(newCluster -> {
@@ -209,7 +212,7 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
                     MinecraftForge.EVENT_BUS.post(new RecipeEvent.LumenCrystallization(this.activeRecipe, this, toSet));
                 }
             } else {
-                if (this.rand.nextInt(20 * 60 * 5) == 0) {
+                if (rule.roll(this.rand, 20 * 60 * 5)) {
                     int stage = above.getValue(LumenCrystalClusterBlock.STAGE);
                     BlockState toSet = above.setValue(LumenCrystalClusterBlock.STAGE, Math.min(4, stage + 1));
                     level.setBlock(this.getBlockPos().above(), toSet, Block.UPDATE_ALL);

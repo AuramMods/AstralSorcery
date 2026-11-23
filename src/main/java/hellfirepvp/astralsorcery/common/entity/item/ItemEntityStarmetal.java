@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.entity.item;
 
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.item.ChiselItem;
 import hellfirepvp.astralsorcery.common.entity.ItemEntityChiselAttackable;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
@@ -45,9 +46,17 @@ public class ItemEntityStarmetal extends ItemEntityChiselAttackable {
     }
 
     @Override
+    protected ProcessingRules.Operation chiselOperation() {
+        return ProcessingRules.Operation.CHISEL_STARMETAL;
+    }
+
+    @Override
     public void onAttack(ServerPlayer sPlayer, ItemStack chisel) {
-        if (random.nextFloat() < 0.4F) {
-            ItemUtil.dropItemNaturally(this.level(), this.getX(), this.getY(), this.getZ(), ItemsAS.STARDUST.toStack());
+        var rule = ProcessingRules.get(this.level(), this.chiselOperation());
+        if (random.nextFloat() < rule.chance(0.4F)) {
+            ItemStack result = rule.output();
+            ItemUtil.dropItemNaturally(this.level(), this.getX(), this.getY(), this.getZ(),
+                    result.isEmpty() ? ItemsAS.STARDUST.toStack() : result);
 
             int fortune = chisel.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
             float ingotBreakChance = 0.9F;

@@ -9,6 +9,7 @@
 package hellfirepvp.astralsorcery.common.tile;
 
 import com.mojang.serialization.Codec;
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -45,16 +46,17 @@ public class TileGemCrystalCluster extends TileEntityTick<TileEntityTick.Data> {
     public void serverTick(ServerLevel level) {
         super.serverTick(level);
 
+        var rule = ProcessingRules.get(level, ProcessingRules.Operation.GEM_CLUSTER_GROWTH);
         GemCrystalClusterBlock.GrowthStageType stage = this.getBlockState().getValue(GemCrystalClusterBlock.STAGE);
         if (stage.getGrowthStage() < 2 && this.doesSeeSky()) {
             int chance = 20 * 60 * 10;
             chance = (int) (chance * (1F - 0.3F * DayTimeHelper.getCurrentDaytimeDistribution(level)));
 
-            if (this.rand.nextInt(chance) == 0) {
+            if (rule.roll(this.rand, chance)) {
                 level.setBlock(this.getBlockPos(), this.getBlockState().setValue(GemCrystalClusterBlock.STAGE, stage.grow(level)), Block.UPDATE_ALL);
             }
         } else if (stage.getGrowthStage() == 2) {
-            if (this.rand.nextInt(20 * 60 * 6) == 0) {
+            if (rule.roll(this.rand, 20 * 60 * 6)) {
                 level.setBlock(this.getBlockPos(), this.getBlockState().setValue(GemCrystalClusterBlock.STAGE, stage.shrink()), Block.UPDATE_ALL);
             }
         }

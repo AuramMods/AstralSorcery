@@ -4,7 +4,7 @@ import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.fluid.IFluidStack;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
-import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
+import hellfirepvp.astralsorcery.common.ingredient.ConstellationIngredient;
 import hellfirepvp.astralsorcery.common.ingredient.IngredientBridge;
 import hellfirepvp.astralsorcery.common.ingredient.SizedFluidIngredient;
 import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
@@ -28,6 +28,7 @@ import hellfirepvp.astralsorcery.common.tile.TileAltar;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -322,11 +323,15 @@ public final class AstralRecipeManagers {
         return result;
     }
 
-    private static Optional<BaseConstellation> constellation(String id) {
-        return id.isEmpty() ? Optional.empty() : Optional.of(registered(RegistriesAS.REGISTRY_CONSTELLATIONS.get(), id));
+    private static Optional<ConstellationIngredient> constellation(String id) {
+        if (id.startsWith("#")) {
+            return Optional.of(ConstellationIngredient.of(TagKey.create(RegistriesAS.KEY_CONSTELLATIONS,
+                    AstralRecipeManager.exactId(id.substring(1)))));
+        }
+        return id.isEmpty() ? Optional.empty() : Optional.of(ConstellationIngredient.of(AstralTags.constellation(id)));
     }
 
-    private static <T> T registered(Registry<T> registry, String name) {
+    static <T> T registered(Registry<T> registry, String name) {
         return registry.getOptional(AstralRecipeManager.exactId(name)).orElseThrow(() ->
                 new IllegalArgumentException("Unknown " + registry.key().location() + " entry " + name));
     }

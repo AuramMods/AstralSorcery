@@ -30,6 +30,7 @@ import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import org.joml.Vector2f;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,16 +52,22 @@ public class RenderPageFocalTransmutation extends RenderPageRecipe<FocalTransmut
 
         this.resolveRecipeOrWriteError(guiGraphics, x, y).map(RecipeHolder::value).ifPresent(recipe -> {
             this.renderPageOverlay(guiGraphics, x, y, TexturesAS.SCREEN_TOME_PAGE_GRID_FOCAL_TRANSMUTATION);
-            List<Component> tip = recipe.requiresFocusedStarlight() ?
-                    List.of(Component.translatable("tome.research.info.transmutation_focused_starlight").withStyle(ChatFormatting.GRAY)) :
-                    List.of();
+            List<Component> tip = new ArrayList<>();
+            if (recipe.requiresFocusedStarlight()) {
+                tip.add(Component.translatable("tome.research.info.transmutation_focused_starlight").withStyle(ChatFormatting.GRAY));
+            }
+            recipe.getConstellationIngredient().ifPresent(ingredient -> tip.add(
+                    Component.translatable("jei.astralsorcery.info.focal_transmutation.specific_constellation", ingredient.displayName())
+                            .withStyle(ChatFormatting.GRAY)));
             this.renderRecipeHeader(guiGraphics, x, y, false, tip);
 
-            recipe.getRequiredConstellation().ifPresent(cst -> {
+            var constellations = recipe.getRequiredConstellations();
+            if (!constellations.isEmpty()) {
+                int index = (int) (ClientProxy.getClientTick() / 80 % constellations.size());
                 this.renderConstellation(guiGraphics,
                         x + TomePage.DEFAULT_WIDTH / 2 - 70, y + TomePage.DEFAULT_HEIGHT / 2 - 70,
-                        140, 140, cst);
-            });
+                        140, 140, constellations.get(index));
+            }
             long tick = ClientProxy.getClientTick();
 
             int midX = x + TomePage.DEFAULT_WIDTH / 2;

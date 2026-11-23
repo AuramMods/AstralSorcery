@@ -14,7 +14,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
-import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
+import hellfirepvp.astralsorcery.common.ingredient.ConstellationIngredient;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
@@ -50,7 +50,7 @@ public class FocalCombineRecipe extends CustomRecipe<FocalCombineRecipe, FocalCo
             ColorWrapper.CODEC.fieldOf("color").forGetter(FocalCombineRecipe::getColor),
             IngredientJson.CODEC.listOf().fieldOf("inputs").forGetter(FocalCombineRecipe::getInputs),
             ItemStack.CODEC.listOf().fieldOf("outputs").forGetter(FocalCombineRecipe::getOutputs),
-            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("required_constellation").forGetter(FocalCombineRecipe::getRequiredConstellation)
+            ConstellationIngredient.CODEC.optionalFieldOf("required_constellation").forGetter(FocalCombineRecipe::getConstellationIngredient)
     ).apply(instance, FocalCombineRecipe::new));
 
     public static final StreamCodec<FriendlyByteBuf, FocalCombineRecipe> STREAM_CODEC = StreamCodec.composite(
@@ -62,22 +62,22 @@ public class FocalCombineRecipe extends CustomRecipe<FocalCombineRecipe, FocalCo
             FocalCombineRecipe::getInputs,
             ByteBufCodecs.ITEM_STACK_LIST,
             FocalCombineRecipe::getOutputs,
-            ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS)),
-            FocalCombineRecipe::getRequiredConstellation,
+            ByteBufCodecs.optional(ConstellationIngredient.STREAM_CODEC),
+            FocalCombineRecipe::getConstellationIngredient,
             FocalCombineRecipe::new);
 
     private final int duration;
     private final ColorWrapper color;
     private final List<Ingredient> inputs;
     private final List<ItemStack> outputs;
-    private final BaseConstellation requiredConstellation;
+    private final Optional<ConstellationIngredient> requiredConstellation;
 
-    public FocalCombineRecipe(int duration, ColorWrapper color, List<Ingredient> inputs, List<ItemStack> outputs, Optional<BaseConstellation> requiredConstellation) {
+    public FocalCombineRecipe(int duration, ColorWrapper color, List<Ingredient> inputs, List<ItemStack> outputs, Optional<ConstellationIngredient> requiredConstellation) {
         this.duration = duration;
         this.color = color;
         this.inputs = inputs;
         this.outputs = outputs;
-        this.requiredConstellation = requiredConstellation.orElse(null);
+        this.requiredConstellation = requiredConstellation;
     }
 
     public int getDuration() {
@@ -96,12 +96,20 @@ public class FocalCombineRecipe extends CustomRecipe<FocalCombineRecipe, FocalCo
         return Collections.unmodifiableList(this.outputs);
     }
 
+    public Optional<ConstellationIngredient> getConstellationIngredient() {
+        return this.requiredConstellation;
+    }
+
+    public List<BaseConstellation> getRequiredConstellations() {
+        return this.requiredConstellation.map(ConstellationIngredient::values).orElseGet(List::of);
+    }
+
     public Optional<BaseConstellation> getRequiredConstellation() {
-        return Optional.ofNullable(this.requiredConstellation);
+        return this.getRequiredConstellations().stream().findFirst();
     }
 
     public boolean isRequiredConstellation(BaseConstellation constellation) {
-        return this.requiredConstellation == null || this.requiredConstellation.equals(constellation);
+        return this.requiredConstellation.map(ingredient -> ingredient.matches(constellation)).orElse(true);
     }
 
     @Override

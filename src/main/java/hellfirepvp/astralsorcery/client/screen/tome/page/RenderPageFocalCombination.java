@@ -27,6 +27,8 @@ import hellfirepvp.astralsorcery.common.research.ResearchNode;
 import hellfirepvp.astralsorcery.common.research.tome.TomePage;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.Vector3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -60,13 +62,18 @@ public class RenderPageFocalCombination extends RenderPageRecipe<FocalCombineRec
 
         this.resolveRecipeOrWriteError(guiGraphics, x, y).map(RecipeHolder::value).ifPresent(recipe -> {
             this.renderPageOverlay(guiGraphics, x, y, TexturesAS.SCREEN_TOME_PAGE_GRID_EMPTY_RESULT);
-            this.renderRecipeHeader(guiGraphics, x, y, false);
+            List<Component> tip = recipe.getConstellationIngredient().map(ingredient -> List.<Component>of(
+                    Component.translatable("jei.astralsorcery.info.focal_transmutation.specific_constellation", ingredient.displayName())
+                            .withStyle(ChatFormatting.GRAY))).orElseGet(List::of);
+            this.renderRecipeHeader(guiGraphics, x, y, false, tip);
 
-            recipe.getRequiredConstellation().ifPresent(cst -> {
+            var constellations = recipe.getRequiredConstellations();
+            if (!constellations.isEmpty()) {
+                int index = (int) (ClientProxy.getClientTick() / 80 % constellations.size());
                 this.renderConstellation(guiGraphics,
                         x + TomePage.DEFAULT_WIDTH / 2 - 70, y + TomePage.DEFAULT_HEIGHT / 2 - 70,
-                        140, 140, cst);
-            });
+                        140, 140, constellations.get(index));
+            }
 
             int midX = x + TomePage.DEFAULT_WIDTH / 2;
             int resultY = y + 18 + 60 / 2;

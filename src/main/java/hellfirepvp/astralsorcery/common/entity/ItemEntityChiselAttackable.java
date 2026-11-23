@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.entity;
 
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.SoundsAS;
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.util.ServerSoundHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,7 +72,8 @@ public abstract class ItemEntityChiselAttackable extends ItemEntityHighlighted {
     public boolean skipAttackInteraction(Entity entity) {
         if (!this.level().isClientSide() && entity instanceof ServerPlayer sPlayer) {
             ItemStack held = sPlayer.getMainHandItem();
-            if (this.isValidAttackableStack(held) && !this.getItem().isEmpty()) {
+            if (this.isValidAttackableStack(held) && !this.getItem().isEmpty()
+                    && ProcessingRules.get(this.level(), this.chiselOperation()).allows(this.getItem())) {
                 this.onAttack(sPlayer, held);
                 this.playOnHitSound();
             }
@@ -85,6 +87,8 @@ public abstract class ItemEntityChiselAttackable extends ItemEntityHighlighted {
     }
 
     public abstract void onAttack(ServerPlayer sPlayer, ItemStack chisel);
+
+    protected abstract ProcessingRules.Operation chiselOperation();
 
     @OnlyIn(Dist.CLIENT)
     private boolean clientHoldsChisel() {

@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.recipe.builder;
 
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
+import hellfirepvp.astralsorcery.common.ingredient.ConstellationIngredient;
 import hellfirepvp.astralsorcery.common.recipe.focal.place.FocalTransmutationRecipe;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.datagen.data.AstralFinishedRecipe;
@@ -145,7 +146,7 @@ public class FocalTransmutationRecipeBuilder implements RecipeBuilder {
                 this.inputPredicates,
                 this.inputDisplay,
                 this.outputStates,
-                Optional.ofNullable(this.requiredConstellation),
+                Optional.ofNullable(this.requiredConstellation).map(ConstellationIngredient::of),
                 this.requiresFocusedStarlight
         );
         recipe.setGroup(this.group);

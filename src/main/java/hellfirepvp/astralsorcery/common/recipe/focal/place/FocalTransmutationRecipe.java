@@ -14,7 +14,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
-import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
+import hellfirepvp.astralsorcery.common.ingredient.ConstellationIngredient;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.util.IngredientUtil;
 import hellfirepvp.astralsorcery.common.util.ItemUtil;
@@ -59,7 +59,7 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
             BlockPredicate.CODEC.listOf().fieldOf("input_predicates").forGetter(FocalTransmutationRecipe::getInputPredicates),
             IngredientJson.CODEC.fieldOf("input_display_stacks").forGetter(FocalTransmutationRecipe::getInputDisplay),
             WeightedEntry.Wrapper.codec(BlockState.CODEC).listOf().fieldOf("output_states").forGetter(FocalTransmutationRecipe::getOutputStates),
-            RegistriesAS.codec(RegistriesAS.KEY_CONSTELLATIONS).optionalFieldOf("required_constellation").forGetter(FocalTransmutationRecipe::getRequiredConstellation),
+            ConstellationIngredient.CODEC.optionalFieldOf("required_constellation").forGetter(FocalTransmutationRecipe::getConstellationIngredient),
             Codec.BOOL.fieldOf("requires_focused_starlight").forGetter(FocalTransmutationRecipe::requiresFocusedStarlight)
     ).apply(inst, FocalTransmutationRecipe::new));
 
@@ -74,8 +74,8 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
             FocalTransmutationRecipe::getInputDisplay,
             ByteBufCodecs.fromCodecWithRegistries(WeightedEntry.Wrapper.codec(BlockState.CODEC)).apply(ByteBufCodecs.list()),
             FocalTransmutationRecipe::getOutputStates,
-            ByteBufCodecs.optional(ByteBufCodecs.registry(RegistriesAS.KEY_CONSTELLATIONS)),
-            FocalTransmutationRecipe::getRequiredConstellation,
+            ByteBufCodecs.optional(ConstellationIngredient.STREAM_CODEC),
+            FocalTransmutationRecipe::getConstellationIngredient,
             ByteBufCodecs.BOOL,
             FocalTransmutationRecipe::requiresFocusedStarlight,
             FocalTransmutationRecipe::new);
@@ -85,16 +85,16 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
     private final List<BlockPredicate> inputPredicates;
     private final Ingredient inputDisplay;
     private final List<WeightedEntry.Wrapper<BlockState>> outputStates;
-    private final BaseConstellation requiredConstellation;
+    private final Optional<ConstellationIngredient> requiredConstellation;
     private final boolean requiresFocusedStarlight;
 
-    public FocalTransmutationRecipe(int duration, ColorWrapper color, List<BlockPredicate> inputPredicates, Ingredient inputDisplay, List<WeightedEntry.Wrapper<BlockState>> outputStates, Optional<BaseConstellation> requiredConstellation, boolean requiresFocusedStarlight) {
+    public FocalTransmutationRecipe(int duration, ColorWrapper color, List<BlockPredicate> inputPredicates, Ingredient inputDisplay, List<WeightedEntry.Wrapper<BlockState>> outputStates, Optional<ConstellationIngredient> requiredConstellation, boolean requiresFocusedStarlight) {
         this.duration = duration;
         this.color = color;
         this.inputPredicates = inputPredicates;
         this.inputDisplay = inputDisplay;
         this.outputStates = outputStates;
-        this.requiredConstellation = requiredConstellation.orElse(null);
+        this.requiredConstellation = requiredConstellation;
         this.requiresFocusedStarlight = requiresFocusedStarlight;
     }
 
@@ -118,12 +118,20 @@ public class FocalTransmutationRecipe extends CustomRecipe<FocalTransmutationRec
         return Collections.unmodifiableList(this.outputStates);
     }
 
+    public Optional<ConstellationIngredient> getConstellationIngredient() {
+        return this.requiredConstellation;
+    }
+
+    public List<BaseConstellation> getRequiredConstellations() {
+        return this.requiredConstellation.map(ConstellationIngredient::values).orElseGet(List::of);
+    }
+
     public Optional<BaseConstellation> getRequiredConstellation() {
-        return Optional.ofNullable(this.requiredConstellation);
+        return this.getRequiredConstellations().stream().findFirst();
     }
 
     public boolean isRequiredConstellation(BaseConstellation constellation) {
-        return this.requiredConstellation == null || this.requiredConstellation.equals(constellation);
+        return this.requiredConstellation.map(ingredient -> ingredient.matches(constellation)).orElse(true);
     }
 
     public BlockState getOutputState(RandomSource rand) {

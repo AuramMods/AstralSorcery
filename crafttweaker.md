@@ -94,3 +94,58 @@ values to `IIngredient`. Import `mods.astralsorcery.recipe.LumenCost` for
 | `liquid_starlight` | `input, count, result, duration, extraTicks=0, color=-1, consumesLiquid=false`. This form consumes its input and drops the listed item. Use JSON for secondary inputs and other output modifiers. |
 | `lumen_crystallization` | `input, lumenId, cost, shatterMultiplier=1.0`. Cost is in lumen units per operation. |
 | `lumen_generation` | `input, lumenId, amount, attemptMultiplier=1.0, starlightCost=1.0, shatterMultiplier=1.0`. Call `addAlchemyRecipe` with a nonempty `LumenCost[]` after `amount` for a combination. |
+
+## Astral ingredient tags
+
+Import `mods.astralsorcery.AstralTags`. Its `lumen(id)`,
+`constellation(id)`, and `crystalProperty(id)` functions return typed,
+registered entries with an `id` getter. Use the corresponding `lumenTag(id)`,
+`constellationTag(id)`, or `crystalPropertyTag(id)` for a typed tag.
+All names must include the namespace. The tag methods `add(...)`,
+`remove(...)`, `contains(value)`, and `elements()` use CraftTweaker's
+registry tag interface. Add to a new tag to create it. Use
+`tag.manager.clear(tag)` on an existing tag, or
+`AstralTags.replaceLumens`, `replaceConstellations`, and
+`replaceCrystalProperties` to set the full membership.
+
+`AstralTags.lumenCrystal(tag)` matches lumen crystals of the tagged types.
+`AstralTags.crystalPropertyIngredient(input, tag, minimumTier=1)` matches
+the base ingredient when at least one tagged crystal property meets the
+tier. Use either as an item ingredient in a typed addition. In native JSON,
+their ingredient types are `astralsorcery:lumen_tag` with a `tag` field and
+`astralsorcery:crystal_property_tag` with `base`, `tag`, and optional
+`minimum_tier` fields. The focal combine and transmutation constellation
+argument accepts a tag as `"#namespace:path"`. An empty tag has no matches.
+
+Forge datapacks can supply the same tags under
+`data/NAMESPACE/tags/astralsorcery/lumen/`,
+`data/NAMESPACE/tags/astralsorcery/constellations/`, and
+`data/NAMESPACE/tags/astralsorcery/crystal_properties/`. Use existing
+item, fluid, and block tags where the native fields accept those types.
+Stack-state predicates such as `astralsorcery:stack_data`,
+`astralsorcery:is_flag_set`, and `astralsorcery:has_stored_lumen`
+are available through the native JSON format.
+
+## Attunement, chisel and cluster rules
+
+Import `mods.astralsorcery.AstralProcessing` and use
+`configure(operation, enabled, input=null, output=null, rateMultiplier=1.0, constellations=null)`.
+Each call replaces the operation's full rule. Use `isEnabled(operation)`
+and `configuredOperations()` during script loading, and `remove(operation)`
+to restore native defaults. Rules are evaluated on the server.
+
+| Operation ID under `astralsorcery:` | Configurable fields beyond `enabled` |
+| --- | --- |
+| `player_attunement` | A constellation tag. Native research, discovery and perk requirements still apply. |
+| `item_attunement` | A custom ingredient replaces the native attuneable item tag. A constellation tag limits the process. An output override uses the input count and writes the chosen constellation to the new item. |
+| `chisel_starmetal` | An additional filter on the dropped ingot, the dropped output stack, and the success-rate multiplier. |
+| `chisel_crystal` | An additional filter and the split-rate multiplier. The native crystal property split still runs. |
+| `chisel_artifact` | An additional filter and the success-rate multiplier. The native shard still carries artifact data. |
+| `celestial_cluster_growth` | Rate multiplier for growth and erosion of starmetal ore beneath it. |
+| `gem_cluster_growth` | Rate multiplier for growth and late-stage shrinkage. |
+| `lumen_cluster_growth` | Rate multiplier for the crystallizer's cluster creation and growth. Disabling this step pauses processing before the crystallizer draws resources. |
+
+Cluster harvest uses the three matching vanilla loot tables under
+`data/astralsorcery/loot_tables/blocks/`. Override those in a datapack
+to edit harvest results. Cluster formation and crystal growth in liquid
+starlight use `liquid_starlight` recipes and their output modifiers.

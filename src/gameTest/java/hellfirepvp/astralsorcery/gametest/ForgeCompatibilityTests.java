@@ -4,25 +4,35 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.LumenComponent;
+import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
+import hellfirepvp.astralsorcery.common.entity.item.ItemEntityStarmetal;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
+import hellfirepvp.astralsorcery.common.lib.ConstellationsAS;
+import hellfirepvp.astralsorcery.common.lib.CrystalPropertiesAS;
+import hellfirepvp.astralsorcery.common.lib.EntitiesAS;
 import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
+import hellfirepvp.astralsorcery.common.item.LumenCrystalItem;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
+import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
+import hellfirepvp.astralsorcery.common.recipe.focal.drop.FocalCombineRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lightwell.LightwellRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
@@ -30,7 +40,10 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
@@ -101,6 +114,56 @@ public final class ForgeCompatibilityTests {
                             "CraftTweaker must dump the complete native recipe at its original ID " + recipe.getId());
                 }
             }
+        }
+        test.succeed();
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void craftTweakerDomainTagsDriveNativeProcessing(GameTestHelper test) {
+        if (ModList.get().isLoaded("crafttweaker")) {
+            var recipes = test.getLevel().getRecipeManager();
+            var lumenRecipe = (LightwellRecipe) recipes.byKey(ResourceLocation.tryParse("crafttweaker:lumen_tag")).orElseThrow();
+            var solyn = LumenCrystalItem.getCrystal(Holder.direct(LumenAS.SOLYN.get()));
+            var caldor = LumenCrystalItem.getCrystal(Holder.direct(LumenAS.CALDOR.get()));
+            test.assertTrue(lumenRecipe.getInput().test(solyn) && !lumenRecipe.getInput().test(caldor),
+                    "The runtime recipe must follow CraftTweaker add and remove operations for lumen tags");
+            test.assertTrue(lumenRecipe.getInput().getItems().length == 1
+                            && ItemStack.matches(lumenRecipe.getInput().getItems()[0], solyn),
+                    "The display ingredient must follow the same tag as the matcher");
+            var propertyRecipe = (LightwellRecipe) recipes.byKey(ResourceLocation.tryParse("crafttweaker:crystal_property_tag")).orElseThrow();
+            ItemStack rock = ItemsAS.ROCK_CRYSTAL.toStack();
+            test.assertTrue(!propertyRecipe.getInput().test(rock), "An unconfigured crystal must not match a property tag");
+            DataComponentsAS.CRYSTAL_ATTRIBUTES.set(rock, CrystalAttributesComponent.empty(1, 3).setAttributeTier(CrystalPropertiesAS.SIZE, 2));
+            test.assertTrue(propertyRecipe.getInput().test(rock), "A crystal with the required property and tier must match");
+            var focal = (FocalCombineRecipe) recipes.byKey(ResourceLocation.tryParse("crafttweaker:focal_tag")).orElseThrow();
+            test.assertTrue(focal.isRequiredConstellation(ConstellationsAS.VICIO.get())
+                            && !focal.isRequiredConstellation(ConstellationsAS.AEVITAS.get())
+                            && focal.getRequiredConstellations().equals(java.util.List.of(ConstellationsAS.VICIO.get())),
+                    "The matcher and display must reflect tag replacement");
+        }
+        test.succeed();
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void craftTweakerChangesChiselProcessing(GameTestHelper test) {
+        if (ModList.get().isLoaded("crafttweaker")) {
+            var level = test.getLevel();
+            var actor = FakePlayerFactory.getMinecraft(level);
+            var before = actor.getMainHandItem();
+            var pos = test.absolutePos(new BlockPos(1, 1, 1));
+            var starmetal = new ItemEntityStarmetal(EntitiesAS.ITEM_STARMETAL.get(), level,
+                    pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ItemsAS.STARMETAL_INGOT.toStack());
+            try {
+                actor.setItemInHand(InteractionHand.MAIN_HAND, ItemsAS.CHISEL.toStack());
+                starmetal.skipAttackInteraction(actor);
+                test.assertTrue(!level.getEntitiesOfClass(ItemEntity.class, new AABB(pos).inflate(1),
+                        item -> item.getItem().is(Items.FLINT)).isEmpty(), "The normal chisel attack must drop the scripted result");
+            } finally {
+                actor.setItemInHand(InteractionHand.MAIN_HAND, before);
+            }
+            test.assertTrue(ProcessingRules.get(level, ProcessingRules.Operation.PLAYER_ATTUNEMENT).enabled()
+                            && !ProcessingRules.get(level, ProcessingRules.Operation.CHISEL_CRYSTAL).enabled(),
+                    "Script removal restores a default, while a disabled operation survives reload");
         }
         test.succeed();
     }
