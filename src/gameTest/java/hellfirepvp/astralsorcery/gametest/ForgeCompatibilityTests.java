@@ -9,6 +9,7 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
+import hellfirepvp.astralsorcery.common.recipe.lightwell.LightwellRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import io.netty.buffer.Unpooled;
@@ -18,14 +19,18 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
@@ -38,6 +43,19 @@ import java.util.Set;
 public final class ForgeCompatibilityTests {
 
     private static final String TEMPLATE = "gametest/empty";
+
+    @GameTest(template = TEMPLATE)
+    public static void craftTweakerAddsNativeLightwellRecipe(GameTestHelper test) {
+        if (ModList.get().isLoaded("crafttweaker")) {
+            var id = new ResourceLocation("crafttweaker", "astral_lightwell_smoke");
+            Recipe<?> recipe = test.getLevel().getRecipeManager().byKey(id).orElseThrow();
+            test.assertTrue(recipe instanceof LightwellRecipe lightwell
+                            && lightwell.getInput().test(new ItemStack(Items.SNOW_BLOCK))
+                            && lightwell.getGeneratedFluid() == Fluids.WATER,
+                    "The real ZenCode script must add a native, usable Lightwell recipe");
+        }
+        test.succeed();
+    }
 
     @GameTest(template = TEMPLATE)
     public static void packetContextLoadsOnDedicatedServer(GameTestHelper test) throws IllegalAccessException {

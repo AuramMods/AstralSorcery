@@ -21,8 +21,11 @@ sourceSets {
     }
 }
 
-def gameDir = { String profile -> layout.projectDirectory.dir("run/${profile}").asFile }
 def integrationMods = providers.gradleProperty('integrationMods').map { it.toBoolean() }.orElse(false)
+def craftTweakerIntegration = providers.gradleProperty('craftTweakerIntegration').map { it.toBoolean() }.orElse(false)
+def gameStagesIntegration = providers.gradleProperty('gameStagesIntegration').map { it.toBoolean() }.orElse(false)
+def integrationSuffix = (craftTweakerIntegration.get() ? '-ct' : '') + (gameStagesIntegration.get() ? '-stages' : '')
+def gameDir = { String profile -> layout.projectDirectory.dir("run/${profile}${integrationSuffix}").asFile }
 def mixinRefmap = 'astralsorcery.refmap.json'
 
 minecraft {
@@ -89,6 +92,9 @@ repositories {
         content {
             includeGroup 'mezz.jei'
             includeGroup 'net.mezzdev.config'
+            includeGroup 'com.blamejared.crafttweaker'
+            includeGroup 'net.darkhax.gamestages'
+            includeGroup 'net.darkhax.bookshelf'
         }
     }
     maven {
@@ -113,6 +119,18 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("hellfirepvp.observerlib:observerlib:${observerlib_version}")
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+
+    def craftTweaker = "com.blamejared.crafttweaker:CraftTweaker-forge-${minecraft_version}:${crafttweaker_version}@jar"
+    def gameStages = "net.darkhax.gamestages:GameStages-Forge-${minecraft_version}:${gamestages_version}@jar"
+    compileOnly(fg.deobf(craftTweaker)) { transitive = false }
+    compileOnly(fg.deobf(gameStages)) { transitive = false }
+    if (craftTweakerIntegration.get()) {
+        runtimeOnly(fg.deobf(craftTweaker)) { transitive = false }
+    }
+    if (gameStagesIntegration.get()) {
+        runtimeOnly(fg.deobf(gameStages)) { transitive = false }
+        runtimeOnly(fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}@jar")) { transitive = false }
+    }
 
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
@@ -155,6 +173,17 @@ tasks.matching { it.name == 'runServer' }.configureEach {
         def eula = new File(gameDir('server'), 'eula.txt')
         eula.parentFile.mkdirs()
         eula.setText('eula=true\n', 'UTF-8')
+    }
+}
+
+tasks.matching { it.name == 'runGameTestServer' }.configureEach {
+    if (craftTweakerIntegration.get()) {
+        doFirst {
+            project.copy {
+                from 'src/gameTest/scripts/crafttweaker'
+                into new File(gameDir('gameTestServer'), 'scripts')
+            }
+        }
     }
 }
 
