@@ -30,6 +30,7 @@ public abstract class BaseConfiguration {
 
     private static final Map<ModConfig.Type, BaseConfiguration> REGISTERED_CONFIGS = new HashMap<>();
     public static final Splitter DOT_SPLITTER = Splitter.on(".");
+    public static final String SERVER_FILE_NAME = AstralSorcery.MODID + ".toml";
 
     private final List<ConfigEntry> configEntries = new ArrayList<>();
     private final ModConfig.Type configType;
@@ -38,7 +39,7 @@ public abstract class BaseConfiguration {
     private boolean built = false;
 
     protected BaseConfiguration(ModConfig.Type configType) {
-        this(configType, configType == ModConfig.Type.SERVER ? AstralSorcery.MODID + ".toml" :
+        this(configType, configType == ModConfig.Type.SERVER ? SERVER_FILE_NAME :
                 AstralSorcery.MODID + "-" + configType.extension() + ".toml");
     }
 

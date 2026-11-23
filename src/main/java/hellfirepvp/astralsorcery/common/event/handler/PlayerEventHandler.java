@@ -101,13 +101,10 @@ public class PlayerEventHandler {
             return;
         }
 
-        if (GeneralConfig.CONFIG.giveTomeOnJoin.get()) {
-            PlayerProgress progress = ResearchManager.getProgress(sPlayer, LogicalSide.SERVER);
-            if (!progress.hasReceivedTome()) {
-                if (sPlayer.getInventory().add(ItemsAS.TOME.toStack())) {
-                    ResearchHelper.setTomeReceived(sPlayer);
-                }
-            }
+        PlayerProgress progress = ResearchManager.getProgress(sPlayer, LogicalSide.SERVER);
+        if (!progress.hasReceivedTome() && GeneralConfig.CONFIG.givesTomeOnJoin(sPlayer.server)
+                && sPlayer.getInventory().add(ItemsAS.TOME.toStack())) {
+            ResearchHelper.setTomeReceived(sPlayer);
         }
 
         NetworkRegistry.sendToPlayer(sPlayer, PktSyncPerkTree.sync());
