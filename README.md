@@ -28,6 +28,11 @@ the narrator and audio muted. Run client verification in a virtual
 display to keep it off the host desktop. Pass `-PintegrationMods=true`
 to include JEI and Jade in the development run classpath.
 
+## Pack customization
+
+See the [CraftTweaker and GameStages reference](crafttweaker.md) for ZenCode
+recipe managers, Astral ingredient tags, processing rules, and stage gates.
+
 ## Links
 
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/astral-sorcery)

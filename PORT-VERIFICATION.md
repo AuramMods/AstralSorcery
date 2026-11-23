@@ -117,3 +117,34 @@ labels show their full title on hover.
   Embeddium evidence.
 - `build/forge-port-pack-server/` contains the automation, KubeJS,
   Better Strongholds and Draconic Evolution evidence.
+
+## CraftTweaker and GameStages on Forge 1.20.1
+
+Run `./gradlew runGameTestServer` for the base profile. Repeat with
+`-PcraftTweakerIntegration=true`, `-PgameStagesIntegration=true`, and
+both flags together. Each profile passed all 19 registered GameTests.
+Optional-mod assertions run in the profiles that supply the corresponding
+integration. The script fixtures live in
+`src/gameTest/scripts/crafttweaker/`.
+
+The tests exercise all nine ZenCode managers and their native processing
+paths, including a two-output altar with relay inputs, a weighted chalice
+reaction that spawns an entity, and both lumen generation modes. They also
+cover custom ingredient matching, inactive and ownerless rules, and a
+running altar that saves and restores its progress while paused and
+consumes its ingredients and produces its outputs once after resuming.
+Two live resource reloads remove and restore a recipe, tag membership, and
+a stage rule. A CraftTweaker-only run with an intentional stage rule
+reported the required GameStages and Bookshelf versions in its script log.
+
+An isolated Forge 47.4.10 server and a muted client on a virtual display
+tested the reobfuscated jar with Auram's CraftTweaker, GameStages, ItemStages,
+RecipeStages, JEI, and Jade versions. Auram's existing `scripts/stages.zs`
+ran alongside the Astral rules. A live reload changed the built-in
+Lightwell altar recipe's output count from one to two at the same recipe
+ID. The open Tome, JEI, and a client-side custom tag assertion picked up the
+reload. A perk allocation packet was denied with the missing-stage
+message, then the same perk activated and used one point after a native
+GameStages grant. The player's stage and allocated perk persisted across
+a dedicated server restart and client rejoin. The logs and screenshots are under
+`build/reference/crafttweaker/` in the verification worktree.

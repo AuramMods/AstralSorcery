@@ -1,5 +1,11 @@
 # CraftTweaker on Forge 1.20.1
 
+This reference targets Minecraft 1.20.1 with Forge 47.4.10 and Java 17.
+Install Astral Sorcery, Curios, and ObserverLib. Install CraftTweaker
+14.0.59 to use the ZenCode examples. GameStages and Bookshelf are only
+needed for stage rules. Put scripts in the server or single-player
+instance's `scripts/` directory, then restart or run `/reload`.
+
 Astral Sorcery uses Forge's recipe manager for the processing types below.
 The same serializers load datapack recipes and CraftTweaker's JSON recipe
 actions. Astral's custom recipe code uses its own input containers and can
@@ -13,12 +19,12 @@ call `assemble`, which can create output in the world.
 | `altar_crafting` | `TileAltar`, `ActiveAltarRecipe` | Altar and relay layouts, additional items, fluid, lumen and starlight into items or output modifiers | Initiating wand user's UUID is already stored with the active recipe |
 | `focal_combine` | `ActiveFocalCombineRecipe` | Dropped items and optional constellation into multiple item stacks | Dropped-item provenance must agree across selected entities |
 | `focal_transmutation` | `ActiveTransmutationHandler` | Block-state predicates and optional focused starlight into weighted block states | Runs from a focal point or beam. A natural focal point can be ownerless |
-| `infusion` | `TileInfuser`, `ActiveInfusionRecipe` | Item and surrounding fluid sources or a chalice into an item | Wand user is known when starting. Current active state lacks that UUID |
-| `lightwell` | `TileLightwell` | Item catalyst into a fluid with production and shatter multipliers | A player can insert a catalyst. Production and automation also run without an actor |
+| `infusion` | `TileInfuser`, `ActiveInfusionRecipe` | Item and surrounding fluid sources or a chalice into an item | Initiating wand user's UUID is persisted with the active recipe |
+| `lightwell` | `TileLightwell` | Item catalyst into a fluid with production and shatter multipliers | Placed machine owner |
 | `lumen_generation` | `TileLumenArray`, `TileLumenAlchemyArray` | Catalyst and optional combination lumen into another lumen | Array data already records a placed machine's owner |
-| `lumen_crystallization` | `TileLumenCrystallizer` | Catalyst and stored lumen into a lumen crystal | Automatic processing needs explicit handling when no actor is present |
+| `lumen_crystallization` | `TileLumenCrystallizer` | Catalyst, stored lumen and liquid starlight into a growing lumen crystal cluster | Placed machine owner |
 | `liquid_starlight` | `ActiveLiquidStarlightRecipe` | Main and secondary dropped items, duration and consumption policy into output modifiers | Use the actual dropped-item contributors |
-| `liquid_interaction` | `LiquidInteractionRecipe` | Two sized fluid reactants, consumption odds and weight into items or entities | Fluid contact is an autonomous world operation |
+| `liquid_interaction` | `LiquidInteractionRecipe` | Two nearby chalice fluids, consumption odds and weight into items or entities | Shared owner of the two chalices |
 | Player and item attunement | `AttunementRecipe`, `TileAttunementAltar` | Eligible player or dropped item and the configured constellation into attunement | Use the participant or item provenance |
 | Chisel processing | `ItemEntityChiselAttackable` and its starmetal, crystal and artifact implementations | Dropped item and chisel into stardust, a crystal split, or artifact shards | Actual attacker |
 | Crystal clusters | `TileCelestialCrystalCluster`, `TileGemCrystalCluster`, `TileLumenCrystalCluster` | Growth and harvesting into crystal-related items | Growth can be autonomous. Harvest can have a player |
@@ -204,3 +210,157 @@ until the same definition is restored. Focal and liquid-starlight
 progress can restart with inputs intact. A failed manual action can show
 the required stages in the action bar. JEI and the Tome can still show
 recipes regardless of which stages the local player has.
+
+
+## Examples
+
+### Add a recipe in each processing family
+
+Use distinct paths if you change these recipes or add other examples to the
+same script. Lava and water quantities in the chalice reaction are in mB.
+The alchemy array consumes ten Solyn units to produce twenty Caldor units
+on a successful attempt.
+
+```zenscript
+import crafttweaker.api.ingredient.IIngredient;
+import mods.astralsorcery.recipe.LumenCost;
+
+val altar = <recipetype:astralsorcery:altar_crafting>;
+altar.addRecipe("astral_altar", "illumination", ["S"], {"S": <item:minecraft:sponge> as IIngredient}, [<item:minecraft:clay_ball>, <item:minecraft:brick>], 80);
+val focal = <recipetype:astralsorcery:focal_combine>;
+focal.addRecipe("astral_focal", [<item:minecraft:sponge>, <item:minecraft:brick>], [<item:minecraft:clay_ball>], 80);
+val transmutation = <recipetype:astralsorcery:focal_transmutation>;
+transmutation.addRecipe("astral_transmutation", <block:minecraft:sponge>, <block:minecraft:clay>.defaultState, 80);
+val infusion = <recipetype:astralsorcery:infusion>;
+infusion.addRecipe("astral_infusion", <item:minecraft:sponge>, <fluid:minecraft:water>, <item:minecraft:clay_ball>, 80);
+val lightwell = <recipetype:astralsorcery:lightwell>;
+lightwell.addRecipe("astral_lightwell", <item:minecraft:sponge>, <fluid:minecraft:water>);
+val interaction = <recipetype:astralsorcery:liquid_interaction>;
+interaction.addRecipe("astral_interaction", <fluid:minecraft:water> * 1000, <fluid:minecraft:lava> * 1000, <item:minecraft:clay_ball>);
+val starlight = <recipetype:astralsorcery:liquid_starlight>;
+starlight.addRecipe("astral_starlight", <item:minecraft:sponge>, 1, <item:minecraft:clay_ball>, 80);
+val crystallization = <recipetype:astralsorcery:lumen_crystallization>;
+crystallization.addRecipe("astral_crystallization", <item:minecraft:sponge>, "astralsorcery:solyn", 20);
+val generation = <recipetype:astralsorcery:lumen_generation>;
+generation.addRecipe("astral_generation", <item:minecraft:sponge>, "astralsorcery:solyn", 20);
+generation.addAlchemyRecipe("astral_alchemy", <item:minecraft:sponge>, "astralsorcery:caldor", 20, [new LumenCost("astralsorcery:solyn", 10)]);
+```
+
+### Keep a built-in recipe ID
+
+The existing water-from-ice Lightwell recipe keeps its original ID and
+produces more water per tick. Tome or pack references to that ID still resolve.
+
+```zenscript
+val lightwell = <recipetype:astralsorcery:lightwell>;
+lightwell.replaceJsonRecipe("astralsorcery:lightwell/water_ice", {
+    catalyst_color: -11310593,
+    input: {item: "minecraft:ice"},
+    generated_fluid: "minecraft:water",
+    production_multiplier: 1.5,
+    shatter_multiplier: 0.04
+});
+```
+
+### Group Astral ingredients and configure hard-coded processing
+
+This example creates and edits three registry tags. The tagged Lightwell
+inputs match lumen-bearing or property-bearing crystals, and the focal
+combination requires a constellation in `astraltest:bright`. The starmetal
+chisel example keeps the normal damage and ingot break behavior and drops
+flint on success.
+
+```zenscript
+import mods.astralsorcery.AstralProcessing;
+import mods.astralsorcery.AstralTags;
+
+val lumens = AstralTags.lumenTag("astraltest:light");
+lumens.add(AstralTags.lumen("astralsorcery:solyn"), AstralTags.lumen("astralsorcery:caldor"));
+lumens.remove(AstralTags.lumen("astralsorcery:caldor"));
+val constellations = AstralTags.constellationTag("astraltest:bright");
+constellations.add(AstralTags.constellation("astralsorcery:aevitas"));
+constellations.manager.clear(constellations);
+AstralTags.replaceConstellations(constellations, AstralTags.constellation("astralsorcery:vicio"));
+val crystalProperties = AstralTags.crystalPropertyTag("astraltest:properties");
+crystalProperties.add(AstralTags.crystalProperty("astralsorcery:size"));
+
+val lightwell = <recipetype:astralsorcery:lightwell>;
+if lumens.contains(AstralTags.lumen("astralsorcery:solyn")) {
+    lightwell.addRecipe("lumen_tag", AstralTags.lumenCrystal(lumens), <fluid:minecraft:water>);
+}
+lightwell.addRecipe("crystal_property_tag", AstralTags.crystalPropertyIngredient(<item:astralsorcery:rock_crystal>, crystalProperties, 2), <fluid:minecraft:water>);
+<recipetype:astralsorcery:focal_combine>.addRecipe("focal_tag", [<item:minecraft:sponge>], [<item:minecraft:clay_ball>], 80, -1, "#astraltest:bright");
+
+AstralProcessing.configure("astralsorcery:player_attunement", false);
+AstralProcessing.remove("astralsorcery:player_attunement");
+AstralProcessing.configure("astralsorcery:item_attunement", true, <item:minecraft:stick>, <item:minecraft:blaze_rod>, 1.0f, constellations);
+AstralProcessing.configure("astralsorcery:chisel_starmetal", true, null, <item:minecraft:flint>, 3.0f);
+AstralProcessing.configure("astralsorcery:chisel_crystal", false);
+AstralProcessing.configure("astralsorcery:chisel_artifact", false);
+AstralProcessing.configure("astralsorcery:gem_cluster_growth", false);
+```
+
+
+### Configure relay grids and an entity reaction
+
+The altar example uses slot 2 of its 3×3 grid and the top-left relay of its
+5×5 layout. Keep the relay center blank. The second recipe reacts water
+from two nearby chalices and spawns a chicken. It consumes 1,000 mB and
+1,500 mB and competes with other permitted matches by weight.
+
+```zenscript
+<recipetype:astralsorcery:altar_crafting>.addJsonRecipe("astral_relay_gameplay", {
+    required_type: "illumination",
+    grid: {
+        key: {
+            S: {type: "item", ingredient: {item: "minecraft:sponge"}},
+            R: {type: "item", ingredient: {item: "minecraft:redstone"}}
+        },
+        pattern: [" S ", "   ", "   "],
+        relay_pattern: ["R    ", "     ", "     ", "     ", "     "]
+    },
+    outputs: [{id: "minecraft:emerald", Count: 1}, {id: "minecraft:amethyst_shard", Count: 1}],
+    base_focus_shatter_chance: 0.0,
+    duration: 20,
+    only_night: false,
+    may_chain: false,
+    required_starlight: [],
+    required_lumen: [],
+    required_fluid: [],
+    required_additional_inputs: [],
+    effects: [],
+    output_modifiers: []
+});
+
+<recipetype:astralsorcery:liquid_interaction>.addJsonRecipe("astral_entity_reaction", {
+    reactant_a: {ingredient: {fluid: "minecraft:water"}, amount: 1000},
+    reactant_b: {ingredient: {fluid: "minecraft:water"}, amount: 1500},
+    chance_consume_a: 1.0,
+    chance_consume_b: 1.0,
+    weight: 10,
+    result: {type: "astralsorcery:spawn_entity", entity_type: "minecraft:chicken"}
+});
+```
+
+### Combine Astral stage rules with Auram's existing stage mods
+
+The ItemStages restriction governs Astral items. RecipeStages handles the
+mod's vanilla crafting recipes. AstralStages handles the specific
+Lightwell recipe and gateway travel. Both Astral rules use the same
+`astralsorcery` stage. The Lightwell example explicitly permits ownerless
+automation. Update or remove the rule by its fully qualified ID.
+
+```zenscript
+import mods.astralsorcery.AstralStages;
+import mods.itemstages.ItemStages;
+import mods.recipestages.Recipes;
+
+ItemStages.createModRestriction("astralsorcery", "astralsorcery")
+    .preventPickup(false)
+    .preventInventory(false)
+    .hiddenName("Unfamiliar starlight");
+Recipes.setRecipeStageByMod("astralsorcery", "astralsorcery");
+
+AstralStages.require("auram:lightwell_ice", "recipe", "astralsorcery:lightwell/water_ice", ["astralsorcery"], false, true);
+AstralStages.require("auram:gateways", "feature", "astralsorcery:gateway_travel", ["astralsorcery"]);
+```
