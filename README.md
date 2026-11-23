@@ -7,6 +7,9 @@ See the original [license](LICENSE) for the terms of use.
 
 ## Building the Forge backport
 
+Run builds and checks on the local machine with its Gradle cache. Keep
+GitHub Actions out of the build and release process.
+
 Use JDK 17. Build ObserverLib once, then build Astral Sorcery with the
 checked-in Gradle wrapper.
 
@@ -14,6 +17,9 @@ checked-in Gradle wrapper.
 ./scripts/build-observerlib.sh
 ./gradlew build
 ```
+
+For a release, run `./gradlew build reobfJarJar` and use the reobfuscated
+runtime jar from `build/libs/`.
 
 The ObserverLib script fetches the pinned upstream Forge source, applies
 the tracked build patch, and builds and reobfuscates the mod. It stores the
