@@ -41,3 +41,56 @@ tag mutations must reach the Forge tag results used by the matcher.
 An independent script-side tag map would not satisfy that requirement.
 Auram's `minecraft/scripts/stages.zs` already uses ItemStages and
 RecipeStages. Its stage names can also be checked by GameStages directly.
+
+## Recipe managers
+
+Every row with a recipe type uses the standard bracket
+`<recipetype:astralsorcery:TYPE>`. Put your script under `scripts/` and run
+`/reload` on the server. Use `/ct recipes` to dump recipe definitions.
+
+| Method | Behavior |
+| --- | --- |
+| `addRecipe(path, …)`, `addAlchemyRecipe(path, …)` | Add at `crafttweaker:PATH`. Duplicate IDs are rejected. |
+| `addJsonRecipe(path, data as MapData)` | Add using the native datapack schema. Omit `type` or use the manager's own ID. |
+| `replaceJsonRecipe(id, data as MapData)` | Replace a recipe of this type at its exact namespaced ID. Missing IDs and IDs of another type are rejected. |
+| `setJsonRecipe(id, json as string)` | Add or replace a recipe of this type at its exact namespaced ID. Recipe dumps use this form. |
+| `getRecipeIds()`, `getRecipeJson(id)` | List namespaced IDs in sorted order or serialize a single live definition. |
+| `removeByName(id, …)`, `removeAll()` | Remove recipes from this manager. |
+
+`getRecipesByOutput(ingredient)` and `remove(ingredient)` match explicit
+item results, including any of the listed altar and focal outputs. For
+lightwell fluid, transmutation block, liquid interaction entity, and lumen
+outputs use each manager's `getIdsByOutputFluid`, `getIdsByOutputBlock`,
+`getIdsByOutputEntity`, or `getIdsByOutputLumen`. Use the returned IDs with
+`removeByName`. Output modifiers that mutate a supplied item or a block
+depend on the operation's live input. Inspect their definitions by ID.
+
+The native fields and modifiers are illustrated by the bundled datapacks in
+`data/astralsorcery/recipes/` inside the JAR. Dump a working recipe before
+editing an advanced field. This covers relay grids, additional item, fluid,
+and lumen inputs, weighted block outputs, fluid tags and entity outcomes,
+and item state. Add and replace actions take effect in script execution
+order during reload. The vanilla crafting manager handles
+`astralsorcery:illumination_wand_change_color` and
+`astralsorcery:celestial_gateway_change_color` by ID.
+
+### Typed additions
+
+Call `addRecipe` with the arguments in the table below. An argument shown
+with a default can be omitted. Durations are in game ticks, chances are in
+the range `0.0` to `1.0`, and colors are signed ARGB integers. Import
+`crafttweaker.api.ingredient.IIngredient` to cast an altar key's item
+values to `IIngredient`. Import `mods.astralsorcery.recipe.LumenCost` for
+`new LumenCost(lumenId, amount)`.
+
+| Manager | Arguments after `path` |
+| --- | --- |
+| `altar_crafting` | `tier, pattern, key, outputs, duration, onlyNight=false, mayChain=false`. Tiers are `illumination`, `resonance`, `luminance` and `radiance`. The typed layout starts in the top left of the 3×3 grid. Use the JSON form for 5×5 relay layouts, resource costs and effects. |
+| `focal_combine` | `inputs, outputs, duration, color=-1, constellation=""`. An empty constellation leaves it unrestricted. |
+| `focal_transmutation` | `inputBlock, outputBlockState, duration, color=-1, constellation="", requiresFocusedStarlight=false`. The typed result has weight 1. The JSON form accepts weighted lists and block predicates. |
+| `infusion` | `input, fluid, output, duration, consumptionChance=1.0, consumeMultiple=false, acceptChalice=true`. The fluid argument selects the type. The native infuser controls the amount consumed. |
+| `lightwell` | `input, outputFluid, productionMultiplier=1.0, shatterMultiplier=1.0, catalystColor=-1`. The fluid argument selects the type. The machine determines the amount it produces. |
+| `liquid_interaction` | `firstFluidStack, secondFluidStack, result, consumeFirst=1.0, consumeSecond=1.0, weight=1`. Fluid stacks supply quantities in mB. The JSON form also supports an entity result. |
+| `liquid_starlight` | `input, count, result, duration, extraTicks=0, color=-1, consumesLiquid=false`. This form consumes its input and drops the listed item. Use JSON for secondary inputs and other output modifiers. |
+| `lumen_crystallization` | `input, lumenId, cost, shatterMultiplier=1.0`. Cost is in lumen units per operation. |
+| `lumen_generation` | `input, lumenId, amount, attemptMultiplier=1.0, starlightCost=1.0, shatterMultiplier=1.0`. Call `addAlchemyRecipe` with a nonempty `LumenCost[]` after `amount` for a combination. |

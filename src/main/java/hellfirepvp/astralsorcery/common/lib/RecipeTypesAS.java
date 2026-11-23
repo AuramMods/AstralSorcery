@@ -9,6 +9,7 @@
 package hellfirepvp.astralsorcery.common.lib;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
@@ -44,6 +45,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -120,14 +122,33 @@ public class RecipeTypesAS {
 
     public record CodecSerializer<T extends CustomRecipe<T, ?>>(MapCodec<T> codec, StreamCodec<FriendlyByteBuf, T> streamCodec) implements RecipeSerializer<T> {
 
+        public JsonObject toJson(T recipe) {
+            return this.codec.codec().encodeStart(jsonOps(), recipe).getOrThrow(false, message -> {
+                throw new JsonSyntaxException("Cannot encode Astral Sorcery recipe " + recipe.getId() + ": " + message);
+            }).getAsJsonObject();
+        }
+
+        public void validateFields(JsonObject json) {
+            var fields = this.codec.keys(jsonOps()).map(JsonElement::getAsString).collect(Collectors.toSet());
+            fields.add("type");
+            for (String key : json.keySet()) {
+                if (!fields.contains(key)) {
+                    throw new JsonSyntaxException("Unknown recipe field '" + key + "'");
+                }
+            }
+        }
+
         @Override
         public T fromJson(ResourceLocation id, JsonObject json) {
-            var ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
-            T recipe = this.codec.codec().parse(ops, json).getOrThrow(false, message -> {
+            T recipe = this.codec.codec().parse(jsonOps(), json).getOrThrow(false, message -> {
                 throw new JsonSyntaxException("Invalid Astral Sorcery recipe " + id + ": " + message);
             });
             recipe.setId(id);
             return recipe;
+        }
+
+        private static RegistryOps<JsonElement> jsonOps() {
+            return RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
         }
 
         @Override

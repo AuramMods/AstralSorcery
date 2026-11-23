@@ -1,5 +1,7 @@
 package hellfirepvp.astralsorcery.gametest;
 
+import com.blamejared.crafttweaker.api.CraftTweakerAPI;
+import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.LumenComponent;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
@@ -9,6 +11,7 @@ import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
+import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lightwell.LightwellRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
@@ -36,6 +39,7 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @GameTestHolder(AstralSorcery.MODID)
@@ -53,6 +57,50 @@ public final class ForgeCompatibilityTests {
                             && lightwell.getInput().test(new ItemStack(Items.SNOW_BLOCK))
                             && lightwell.getGeneratedFluid() == Fluids.WATER,
                     "The real ZenCode script must add a native, usable Lightwell recipe");
+        }
+        test.succeed();
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void craftTweakerManagesEveryAstralRecipeType(GameTestHelper test) {
+        if (ModList.get().isLoaded("crafttweaker")) {
+            var recipes = test.getLevel().getRecipeManager();
+            var types = Map.of(
+                    "altar", RecipeTypesAS.ALTAR_CRAFTING_TYPE.get(),
+                    "focal", RecipeTypesAS.FOCAL_COMBINE_TYPE.get(),
+                    "transmutation", RecipeTypesAS.FOCAL_TRANSMUTATION_TYPE.get(),
+                    "infusion", RecipeTypesAS.INFUSION_TYPE.get(),
+                    "lightwell", RecipeTypesAS.LIGHTWELL_TYPE.get(),
+                    "interaction", RecipeTypesAS.LIQUID_INTERACTION_TYPE.get(),
+                    "starlight", RecipeTypesAS.LIQUID_STARLIGHT_TYPE.get(),
+                    "crystallization", RecipeTypesAS.LUMEN_CRYSTALLIZATION_TYPE.get(),
+                    "generation", RecipeTypesAS.LUMEN_GENERATION_TYPE.get(),
+                    "alchemy", RecipeTypesAS.LUMEN_GENERATION_TYPE.get());
+            types.forEach((name, type) -> {
+                var id = ResourceLocation.tryParse("astraltest:" + name);
+                var original = ResourceLocation.tryParse("crafttweaker:astral_" + name);
+                var result = recipes.byKey(id);
+                test.assertTrue(result.isPresent() && result.get().getType() == type, "Missing script recipe " + id);
+                test.assertTrue(recipes.byKey(original).isEmpty(), "Script recipe was not removed " + original);
+                assertRecipeRoundTrip(test, result.orElseThrow());
+            });
+            var lightwell = (LightwellRecipe) recipes.byKey(ResourceLocation.tryParse("astraltest:lightwell")).orElseThrow();
+            test.assertTrue(lightwell.getGeneratedFluid() == Fluids.LAVA, "Script replacement must retain its namespaced ID");
+            var ice = (LightwellRecipe) recipes.byKey(AstralSorcery.key("lightwell/water_ice")).orElseThrow();
+            test.assertTrue(ice.getProductionMultiplier() == 1.5F, "The built-in recipe must be replaced at its original ID");
+            var generation = (LumenGenerationRecipe) recipes.byKey(ResourceLocation.tryParse("astraltest:generation")).orElseThrow();
+            var alchemy = (LumenGenerationRecipe) recipes.byKey(ResourceLocation.tryParse("astraltest:alchemy")).orElseThrow();
+            test.assertTrue(generation.getLumenCombinationInputs().isEmpty()
+                    && alchemy.getLumenCombinationInputs().getOrDefault(LumenAS.SOLYN.get(), 0) == 10,
+                    "The native lumen recipes retain the configured production modes");
+            for (Recipe<?> recipe : recipes.getRecipes()) {
+                if (recipe instanceof CustomRecipe<?, ?>) {
+                    var manager = RecipeTypeBracketHandler.getOrDefault(recipe.getType());
+                    String command = CraftTweakerAPI.getRegistry().<Recipe<?>>getRecipeHandlerFor(recipe).dumpToCommandString(manager, recipe);
+                    test.assertTrue(command.startsWith(manager.getCommandString() + ".setJsonRecipe(\"" + recipe.getId() + "\""),
+                            "CraftTweaker must dump the complete native recipe at its original ID " + recipe.getId());
+                }
+            }
         }
         test.succeed();
     }
