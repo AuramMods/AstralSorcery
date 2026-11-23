@@ -8,6 +8,8 @@
 
 package hellfirepvp.astralsorcery.common.entity.item;
 
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.item.ChiselItem;
 import hellfirepvp.astralsorcery.common.artifact.*;
@@ -51,6 +53,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.*;
 
 /**
@@ -217,6 +220,8 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
         }
 
         if (this.level() instanceof ServerLevel sLevel) {
+            if (StageRules.hasRules(sLevel) && !StageRules.allowsFeature(sLevel, StageRules.Feature.ARTIFACT_INTERACTION.id(),
+                    StageActor.fromItems(sLevel, List.of(this)))) return;
             if (this.forcedMoveTimeout > 0) {
                 this.forcedMoveTimeout--;
             }
@@ -389,6 +394,7 @@ public class ItemEntityArtifact extends ItemEntityChiselAttackable {
 
     @Override
     public boolean skipAttackInteraction(Entity entity) {
+        if (entity instanceof ServerPlayer player && !StageRules.checkFeature(player, StageRules.Feature.ARTIFACT_INTERACTION)) return true;
         super.skipAttackInteraction(entity);
         return false;
     }

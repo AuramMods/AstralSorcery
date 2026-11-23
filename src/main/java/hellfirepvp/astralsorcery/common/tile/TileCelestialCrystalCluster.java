@@ -10,6 +10,8 @@ package hellfirepvp.astralsorcery.common.tile;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
@@ -79,6 +81,7 @@ public class TileCelestialCrystalCluster extends TileEntityNetwork<ForwardingSta
     }
 
     private void tryGrow(Level level, float chanceMultiplier) {
+        if (!StageRules.allowsFeature(level, ProcessingRules.Operation.CELESTIAL_CLUSTER_GROWTH.id, StageActor.AUTOMATION)) return;
         var rule = ProcessingRules.get(level, ProcessingRules.Operation.CELESTIAL_CLUSTER_GROWTH);
         if (!rule.enabled() || rule.rateMultiplier() == 0) return;
         float chance = 20 * 60 * 15;
@@ -99,6 +102,7 @@ public class TileCelestialCrystalCluster extends TileEntityNetwork<ForwardingSta
     }
 
     public void grow(Level level, int chance) {
+        if (!StageRules.allowsFeature(level, ProcessingRules.Operation.CELESTIAL_CLUSTER_GROWTH.id, StageActor.AUTOMATION)) return;
         int stage = this.getGrowth();
         if (stage < 4) {
             if (ProcessingRules.get(level, ProcessingRules.Operation.CELESTIAL_CLUSTER_GROWTH).roll(rand, chance)) {

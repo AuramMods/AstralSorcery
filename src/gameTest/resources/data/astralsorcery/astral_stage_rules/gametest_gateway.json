@@ -1,0 +1,8 @@
+{
+  "conditions": [
+    {"type": "forge:mod_loaded", "modid": "gamestages"}
+  ],
+  "target": "feature",
+  "selector": "astralsorcery:gateway_travel",
+  "stages": ["astral_test_gateway"]
+}

@@ -10,12 +10,15 @@ package hellfirepvp.astralsorcery.common.lumen.binding;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
 import hellfirepvp.astralsorcery.common.component.StoredLumenComponent;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.constants.TagsAS;
 import hellfirepvp.astralsorcery.common.lumen.Lumen;
 import hellfirepvp.astralsorcery.common.util.RandomMobEffectInstance;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
@@ -75,6 +78,8 @@ public class LumenBindingType {
     }
 
     public Optional<LumenBinding> getActiveBinding(ItemStack stack, LivingEntity entity) {
+        StageActor actor = entity instanceof ServerPlayer server ? StageActor.fromPlayer(server) : StageActor.AUTOMATION;
+        if (!StageRules.allowsFeature(entity.level(), StageRules.Feature.LUMEN_USE.id(), actor)) return Optional.empty();
         return this.slotBindings.entrySet().stream()
                 .filter(entry -> entry.getKey().isSlotTypeFor(stack))
                 .filter(entry -> ItemStack.matches(entry.getKey().getStackFromEntity(entity), stack))

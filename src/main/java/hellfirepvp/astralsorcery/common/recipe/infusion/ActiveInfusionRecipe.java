@@ -10,6 +10,7 @@ package hellfirepvp.astralsorcery.common.recipe.infusion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.util.codec.CodecUtil;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.recipe.ActiveRecipe;
 import hellfirepvp.astralsorcery.common.tile.TileChalice;
@@ -25,6 +26,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import java.util.HashSet;
 import java.util.Set;
 
+import java.util.Optional;
+import java.util.UUID;
+
 /**
  * This class is part of the Astral Sorcery Mod
  * The complete source code for this mod can be found on GitHub.
@@ -37,26 +41,30 @@ public class ActiveInfusionRecipe extends ActiveRecipe<InfusionRecipe> {
     public static final Codec<ActiveInfusionRecipe> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             LazyRecipeHolder.typedCodec(RecipeTypesAS.INFUSION_TYPE).fieldOf("recipe").forGetter(ActiveInfusionRecipe::getRecipeReference),
             Codec.INT.fieldOf("progress_tick").forGetter(ActiveInfusionRecipe::getProgressTick),
-            TileChalice.LiquidDrawInstance.CODEC.fieldOf("chalice_input").forGetter(ActiveInfusionRecipe::getDrawInstance)
+            TileChalice.LiquidDrawInstance.CODEC.fieldOf("chalice_input").forGetter(ActiveInfusionRecipe::getDrawInstance),
+            CodecUtil.uuidCodec().optionalFieldOf("player_uuid").forGetter(active -> Optional.ofNullable(active.playerId))
     ).apply(inst, ActiveInfusionRecipe::new));
 
     private int progressTick;
+    private final UUID playerId;
     private final TileChalice.LiquidDrawInstance drawInstance;
 
     private ActiveInfusionRecipe(LazyRecipeHolder<InfusionRecipe> lazyRecipeHolder,
                                  int progressTick,
-                                 TileChalice.LiquidDrawInstance drawInstance) {
+                                 TileChalice.LiquidDrawInstance drawInstance, Optional<UUID> playerId) {
         super(lazyRecipeHolder);
         this.progressTick = progressTick;
         this.drawInstance = drawInstance;
+        this.playerId = playerId.orElse(null);
     }
 
-    private ActiveInfusionRecipe(RecipeHolder<InfusionRecipe> recipeHolder) {
-        this(LazyRecipeHolder.of(recipeHolder), 0, TileChalice.LiquidDrawInstance.newInstance());
+    public static ActiveInfusionRecipe of(RecipeHolder<InfusionRecipe> recipeHolder, UUID playerId) {
+        return new ActiveInfusionRecipe(LazyRecipeHolder.of(recipeHolder), 0,
+                TileChalice.LiquidDrawInstance.newInstance(), Optional.ofNullable(playerId));
     }
 
-    public static ActiveInfusionRecipe of(RecipeHolder<InfusionRecipe> recipeHolder) {
-        return new ActiveInfusionRecipe(recipeHolder);
+    public UUID getPlayerId() {
+        return this.playerId;
     }
 
     public int getProgressTick() {

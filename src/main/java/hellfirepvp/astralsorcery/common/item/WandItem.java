@@ -8,6 +8,8 @@
 
 package hellfirepvp.astralsorcery.common.item;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
 import hellfirepvp.astralsorcery.common.data.level.RockCrystalData;
 import hellfirepvp.astralsorcery.common.network.play.PktPlayStructurePreview;
 import hellfirepvp.astralsorcery.common.util.data.ObserverRegistryObject;
@@ -54,6 +56,7 @@ public class WandItem extends ItemCustom implements InterceptInteractItem.Block 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (level instanceof ServerLevel sLevel && entity instanceof ServerPlayer sPlayer) {
+            if (!StageRules.allowsFeature(level, StageRules.Feature.RESONATING_WAND.id(), StageActor.fromPlayer(sPlayer))) return;
             if (isSelected || sPlayer.getOffhandItem() == stack) {
                 RockCrystalData data = DataAS.DOMAIN_AS.getData(sLevel, DataAS.KEY_ROCK_CRYSTAL_DATA);
                 RandomSource rand = sLevel.getRandom();
@@ -88,6 +91,7 @@ public class WandItem extends ItemCustom implements InterceptInteractItem.Block 
         Level level = player.level();
         if (level.isClientSide()) return false;
         if (!(player instanceof ServerPlayer sPlayer)) return false;
+        if (!StageRules.checkFeature(sPlayer, StageRules.Feature.RESONATING_WAND)) return true;
 
         MiscUtil.getTileAt(level, pos, TileEntityTick.class, true).ifPresent(te -> {
             ObserverRegistryObject registryObject = te.getRequiredObserver();

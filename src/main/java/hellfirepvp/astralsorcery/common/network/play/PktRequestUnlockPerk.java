@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.network.play;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.client.screen.tome.TomePerkTreeScreen;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.perk.data.PerkTree;
@@ -64,6 +65,7 @@ public class PktRequestUnlockPerk extends PlayPacketHandler.BiDirectional<PktReq
     public void handleServer(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
+                if (!StageRules.checkFeature(sPlayer, StageRules.Feature.PERK_ALLOCATION)) return;
                 PerkTree.getInstance().getPerk(LogicalSide.SERVER, payload.perkKey()).ifPresent(perk -> {
                     PlayerProgress progress = ResearchManager.getProgress(sPlayer, LogicalSide.SERVER);
                     if (!progress.getPerkData().hasPerkAllocation(perk) &&

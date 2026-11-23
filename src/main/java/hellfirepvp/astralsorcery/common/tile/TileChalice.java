@@ -10,6 +10,9 @@ package hellfirepvp.astralsorcery.common.tile;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
+import hellfirepvp.astralsorcery.common.tile.base.TileDataOwned;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -53,6 +56,8 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
+import java.util.Optional;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -208,7 +213,9 @@ public class TileChalice extends TileEntityTick<TileChalice.Data> {
                 continue;
             }
 
+            StageActor actor = StageActor.fromOwners(level, this.getTileData().getOwnerId(), otherChalice.getTileData().getOwnerId());
             List<LiquidInteractionRecipe> candidateRecipes = LiquidInteractionRecipe.findMatching(level, thisFluid, otherFluid);
+            candidateRecipes.removeIf(recipe -> !StageRules.allowsRecipe(level, recipe, actor));
             while (!candidateRecipes.isEmpty()) {
                 LiquidInteractionRecipe recipe = LiquidInteractionRecipe.pickWeighted(candidateRecipes, this.rand);
                 if (recipe == null) {
@@ -320,21 +327,34 @@ public class TileChalice extends TileEntityTick<TileChalice.Data> {
         return required.isEmpty();
     }
 
-    public static class Data extends TileEntityTick.Data implements TileCapabilities.FluidStorage {
+    public static class Data extends TileEntityTick.Data implements TileDataOwned, TileCapabilities.FluidStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> tickFields(inst).and(
                 CodecUtil.defaulted(FluidContainerList.CODEC, "fluidContents", FluidContainerList::create, Data::getFluidContents)
-        ).apply(inst, Data::new));
+        ).and(TileDataOwned.<Data>ownerField()).apply(inst, Data::new));
 
         private final FluidContainerList fluidContents;
+        private UUID ownerId;
 
         protected Data(long ticksExisted,
                        boolean hasStructure,
                        Map<BlockPos, Boolean> skyObstructions,
-                       FluidContainerList fluidContents) {
+                       FluidContainerList fluidContents, Optional<UUID> ownerId) {
             super(ticksExisted, hasStructure, skyObstructions);
             this.fluidContents = fluidContents;
+            this.ownerId = ownerId.orElse(null);
         }
+
+        @Override
+        public UUID getOwnerId() {
+            return this.ownerId;
+        }
+
+        @Override
+        public void setOwnerId(UUID ownerId) {
+            this.ownerId = ownerId;
+        }
+
         public FluidStack getContainedFluid() {
             return this.fluidContents.getTank(0).getContent();
         }

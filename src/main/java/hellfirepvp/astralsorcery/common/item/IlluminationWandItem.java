@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.item;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.block.FlareLightBlock;
 import hellfirepvp.astralsorcery.common.component.ColorComponent;
 import hellfirepvp.astralsorcery.common.item.base.CreativeTabItem;
@@ -55,6 +56,9 @@ public class IlluminationWandItem extends ItemCustom implements ItemDynamicColor
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
+        if (context.getPlayer() instanceof ServerPlayer player && !StageRules.checkFeature(player, StageRules.Feature.ILLUMINATION_WAND)) {
+            return InteractionResult.FAIL;
+        }
         Level level = context.getLevel();
         Direction dir = context.getClickedFace();
         BlockPos pos = context.getClickedPos();

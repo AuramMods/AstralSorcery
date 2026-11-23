@@ -11,6 +11,9 @@ package hellfirepvp.astralsorcery.common.tile;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
+import hellfirepvp.astralsorcery.common.util.RecipeFinder;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -46,6 +49,7 @@ import hellfirepvp.astralsorcery.common.util.inventory.InventoryViewFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Tuple;
@@ -125,12 +129,13 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
             return;
         }
         this.getTileData().getActiveRecipe().ifPresent(activeRecipe -> {
-            if (!activeRecipe.isValid(level) || !activeRecipe.matches(level, this)) {
+            InfusionRecipe recipe = activeRecipe.getRecipe(level).orElse(null);
+            if (recipe == null) {
                 this.abortCrafting();
                 return;
             }
-            InfusionRecipe recipe = activeRecipe.getRecipe(level).orElse(null);
-            if (recipe == null) {
+            if (!StageRules.allowsRecipe(level, recipe, StageActor.fromOwner(level, activeRecipe.getPlayerId()))) return;
+            if (!activeRecipe.matches(level, this)) {
                 this.abortCrafting();
                 return;
             }
@@ -157,6 +162,16 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
         return level.getRecipeManager().getRecipeFor(RecipeTypesAS.INFUSION_TYPE.get(), this.createInput(level), level).map(RecipeHolder::of);
     }
 
+    public Optional<RecipeHolder<InfusionRecipe>> findMatchingRecipe(ServerPlayer player) {
+        Level level = player.level();
+        var result = RecipeFinder.of(level).findAllowed(RecipeTypesAS.INFUSION_TYPE.get(), this.createInput(level),
+                recipe -> StageRules.allowsRecipe(level, recipe, StageActor.fromPlayer(player)));
+        if (result.isEmpty() && StageRules.hasRules(level)) {
+            this.findMatchingRecipe(level).ifPresent(recipe -> StageRules.checkRecipe(player, recipe.value()));
+        }
+        return result;
+    }
+
     public InfusionRecipeInput createInput(Level level) {
         Map<BlockPos, FluidState> liquidInputs = LIQUID_OFFSETS.stream().map(offset -> {
             BlockPos pos = this.getBlockPos().offset(offset);
@@ -165,12 +180,12 @@ public class TileInfuser extends TileEntityTick<TileInfuser.Data> {
         return InfusionRecipeInput.of(this.getTileData().getInventory().getStackInSlot(0), level, liquidInputs);
     }
 
-    public void startCrafting(Level level, RecipeHolder<InfusionRecipe> recipe) {
-        if (this.getTileData().getActiveRecipe().isPresent()) {
-            this.abortCrafting();
-        }
+    public void startCrafting(ServerPlayer player, RecipeHolder<InfusionRecipe> recipe) {
+        Level level = player.level();
+        if (!StageRules.isCurrent(level, recipe.value()) || !StageRules.checkRecipe(player, recipe.value())
+                || this.getTileData().getActiveRecipe().isPresent()) return;
 
-        ActiveInfusionRecipe infusionRecipe = ActiveInfusionRecipe.of(recipe);
+        ActiveInfusionRecipe infusionRecipe = ActiveInfusionRecipe.of(recipe, player.getUUID());
         RecipeEvent.Infusion.Start start = new RecipeEvent.Infusion.Start(recipe, infusionRecipe);
         MinecraftForge.EVENT_BUS.post(start);
         if (start.isCanceled()) return;

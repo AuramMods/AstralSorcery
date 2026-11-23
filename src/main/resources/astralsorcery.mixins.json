@@ -5,6 +5,7 @@
     "compatibilityLevel": "JAVA_17",
     "refmap": "astralsorcery.refmap.json",
     "mixins": [
+        "AccessorItemEntityThrower",
         "MixinAbstractMegaTreeGrower",
         "MixinAbstractTreeGrower",
         "MixinAttributeInstance",
@@ -13,6 +14,7 @@
         "MixinInventory",
         "MixinInventoryChangeTrigger",
         "MixinItemCooldowns",
+        "MixinItemEntityProvenance",
         "MixinItemStack",
         "MixinLevelChunk",
         "MixinLivingEntity",

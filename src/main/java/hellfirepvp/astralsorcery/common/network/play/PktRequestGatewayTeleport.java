@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.network.play;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import hellfirepvp.astralsorcery.common.lib.DataAS;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
@@ -61,6 +62,7 @@ public class PktRequestGatewayTeleport extends PlayPacketHandler.ToServer<PktReq
     public void handle(Request payload, PacketContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer sPlayer) {
+                if (!StageRules.checkFeature(sPlayer, StageRules.Feature.GATEWAY_TRAVEL)) return;
                 MinecraftServer srv = sPlayer.getServer();
                 if (srv == null) return;
                 MiscUtil.getTileAt(sPlayer.level(), sPlayer.blockPosition(), TileCelestialGateway.class, true).ifPresent(thisGateway -> {

@@ -8,17 +8,23 @@
 
 package hellfirepvp.astralsorcery.common.recipe.liquid;
 
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.event.RecipeEvent;
 import hellfirepvp.astralsorcery.common.util.RecipeFinder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -30,6 +36,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class ActiveLiquidStarlightRecipe {
 
     private static final int WORLD_TIME_TOLERANCE = 4;
+    private static final Map<ItemEntity, LiquidStarlightRecipe> SERVER_RECIPES = new WeakHashMap<>();
 
     //This is primarily just a helper class to do the on tick stuff for liquid starlight recipes
     //Cause we kinda don't have a state on the entity really, only a tick timer saved on the trigger entity
@@ -40,12 +47,19 @@ public class ActiveLiquidStarlightRecipe {
         BlockPos pos = itemEntity.blockPosition();
         Level level = itemEntity.level();
 
-        RecipeFinder.of(level).findLiquidStarlightRecipe(itemEntity).ifPresent(recipeHolder -> {
+        var selected = RecipeFinder.of(level).findLiquidStarlightRecipe(itemEntity);
+        if (!level.isClientSide() && selected.isEmpty() && SERVER_RECIPES.remove(itemEntity) != null) {
+            setCraftingTick(itemEntity, 0);
+        }
+        selected.ifPresent(recipeHolder -> {
             LiquidStarlightRecipeInput input = LiquidStarlightRecipeInput.of(itemEntity);
             if (!recipeHolder.value().matches(input, level)) {
                 return;
             }
 
+            if (!level.isClientSide() && SERVER_RECIPES.put(itemEntity, recipeHolder.value()) != recipeHolder.value()) {
+                setCraftingTick(itemEntity, 0);
+            }
             RandomSource rand = RandomSource.create(pos.asLong() + itemEntity.getId() + itemEntity.getId() << 16);
             if (getCraftingTick(itemEntity) == 0) {
                 RecipeEvent.LiquidStarlight.Start start = new RecipeEvent.LiquidStarlight.Start(recipeHolder);
@@ -67,7 +81,8 @@ public class ActiveLiquidStarlightRecipe {
         int requiredTicks = recipe.getDuration() + rand.nextInt(Math.max(recipe.getRandomAdditionalDuration() + 1, 1));
         if (craftTick >= requiredTicks) {
             LiquidStarlightRecipeInput input = LiquidStarlightRecipeInput.of(triggerEntity);
-            if (recipe.matches(input, level) && recipe.consumeInputs(input, level.registryAccess())) {
+            if (level instanceof ServerLevel server && StageRules.isCurrent(server, recipe) && recipe.matches(input, level)
+                    && recipe.isAllowed(server, input) && recipe.consumeInputs(input, level.registryAccess())) {
                 setCraftingTick(triggerEntity, 0);
                 recipe.createOutput(input, level.registryAccess());
                 MinecraftForge.EVENT_BUS.post(new RecipeEvent.LiquidStarlight.End(recipeHolder));

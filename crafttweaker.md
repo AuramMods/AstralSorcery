@@ -149,3 +149,58 @@ Cluster harvest uses the three matching vanilla loot tables under
 `data/astralsorcery/loot_tables/blocks/`. Override those in a datapack
 to edit harvest results. Cluster formation and crystal growth in liquid
 starlight use `liquid_starlight` recipes and their output modifiers.
+
+## GameStages
+
+Install GameStages 15.0.2 and Bookshelf 20.2.15 on the server. Import
+`mods.astralsorcery.AstralStages` and use
+`require(ruleId, target, selector, stages, any=false, allowAutomation=false)`.
+For each matching rule, the actor needs every listed stage by default, or
+one listed stage when `any` is true. All applicable rules must pass. A
+second call with the same namespaced rule ID replaces that rule.
+`getRules()` lists the resulting definitions and `remove(ruleId)` removes one.
+Adding a rule without GameStages produces an error in the CraftTweaker log.
+
+| Target | Namespaced selector |
+| --- | --- |
+| `recipe` | An exact recipe ID, such as `astralsorcery:lightwell/water_ice` |
+| `recipe_type` | An Astral processing type, such as `astralsorcery:infusion` |
+| `feature` | A feature ID from the table below, or an attunement, chisel or cluster operation ID |
+| `output_lumen_tag` | A lumen tag matched by the output type of a generation or crystallization recipe |
+| `constellation_tag` | A constellation tag matched by an attunement participant's constellation or a required focal or altar-focus constellation |
+
+| Feature ID under `astralsorcery:` | Server action |
+| --- | --- |
+| `altar_upgrade` | An altar recipe that can set another altar block |
+| `perk_allocation` | A player's packet request to unlock a perk |
+| `perk_socketing` | Inserting a perk gem. Removing a gem stays available. |
+| `gateway_travel` | A player's teleport request |
+| `resonating_wand` | Starting altar or infusion recipes, structure previews, creative structure placement, and crystal ore detection |
+| `illumination_wand`, `architect_wand`, `exchange_wand`, `blink_wand`, `grappling_wand` | Using the corresponding wand, including the blink release |
+| `artifact_interaction` | Player attacks and dropped artifact processing |
+| `lumen_binding`, `lumen_use` | Applying a lumen binding in liquid starlight and using an active equipment binding |
+
+Altar and infusion use the initiating player. Lightwells, arrays and
+crystallizers use the placed machine's owner. Chalice reactions use a
+shared owner. Dropped-item recipes use a common recorded thrower across
+the items they match. Focal transmutation and natural cluster growth
+run without an attributable actor. Blocks saved before ownership was
+recorded can be ownerless. Set `allowAutomation` for a rule when you
+want ownerless processing or direct fake-player actions to proceed.
+Mixed provenance, offline owners, and players missing a required stage
+remain restricted. Astral does not consult nearby players' stages.
+
+When CraftTweaker is absent, the same rules can be defined in a datapack
+under `data/NAMESPACE/astral_stage_rules/PATH.json`. The file's ID is the
+rule ID. Set `target`, `selector`, and a `stages` array. Optional
+`any` and `allow_automation` fields default to false. Forge
+`conditions` can make a file conditional on GameStages. CraftTweaker
+can override or remove these rules by ID during the same reload.
+
+Stage changes take effect at the next server action. A stage change
+pauses an active altar or infusion until it can resume. If a reload
+removes or changes an active altar recipe, a reserved altar pauses
+until the same definition is restored. Focal and liquid-starlight
+progress can restart with inputs intact. A failed manual action can show
+the required stages in the action bar. JEI and the Tome can still show
+recipes regardless of which stages the local player has.

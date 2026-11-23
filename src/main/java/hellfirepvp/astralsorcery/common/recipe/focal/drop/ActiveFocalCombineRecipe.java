@@ -8,6 +8,8 @@
 
 package hellfirepvp.astralsorcery.common.recipe.focal.drop;
 
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.util.ChunkUtil;
 import hellfirepvp.astralsorcery.common.util.RecipeFinder;
@@ -109,7 +111,8 @@ public class ActiveFocalCombineRecipe {
         this.combineItems.removeIf(id -> !aliveItems.contains(id));
 
         FocalCombineCraftingInput runningInput = new FocalCombineCraftingInput(this.usedConstellation, sLevel, itemEntities);
-        if (this.getRecipe().matches(runningInput, sLevel)) {
+        if (StageRules.isCurrent(sLevel, this.getRecipe()) && this.getRecipe().matches(runningInput, sLevel)
+                && this.isAllowed(runningInput, sLevel)) {
             return Optional.of(runningInput);
         }
         return Optional.empty();
@@ -123,9 +126,16 @@ public class ActiveFocalCombineRecipe {
         return this.duration <= 0;
     }
 
-    public void finish(FocalCombineCraftingInput testedInput, ServerLevel sLevel) {
+    private boolean isAllowed(FocalCombineCraftingInput input, ServerLevel level) {
+        return !StageRules.hasRules(level) || StageRules.allowsRecipe(level, this.getRecipe(),
+                StageActor.fromItems(level, this.getRecipe().filterNecessaryItems(input)));
+    }
+
+    public boolean finish(FocalCombineCraftingInput testedInput, ServerLevel sLevel) {
         FocalCombineRecipe recipe = this.getRecipe();
-        recipe.consumeInputs(testedInput, sLevel.registryAccess());
+        if (!StageRules.isCurrent(sLevel, recipe) || !this.isAllowed(testedInput, sLevel)
+                || !recipe.consumeInputs(testedInput, sLevel.registryAccess())) return false;
         recipe.createOutput(testedInput, sLevel.registryAccess());
+        return true;
     }
 }

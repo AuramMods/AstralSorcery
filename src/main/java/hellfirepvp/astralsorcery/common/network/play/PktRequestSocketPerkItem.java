@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.network.play;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.perk.data.PerkTree;
 import hellfirepvp.astralsorcery.common.perk.tree.AbstractPerk;
@@ -70,6 +71,7 @@ public class PktRequestSocketPerkItem extends PlayPacketHandler.ToServer<PktRequ
                         PlayerProgress progress = ResearchManager.getProgress(sPlayer, LogicalSide.SERVER);
                         switch (payload.action()) {
                             case INSERT_ITEM -> {
+                                if (!StageRules.checkFeature(sPlayer, StageRules.Feature.PERK_SOCKETING)) return;
                                 if (!gemSocketPerk.hasGemStack(progress)) {
                                     ItemStack stack = sPlayer.getInventory().getItem(payload.inventorySlot());
                                     if (!stack.isEmpty()) {

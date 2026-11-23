@@ -8,8 +8,10 @@
 
 package hellfirepvp.astralsorcery.common.util.data;
 
+import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -17,6 +19,7 @@ import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -29,33 +32,28 @@ import java.util.function.Supplier;
 public class LazyRecipeHolder<T extends Recipe<?>> {
 
     private final ResourceLocation recipeId;
-    private T recipe;
+    private final Supplier<? extends RecipeType<?>> expectedType;
+    private T initialRecipe;
+    private String definition;
 
-    private LazyRecipeHolder(ResourceLocation recipeId) {
-        this(recipeId, null);
-    }
-
-    private LazyRecipeHolder(ResourceLocation recipeId, T recipe) {
+    private LazyRecipeHolder(ResourceLocation recipeId, Supplier<? extends RecipeType<?>> expectedType, T initialRecipe, String definition) {
         this.recipeId = recipeId;
-        this.recipe = recipe;
+        this.expectedType = expectedType;
+        this.initialRecipe = initialRecipe;
+        this.definition = definition;
     }
 
     public static <R extends Recipe<?>> Codec<LazyRecipeHolder<R>> typedCodec(Supplier<RecipeType<R>> typeHint) {
-        return typedCodec(typeHint.get());
+        return RecordCodecBuilder.create(instance -> instance.group(
+                ResourceLocation.CODEC.fieldOf("recipe_id").forGetter(LazyRecipeHolder::getRecipeId),
+                Codec.STRING.optionalFieldOf("definition").forGetter(holder -> Optional.ofNullable(holder.definition))
+        ).apply(instance, (id, definition) -> new LazyRecipeHolder<>(id, typeHint, null, definition.orElse(null))));
     }
 
-    public static <R extends Recipe<?>> Codec<LazyRecipeHolder<R>> typedCodec(RecipeType<R> typeHint) {
-        return RecordCodecBuilder.create(inst -> inst.group(
-                ResourceLocation.CODEC.fieldOf("recipe_id").forGetter(LazyRecipeHolder::getRecipeId)
-        ).apply(inst, LazyRecipeHolder::new));
-    }
-
-    public static <T extends Recipe<?>> LazyRecipeHolder<T> of(ResourceLocation recipeId) {
-        return new LazyRecipeHolder<>(recipeId);
-    }
-
-    public static <T extends Recipe<?>> LazyRecipeHolder<T> of(RecipeHolder<T> recipeHolder) {
-        return new LazyRecipeHolder<>(recipeHolder.id(), recipeHolder.value());
+    public static <T extends Recipe<?>> LazyRecipeHolder<T> of(RecipeHolder<T> holder) {
+        T recipe = holder.value();
+        String definition = recipe instanceof CustomRecipe<?, ?> custom ? custom.encodeDefinition().toString() : null;
+        return new LazyRecipeHolder<>(holder.id(), recipe::getType, recipe, definition);
     }
 
     public ResourceLocation getRecipeId() {
@@ -63,10 +61,20 @@ public class LazyRecipeHolder<T extends Recipe<?>> {
     }
 
     public T resolveRecipe(Level level) {
-        if (this.recipe == null && level != null) {
-            this.recipe = MiscUtil.cast(level.getRecipeManager().byKey(this.recipeId)
-                    .orElse(null));
+        if (level == null) return null;
+        Recipe<?> current = level.getRecipeManager().byKey(this.recipeId).orElse(null);
+        if (current == null || current.getType() != this.expectedType.get()) return null;
+        if (level.isClientSide()) return MiscUtil.cast(current);
+        if (this.initialRecipe != current) {
+            if (current instanceof CustomRecipe<?, ?> custom) {
+                var encoded = custom.encodeDefinition();
+                if (this.definition != null && !JsonParser.parseString(this.definition).equals(encoded)) return null;
+                this.definition = encoded.toString();
+            } else if (this.initialRecipe != null) {
+                return null;
+            }
+            this.initialRecipe = MiscUtil.cast(current);
         }
-        return this.recipe;
+        return this.initialRecipe;
     }
 }

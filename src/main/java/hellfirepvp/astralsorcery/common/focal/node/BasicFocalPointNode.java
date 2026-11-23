@@ -292,8 +292,9 @@ public class BasicFocalPointNode extends FocalPointNode {
                 this.activeCombineRecipe.tick();
                 FocalPointCombineSparkle.at(new Vector3(usedInput.getCenter()), this.activeCombineRecipe.getRecipe().getColor()).sendToNearby(sLevel);
                 if (this.activeCombineRecipe.isFinished()) {
-                    this.activeCombineRecipe.finish(usedInput, sLevel);
-                    MinecraftForge.EVENT_BUS.post(new RecipeEvent.FocalCombine.End(this.activeCombineRecipe));
+                    if (this.activeCombineRecipe.finish(usedInput, sLevel)) {
+                        MinecraftForge.EVENT_BUS.post(new RecipeEvent.FocalCombine.End(this.activeCombineRecipe));
+                    }
                     this.activeCombineRecipe = null;
                 }
             });

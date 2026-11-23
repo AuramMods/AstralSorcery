@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.container.provider.ContainerAltarProvider;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
@@ -66,6 +67,7 @@ public class AltarBlock extends BaseTickTileBlock<TileAltar> {
         if (hand == InteractionHand.MAIN_HAND && player instanceof ServerPlayer sPlayer) {
             return MiscUtil.getTileAt(level, pos, TileAltar.class, true).map(altar -> {
                 if (stack.is(ItemsAS.WAND.get())) {
+                    if (!StageRules.checkFeature(sPlayer, StageRules.Feature.RESONATING_WAND)) return InteractionResult.FAIL;
                     if (altar.getTileData().getActiveRecipe().isPresent()) return InteractionResult.CONSUME;
                     if (!altar.getTileData().hasStructure()) return InteractionResult.CONSUME;
                     return altar.findMatchingRecipe(level, sPlayer.getUUID()).map(recipe -> {

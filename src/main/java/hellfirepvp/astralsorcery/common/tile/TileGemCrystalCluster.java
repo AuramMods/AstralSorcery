@@ -9,6 +9,8 @@
 package hellfirepvp.astralsorcery.common.tile;
 
 import com.mojang.serialization.Codec;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
@@ -45,6 +47,7 @@ public class TileGemCrystalCluster extends TileEntityTick<TileEntityTick.Data> {
     @Override
     public void serverTick(ServerLevel level) {
         super.serverTick(level);
+        if (!StageRules.allowsFeature(level, ProcessingRules.Operation.GEM_CLUSTER_GROWTH.id, StageActor.AUTOMATION)) return;
 
         var rule = ProcessingRules.get(level, ProcessingRules.Operation.GEM_CLUSTER_GROWTH);
         GemCrystalClusterBlock.GrowthStageType stage = this.getBlockState().getValue(GemCrystalClusterBlock.STAGE);

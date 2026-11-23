@@ -1,4 +1,6 @@
 {
+    "message.astralsorcery.stage_all": "Requires all stages: %s",
+    "message.astralsorcery.stage_any": "Requires one of these stages: %s",
     "attribute.name.generic.fall_damage_multiplier": "Fall Damage Multiplier",
     "attribute.name.generic.safe_fall_distance": "Safe Fall Distance",
     "attribute.name.generic.scale": "Scale",

@@ -11,6 +11,9 @@ package hellfirepvp.astralsorcery.common.tile;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.tile.base.TileDataOwned;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -60,6 +63,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -107,17 +111,19 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
             this.activeRecipe = null;
             return;
         }
-        if (!level.isEmptyBlock(this.getBlockPos().above())) {
-            this.breakCatalyst();
+        StageActor actor = StageActor.fromOwner(level, this.getTileData().getOwnerId());
+        if (this.activeRecipe != null && (!StageRules.isCurrent(level, this.activeRecipe)
+                || !StageRules.allowsRecipe(level, this.activeRecipe, actor))) {
+            this.activeRecipe = null;
+        }
+        if (this.activeRecipe == null) {
+            this.activeRecipe = RecipeFinder.of(level).findLightwellRecipe(catalyst, this.getTileData().getContainedFluid(), actor)
+                    .map(RecipeHolder::value).orElse(null);
+        }
+        if (this.activeRecipe == null) {
             return;
         }
-
-        if (this.activeRecipe == null) {
-            this.activeRecipe = this.getTileData().findMatchingRecipe(level, catalyst)
-                    .map(RecipeHolder::value)
-                    .orElse(null);
-        }
-        if (this.activeRecipe == null) {
+        if (!level.isEmptyBlock(this.getBlockPos().above())) {
             this.breakCatalyst();
             return;
         }
@@ -235,17 +241,19 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
     }
 
     public static class Data extends TileEntityNetwork.Data
-            implements TileCapabilities.ItemStorage, TileCapabilities.FluidStorage {
+            implements TileDataOwned, TileCapabilities.ItemStorage, TileCapabilities.FluidStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> lightwellFields(inst).apply(inst, Data::new));
 
-        protected static <T extends Data> Products.P6<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, Boolean, FluidContainerList, InventoryStackList> lightwellFields(RecordCodecBuilder.Instance<T> instance) {
+        protected static <T extends Data> Products.P7<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, Boolean, FluidContainerList, InventoryStackList, Optional<UUID>> lightwellFields(RecordCodecBuilder.Instance<T> instance) {
             return TileEntityNetwork.Data.netFields(instance).and(instance.group(
                     CodecUtil.defaulted(FluidContainerList.CODEC, "fluidContents", FluidContainerList::create, Data::getFluidContents),
-                    CodecUtil.defaulted(InventoryStackList.CODEC, "inventoryContents", InventoryStackList::create, Data::getInventoryContents)
+                    CodecUtil.defaulted(InventoryStackList.CODEC, "inventoryContents", InventoryStackList::create, Data::getInventoryContents),
+                    TileDataOwned.<T>ownerField()
             ));
         }
 
+        private UUID ownerId;
         protected final FluidContainerList fluidContents;
         protected final InventoryStackList inventoryContents;
 
@@ -254,10 +262,21 @@ public class TileLightwell extends TileEntityNetwork<ForwardingStarlightReceiver
                        Map<BlockPos, Boolean> skyObstructions,
                        boolean needsNetworkSync,
                        FluidContainerList fluidContents,
-                       InventoryStackList inventoryContents) {
+                       InventoryStackList inventoryContents, Optional<UUID> ownerId) {
             super(ticksExisted, hasStructure, skyObstructions, needsNetworkSync);
             this.fluidContents = fluidContents;
             this.inventoryContents = inventoryContents;
+            this.ownerId = ownerId.orElse(null);
+        }
+
+        @Override
+        public UUID getOwnerId() {
+            return this.ownerId;
+        }
+
+        @Override
+        public void setOwnerId(UUID ownerId) {
+            this.ownerId = ownerId;
         }
 
         public FluidContainerList getFluidContents() {

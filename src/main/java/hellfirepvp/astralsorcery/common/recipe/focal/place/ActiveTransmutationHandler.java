@@ -8,6 +8,8 @@
 
 package hellfirepvp.astralsorcery.common.recipe.focal.place;
 
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.event.RecipeEvent;
 import hellfirepvp.astralsorcery.common.visual.type.FocalPointTransmutationSparkle;
@@ -52,7 +54,13 @@ public class ActiveTransmutationHandler {
 
     public static Optional<ActiveFocalTransmutationRecipe> getOrCreateActiveTransmutation(ServerLevel level, BlockPos pos, BaseConstellation cst, boolean isFocusedStarlight) {
         Optional<ActiveFocalTransmutationRecipe> recipe = getActiveTransmutation(level, pos);
-        if (recipe.isPresent()) return recipe;
+        if (recipe.isPresent()) {
+            var existing = recipe.get().getRecipe();
+            if (StageRules.isCurrent(level, existing) && StageRules.allowsRecipe(level, existing, StageActor.AUTOMATION)) {
+                return recipe;
+            }
+            removeTransmutation(level, pos);
+        }
         return ChunkUtil.executeWithChunk(level, pos, () -> {
             return RecipeFinder.of(level).findFocalTransmutationRecipe(cst, pos, isFocusedStarlight).map(r -> {
                 ActiveFocalTransmutationRecipe activeRecipe = ActiveFocalTransmutationRecipe.create(r, cst, pos, level.getGameTime());
@@ -83,6 +91,11 @@ public class ActiveTransmutationHandler {
             }
             FocalPointTransmutationSparkle.at(activeRecipe.getTransmutationPos(), activeRecipe.getRecipe().getColor()).sendToNearby(level);
             if (activeRecipe.isFinished()) {
+                if (!StageRules.isCurrent(level, activeRecipe.getRecipe())
+                        || !StageRules.allowsRecipe(level, activeRecipe.getRecipe(), StageActor.AUTOMATION)) {
+                    removeTransmutation(level, pos);
+                    return Result.NO_PROGRESS;
+                }
                 activeRecipe.finish(usedInput, level);
                 MinecraftForge.EVENT_BUS.post(new RecipeEvent.FocalTransmutation.End(activeRecipe));
                 removeTransmutation(level, pos);

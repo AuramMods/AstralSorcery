@@ -11,6 +11,8 @@ package hellfirepvp.astralsorcery.common.recipe.attunement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.EntityVisualFX;
@@ -42,6 +44,7 @@ import hellfirepvp.astralsorcery.common.util.data.Vector3;
 import hellfirepvp.astralsorcery.common.util.level.DayTimeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -101,12 +104,19 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
             AABB searchBox = BOX.move(altar.getBlockPos().above());
 
             Vector3 altarVec = Vector3.atCenter(altar).addY(1);
-            List<ItemEntity> items = altar.getLevel().getEntities(EntityTypeTest.forClass(ItemEntity.class), searchBox, ItemAttunementRecipe::isEligibleItem);
+            List<ItemEntity> items = altar.getLevel().getEntities(EntityTypeTest.forClass(ItemEntity.class), searchBox,
+                    entity -> isEligibleItem(entity) && isAllowed(entity, cst));
             if (!items.isEmpty()) {
                 return EntityUtil.selectClosest(items, altarVec::distanceSquared);
             }
             return Optional.empty();
         });
+    }
+
+    private static boolean isAllowed(ItemEntity entity, BaseConstellation constellation) {
+        if (!(entity.level() instanceof ServerLevel level) || !StageRules.hasRules(level)) return true;
+        return StageRules.allowsFeature(level, ProcessingRules.Operation.ITEM_ATTUNEMENT.id, constellation,
+                StageActor.fromItems(level, List.of(entity)));
     }
 
     public static boolean isEligibleItem(ItemEntity entity) {
@@ -148,7 +158,7 @@ public class ItemAttunementRecipe extends AttunementRecipe<ItemAttunementRecipe.
             if (!super.matches(altar)) return false;
 
             return ProcessingRules.get(altar.getLevel(), ProcessingRules.Operation.ITEM_ATTUNEMENT).allows(this.getConstellation())
-                    && this.getEntity(altar.getLevel()).map(ItemAttunementRecipe::isEligibleItem).orElse(false);
+                    && this.getEntity(altar.getLevel()).map(item -> isEligibleItem(item) && isAllowed(item, this.getConstellation())).orElse(false);
         }
 
         @Override

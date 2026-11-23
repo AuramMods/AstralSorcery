@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.item.wand;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.component.BlockStateStorageComponent;
 import hellfirepvp.astralsorcery.common.component.IdentifierComponent;
 import hellfirepvp.astralsorcery.common.component.IntegerModeComponent;
@@ -95,6 +96,7 @@ public class ExchangeWandItem extends ItemCustom {
 
         if (player == null || level.isClientSide()) return InteractionResult.SUCCESS;
         if (!(level instanceof ServerLevel sLevel) || !(player instanceof ServerPlayer sPlayer)) return InteractionResult.SUCCESS;
+        if (!StageRules.checkFeature(sPlayer, StageRules.Feature.EXCHANGE_WAND)) return InteractionResult.FAIL;
 
         if (player.isShiftKeyDown()) {
             WandBlockStorageHelper.tryStoreBlock(stack, level, pos, player);
@@ -108,6 +110,7 @@ public class ExchangeWandItem extends ItemCustom {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (player instanceof ServerPlayer stagedPlayer && !StageRules.checkFeature(stagedPlayer, StageRules.Feature.EXCHANGE_WAND)) return InteractionResultHolder.fail(stack);
         if (player.isShiftKeyDown()) {
             SizeMode current = getSizeMode(stack);
             SizeMode next = current.next();

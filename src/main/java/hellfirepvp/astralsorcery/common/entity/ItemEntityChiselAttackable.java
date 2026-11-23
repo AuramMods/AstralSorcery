@@ -8,6 +8,8 @@
 
 package hellfirepvp.astralsorcery.common.entity;
 
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.SoundsAS;
 import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
@@ -73,7 +75,8 @@ public abstract class ItemEntityChiselAttackable extends ItemEntityHighlighted {
         if (!this.level().isClientSide() && entity instanceof ServerPlayer sPlayer) {
             ItemStack held = sPlayer.getMainHandItem();
             if (this.isValidAttackableStack(held) && !this.getItem().isEmpty()
-                    && ProcessingRules.get(this.level(), this.chiselOperation()).allows(this.getItem())) {
+                    && ProcessingRules.get(this.level(), this.chiselOperation()).allows(this.getItem())
+                    && StageRules.allowsFeature(this.level(), this.chiselOperation().id, StageActor.fromPlayer(sPlayer))) {
                 this.onAttack(sPlayer, held);
                 this.playOnHitSound();
             }

@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.item.wand;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
 import hellfirepvp.astralsorcery.client.effect.function.FXColorFunction;
@@ -90,6 +91,7 @@ public class BlinkWandItem extends ItemCustom {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (player instanceof ServerPlayer stagedPlayer && !StageRules.checkFeature(stagedPlayer, StageRules.Feature.BLINK_WAND)) return InteractionResultHolder.fail(stack);
         if (player.isShiftKeyDown()) {
             BlinkMode current = getBlinkMode(stack);
             BlinkMode next = current.next();
@@ -114,6 +116,7 @@ public class BlinkWandItem extends ItemCustom {
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
+        if (livingEntity instanceof ServerPlayer stagedPlayer && !StageRules.checkFeature(stagedPlayer, StageRules.Feature.BLINK_WAND)) return;
         getBlinkMode(stack).onRelease(stack, livingEntity, timeCharged);
     }
 

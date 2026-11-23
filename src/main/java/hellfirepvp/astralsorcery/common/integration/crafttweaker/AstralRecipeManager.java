@@ -150,12 +150,8 @@ public abstract class AstralRecipeManager implements IRecipeManager<Recipe<?>> {
         }
     }
 
-    static <T extends CustomRecipe<T, ?>> JsonObject encode(CustomRecipe<T, ?> recipe) {
-        @SuppressWarnings("unchecked")
-        RecipeTypesAS.CodecSerializer<T> serializer = (RecipeTypesAS.CodecSerializer<T>) recipe.getRecipeSerializer().get();
-        @SuppressWarnings("unchecked")
-        T self = (T) recipe;
-        JsonObject data = serializer.toJson(self);
+    static JsonObject encode(CustomRecipe<?, ?> recipe) {
+        JsonObject data = recipe.encodeDefinition();
         data.addProperty("type", recipe.getRecipeType().holder().getId().toString());
         return data;
     }

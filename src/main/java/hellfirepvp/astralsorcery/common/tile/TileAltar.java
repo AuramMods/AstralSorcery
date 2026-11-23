@@ -64,6 +64,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -137,19 +139,21 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
     }
 
     private void doCraftingCycle(ServerLevel level) {
-        if (!this.hasStructure()) {
-            this.abortCrafting();
-            return;
-        }
-
         this.getTileData().getActiveRecipe().ifPresent(activeRecipe -> {
-            if (!activeRecipe.isValid(level) || !activeRecipe.matches(level, this)) {
-                this.abortCrafting();
+            AltarRecipe recipe = activeRecipe.getRecipe(level).orElse(null);
+            if (recipe == null || !this.hasStructure()) {
+                if (activeRecipe.getDrawnLumen().isEmpty() && activeRecipe.getDrawnFluid().isEmpty()) {
+                    this.abortCrafting();
+                }
                 return;
             }
-            AltarRecipe recipe = activeRecipe.getRecipe(level).orElse(null);
-            if (recipe == null) {
-                this.abortCrafting();
+            if (!StageRules.allowsRecipe(level, recipe, StageActor.fromOwner(level, activeRecipe.getPlayerUUID()))) {
+                return;
+            }
+            if (!activeRecipe.matches(level, this)) {
+                if (activeRecipe.getDrawnLumen().isEmpty() && activeRecipe.getDrawnFluid().isEmpty()) {
+                    this.abortCrafting();
+                }
                 return;
             }
 
@@ -182,9 +186,9 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
     }
 
     public void startCrafting(RecipeHolder<AltarRecipe> recipe, UUID playerUUID) {
-        if (this.getTileData().getActiveRecipe().isPresent()) {
-            this.abortCrafting();
-        }
+        if (!(this.getLevel() instanceof ServerLevel level) || !StageRules.isCurrent(level, recipe.value())
+                || !StageRules.allowsRecipe(level, recipe.value(), StageActor.fromOwner(level, playerUUID))
+                || this.getTileData().getActiveRecipe().isPresent()) return;
 
         ActiveAltarRecipe activeRecipe = ActiveAltarRecipe.of(recipe, playerUUID, Direction.NORTH);
         RecipeEvent.Altar.Start start = new RecipeEvent.Altar.Start(recipe, activeRecipe);
@@ -199,7 +203,15 @@ public class TileAltar extends TileEntityNetwork<ForwardingStarlightReceiverNode
 
     public Optional<RecipeHolder<AltarRecipe>> findMatchingRecipe(Level level, @Nullable UUID playerUUID) {
         AltarCraftingInput input = this.createInput(level, playerUUID);
-        return RecipeFinder.of(level).findAltarRecipe(input);
+        RecipeFinder finder = RecipeFinder.of(level);
+        if (!(level instanceof ServerLevel server) || !StageRules.hasRules(level)) return finder.findAltarRecipe(input);
+
+        StageActor actor = StageActor.fromOwner(server, playerUUID);
+        var allowed = finder.findAltarRecipe(input, actor);
+        if (allowed.isEmpty() && actor.player() != null) {
+            finder.findAltarRecipe(input).ifPresent(recipe -> StageRules.checkRecipe(actor.player(), recipe.value()));
+        }
+        return allowed;
     }
 
     public AltarCraftingInput createInput(Level level, UUID playerUUID) {

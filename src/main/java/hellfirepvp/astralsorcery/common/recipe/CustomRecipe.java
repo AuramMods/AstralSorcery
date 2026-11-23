@@ -8,7 +8,9 @@
 
 package hellfirepvp.astralsorcery.common.recipe;
 
+import com.google.gson.JsonObject;
 import hellfirepvp.astralsorcery.AstralSorcery;
+import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -39,6 +41,11 @@ public abstract class CustomRecipe<R extends CustomRecipe<R, T>, T extends Custo
     @Override
     public final ResourceLocation getId() {
         return this.id;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final JsonObject encodeDefinition() {
+        return ((RecipeTypesAS.CodecSerializer<R>) this.getRecipeSerializer().get()).toJson((R) this);
     }
 
     public abstract boolean consumeInputs(T input, HolderLookup.Provider registries);

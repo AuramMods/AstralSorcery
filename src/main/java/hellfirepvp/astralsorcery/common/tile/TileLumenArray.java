@@ -11,6 +11,8 @@ package hellfirepvp.astralsorcery.common.tile;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.EntityVisualFX;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
@@ -136,12 +138,23 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
         LumenNode thisNode = LumenNetworkHelper.getNode(level, this.getBlockPos()).orElse(null);
         FluidStack starlight = this.getTileData().getFluidTank().getFluidInTank(0);
         ItemStack catalyst = this.getTileData().getInventory().getStackInSlot(0);
+        StageActor actor = StageActor.fromOwner(level, this.getTileData().getOwnerId());
+        if (this.activeRecipe != null && (!StageRules.isCurrent(level, this.activeRecipe)
+                || !StageRules.allowsRecipe(level, this.activeRecipe, actor))) {
+            this.activeRecipe = null;
+            this.activeRequestChains.clear();
+            this.lastSearchGameTime = level.getGameTime() - 100L;
+        }
+        if (StageRules.hasRules(level) && !catalyst.isEmpty() && this.activeRecipe == null) {
+            this.findRecipe(level, catalyst, actor);
+            if (this.activeRecipe == null) return;
+        }
         if (thisNode == null || starlight.isEmpty() || catalyst.isEmpty()) {
             this.breakCatalyst();
             return;
         }
 
-        if (this.activeRecipe == null) this.findRecipe(level, catalyst);
+        if (this.activeRecipe == null) this.findRecipe(level, catalyst, actor);
         if (this.activeRecipe == null) return;
 
         // Validate and build required lumen chains
@@ -287,11 +300,12 @@ public class TileLumenArray extends TileEntityTick<TileLumenArray.Data> implemen
         return MiscUtil.roundChanced(attemptChance, rand);
     }
 
-    private void findRecipe(ServerLevel level, ItemStack catalyst) {
+    private void findRecipe(ServerLevel level, ItemStack catalyst, StageActor actor) {
         if (level.getGameTime() - this.lastSearchGameTime < 100L) return;
         this.lastSearchGameTime = level.getGameTime();
 
-        this.getTileData().findMatchingRecipe(level, catalyst)
+        RecipeFinder.of(level).findLumenGenerationRecipe(catalyst, this.getTileData().getAssignedLumen(),
+                        this instanceof TileLumenAlchemyArray, recipe -> StageRules.allowsRecipe(level, recipe, actor))
                 .map(RecipeHolder::value)
                 .ifPresent(matchingRecipe -> {
                     this.activeRecipe = matchingRecipe;

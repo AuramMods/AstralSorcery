@@ -2,6 +2,7 @@ package hellfirepvp.astralsorcery.gametest;
 
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.bracket.custom.RecipeTypeBracketHandler;
+import com.mojang.authlib.GameProfile;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.LumenComponent;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
@@ -19,9 +20,12 @@ import hellfirepvp.astralsorcery.common.item.LumenCrystalItem;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.recipe.focal.drop.FocalCombineRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lightwell.LightwellRecipe;
 import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
+import hellfirepvp.astralsorcery.common.tile.TileLightwell;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -30,9 +34,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
@@ -40,20 +50,27 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.darkhax.gamestages.GameStageHelper;
+import net.darkhax.gamestages.data.GameStageSaveHandler;
 
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @GameTestHolder(AstralSorcery.MODID)
 @PrefixGameTestTemplate(false)
@@ -164,6 +181,81 @@ public final class ForgeCompatibilityTests {
             test.assertTrue(ProcessingRules.get(level, ProcessingRules.Operation.PLAYER_ATTUNEMENT).enabled()
                             && !ProcessingRules.get(level, ProcessingRules.Operation.CHISEL_CRYSTAL).enabled(),
                     "Script removal restores a default, while a disabled operation survives reload");
+        }
+        test.succeed();
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void gameStagesGatesRecipesAndWandActions(GameTestHelper test) {
+        if (ModList.get().isLoaded("crafttweaker") && ModList.get().isLoaded("gamestages")) {
+            var level = test.getLevel();
+            List<Component> deniedMessages = new ArrayList<>();
+            var player = new ServerPlayer(level.getServer(), level, new GameProfile(UUID.randomUUID(), "astral_stage_test")) {
+                @Override
+                public void displayClientMessage(Component message, boolean actionBar) {
+                    deniedMessages.add(message);
+                }
+            };
+            var recipes = level.getRecipeManager();
+            var recipe = (LightwellRecipe) recipes.byKey(ResourceLocation.tryParse("astraltest:lightwell")).orElseThrow();
+            var interaction = (CustomRecipe<?, ?>) recipes.byKey(ResourceLocation.tryParse("astraltest:interaction")).orElseThrow();
+            var actor = StageActor.fromPlayer(player);
+            test.assertTrue(!StageRules.allowsRecipe(level, recipe, actor), "Automation allowance cannot authorize a real player");
+            test.assertTrue(StageRules.allowsRecipe(level, recipe, StageActor.AUTOMATION), "Explicitly allowed ownerless processing should pass");
+            test.assertTrue(!StageRules.allowsRecipe(level, recipe, StageActor.fromOwner(level, UUID.randomUUID())),
+                    "An identified offline owner must not fall back to automation");
+            test.assertTrue(!StageRules.allowsRecipe(level, interaction, StageActor.AUTOMATION), "Ownerless processing is denied by default");
+
+            BlockPos wellPos = new BlockPos(1, 1, 1);
+            test.setBlock(wellPos, BlocksAS.LIGHTWELL.get());
+            var well = (TileLightwell) test.getBlockEntity(wellPos);
+            well.getTileData().setOwnerId(UUID.randomUUID());
+            well.getTileData().getInventory().setStackInSlot(0, new ItemStack(Items.SNOW_BLOCK));
+            well.serverTick(level);
+            test.assertTrue(well.getTileData().getContainedFluid().isEmpty()
+                            && well.getTileData().getInventory().getStackInSlot(0).is(Items.SNOW_BLOCK),
+                    "An unavailable owner must neither run the lightwell recipe nor lose its catalyst");
+            well.getTileData().getInventory().setStackInSlot(0, new ItemStack(Items.SPONGE));
+            well.serverTick(level);
+            test.assertTrue(well.getTileData().getContainedFluid().getFluid() == Fluids.WATER,
+                    "The lightwell must be able to select a permitted recipe with matching inputs");
+
+            GameStageSaveHandler.onPlayerLoad(new PlayerEvent.LoadFromFile(player,
+                    level.getServer().getWorldPath(LevelResource.PLAYER_DATA_DIR).toFile(), player.getStringUUID()));
+            new ServerGamePacketListenerImpl(level.getServer(), new Connection(PacketFlow.SERVERBOUND), player);
+            var data = GameStageHelper.getPlayerData(player);
+            data.addStage("astral_first");
+            test.assertTrue(!StageRules.allowsRecipe(level, recipe, actor), "All-of requires every stage");
+            data.addStage("astral_second");
+            test.assertTrue(StageRules.allowsRecipe(level, recipe, actor), "The next action must see a new stage");
+            data.removeStage("astral_first");
+            test.assertTrue(!StageRules.allowsRecipe(level, recipe, actor), "Revocation must apply without a recipe reload");
+
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemsAS.GRAPPLING_WAND.toStack());
+            test.assertTrue(ItemsAS.GRAPPLING_WAND.get().use(level, player, InteractionHand.MAIN_HAND).getResult() == InteractionResult.FAIL
+                    && !deniedMessages.isEmpty(), "The server wand action must stop and report the missing stage");
+            data.addStage("astral_master");
+            test.assertTrue(ItemsAS.GRAPPLING_WAND.get().use(level, player, InteractionHand.MAIN_HAND).getResult() == InteractionResult.SUCCESS,
+                    "A single permitted stage satisfies an any-of feature gate");
+            data.removeStage("astral_master");
+            test.assertTrue(ItemsAS.GRAPPLING_WAND.get().use(level, player, InteractionHand.MAIN_HAND).getResult() == InteractionResult.FAIL,
+                    "The feature must stop immediately on revocation");
+            test.assertTrue(!StageRules.configured(recipes).containsKey(ResourceLocation.tryParse("astraltest:gateway")),
+                    "The script must be able to remove a named rule");
+        }
+        test.succeed();
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void gameStagesDatapackRulesLoadIndependently(GameTestHelper test) {
+        var rules = StageRules.configured(test.getLevel().getRecipeManager());
+        boolean expected = ModList.get().isLoaded("gamestages");
+        var rule = rules.get(ResourceLocation.tryParse("astralsorcery:gametest_gateway"));
+        test.assertTrue((rule != null) == expected,
+                "Forge must load native stage definitions whenever GameStages is present");
+        if (expected) {
+            String stage = ModList.get().isLoaded("crafttweaker") ? "astral_master" : "astral_test_gateway";
+            test.assertTrue(rule.stages().equals(List.of(stage)), "The script can replace a native datapack rule at the same ID");
         }
         test.succeed();
     }

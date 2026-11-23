@@ -11,6 +11,8 @@ package hellfirepvp.astralsorcery.common.recipe.attunement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.client.ClientProxy;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
@@ -58,6 +60,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
 
+import java.util.Comparator;
 import java.util.*;
 
 /**
@@ -100,17 +103,13 @@ public class PlayerAttunementRecipe extends AttunementRecipe<PlayerAttunementRec
         if (cst == null || !ProcessingRules.get(altar.getLevel(), ProcessingRules.Operation.PLAYER_ATTUNEMENT).allows(cst)) {
             return Optional.empty();
         }
-        return AttunePlayerProperty.getRootPerk(cst, LogicalSide.SERVER)
-                .map(root -> {
-                    Vector3 tileVec = Vector3.atCenter(altar).addY(0.5);
-                    Player player = altar.getLevel().getNearestPlayer(tileVec.getX(), tileVec.getY(), tileVec.getZ(), 1, false);
-                    if (player instanceof ServerPlayer sPlayer) {
-                        if (isEligiblePlayer(sPlayer, cst)) {
-                            return sPlayer;
-                        }
-                    }
-                    return null;
-                });
+        if (AttunePlayerProperty.getRootPerk(cst, LogicalSide.SERVER).isEmpty()) return Optional.empty();
+        Vec3 center = Vec3.atCenterOf(altar.getBlockPos());
+        return altar.getLevel().getEntitiesOfClass(ServerPlayer.class, AABB.ofSize(center, 2, 2, 2),
+                        player -> player.distanceToSqr(center) <= 1.0 && isEligiblePlayer(player, cst)
+                                && StageRules.allowsFeature(player.level(), ProcessingRules.Operation.PLAYER_ATTUNEMENT.id,
+                                    cst, StageActor.fromPlayer(player)))
+                .stream().min(Comparator.comparingDouble(player -> player.distanceToSqr(center)));
     }
 
     public static boolean isEligiblePlayer(ServerPlayer player, BaseConstellation attuneTo) {
@@ -158,7 +157,9 @@ public class PlayerAttunementRecipe extends AttunementRecipe<PlayerAttunementRec
                 return false;
             }
             Player player = altar.getLevel().getPlayerByUUID(this.playerUUID);
-            return player != null && player.isAlive();
+            return player instanceof ServerPlayer server && server.isAlive()
+                    && StageRules.allowsFeature(server.level(), ProcessingRules.Operation.PLAYER_ATTUNEMENT.id,
+                            this.getConstellation(), StageActor.fromPlayer(server));
         }
 
         @Override

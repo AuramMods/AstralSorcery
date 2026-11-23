@@ -8,6 +8,7 @@
 
 package hellfirepvp.astralsorcery.common.block.tile;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.block.tile.base.BaseTickTileBlock;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.TileEntitiesAS;
@@ -15,6 +16,7 @@ import hellfirepvp.astralsorcery.common.tile.TileInfuser;
 import hellfirepvp.astralsorcery.common.util.InteractUtil;
 import hellfirepvp.astralsorcery.common.util.MiscUtil;
 import hellfirepvp.astralsorcery.common.util.data.TileRegistryObject;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -50,10 +52,11 @@ public class InfuserBlock extends BaseTickTileBlock<TileInfuser> {
         return MiscUtil.getTileAt(level, pos, TileInfuser.class, true).map(infuser -> {
             ItemStack held = player.getItemInHand(hand);
 
-            if (hand == InteractionHand.MAIN_HAND && held.is(ItemsAS.WAND.get()) &&
+            if (player instanceof ServerPlayer serverPlayer && hand == InteractionHand.MAIN_HAND && held.is(ItemsAS.WAND.get()) &&
                     infuser.getTileData().getActiveRecipe().isEmpty()) {
-                return infuser.findMatchingRecipe(level).map(recipe -> {
-                    infuser.startCrafting(level, recipe);
+                    if (!StageRules.checkFeature(serverPlayer, StageRules.Feature.RESONATING_WAND)) return InteractionResult.FAIL;
+                return infuser.findMatchingRecipe(serverPlayer).map(recipe -> {
+                    infuser.startCrafting(serverPlayer, recipe);
                     return InteractionResult.SUCCESS;
                 }).orElse(InteractionResult.CONSUME);
             }

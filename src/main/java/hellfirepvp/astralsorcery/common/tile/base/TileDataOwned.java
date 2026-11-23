@@ -32,9 +32,11 @@ import java.util.UUID;
 public interface TileDataOwned {
 
     static <T extends TileDataOwned> Products.P1<RecordCodecBuilder.Mu<T>, Optional<UUID>> ownedFields(RecordCodecBuilder.Instance<T> instance) {
-        return instance.group(
-                CodecUtil.optional(CodecUtil.uuidCodec(), "ownerId", TileDataOwned::getOwnerId)
-        );
+        return instance.group(TileDataOwned.<T>ownerField());
+    }
+
+    static <T extends TileDataOwned> RecordCodecBuilder<T, Optional<UUID>> ownerField() {
+        return CodecUtil.optional(CodecUtil.uuidCodec(), "ownerId", TileDataOwned::getOwnerId);
     }
 
     default <T extends TileEntitySynchronized.Data> T self() {

@@ -9,6 +9,10 @@
 package hellfirepvp.astralsorcery.common.util;
 
 import hellfirepvp.astralsorcery.common.recipe.RecipeHolder;
+import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
+import hellfirepvp.astralsorcery.common.recipe.CustomRecipeInput;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.constellation.BaseConstellation;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
@@ -32,6 +36,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.server.level.ServerLevel;
+import java.util.function.Predicate;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -91,27 +97,41 @@ public class RecipeFinder {
 
     public Optional<RecipeHolder<FocalTransmutationRecipe>> findFocalTransmutationRecipe(BaseConstellation cst, BlockPos transmutationPos, boolean isFocused) {
         FocalTransmutationCraftingInput input = new FocalTransmutationCraftingInput(cst, this.level, transmutationPos, isFocused);
-        return this.mgr.getRecipeFor(RecipeTypesAS.FOCAL_TRANSMUTATION_TYPE.get(), input, this.level).map(RecipeHolder::of);
+        return this.findAllowed(RecipeTypesAS.FOCAL_TRANSMUTATION_TYPE.get(), input, recipe -> StageRules.allowsRecipe(this.level, recipe, StageActor.AUTOMATION));
     }
 
     public Optional<RecipeHolder<FocalCombineRecipe>> findFocalCombineRecipe(BaseConstellation cst, List<ItemEntity> combinableItems) {
         FocalCombineCraftingInput input = new FocalCombineCraftingInput(cst, this.level, combinableItems);
-        return this.mgr.getRecipeFor(RecipeTypesAS.FOCAL_COMBINE_TYPE.get(), input, this.level).map(RecipeHolder::of);
+        return this.findAllowed(RecipeTypesAS.FOCAL_COMBINE_TYPE.get(), input, recipe ->
+                !(this.level instanceof ServerLevel server) || StageRules.allowsRecipe(server, recipe,
+                        StageActor.fromItems(server, recipe.filterNecessaryItems(input))));
     }
 
     public Optional<RecipeHolder<AltarRecipe>> findAltarRecipe(AltarCraftingInput input) {
         return this.mgr.getRecipeFor(RecipeTypesAS.ALTAR_CRAFTING_TYPE.get(), input, this.level).map(RecipeHolder::of);
     }
 
+    public Optional<RecipeHolder<AltarRecipe>> findAltarRecipe(AltarCraftingInput input, StageActor actor) {
+        return this.findAllowed(RecipeTypesAS.ALTAR_CRAFTING_TYPE.get(), input,
+                recipe -> StageRules.allowsRecipe(this.level, recipe, actor));
+    }
+
     public Optional<RecipeHolder<LumenGenerationRecipe>> findLumenGenerationRecipe(ItemStack inputStack, Lumen generatedLumen, boolean useCombinationRecipes) {
+        return this.findLumenGenerationRecipe(inputStack, generatedLumen, useCombinationRecipes, recipe -> true);
+    }
+
+    public Optional<RecipeHolder<LumenGenerationRecipe>> findLumenGenerationRecipe(ItemStack inputStack, Lumen generatedLumen,
+                                                                                    boolean useCombinationRecipes, Predicate<LumenGenerationRecipe> allowed) {
         LumenGenerationRecipeInput input = LumenGenerationRecipeInput.create(inputStack);
         if (generatedLumen.equals(LumenAS.NONE.get())) {
             return this.mgr.getRecipesFor(RecipeTypesAS.LUMEN_GENERATION_TYPE.get(), input, this.level).stream()
                     .filter(recipeHolder -> useCombinationRecipes != recipeHolder.getLumenCombinationInputs().isEmpty())
+                    .filter(allowed)
                     .findFirst().map(RecipeHolder::of);
         }
         return this.mgr.getRecipesFor(RecipeTypesAS.LUMEN_GENERATION_TYPE.get(), input, this.level).stream()
                 .filter(recipeHolder -> useCombinationRecipes != recipeHolder.getLumenCombinationInputs().isEmpty())
+                    .filter(allowed)
                 .filter(recipeHolder -> recipeHolder.getProducedLumen().equals(generatedLumen))
                 .findFirst().map(RecipeHolder::of);
     }
@@ -127,9 +147,15 @@ public class RecipeFinder {
         return this.mgr.getRecipeFor(RecipeTypesAS.LIGHTWELL_TYPE.get(), input, this.level).map(RecipeHolder::of);
     }
 
+    public Optional<RecipeHolder<LightwellRecipe>> findLightwellRecipe(ItemStack stack, FluidStack fluid, StageActor actor) {
+        return this.findAllowed(RecipeTypesAS.LIGHTWELL_TYPE.get(), LightwellRecipeInput.of(stack, fluid),
+                recipe -> StageRules.allowsRecipe(this.level, recipe, actor));
+    }
+
     public Optional<RecipeHolder<LiquidStarlightRecipe>> findLiquidStarlightRecipe(ItemEntity itemEntity) {
         LiquidStarlightRecipeInput input = LiquidStarlightRecipeInput.of(itemEntity);
         return this.mgr.getRecipesFor(RecipeTypesAS.LIQUID_STARLIGHT_TYPE.get(), input, itemEntity.level()).stream()
+                .filter(recipe -> !(this.level instanceof ServerLevel level) || recipe.isAllowed(level, input))
                 .min(Comparator.comparingInt((LiquidStarlightRecipe recipe) -> recipe.getOtherInputs().size())
                         .thenComparing(LiquidStarlightRecipe::getId))
                 .map(RecipeHolder::of);
@@ -143,6 +169,21 @@ public class RecipeFinder {
     public Optional<RecipeHolder<LumenCrystallizationRecipe>> findCrystallizationRecipe(Lumen lumen) {
         LumenCrystallizationRecipeInput input = LumenCrystallizationRecipeInput.of(lumen);
         return this.mgr.getRecipeFor(RecipeTypesAS.LUMEN_CRYSTALLIZATION_TYPE.get(), input, this.level).map(RecipeHolder::of);
+    }
+
+    public Optional<RecipeHolder<LumenCrystallizationRecipe>> findCrystallizationRecipe(LumenCrystallizationRecipeInput input, StageActor actor) {
+        return this.findAllowed(RecipeTypesAS.LUMEN_CRYSTALLIZATION_TYPE.get(), input,
+                recipe -> StageRules.allowsRecipe(this.level, recipe, actor));
+    }
+
+    public <I extends CustomRecipeInput, T extends CustomRecipe<T, I>> Optional<RecipeHolder<T>> findAllowed(
+            RecipeType<T> type, I input, Predicate<T> allowed) {
+        if (!StageRules.hasRules(this.level)) {
+            return this.mgr.getRecipeFor(type, input, this.level).map(RecipeHolder::of);
+        }
+        return this.mgr.getAllRecipesFor(type).stream()
+                .filter(recipe -> recipe.matches(input, this.level) && allowed.test(recipe))
+                .findFirst().map(RecipeHolder::of);
     }
 
     public <I extends Container, T extends Recipe<I>> Optional<RecipeHolder<T>> findRecipe(RecipeType<T> type, ResourceLocation recipeId) {

@@ -8,8 +8,10 @@
 
 package hellfirepvp.astralsorcery.common.item.wand;
 
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.entity.EntityGrapplingHook;
 import hellfirepvp.astralsorcery.common.item.base.ItemCustom;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +35,7 @@ public class GrapplingWandItem extends ItemCustom {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack held = player.getItemInHand(usedHand);
         if (level.isClientSide() || held.isEmpty()) return InteractionResultHolder.success(held);
+        if (player instanceof ServerPlayer stagedPlayer && !StageRules.checkFeature(stagedPlayer, StageRules.Feature.GRAPPLING_WAND)) return InteractionResultHolder.fail(held);
 
         if (!player.getCooldowns().isOnCooldown(this)) {
             level.addFreshEntity(new EntityGrapplingHook(player, level));

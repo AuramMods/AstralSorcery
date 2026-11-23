@@ -11,12 +11,16 @@ package hellfirepvp.astralsorcery.common.recipe.liquid;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.recipe.liquid.output.LiquidStarlightRecipeOutputModifier;
+import hellfirepvp.astralsorcery.common.recipe.liquid.output.LiquidStarlightOutputBindLumen;
 import hellfirepvp.astralsorcery.common.util.data.ColorWrapper;
 import hellfirepvp.astralsorcery.common.util.data.ResolvingRecipeTypeRegistryObject;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
@@ -32,6 +36,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import hellfirepvp.astralsorcery.common.ingredient.SizedIngredient;
 
+import java.util.ArrayList;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -125,6 +130,22 @@ public class LiquidStarlightRecipe extends CustomRecipe<LiquidStarlightRecipe, L
 
     private boolean isValidForOutputModifiers(LiquidStarlightRecipeInput input, List<ItemEntity> validOtherInputs) {
         return this.getOutputModifiers().stream().allMatch(modifier -> modifier.isValidInputForOutput(input, validOtherInputs));
+    }
+
+    public boolean isAllowed(ServerLevel level, LiquidStarlightRecipeInput input) {
+        if (!StageRules.hasRules(level)) return true;
+        StageActor actor = StageActor.fromItems(level, this.getContributors(input));
+        return StageRules.allowsRecipe(level, this, actor)
+                && (this.outputModifiers.stream().noneMatch(LiquidStarlightOutputBindLumen.class::isInstance)
+                    || StageRules.allowsFeature(level, StageRules.Feature.LUMEN_BINDING.id(), actor));
+    }
+
+    public List<ItemEntity> getContributors(LiquidStarlightRecipeInput input) {
+        List<ItemEntity> items = new ArrayList<>();
+        items.add(input.getTriggerEntity());
+        this.splitOtherInputs(input.getFilteredOtherEntitiesByOutput(this.getOutputModifiers()))
+                .values().forEach(items::addAll);
+        return items;
     }
 
     public void consumeItemInputs(LiquidStarlightRecipeInput input) {

@@ -12,6 +12,10 @@ import com.google.common.collect.Iterables;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import hellfirepvp.astralsorcery.common.recipe.lumen.LumenCrystallizationRecipeInput;
+import hellfirepvp.astralsorcery.common.tile.base.TileDataOwned;
+import hellfirepvp.astralsorcery.common.recipe.StageActor;
+import hellfirepvp.astralsorcery.common.recipe.StageRules;
 import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.client.effect.EffectHelper;
 import hellfirepvp.astralsorcery.client.effect.function.FXAlphaFunction;
@@ -67,6 +71,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -108,26 +113,22 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
             this.activeRecipe = null;
             return;
         }
-        if (!catalyst.isEmpty() && !level.isEmptyBlock(this.getBlockPos().above())) {
-            this.breakCatalyst();
-            return;
-        }
-
         TileLumenCrystalCluster cluster = MiscUtil.getTileAt(level, this.getBlockPos().above(), TileLumenCrystalCluster.class, false).orElse(null);
 
-        if (this.activeRecipe == null) {
-            if (!catalyst.isEmpty()) {
-                this.activeRecipe = this.getTileData().findMatchingRecipe(level, catalyst)
-                        .map(RecipeHolder::value)
-                        .orElse(null);
-            }
-            if (cluster != null) {
-                this.activeRecipe = this.getTileData().findMatchingRecipe(level, cluster.getTileData().getLumen())
-                        .map(RecipeHolder::value)
-                        .orElse(null);
-            }
+        StageActor actor = StageActor.fromOwner(level, this.getTileData().getOwnerId());
+        if (!StageRules.allowsFeature(level, ProcessingRules.Operation.LUMEN_CLUSTER_GROWTH.id, actor)) return;
+        if (this.activeRecipe != null && (!StageRules.isCurrent(level, this.activeRecipe)
+                || !StageRules.allowsRecipe(level, this.activeRecipe, actor))) {
+            this.activeRecipe = null;
         }
         if (this.activeRecipe == null) {
+            var input = cluster == null ? LumenCrystallizationRecipeInput.of(catalyst)
+                    : LumenCrystallizationRecipeInput.of(cluster.getTileData().getLumen());
+            this.activeRecipe = RecipeFinder.of(level).findCrystallizationRecipe(input, actor).map(RecipeHolder::value).orElse(null);
+        }
+        if (this.activeRecipe == null) return;
+        if (!catalyst.isEmpty() && !level.isEmptyBlock(this.getBlockPos().above())) {
+            this.breakCatalyst();
             return;
         }
         boolean byCatalyst = cluster == null;
@@ -289,20 +290,23 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
     }
 
     public static class Data extends TileEntityTick.Data
-            implements TileCapabilities.ItemStorage, TileCapabilities.FluidStorage, TileCapabilities.LumenStorage {
+            implements TileDataOwned, TileCapabilities.ItemStorage, TileCapabilities.FluidStorage, TileCapabilities.LumenStorage {
 
         public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> crystallizerFields(inst).apply(inst, Data::new));
 
-        protected static <T extends Data> Products.P8<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, FluidContainerList, InventoryStackList, LumenStackList, Lumen, Long> crystallizerFields(RecordCodecBuilder.Instance<T> instance) {
-            return TileEntityTick.Data.tickFields(instance).and(instance.group(
+        protected static <T extends Data> Products.P9<RecordCodecBuilder.Mu<T>, Long, Boolean, Map<BlockPos, Boolean>, FluidContainerList, InventoryStackList, LumenStackList, Lumen, Long, Optional<UUID>> crystallizerFields(RecordCodecBuilder.Instance<T> instance) {
+            var tick = TileEntityTick.Data.tickFields(instance);
+            return instance.group(tick.t1(), tick.t2(), tick.t3(),
                     CodecUtil.defaulted(FluidContainerList.CODEC, "fluidContents", FluidContainerList::create, Data::getFluidContents),
                     CodecUtil.defaulted(InventoryStackList.CODEC, "inventoryContents", InventoryStackList::create, Data::getInventoryContents),
                     CodecUtil.defaulted(LumenStackList.CODEC, "lumenContents", LumenStackList::create, Data::getLumenContents),
                     CodecUtil.lenientDefaulted(RegistriesAS.codec(RegistriesAS.KEY_LUMEN), "recentlyTransmittedLumen", LumenAS.NONE, Data::getRecentlyTransmittedLumen),
-                    CodecUtil.defaulted(Codec.LONG, "transmittedLumenGameTime", () -> 0L, Data::getTransmittedLumenGameTime)
-            ));
+                    CodecUtil.defaulted(Codec.LONG, "transmittedLumenGameTime", () -> 0L, Data::getTransmittedLumenGameTime),
+                    TileDataOwned.<T>ownerField()
+            );
         }
 
+        private UUID ownerId;
         protected final FluidContainerList fluidContents;
         protected final InventoryStackList inventoryContents;
         protected final LumenStackList lumenContents;
@@ -316,13 +320,24 @@ public class TileLumenCrystallizer extends TileEntityTick<TileLumenCrystallizer.
                        InventoryStackList inventoryContents,
                        LumenStackList lumenContents,
                        Lumen recentlyTransmittedLumen,
-                       long transmittedLumenGameTime) {
+                       long transmittedLumenGameTime, Optional<UUID> ownerId) {
             super(ticksExisted, hasStructure, skyObstructions);
             this.fluidContents = fluidContents;
             this.inventoryContents = inventoryContents;
             this.lumenContents = lumenContents;
             this.recentlyTransmittedLumen = recentlyTransmittedLumen;
             this.transmittedLumenGameTime = transmittedLumenGameTime;
+            this.ownerId = ownerId.orElse(null);
+        }
+
+        @Override
+        public UUID getOwnerId() {
+            return this.ownerId;
+        }
+
+        @Override
+        public void setOwnerId(UUID ownerId) {
+            this.ownerId = ownerId;
         }
 
         public FluidContainerList getFluidContents() {
