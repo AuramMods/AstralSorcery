@@ -12,10 +12,12 @@ import hellfirepvp.astralsorcery.common.data.sync.SyncDataManager;
 import hellfirepvp.astralsorcery.common.lib.types.SyncDataTypesAS;
 import hellfirepvp.astralsorcery.common.recipe.focal.place.ActiveTransmutationHandler;
 import hellfirepvp.astralsorcery.common.starlight.StarlightNetworkLevelHelper;
+import hellfirepvp.astralsorcery.common.starlight.api.BlockStarlightReceiver;
 import hellfirepvp.astralsorcery.common.starlight.api.TransmissionNode;
 import hellfirepvp.astralsorcery.common.starlight.api.TransmissionSourceNode;
 import hellfirepvp.astralsorcery.common.util.ChunkUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -83,10 +85,24 @@ public class StarlightTransmissionLevelHandler {
 
             sourceChain.getBlockEndpoints().forEach((endpointPos, lossMultiplier) -> {
                 if (lossMultiplier > 1E-3F) {
-                    ActiveTransmutationHandler.receiveStarlight(sLevel, endpointPos, packet.withMultiplier(lossMultiplier));
+                    transmitToBlock(sLevel, endpointPos, packet.withMultiplier(lossMultiplier));
                 }
             });
         });
+    }
+
+    private static void transmitToBlock(ServerLevel level, BlockPos pos, StarlightTransmissionPacket packet) {
+        var chunk = level.getChunkSource().getChunkNow(
+                SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()));
+        var blockEntity = chunk == null ? null : chunk.getBlockEntity(pos);
+        if (blockEntity != null && !blockEntity.isRemoved()) {
+            var receiver = blockEntity.getCapability(BlockStarlightReceiver.CAPABILITY).resolve().orElse(null);
+            if (receiver != null) {
+                receiver.receive(level, packet);
+                return;
+            }
+        }
+        ActiveTransmutationHandler.receiveStarlight(level, pos, packet);
     }
 
     protected void createTransmissionChain(ServerLevel sLevel, TransmissionSourceNode sourceNode) {

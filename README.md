@@ -39,6 +39,14 @@ to include JEI and Jade in the development run classpath.
 See the [CraftTweaker and GameStages reference](crafttweaker.md) for ZenCode
 recipe managers, Astral ingredient tags, processing rules, and stage gates.
 
+## Starlight receivers
+
+Addons can expose the `BlockStarlightReceiver` capability on a block entity.
+Use the Linking Tool to connect a crystal or lens to that block. The capability
+receives each source's server-side packet after the usual splitting and
+transmission losses. Native network nodes and block transmutation retain their
+existing behavior.
+
 ## Links
 
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/astral-sorcery)
