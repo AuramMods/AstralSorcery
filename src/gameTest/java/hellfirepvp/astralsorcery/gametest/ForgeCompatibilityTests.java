@@ -7,6 +7,9 @@ import hellfirepvp.astralsorcery.AstralSorcery;
 import hellfirepvp.astralsorcery.common.component.LumenComponent;
 import hellfirepvp.astralsorcery.common.component.CrystalAttributesComponent;
 import hellfirepvp.astralsorcery.common.entity.item.ItemEntityStarmetal;
+import hellfirepvp.astralsorcery.common.enchantment.EnchantmentModifier;
+import hellfirepvp.astralsorcery.common.event.DynamicEnchantmentEvent;
+import hellfirepvp.astralsorcery.common.item.base.ItemStackEquipmentReference;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import hellfirepvp.astralsorcery.common.lib.DataComponentsAS;
 import hellfirepvp.astralsorcery.common.lib.ConstellationsAS;
@@ -28,39 +31,48 @@ import hellfirepvp.astralsorcery.common.recipe.lumen.LumenGenerationRecipe;
 import hellfirepvp.astralsorcery.common.tile.TileLightwell;
 import hellfirepvp.astralsorcery.common.util.codec.ByteBufCodecs;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.embedded.EmbeddedChannel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
+import net.minecraftforge.network.NetworkHooks;
 import net.darkhax.gamestages.GameStageHelper;
 import net.darkhax.gamestages.data.GameStageSaveHandler;
 
@@ -71,12 +83,64 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @GameTestHolder(AstralSorcery.MODID)
 @PrefixGameTestTemplate(false)
 public final class ForgeCompatibilityTests {
 
     private static final String TEMPLATE = "gametest/empty";
+
+    @GameTest(template = TEMPLATE)
+    public static void enchantmentOwnerLookupDoesNotInitializeCapabilities(GameTestHelper test) {
+        var level = test.getLevel();
+        var playerList = level.getServer().getPlayerList();
+        var owner = new ServerPlayer(level.getServer(), level, new GameProfile(UUID.randomUUID(), "astral_enchant_test"));
+        var enchantment = Enchantments.BLOCK_EFFICIENCY;
+        var source = new ItemStack(Items.IRON_PICKAXE);
+        source.enchant(enchantment, 1);
+        ItemStackEquipmentReference.setEquipmentReference(source, owner.getUUID(), EquipmentSlot.MAINHAND);
+        var equipped = source.copy();
+        var matchingCopy = source.copy();
+        var staleCopy = source.copy();
+        staleCopy.getOrCreateTag().putBoolean("Changed", true);
+
+        int[] capabilityCalls = {0};
+        Consumer<AttachCapabilitiesEvent<ItemStack>> attach = event -> {
+            if (event.getObject() == equipped || event.getObject() == matchingCopy) {
+                test.assertTrue(++capabilityCalls[0] == 1, "Capability initialization must not re-enter itself");
+                test.assertTrue(event.getObject().getEnchantmentLevel(enchantment) == 2,
+                        "A capability must be able to read the effective enchantment level during initialization");
+            }
+        };
+        Consumer<DynamicEnchantmentEvent.Add> modifier = event -> {
+            if (event.getEntity() == owner) {
+                event.getDynamicEnchantments().addModifier(
+                        EnchantmentModifier.addToExistingLevel(BuiltInRegistries.ENCHANTMENT.wrapAsHolder(enchantment), 1));
+            }
+        };
+        var connection = new Connection(PacketFlow.SERVERBOUND);
+        var channel = new EmbeddedChannel(connection);
+        NetworkHooks.registerServerLoginChannel(connection, new ClientIntentionPacket("localhost", 0, ConnectionProtocol.LOGIN));
+        MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class, attach);
+        MinecraftForge.EVENT_BUS.addListener(modifier);
+        try {
+            playerList.placeNewPlayer(connection, owner);
+            owner.setItemSlot(EquipmentSlot.MAINHAND, equipped);
+            test.assertTrue(equipped.getEnchantmentLevel(enchantment) == 2, "The equipped stack must receive the bonus");
+            test.assertTrue(matchingCopy.getEnchantmentLevel(enchantment) == 2, "Matching copies must receive the bonus");
+            test.assertTrue(staleCopy.getEnchantmentLevel(enchantment) == 1, "A changed copy must use its stored level");
+            test.assertTrue(capabilityCalls[0] == 0, "Owner lookup must leave lazy capabilities uninitialized");
+            equipped.getCapability(ForgeCapabilities.ITEM_HANDLER);
+            test.assertTrue(capabilityCalls[0] == 1, "The test must exercise lazy capability initialization");
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(modifier);
+            MinecraftForge.EVENT_BUS.unregister(attach);
+            if (playerList.getPlayer(owner.getUUID()) == owner) playerList.remove(owner);
+            channel.finishAndReleaseAll();
+        }
+        test.succeed();
+    }
 
     @GameTest(template = TEMPLATE)
     public static void craftTweakerAddsNativeLightwellRecipe(GameTestHelper test) {

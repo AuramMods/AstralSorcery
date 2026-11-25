@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -135,10 +136,12 @@ public class EnchantmentModifierHelper {
         return getPlayerFromToolReference(heldTool).map(reference -> {
             Player player = reference.getFirst();
             ItemStack equipped = player.getItemBySlot(reference.getSecond());
-            if (ItemStack.isSameItemSameTags(equipped, heldTool)) {
-                return player;
-            }
-            return null;
+            if (equipped.isEmpty() || heldTool.isEmpty()) return null;
+            if (equipped == heldTool) return player;
+
+            // Forge's stack equality initializes capabilities, which can query enchantments again.
+            return ItemStack.isSameItem(equipped, heldTool) && Objects.equals(equipped.getTag(), heldTool.getTag())
+                    ? player : null;
         });
     }
 
