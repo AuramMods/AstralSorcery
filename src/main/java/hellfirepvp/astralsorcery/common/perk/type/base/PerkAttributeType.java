@@ -14,7 +14,7 @@ import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.perk.modifier.PerkAttributeModifier;
 import hellfirepvp.astralsorcery.common.perk.reader.PerkAttributeTypeReader;
 import hellfirepvp.astralsorcery.common.perk.source.ModifierSource;
-import hellfirepvp.astralsorcery.common.util.MiscUtil;
+import hellfirepvp.astralsorcery.common.perk.type.AttributeTypeArmor;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,6 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * This class is part of the Astral Sorcery Mod
@@ -38,6 +39,7 @@ import java.util.function.Supplier;
 public class PerkAttributeType {
 
     public static final Codec<PerkAttributeType> CODEC = RegistriesAS.codec(RegistriesAS.KEY_PERK_ATTRIBUTE_TYPES);
+    private static volatile VanillaAttributeIndex vanillaAttributeIndex;
 
     //Used by subclasses to track application of this perkAttributeType on a player-uuid
     private final Map<LogicalSide, Set<UUID>> applicationCache = Maps.newHashMap();
@@ -62,12 +64,49 @@ public class PerkAttributeType {
     }
 
     public static Optional<PerkAttributeType> fromVanillaType(Attribute attribute) {
+        VanillaAttributeIndex index = vanillaAttributeIndex;
+        return index == null ? findVanillaType(attribute) : index.find(attribute);
+    }
+
+    private static Optional<PerkAttributeType> findVanillaType(Attribute attribute) {
         return RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().stream()
-                .filter(type -> type instanceof VanillaPerkAttributeType)
-                .map(type -> (VanillaPerkAttributeType) type)
-                .filter(type -> type.getAttribute() == attribute)
-                .findFirst()
-                .map(MiscUtil::cast);
+                .filter(type -> type instanceof VanillaPerkAttributeType vanilla && vanilla.getAttribute() == attribute)
+                .findFirst();
+    }
+
+    public static void invalidateVanillaAttributeIndex() {
+        vanillaAttributeIndex = null;
+    }
+
+    public static void beginVanillaAttributeIndex() {
+        // Resolve attributes lazily after Forge has baked the registry and
+        // finalized the RegistryObjects used by the built-in attributes.
+        vanillaAttributeIndex = new VanillaAttributeIndex();
+    }
+
+    private static final class VanillaAttributeIndex {
+        private volatile Function<Attribute, Optional<PerkAttributeType>> lookup;
+
+        Optional<PerkAttributeType> find(Attribute attribute) {
+            var ready = lookup;
+            return (ready == null ? initialize() : ready).apply(attribute);
+        }
+
+        private synchronized Function<Attribute, Optional<PerkAttributeType>> initialize() {
+            if (lookup != null) return lookup;
+            Map<Attribute, Optional<PerkAttributeType>> index = new IdentityHashMap<>();
+            for (PerkAttributeType type : RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get()) {
+                if (!(type instanceof VanillaPerkAttributeType vanilla)) continue;
+                if (!type.getClass().getPackageName().equals(AttributeTypeArmor.class.getPackageName())) {
+                    // Other mods can provide dynamic implementations.
+                    lookup = PerkAttributeType::findVanillaType;
+                    return lookup;
+                }
+                index.putIfAbsent(vanilla.getAttribute(), Optional.of(type));
+            }
+            lookup = attribute -> index.getOrDefault(attribute, Optional.empty());
+            return lookup;
+        }
     }
 
     public Optional<PerkAttributeTypeReader> getReader() {

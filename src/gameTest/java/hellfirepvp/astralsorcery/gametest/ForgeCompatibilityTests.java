@@ -19,8 +19,11 @@ import hellfirepvp.astralsorcery.common.lib.FluidsAS;
 import hellfirepvp.astralsorcery.common.lib.ItemsAS;
 import hellfirepvp.astralsorcery.common.lib.LumenAS;
 import hellfirepvp.astralsorcery.common.lib.RecipeTypesAS;
+import hellfirepvp.astralsorcery.common.lib.RegistriesAS;
 import hellfirepvp.astralsorcery.common.item.LumenCrystalItem;
 import hellfirepvp.astralsorcery.common.network.PlayPacketHandler;
+import hellfirepvp.astralsorcery.common.perk.type.base.PerkAttributeType;
+import hellfirepvp.astralsorcery.common.perk.type.base.VanillaPerkAttributeType;
 import hellfirepvp.astralsorcery.common.recipe.CustomRecipe;
 import hellfirepvp.astralsorcery.common.recipe.ProcessingRules;
 import hellfirepvp.astralsorcery.common.recipe.StageActor;
@@ -73,6 +76,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.darkhax.gamestages.GameStageHelper;
 import net.darkhax.gamestages.data.GameStageSaveHandler;
 
@@ -90,6 +94,19 @@ import java.util.function.Consumer;
 public final class ForgeCompatibilityTests {
 
     private static final String TEMPLATE = "gametest/empty";
+
+    @GameTest(template = TEMPLATE)
+    public static void perkLookupMatchesRegistryOrder(GameTestHelper test) {
+        for (var attribute : ForgeRegistries.ATTRIBUTES.getValues()) {
+            var expected = RegistriesAS.REGISTRY_PERK_ATTRIBUTE_TYPES.get().stream()
+                    .filter(type -> type instanceof VanillaPerkAttributeType vanilla && vanilla.getAttribute() == attribute)
+                    .findFirst();
+            test.assertTrue(expected.equals(PerkAttributeType.fromVanillaType(attribute)), "Perk lookup changed for " + attribute);
+        }
+        var unknown = new net.minecraft.world.entity.ai.attributes.RangedAttribute("test", 1, 0, 2);
+        test.assertTrue(PerkAttributeType.fromVanillaType(unknown).isEmpty(), "Unknown attribute has a perk mapping");
+        test.succeed();
+    }
 
     @GameTest(template = TEMPLATE)
     public static void enchantmentOwnerLookupDoesNotInitializeCapabilities(GameTestHelper test) {

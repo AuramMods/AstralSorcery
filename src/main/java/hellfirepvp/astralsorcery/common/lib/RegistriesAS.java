@@ -45,6 +45,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
+import net.minecraftforge.registries.RegistryManager;
 
 import java.util.function.Supplier;
 
@@ -124,7 +125,14 @@ public class RegistriesAS {
         create(event, KEY_PERK_TYPES);
         create(event, KEY_PERK_DATA_TYPES);
         create(event, KEY_PERK_ATTRIBUTE_TYPE_READERS);
-        create(event, KEY_PERK_ATTRIBUTE_TYPES);
+        event.create(new RegistryBuilder<PerkAttributeType>().setName(KEY_PERK_ATTRIBUTE_TYPES.location()).hasTags()
+                .onAdd((owner, stage, id, key, value, previous) -> {
+                    if (stage == RegistryManager.ACTIVE) PerkAttributeType.invalidateVanillaAttributeIndex();
+                }).onClear((owner, stage) -> {
+                    if (stage == RegistryManager.ACTIVE) PerkAttributeType.invalidateVanillaAttributeIndex();
+                }).onBake((owner, stage) -> {
+                    if (stage == RegistryManager.ACTIVE) PerkAttributeType.beginVanillaAttributeIndex();
+                }));
         create(event, KEY_PERK_CONVERTERS);
         create(event, KEY_PERK_CUSTOM_MODIFIERS);
         create(event, KEY_PERK_MODIFIER_SOURCES);
